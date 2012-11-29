@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>intermine.results.InterMineURLOpener</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="intermine-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.intermine.org">InterMine Python Webservice Client</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="intermine-module.html">Package&nbsp;intermine</a> ::
+        <a href="intermine.results-module.html">Module&nbsp;results</a> ::
+        Class&nbsp;InterMineURLOpener
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="intermine.results.InterMineURLOpener-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class InterMineURLOpener</h1><p class="nomargin-top"><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+ urllib.URLopener --+    
+                    |    
+urllib.FancyURLopener --+
+                        |
+                       <strong class="uidshort">InterMineURLOpener</strong>
+</pre>
+
+<hr />
+<h1 class="heading">Specific implementation of urllib.FancyURLOpener for this client</h1>
+    <p>Provides user agent and authentication headers, and handling of 
+    errors</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="intermine.results.InterMineURLOpener-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">credentials</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">token</span>=<span class="summary-sig-default">None</span>)</span><br />
+      InterMineURLOpener((username, password)) &rarr; InterMineURLOpener</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="post_plain_text"></a><span class="summary-sig-name">post_plain_text</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">body</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.post_plain_text">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="intermine.results.InterMineURLOpener-class.html#open" class="summary-sig-name">open</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">data</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Use URLopener().open(file) instead of open(file, 'r').</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.open">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="prepare_url"></a><span class="summary-sig-name">prepare_url</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.prepare_url">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="delete"></a><span class="summary-sig-name">delete</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.delete">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="intermine.results.InterMineURLOpener-class.html#http_error_default" class="summary-sig-name">http_error_default</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">fp</span>,
+        <span class="summary-sig-arg">errcode</span>,
+        <span class="summary-sig-arg">errmsg</span>,
+        <span class="summary-sig-arg">headers</span>)</span><br />
+      Re-implementation of http_error_default, with content now supplied by
+      default</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_default">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="intermine.results.InterMineURLOpener-class.html#http_error_400" class="summary-sig-name">http_error_400</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">fp</span>,
+        <span class="summary-sig-arg">errcode</span>,
+        <span class="summary-sig-arg">errmsg</span>,
+        <span class="summary-sig-arg">headers</span>,
+        <span class="summary-sig-arg">data</span>=<span class="summary-sig-default">None</span>)</span><br />
+      400 errors indicate that something about our request was incorrect</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_400">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="intermine.results.InterMineURLOpener-class.html#http_error_401" class="summary-sig-name">http_error_401</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">fp</span>,
+        <span class="summary-sig-arg">errcode</span>,
+        <span class="summary-sig-arg">errmsg</span>,
+        <span class="summary-sig-arg">headers</span>,
+        <span class="summary-sig-arg">data</span>=<span class="summary-sig-default">None</span>)</span><br />
+      401 errors indicate we don't have sufficient permission for the 
+      resource we requested - usually a list or a tempate</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_401">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="intermine.results.InterMineURLOpener-class.html#http_error_403" class="summary-sig-name">http_error_403</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">fp</span>,
+        <span class="summary-sig-arg">errcode</span>,
+        <span class="summary-sig-arg">errmsg</span>,
+        <span class="summary-sig-arg">headers</span>,
+        <span class="summary-sig-arg">data</span>=<span class="summary-sig-default">None</span>)</span><br />
+      401 errors indicate we don't have sufficient permission for the 
+      resource we requested - usually a list or a tempate</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_403">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="intermine.results.InterMineURLOpener-class.html#http_error_404" class="summary-sig-name">http_error_404</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">fp</span>,
+        <span class="summary-sig-arg">errcode</span>,
+        <span class="summary-sig-arg">errmsg</span>,
+        <span class="summary-sig-arg">headers</span>,
+        <span class="summary-sig-arg">data</span>=<span class="summary-sig-default">None</span>)</span><br />
+      404 errors indicate that the requested resource does not exist - 
+      usually a template that is not longer available.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_404">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="intermine.results.InterMineURLOpener-class.html#http_error_500" class="summary-sig-name">http_error_500</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">fp</span>,
+        <span class="summary-sig-arg">errcode</span>,
+        <span class="summary-sig-arg">errmsg</span>,
+        <span class="summary-sig-arg">headers</span>,
+        <span class="summary-sig-arg">data</span>=<span class="summary-sig-default">None</span>)</span><br />
+      500 errors indicate that the server borked during the request - ie: 
+      it wasn't our fault.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_500">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>urllib.FancyURLopener</code></b>:
+      <code>get_user_passwd</code>,
+      <code>http_error_301</code>,
+      <code>http_error_302</code>,
+      <code>http_error_303</code>,
+      <code>http_error_307</code>,
+      <code>http_error_407</code>,
+      <code>prompt_user_passwd</code>,
+      <code>redirect_internal</code>,
+      <code>retry_http_basic_auth</code>,
+      <code>retry_https_basic_auth</code>,
+      <code>retry_proxy_http_basic_auth</code>,
+      <code>retry_proxy_https_basic_auth</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>urllib.URLopener</code></b>:
+      <code>__del__</code>,
+      <code>addheader</code>,
+      <code>cleanup</code>,
+      <code>close</code>,
+      <code>http_error</code>,
+      <code>open_data</code>,
+      <code>open_file</code>,
+      <code>open_ftp</code>,
+      <code>open_http</code>,
+      <code>open_https</code>,
+      <code>open_local_file</code>,
+      <code>open_unknown</code>,
+      <code>open_unknown_proxy</code>,
+      <code>retrieve</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="version"></a><span class="summary-name">version</span> = <code title="'InterMine-Python-Client-0.96.00'"><code class="variable-quote">'</code><code class="variable-string">InterMine-Python-Client-0.96.00</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">credentials</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">token</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <h1 class="heading">Constructor</h1>
+    <p>InterMineURLOpener((username, password)) &rarr; 
+    InterMineURLOpener</p>
+    <p>Return a new url-opener with the appropriate credentials</p>
+  <dl class="fields">
+    <dt>Overrides:
+        urllib.URLopener.__init__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="open"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">open</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">data</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.open">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Use URLopener().open(file) instead of open(file, 'r').</p>
+  <dl class="fields">
+    <dt>Overrides:
+        urllib.URLopener.open
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="http_error_default"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">http_error_default</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">fp</span>,
+        <span class="sig-arg">errcode</span>,
+        <span class="sig-arg">errmsg</span>,
+        <span class="sig-arg">headers</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_default">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Re-implementation of http_error_default, with content now supplied by 
+  default</p>
+  <dl class="fields">
+    <dt>Overrides:
+        urllib.URLopener.http_error_default
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="http_error_400"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">http_error_400</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">fp</span>,
+        <span class="sig-arg">errcode</span>,
+        <span class="sig-arg">errmsg</span>,
+        <span class="sig-arg">headers</span>,
+        <span class="sig-arg">data</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_400">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <h1 class="heading">Handle 400 HTTP errors, attempting to return informative error messages</h1>
+    <p>400 errors indicate that something about our request was 
+    incorrect</p>
+  <dl class="fields">
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'><a href="intermine.errors.WebserviceError-class.html">WebserviceError</a></strong></code> - in all circumstances</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="http_error_401"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">http_error_401</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">fp</span>,
+        <span class="sig-arg">errcode</span>,
+        <span class="sig-arg">errmsg</span>,
+        <span class="sig-arg">headers</span>,
+        <span class="sig-arg">data</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_401">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <h1 class="heading">Handle 401 HTTP errors, attempting to return informative error messages</h1>
+    <p>401 errors indicate we don't have sufficient permission for the 
+    resource we requested - usually a list or a tempate</p>
+  <dl class="fields">
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'><a href="intermine.errors.WebserviceError-class.html">WebserviceError</a></strong></code> - in all circumstances</li>
+    </ul></dd>
+    <dt>Overrides:
+        urllib.FancyURLopener.http_error_401
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="http_error_403"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">http_error_403</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">fp</span>,
+        <span class="sig-arg">errcode</span>,
+        <span class="sig-arg">errmsg</span>,
+        <span class="sig-arg">headers</span>,
+        <span class="sig-arg">data</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_403">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <h1 class="heading">Handle 403 HTTP errors, attempting to return informative error messages</h1>
+    <p>401 errors indicate we don't have sufficient permission for the 
+    resource we requested - usually a list or a tempate</p>
+  <dl class="fields">
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'><a href="intermine.errors.WebserviceError-class.html">WebserviceError</a></strong></code> - in all circumstances</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="http_error_404"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">http_error_404</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">fp</span>,
+        <span class="sig-arg">errcode</span>,
+        <span class="sig-arg">errmsg</span>,
+        <span class="sig-arg">headers</span>,
+        <span class="sig-arg">data</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_404">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <h1 class="heading">Handle 404 HTTP errors, attempting to return informative error messages</h1>
+    <p>404 errors indicate that the requested resource does not exist - 
+    usually a template that is not longer available.</p>
+  <dl class="fields">
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'><a href="intermine.errors.WebserviceError-class.html">WebserviceError</a></strong></code> - in all circumstances</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="http_error_500"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">http_error_500</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">fp</span>,
+        <span class="sig-arg">errcode</span>,
+        <span class="sig-arg">errmsg</span>,
+        <span class="sig-arg">headers</span>,
+        <span class="sig-arg">data</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="intermine.results-pysrc.html#InterMineURLOpener.http_error_500">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <h1 class="heading">Handle 500 HTTP errors, attempting to return informative error messages</h1>
+    <p>500 errors indicate that the server borked during the request - ie: 
+    it wasn't our fault.</p>
+  <dl class="fields">
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'><a href="intermine.errors.WebserviceError-class.html">WebserviceError</a></strong></code> - in all circumstances</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="intermine-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.intermine.org">InterMine Python Webservice Client</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Nov 29 01:18:18 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
