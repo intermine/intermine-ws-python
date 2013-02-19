@@ -9,6 +9,7 @@ except ImportError:
 import urllib
 import codecs
 
+from intermine.errors import WebserviceError
 from intermine.lists.list import List
 
 class ListManager(object):
@@ -337,6 +338,6 @@ class ListManager(object):
 
         return list_names
 
-class ListServiceError(IOError):
+class ListServiceError(WebserviceError):
     """Errors thrown when something goes wrong with list requests"""
     pass
