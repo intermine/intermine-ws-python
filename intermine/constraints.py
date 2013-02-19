@@ -396,9 +396,6 @@ class LogicParser(object):
         except IndexError:
             raise EmptyLogicError()
 
-class EmptyLogicError (IndexError):
-    pass
-
 class CodedConstraint(Constraint, LogicNode):
     """
     A parent class for all constraints that have codes
