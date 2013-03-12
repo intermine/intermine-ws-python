@@ -132,12 +132,11 @@ setup(
         packages = ["intermine", "intermine.lists"],
         provides = ["intermine"],
         cmdclass = { 'clean': CleanCommand, 'test': TestCommand,  'livetest': LiveTestCommand },
-        version = "1.00.02",
+        version = "1.00.03",
         description = "InterMine WebService client",
         author = "Alex Kalderimis",
         author_email = "dev@intermine.org",
         url = "http://www.intermine.org",
-        download_url = "http://www.intermine.org/lib/python-webservice-client-0.98.02.tar.gz",
         keywords = ["webservice", "genomic", "bioinformatics"],
         classifiers = [
             "Programming Language :: Python",
