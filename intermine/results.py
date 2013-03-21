@@ -315,6 +315,8 @@ class ResultIterator(object):
                 params.update({"format": "json"})
             else:
                 params.update({"format" : "jsonrows"})
+        elif rowformat == 'tsv':
+            params.update({"format": "tab"})
         else:
             params.update({"format" : rowformat})
 
