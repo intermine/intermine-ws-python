@@ -14,6 +14,38 @@ from glob import glob
 from os.path import splitext, basename, join as pjoin
 from warnings import warn
 
+OPTIONS = {
+    'name': "intermine",
+    'packages': ["intermine", "intermine.lists"],
+    'provides': ["intermine"],
+    'version': "1.01.00",
+    'description': "InterMine WebService client",
+    'author': "Alex Kalderimis",
+    'author_email': "dev@intermine.org",
+    'url': "http://www.intermine.org",
+    'keywords': ["webservice", "genomic", "bioinformatics"],
+    'classifiers': [
+        "Programming Language :: Python",
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Scientific/Engineering :: Bio-Informatics",
+        "Topic :: Scientific/Engineering :: Information Analysis",
+        "Operating System :: OS Independent",
+    ],
+    'license': "LGPL",
+    'long_description': """\
+InterMine Webservice Client
+----------------------------
+
+Provides access routines to datawarehouses powered
+by InterMine technology.
+
+"""
+}
 
 class TestCommand(Command):
     user_options = [('verbose', 'v', "produce verbose output", 1)]
@@ -57,6 +89,18 @@ class TestCommand(Command):
        t = TextTestRunner(verbosity = self.verbose)
        t.run(tests)
        exit()
+
+class PrintVersion(Command):
+    user_options = []
+
+    def initialize_options(self):
+        self.version = None
+
+    def finalize_options(self):
+        self.version = OPTIONS['version']
+
+    def run(self):
+        print(self.version)
 
 class LiveTestCommand(TestCommand):
 
@@ -123,41 +167,17 @@ class CleanCommand(Command):
                 elif clean_me != "build":
                     log.warn(clean_me + " does not exist")
 
-extra = {}
+extra = {
+    'cmdclass': {
+        'clean': CleanCommand,
+        'test': TestCommand,
+        'livetest': LiveTestCommand,
+        'version': PrintVersion
+    }
+}
 if sys.version_info >= (3,):
     extra['use_2to3'] = True
 
-setup(
-        name = "intermine",
-        packages = ["intermine", "intermine.lists"],
-        provides = ["intermine"],
-        cmdclass = { 'clean': CleanCommand, 'test': TestCommand,  'livetest': LiveTestCommand },
-        version = "1.01.00",
-        description = "InterMine WebService client",
-        author = "Alex Kalderimis",
-        author_email = "dev@intermine.org",
-        url = "http://www.intermine.org",
-        keywords = ["webservice", "genomic", "bioinformatics"],
-        classifiers = [
-            "Programming Language :: Python",
-            "Development Status :: 5 - Production/Stable",
-            "Intended Audience :: Science/Research",
-            "Intended Audience :: Developers",
-            "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
-            "Topic :: Software Development :: Libraries :: Python Modules",
-            "Topic :: Internet :: WWW/HTTP",
-            "Topic :: Scientific/Engineering :: Bio-Informatics",
-            "Topic :: Scientific/Engineering :: Information Analysis",
-            "Operating System :: OS Independent",
-            ],
-        license = "LGPL",
-        long_description = """\
-InterMine Webservice Client
-----------------------------
+OPTIONS.update(extra)
 
-Provides access routines to datawarehouses powered
-by InterMine technology.
-
-""",
-        **extra
-)
+setup(**OPTIONS)
