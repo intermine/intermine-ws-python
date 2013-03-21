@@ -106,6 +106,8 @@ Changes:
 0.99.07  Wed Jan 18 14:42:41 GMT 2012
          Fixed bugs with lazy reference fetching handling empty collections and null references.
 0.99.08  Added simpler constraint definition with kwargs.
+1.00.00  Added widget enrichment requests.
+1.01.00  Added widget listing requests.
 
 
 
