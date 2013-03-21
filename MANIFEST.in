@@ -1,6 +1,4 @@
 include COPYING.txt
+include README.md
 recursive-include docs *.html *.css *.png
-recursive-include tests *.py
-recursive-include tests/data *
-recursive-include tests/testservice *
 recursive-include intermine *.py
