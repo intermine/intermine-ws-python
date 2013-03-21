@@ -178,6 +178,7 @@ class Service(object):
     """
     QUERY_PATH             = '/query/results'
     LIST_ENRICHMENT_PATH   = '/list/enrichment'
+    WIDGETS_PATH           = '/widgets'
     QUERY_LIST_UPLOAD_PATH = '/query/tolist/json'
     QUERY_LIST_APPEND_PATH = '/query/append/tolist/json'
     MODEL_PATH             = '/model'
@@ -236,10 +237,12 @@ class Service(object):
         self.root = root
         self.prefetch_depth = prefetch_depth
         self.prefetch_id_only = prefetch_id_only
+        # Initialize empty cached data.
         self._templates = None
         self._model = None
         self._version = None
         self._release = None
+        self._widgets = None
         self._list_manager = ListManager(self)
         self.__missing_method_name = None
         if token:
@@ -403,6 +406,40 @@ class Service(object):
             t = Template.from_xml(t, self.model, self)
             self.templates[name] = t
         return t
+
+    @property
+    def widgets(self):
+        """
+        The dictionary of widgets from the webservice
+        ==============================================
+
+        The set of widgets available to a service does not
+        change between releases, so they are cached.
+        If you are running a long running process, you may
+        wish to periodically dump the cache by calling
+        L{Service.flush}, or simply get a new Service object.
+
+        @return dict
+        """
+        if self._widgets is None:
+           sock = self.opener.open(self.root + self.WIDGETS_PATH)
+           text = sock.read()
+           sock.close()
+           data = json.loads(text)
+           if data['error'] is not None:
+               raise ServiceError(data['error'])
+           self._widgets = dict(([w['name'], w] for w in data['widgets']))
+        return self._widgets
+
+    def flush(self):
+        """
+        Flushes any cached data.
+        """
+        self._templates = None
+        self._model = None
+        self._version = None
+        self._release = None
+        self._widgets = None
 
     @property
     def templates(self):
