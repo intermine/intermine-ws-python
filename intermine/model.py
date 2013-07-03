@@ -80,10 +80,16 @@ class Field(object):
         self.type_name = type_name
         self.type_class = None
         self.declared_in = class_origin
+
     def __repr__(self):
         return self.name + " is a " + self.type_name
+
     def __str__(self):
         return self.name
+
+    @property
+    def fieldtype(self):
+        raise Exception("Fields should never be directly instantiated")
 
 class Attribute(Field):
     """
@@ -92,7 +98,10 @@ class Attribute(Field):
 
     The Attribute class inherits all the behaviour of L{intermine.model.Field}
     """
-    pass
+
+    @property
+    def fieldtype(self):
+        return "attribute"
 
 class Reference(Field):
     """
@@ -134,6 +143,10 @@ class Reference(Field):
         else:
             return s + ", which links back to this as " + self.reverse_reference.name
 
+    @property
+    def fieldtype(self):
+        return "reference"
+
 class Collection(Reference):
     """
     Collections are references which refer to groups of objects
@@ -149,6 +162,9 @@ class Collection(Reference):
         else:
             return ret.replace(", which links", " objects, which link")
 
+    @property
+    def fieldtype(self):
+        return "collection"
 
 class Class(object):
     """
@@ -183,7 +199,7 @@ class Class(object):
     """
 
 
-    def __init__(self, name, parents, model):
+    def __init__(self, name, parents, model, interface = True):
         """
         Constructor - Creates a new Class descriptor
         ============================================
@@ -202,6 +218,7 @@ class Class(object):
         self.parents = parents
         self.model = model
         self.parent_classes = []
+        self.is_interface = interface
         self.field_dict = {}
         self.has_id = "Object" not in parents
         if self.has_id:
@@ -731,7 +748,8 @@ class Model(object):
                     return re.sub(r'.*\.', '', x)
                 parents = map(strip_java_prefix,
                         c.getAttribute('extends').split(' '))
-                cl =  Class(class_name, parents, self)
+                interface = c.getAttribute('is-interface') == 'true'
+                cl =  Class(class_name, parents, self, interface)
                 for a in c.getElementsByTagName('attribute'):
                     name = a.getAttribute('name')
                     type_name = strip_java_prefix(a.getAttribute('type'))
