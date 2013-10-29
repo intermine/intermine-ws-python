@@ -194,6 +194,9 @@ class ResultRow(object):
            parts.append(short_form + "=" + repr(value))
         return " ".join(parts)
 
+    def __call__(self, name):
+        return self.__getitem__(name)
+
     def __getitem__(self, key):
         if isinstance(key, int):
             return self.data[key]

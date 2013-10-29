@@ -77,6 +77,8 @@ class LiveResultsTest(unittest.TestCase):
 
         self.assertEqual(expected_sum, sum(map(lambda x: x["age"], q.results(row="rr"))))
         self.assertEqual(expected_sum, sum(map(lambda x: x[0], q.results(row="rr"))))
+        self.assertEqual(expected_sum, sum(map(lambda x: x("age"), q.results(row="rr"))))
+        self.assertEqual(expected_sum, sum(map(lambda x: x(0), q.results(row="rr"))))
 
         self.assertEqual(expected_sum, sum(map(lambda x: x["Manager.age"], q.results(row="dict"))))
         self.assertEqual(expected_sum, sum(map(lambda x: x[0], q.results(row="list"))))
