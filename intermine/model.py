@@ -557,9 +557,14 @@ class Column(object):
     def select(self, *cols):
         """
         Create a new query with this column as the base class, selecting the given fields.
+
+        If no fields are given, then just this column will be selected.
         """
         q = self._model.service.new_query(str(self))
-        q.select(*cols)
+        if len(cols):
+            q.select(*cols)
+        else:
+            q.select(self)
         return q
 
     def where(self, *args, **kwargs):
@@ -568,15 +573,29 @@ class Column(object):
 
         also available as "filter"
         """
-        q = self._model.service.new_query(str(self))
+        q = self.select()
         return q.where(*args, **kwargs)
+
+    def __len__(self):
+        """
+        Return the number of values in this column.
+        """
+        return self.select().count()
 
     def __iter__(self):
         """
-        Return a query for all objects of this class in the given webservice
+        Iterate over the things this column represents.
+
+        In the case of an attribute column, that is the values it may have. In the case
+        of a reference or class column, it is the objects that this path may refer to.
         """
-        q = self.select("*")
-        return iter(q)
+        q = self.select()
+        if self._path.is_attribute():
+            for row in q.rows():
+                yield row[0]
+        else:
+            for obj in q:
+                yield obj
 
     def __getattr__(self, name):
         if name in self._branches:
