@@ -156,7 +156,7 @@ class ResultRow(object):
     following all work:
 
         >>> # Assuming the view is "Gene.symbol", "Gene.organism.name":
-        >>> row[0] == row["symbol"] == row["Gene.symbol"]
+        >>> row[0] == row["symbol"] == row["Gene.symbol"] == row(0) == row("symbol")
         ... True
 
     """
