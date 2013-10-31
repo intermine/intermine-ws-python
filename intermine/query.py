@@ -754,6 +754,9 @@ class Query(object):
                     d["value"] = v
                 kwargs = d
 
+            if len(args) and args[0] in self.constraint_factory.reference_ops:
+                args = [self.root] + list(args)
+
             con = self.constraint_factory.make_constraint(*args, **kwargs)
 
         con.path = self.prefix_path(con.path)
@@ -767,11 +770,12 @@ class Query(object):
 
     def where(self, *cons, **kwargs):
         """
-        Add a constraint to the query
-        =============================
+        Return a new query like this one but with an additional constraint
+        ==================================================================
 
         In contrast to add_constraint, this method returns
-        a new object with the given comstraint added.
+        a new object with the given comstraint added, it does not
+        mutate the Query it is invoked on.
 
         Also available as Query.filter
         """

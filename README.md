@@ -108,6 +108,8 @@ Changes:
 0.99.08  Added simpler constraint definition with kwargs.
 1.00.00  Added widget enrichment requests.
 1.01.00  Added widget listing requests.
+1.05.00  Allowed constraints to be added on root paths implicitly, eg:
+            q.where('LOOKUP', 'eve') or q.where('IN', 'My List')
 
 
 

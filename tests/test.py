@@ -562,6 +562,15 @@ class TestQuery(WebserviceTest): # pragma: no cover
         except ConstraintError, ex:
             self.assertEqual(ex.message, "'Employee.department.name' does not represent a class, or a reference to a class")
 
+    def testTernaryConstraintImpliedRoot(self):
+        """Queries should be able to add constraints for LOOKUPs on the implied root"""
+        self.q.add_view('Employee.age') # Sets root implicitly
+        self.q.add_constraint('LOOKUP', 'Susan')
+        self.assertEqual(1, len(self.q.constraints))
+        self.assertEqual('Employee', self.q.constraints[0].path)
+        self.assertEqual('LOOKUP', self.q.constraints[0].op)
+        self.assertEqual('Susan', self.q.constraints[0].value)
+
     def testMultiConstraint(self):
         """Queries should be ok with multi-value constraints"""
         self.q.add_constraint('Employee.name', 'ONE OF', ['Tom', 'Dick', 'Harry'])

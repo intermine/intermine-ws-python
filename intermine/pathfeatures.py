@@ -5,6 +5,12 @@ PATH_PATTERN = re.compile(PATTERN_STR)
 
 class PathFeature(object):
     def __init__(self, path):
+        if path is None:
+            raise ValueError("path must not be None")
+        try:
+            path = path.name
+        except:
+            pass
         if not PATH_PATTERN.match(path):
             raise TypeError(
                 "Path '" + path + "' does not match expected pattern" + PATTERN_STR)
