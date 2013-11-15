@@ -85,6 +85,21 @@ class LiveListTest(unittest.TestCase):
         l.update_tags()
         self.assertEqual(set(["a-tag", "b-tag"]), set(map(str, l.tags)))
 
+    def testContextManager(self):
+        t = self.TYPE;
+        before = self.SERVICE.get_list_count()
+        with self.SERVICE.list_manager() as m:
+            a = m.create_list(self.LADIES_NAMES, t, description="Id list")
+            self.assertEqual(5, a.size)
+            b = m.create_list(self.GUYS_NAMES, t, description="Id string")
+            self.assertEqual(5, b.size)
+            c = m.create_list(self.EMPLOYEE_FILE, t, description="Id file", tags=["Foo", "Bar"])
+            self.assertEqual(5, c.size)
+            d = a | b | c
+            self.assertEqual(14, d.size)
+            self.assertEqual(before + 5, m.get_list_count())
+        self.assertEqual(before, self.SERVICE.get_list_count())
+
     def testLists(self):
         t = self.TYPE;
         s = self.SERVICE

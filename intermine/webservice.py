@@ -269,12 +269,30 @@ class Service(object):
         # Set up sugary aliases
         self.query = self.new_query
 
-
     # Delegated list methods
 
     LIST_MANAGER_METHODS = frozenset(["get_list", "get_all_lists",
         "get_all_list_names",
         "create_list", "get_list_count", "delete_lists", "l"])
+
+    def list_manager(self):
+        """
+        Get a new ListManager to use with this service.
+        ===============================================
+
+        This method is primarily useful as a context manager
+        when creating temporary lists, since on context exit all
+        temporary lists will be cleaned up::
+
+            with service.list_manager() as manager:
+                temp_a = manager.create_list(file_a, "Gene")
+                temp_b = manager.create_list(file_b, "Gene")
+                for gene in (temp_a & temp_b):
+                    print gene.primaryIdentifier, "is in both"
+
+        @rtype: ListManager
+        """
+        return ListManager(self)
 
     def __getattribute__(self, name):
         return object.__getattribute__(self, name)
@@ -285,7 +303,7 @@ class Service(object):
             return method
         raise AttributeError("Could not find " + name)
 
-    def __del__(self):
+    def __del__(self): # On going out of scope, try and clean up.
         try:
             self._list_manager.delete_temporary_lists()
         except ReferenceError:

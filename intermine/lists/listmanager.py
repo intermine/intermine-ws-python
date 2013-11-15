@@ -17,16 +17,17 @@ class ListManager(object):
     A Class for Managing List Content and Operations
     ================================================
 
-    This class serves as a delegate for the intermine.webservice.Service class,
-    managing list content and operations.
+    This class provides methods to manage list contents and operations.
 
-    This class is not meant to be called itself, but rather for its
-    methods to be called by the service object.
+    This class may be called itself, but all the useful methods it has
+    are also available on the Service object, which delegates to this class, while
+    other methods are more coneniently accessed through the list objects themselves.
 
-    Note that the methods for creating lists can conflict in threaded applications, if
+    NB: The methods for creating lists can conflict in threaded applications, if
     two threads are each allocated the same unused list name. You are
     strongly advised to use locks to synchronise any list creation requests (create_list,
-    or intersect, union, subtract, diff) unless you are choosing your own names each time.
+    or intersect, union, subtract, diff) unless you are choosing your own names each time
+    and are confident that these will not conflict.
     """
 
     DEFAULT_LIST_NAME = "my_list_"
@@ -137,7 +138,7 @@ class ListManager(object):
         resp.close()
         return self.parse_list_upload_response(data)
 
-    def create_list(self, content, list_type="", name=None, description=None, tags=[]):
+    def create_list(self, content, list_type="", name=None, description=None, tags=[], add=[]):
         """
         Create a new list in the webservice
         ===================================
@@ -149,6 +150,32 @@ class ListManager(object):
         This method is not thread safe for anonymous lists - it will need synchronisation
         with locks if you intend to create lists with multiple threads in parallel.
 
+        @param content: The source of the identifiers for this list. This can be:
+                          * A string with white-space separated terms.
+                          * The name of a file that contains the terms.
+                          * A file-handle like thing (something with a 'read' method)
+                          * An iterable of identifiers
+                          * A query with a single column.
+                          * Another list.
+        @param list_type: The type of objects to include in the list. This parameter is not
+                          required if the content parameter implicitly includes the type
+                          (as queries and lists do).
+        @param name: The name for the new list. If none is provided one will be generated, and the
+                     list will be deleted when the list manager exits context.
+        @param description: A description for the list (free text, default = None)
+        @param tags: A set of strings to use as tags (default = [])
+        @param add: The issues groups that can be treated as matches. This should be a
+                    collection of strings naming issue groups that would otherwise be ignored, but
+                    in this case will be added to the list. The available groups are:
+                      * DUPLICATE - More than one match was found.
+                      * WILDCARD - A wildcard match was made.
+                      * TYPE_CONVERTED - A match was found, but in another type (eg. found a protein
+                                         and we could convert it to a gene).
+                      * OTHER - other issue types
+                      * :all - All issues should be considered acceptable.
+                    This only makes sense with text uploads - it is not required (or used) when
+                    the content is a list or a query.
+
         @rtype: intermine.lists.List
         """
         if description is None:
@@ -158,15 +185,22 @@ class ListManager(object):
             name = self.get_unused_list_name()
 
         try:
-            ids = open(content).read()
-        except (TypeError, IOError):
-            if isinstance(content, basestring):
-                ids = content
-            else:
+            ids = content.read() # File like thing
+        except AttributeError:
+            try:
+                with open(content) as c: # File name
+                    ids = c.read()
+            except (TypeError, IOError):
                 try:
-                    return self._create_list_from_queryable(content, name, description, tags)
+                    ids = content.strip() # Stringy thing
                 except AttributeError:
-                    ids = "\n".join(map(lambda x: '"' + x + '"', iter(content)))
+                    try: # Queryable
+                        return self._create_list_from_queryable(content, name, description, tags)
+                    except AttributeError:
+                        try: # Array of idents
+                            ids = "\n".join(map(lambda x: '"' + x + '"', iter(content)))
+                        except AttributeError:
+                            raise TypeError("Cannot create list from " + repr(content))
 
         uri = self.service.root + self.service.LIST_CREATION_PATH
         query_form = {
@@ -175,7 +209,9 @@ class ListManager(object):
             'description': description,
             'tags': ";".join(tags)
         }
-        uri += "?" + urllib.urlencode(query_form)
+        if len(add): query_form['add'] = [x.lower() for x in add if x]
+
+        uri += "?" + urllib.urlencode(query_form, doseq = True)
         data = self.service.opener.post_plain_text(uri, ids)
         return self.parse_list_upload_response(data)
 
@@ -264,6 +300,12 @@ class ListManager(object):
         if not data.get("wasSuccessful"):
             raise ListServiceError(data.get("error"))
         return data
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, traceback):
+        self.delete_temporary_lists()
 
     def delete_temporary_lists(self):
         """Delete all the lists considered temporary (those created without names)"""
