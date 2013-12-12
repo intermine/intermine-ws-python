@@ -7,7 +7,7 @@ from intermine.webservice import Service
 
 class LiveResultsTest(unittest.TestCase):
 
-    TEST_ROOT = "http://localhost/intermine-test/service"
+    TEST_ROOT = os.getenv("TESTMODEL_URL", "http://localhost/intermine-test/service")
 
     SERVICE = Service(TEST_ROOT)
 

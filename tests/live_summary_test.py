@@ -7,7 +7,7 @@ from intermine.webservice import Service
 
 class LiveSummaryTest(unittest.TestCase):
 
-    TEST_ROOT = "localhost/intermine-test"
+    TEST_ROOT = os.getenv("TESTMODEL_URL", "localhost/intermine-test")
     SERVICE = Service(TEST_ROOT)
 
     QUERY = SERVICE.select("Employee.*", "department.name")

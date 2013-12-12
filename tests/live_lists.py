@@ -13,7 +13,7 @@ def emp_rows_without_ids(bag):
 # a universal clean-up at the end.
 class LiveListTest(unittest.TestCase):
 
-    TEST_ROOT = "http://localhost/intermine-test/service"
+    TEST_ROOT = os.getenv("TESTMODEL_URL", "http://localhost/intermine-test/service")
     TEST_USER = "intermine-test-user"
     TEST_PASS = "intermine-test-user-password"
 
