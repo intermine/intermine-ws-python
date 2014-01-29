@@ -833,6 +833,12 @@ class Query(object):
             pathA = self.model.make_path(con.path, self.get_subclass_dict())
             if isinstance(con, constraints.RangeConstraint):
                 pass # No verification done on these, beyond checking its path, of course.
+            elif isinstance(con, constraints.IsaConstraint):
+                if pathA.get_class() is None:
+                    raise ConstraintError("'" + str(pathA) + "' does not represent a class, or a reference to a class")
+                for c in con.values:
+                    if c not in self.model.classes:
+                        raise ConstraintError("Illegal constraint: " + repr(con) + " '" + str(c) + "' is not a class in this model")
             elif isinstance(con, constraints.TernaryConstraint):
                 if pathA.get_class() is None:
                     raise ConstraintError("'" + str(pathA) + "' does not represent a class, or a reference to a class")

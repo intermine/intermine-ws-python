@@ -780,6 +780,24 @@ class RangeConstraint(MultiConstraint):
     """
     OPS = set(['OVERLAPS', 'DOES NOT OVERLAP', 'WITHIN', 'OUTSIDE', 'CONTAINS', 'DOES NOT CONTAIN'])
 
+class IsaConstraint(MultiConstraint):
+    """
+    Constraints for testing the class of a value, as a disjoint union
+    ======================================================================
+
+    These constraints require that the value of the path they constrain
+    should be an instance of one of the classes provided.
+
+    Valid operators:
+     - ISA : The value is an instance of one of the provided classes.
+
+    For example:
+
+        SequenceFeature ISA [Exon, Intron]
+
+    """
+    OPS = set(['ISA'])
+
 class SubClassConstraint(Constraint):
     """
     Constraints on the class of a reference
@@ -1045,6 +1063,19 @@ class TemplateRangeConstraint(RangeConstraint, TemplateConstraint):
         return(RangeConstraint.to_string(self)
                 + " " + TemplateConstraint.to_string(self))
 
+class TemplateIsaConstraint(IsaConstraint, TemplateConstraint):
+    def __init__(self, *a, **d):
+        (c_args, t_args) = self.separate_arg_sets(d)
+        IsaConstraint.__init__(self, *a, **c_args)
+        TemplateConstraint.__init__(self, **t_args)
+    def to_string(self):
+        """
+        Provide a template specific human readable representation of the
+        constraint. This method is called by repr.
+        """
+        return(IsaConstraint.to_string(self)
+                + " " + TemplateConstraint.to_string(self))
+
 class TemplateSubClassConstraint(SubClassConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
@@ -1070,7 +1101,7 @@ class ConstraintFactory(object):
     CONSTRAINT_CLASSES = set([
         UnaryConstraint, BinaryConstraint, TernaryConstraint,
         MultiConstraint, SubClassConstraint, LoopConstraint,
-        ListConstraint, RangeConstraint])
+        ListConstraint, RangeConstraint, IsaConstraint])
 
     def __init__(self):
         """
@@ -1080,7 +1111,7 @@ class ConstraintFactory(object):
         Creates a new ConstraintFactory
         """
         self._codes = iter(string.ascii_uppercase)
-        self.reference_ops = TernaryConstraint.OPS | RangeConstraint.OPS | ListConstraint.OPS
+        self.reference_ops = TernaryConstraint.OPS | RangeConstraint.OPS | ListConstraint.OPS | IsaConstraint.OPS
 
     def get_next_code(self):
         """
@@ -1125,5 +1156,5 @@ class TemplateConstraintFactory(ConstraintFactory):
         TemplateUnaryConstraint, TemplateBinaryConstraint,
         TemplateTernaryConstraint, TemplateMultiConstraint,
         TemplateSubClassConstraint, TemplateLoopConstraint,
-        TemplateListConstraint, TemplateRangeConstraint
+        TemplateListConstraint, TemplateRangeConstraint, TemplateIsaConstraint
     ])
