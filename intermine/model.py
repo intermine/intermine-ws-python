@@ -753,7 +753,8 @@ class Model(object):
         """
         try:
             io = openAnything(source)
-            doc = minidom.parse(io)
+            src = ''.join(io.readlines())
+            doc = minidom.parseString(src)
             for node in doc.getElementsByTagName('model'):
                 self.name = node.getAttribute('name')
                 self.package_name = node.getAttribute('package')
@@ -788,7 +789,11 @@ class Model(object):
                     cl.field_dict[name] = col
                 self.classes[class_name] = cl
         except Exception, error:
-            raise ModelParseError("Error parsing model", source, error)
+            model_src = src if src is not None else source 
+            raise ModelParseError("Error parsing model", model_src, error)
+        finally:
+            if io is not None:
+                io.close()
 
     def vivify(self):
         """

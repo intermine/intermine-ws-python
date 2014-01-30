@@ -19,7 +19,7 @@ import UserDict
 from intermine.errors import WebserviceError
 from intermine.model import Attribute, Reference, Collection
 
-USER_AGENT = 'WebserviceInterMinePerlAPIClient'
+USER_AGENT = 'WebserviceInterMinePythonAPIClient'
 
 class EnrichmentLine(UserDict.UserDict):
     """
@@ -521,7 +521,7 @@ class InterMineURLOpener(urllib.FancyURLopener):
 
     Provides user agent and authentication headers, and handling of errors
     """
-    version = "InterMine-Python-Client-0.96.00"
+    version = "InterMine-Python-Client-1.07.01"
 
     def __init__(self, credentials=None, token=None):
         """
