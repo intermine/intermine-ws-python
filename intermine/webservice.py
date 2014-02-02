@@ -49,8 +49,8 @@ class Registry(object, UserDict.DictMixin):
     A Class representing an InterMine registry.
     ===========================================
 
-    Registries are web-services that mines can automatically register themselves
-    with, and thus enable service discovery by clients.
+    Registries are web-services that mines can automatically register
+    themselves with, and thus enable service discovery by clients.
 
     SYNOPSIS
     --------
@@ -452,6 +452,30 @@ class Service(object):
         return self._widgets
 
     def resolve_ids(self, data_type, identifiers, extra = '', case_sensitive = False, wildcards = False):
+        """
+        Submit an Identifier Resolution Job
+        ===================================
+
+        Request that a set of identifiers be resolved to objects in
+        the data store.
+
+        @param data_type: The type of these identifiers (eg. 'Gene')
+        @type data_type: String
+
+        @param identifiers: The ids to resolve (eg. ['eve', 'zen', 'pparg'])
+        @type identifiers: iterable of string
+
+        @param extra: A disambiguating value (eg. "Drosophila melanogaster")
+        @type extra: String
+
+        @param case_sensitive: Whether to treat IDs case sensitively.
+        @type case_sensitive: Boolean
+
+        @param wildcards: Whether or not to interpret wildcards (eg: "eve*")
+        @type wildcards: Boolean
+
+        @return: {idresolution.Job} The job.
+        """
         if self.version < 10:
             raise ServiceError("This feature requires API version 10+")
         if not data_type:
@@ -466,7 +490,6 @@ class Service(object):
             "caseSensitive": case_sensitive,
             "wildCards": wildcards
         })
-        print repr(data)
         text = self.opener.post_content(self.root + self.IDS_PATH, data, InterMineURLOpener.JSON)
         ret = json.loads(text)
         if ret['error'] is not None:
