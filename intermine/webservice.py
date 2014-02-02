@@ -28,6 +28,7 @@ from intermine.model import Model, Attribute, Reference, Collection, Column
 from intermine.lists.listmanager import ListManager
 from intermine.errors import ServiceError, WebserviceError
 from intermine.results import InterMineURLOpener, ResultIterator
+from intermine import idresolution
 
 """
 Webservice Interaction Routines for InterMine Webservices
@@ -194,6 +195,7 @@ class Service(object):
     RELEASE_PATH           = '/version/release'
     SCHEME                 = 'http://'
     SERVICE_RESOLUTION_PATH = "/check/"
+    IDS_PATH               = "/ids"
 
     def __init__(self, root,
             username=None, password=None, token=None,
@@ -448,6 +450,31 @@ class Service(object):
                raise ServiceError(data['error'])
            self._widgets = dict(([w['name'], w] for w in data['widgets']))
         return self._widgets
+
+    def resolve_ids(self, data_type, identifiers, extra = '', case_sensitive = False, wildcards = False):
+        if self.version < 10:
+            raise ServiceError("This feature requires API version 10+")
+        if not data_type:
+            raise ServiceError("No data-type supplied")
+        if not identifiers:
+            raise ServiceError("No identifiers supplied")
+
+        data = json.dumps({
+            "type": data_type,
+            "identifiers": list(identifiers),
+            "extra": extra,
+            "caseSensitive": case_sensitive,
+            "wildCards": wildcards
+        })
+        print repr(data)
+        text = self.opener.post_content(self.root + self.IDS_PATH, data, InterMineURLOpener.JSON)
+        ret = json.loads(text)
+        if ret['error'] is not None:
+            raise ServiceError(ret['error'])
+        if ret['uid'] is None:
+            raise Exception("No uid found in " + ret)
+
+        return idresolution.Job(self, ret['uid'])
 
     def flush(self):
         """

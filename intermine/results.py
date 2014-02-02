@@ -522,6 +522,8 @@ class InterMineURLOpener(urllib.FancyURLopener):
     Provides user agent and authentication headers, and handling of errors
     """
     version = "InterMine-Python-Client-1.07.01"
+    PLAIN_TEXT = "text/plain"
+    JSON = "application/json"
 
     def __init__(self, credentials=None, token=None):
         """
@@ -547,10 +549,17 @@ class InterMineURLOpener(urllib.FancyURLopener):
             self.using_authentication = False
 
     def post_plain_text(self, url, body):
+        return self.post_content(url, body, InterMineURLOpener.PLAIN_TEXT)
+
+    def post_content(self, url, body, mimetype, charset = "utf-8"):
+        headers = {
+            "Content-Type": "%s; charset=%s" % (mimetype, charset),
+            "UserAgent": USER_AGENT
+        }
         url = self.prepare_url(url)
         o = urlparse(url)
         con = httplib.HTTPConnection(o.hostname, o.port)
-        con.request('POST', url, body, self.plain_post_header)
+        con.request('POST', url, body, headers)
         resp = con.getresponse()
         content = resp.read()
         con.close()
