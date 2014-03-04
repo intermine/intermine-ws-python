@@ -264,6 +264,21 @@ class TableResultRow(ResultRow):
         """Return a list view of this row"""
         return map(lambda x: x["value"], self.data)
 
+def encode_dict(input_d):
+    output = {}
+    for k, v in input_d.iteritems():
+        if isinstance(k, unicode):
+            k = k.encode('utf8')
+        elif isinstance(k, str):
+            k.decode('utf8')
+
+        if isinstance(v, unicode):
+            v = v.encode('utf8')
+        elif isinstance(v, str):
+            v.decode('utf8')
+        output[k] = v
+    return output
+
 class ResultIterator(object):
     """
     A facade over the internal iterator object
@@ -323,16 +338,8 @@ class ResultIterator(object):
         else:
             params.update({"format" : rowformat})
 
-        encoded_params = {}
-        for k, v in params.iteritems():
-            if isinstance(v, unicode):
-                v = v.encode('utf8')
-            elif isinstance(v, str):
-                v.decode('utf8')
-            encoded_params[k] = v
-
         self.url  = service.root + path
-        self.data = urllib.urlencode(encoded_params, True)
+        self.data = urllib.urlencode(encode_dict(params), True)
         self.view = view
         self.opener = service.opener
         self.cld = cld
@@ -522,6 +529,11 @@ class JSONIterator(object):
         else:
             return next_row
 
+def encode_headers(headers):
+    return dict((k.encode('ascii') if isinstance(k, unicode) else k, \
+                 v.encode('ascii') if isinstance(v, unicode) else v) \
+                 for k, v in headers.items())
+
 class InterMineURLOpener(urllib.FancyURLopener):
     """
     Specific implementation of urllib.FancyURLOpener for this client
@@ -574,7 +586,7 @@ class InterMineURLOpener(urllib.FancyURLopener):
         url = self.prepare_url(url)
         o = urlparse(url)
         con = httplib.HTTPConnection(o.hostname, o.port)
-        con.request('POST', url, body, headers)
+        con.request('POST', url, body, encode_headers(headers))
         resp = con.getresponse()
         content = resp.read()
         con.close()
@@ -588,7 +600,7 @@ class InterMineURLOpener(urllib.FancyURLopener):
 
     def prepare_url(self, url):
         if self.token:
-            token_param = "token=" + self.token
+            token_param = urllib.urlencode(encode_dict(dict(token = self.token)))
             o = urlparse(url)
             if o.query:
                 url += "&" + token_param

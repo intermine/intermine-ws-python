@@ -18,7 +18,7 @@ OPTIONS = {
     'name': "intermine",
     'packages': ["intermine", "intermine.lists"],
     'provides': ["intermine"],
-    'version': "1.09.01",
+    'version': "1.09.03",
     'description': "InterMine WebService client",
     'author': "Alex Kalderimis",
     'author_email': "dev@intermine.org",

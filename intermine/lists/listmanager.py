@@ -198,7 +198,7 @@ class ListManager(object):
                         return self._create_list_from_queryable(content, name, description, tags)
                     except AttributeError:
                         try: # Array of idents
-                            ids = "\n".join(map(lambda x: '"' + x + '"', iter(content)))
+                            ids = "\n".join(map(lambda x: u'"{0}"'.format(x), iter(content)))
                         except AttributeError:
                             raise TypeError("Cannot create list from " + repr(content))
 

@@ -14,8 +14,8 @@ def emp_rows_without_ids(bag):
 class LiveListTest(unittest.TestCase):
 
     TEST_ROOT = os.getenv("TESTMODEL_URL", "http://localhost/intermine-test/service")
-    TEST_USER = "intermine-test-user"
-    TEST_PASS = "intermine-test-user-password"
+    TEST_USER = u"intermine-test-user"
+    TEST_PASS = u"intermine-test-user-password"
 
     # Expected rows
     KARIM = [37, '4', False, 'Karim']
@@ -39,7 +39,8 @@ class LiveListTest(unittest.TestCase):
 
     LADIES_NAMES = ["Brenda", "Zop", "Carol", "Quux", "Jennifer", "Delphine", "Ina"]
     GUYS_NAMES = 'Alex Karim "Gareth Keenan" Foo Bar "Keith Bishop" Vincent Baz'
-    UNICODE_NAMES = [u'Herr P\xf6tsch', u'St\xe9phane', u'Theo H\xf6lter',u'Nad\xe8ge']
+    UNICODE_NAMES = [u'Separator Leader', u'Keith Bishop', u'Jacques Plagnol Jacques', u'Michael Scott', u'Dr. Stefan Heinemann', u'Angela', u'Quote Leader', u'Neil Godwin', u'Tatjana Berkel', u'Juliette Lebrac', u"Bwa'h Ha Ha", u'Bernd Stromberg', u'Gilles Triquet', u'XML Leader', u'Didier Legu\xe9lec', u'Meredith Palmer', u'Jennifer Taylor-Clarke', u'David Brent', u'Lonnis Collins', u'Frank M\xf6llers', u'Burkhardt Wutke', u'Glynn Williams', u'Joel Liotard', u'Slash Leader', u'Charles Miner', u'Sinan Tur\xe7ulu']
+
     EMPLOYEE_FILE = "tests/data/test-identifiers.list"
     TYPE = 'Employee'
 
@@ -388,7 +389,7 @@ class LiveListTest(unittest.TestCase):
         self.assertEqual(self.SERVICE.get_list_count(), self.initialListCount)
 
 class LiveListTestWithTokens(LiveListTest):
-    SERVICE = Service(LiveListTest.TEST_ROOT, token="test-user-token")
+    SERVICE = Service(LiveListTest.TEST_ROOT, token=u"test-user-token")
 
 if __name__ == '__main__':
     unittest.main()
