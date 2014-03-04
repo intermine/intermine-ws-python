@@ -97,6 +97,14 @@ class LiveResultsTest(unittest.TestCase):
 
         self.assertEqual(expected_sum, sum(map(lambda x: x.age, q.results(row="object"))))
 
+    def testSearch(self):
+        res, facs = self.SERVICE.search('david')
+        self.assertEqual(2, len(res))
+        self.assertEqual(1, facs['Category']['Manager'])
+
+        res, facs = self.SERVICE.search('david', Category = 'Department')
+        self.assertEqual(1, len(res))
+        self.assertEqual('Sales', res[0]['fields']['name'])
 
 if __name__ == '__main__':
     unittest.main()

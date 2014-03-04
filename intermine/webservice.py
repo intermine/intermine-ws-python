@@ -3,6 +3,7 @@ import urllib
 from urlparse import urlparse
 import base64
 import UserDict
+from contextlib import closing
 
 #class UJsonLibDecoder(object): # pragma: no cover
 #    def __init__(self):
@@ -180,6 +181,7 @@ class Service(object):
     QUERY_PATH             = '/query/results'
     LIST_ENRICHMENT_PATH   = '/list/enrichment'
     WIDGETS_PATH           = '/widgets'
+    SEARCH_PATH            = '/search'
     QUERY_LIST_UPLOAD_PATH = '/query/tolist'
     QUERY_LIST_APPEND_PATH = '/query/append/tolist'
     MODEL_PATH             = '/model'
@@ -427,6 +429,21 @@ class Service(object):
             self.templates[name] = t
         return t
 
+    def _get_json(self, path, payload = None):
+        with closing(self.opener.open(self.root + path, payload)) as resp:
+            data = json.loads(resp.read())
+            if data['error'] is not None:
+                raise ServiceError(data['error'])
+            return data
+
+    def search(self, term, **categories):
+        params = [('q', term)]
+        for facet, value in categories.iteritems():
+            params.append(("facet_" + facet, value))
+        payload = urllib.urlencode(params, doseq = True)
+        resp = self._get_json(self.SEARCH_PATH, payload = payload)
+        return (resp['results'], resp['facets'])
+
     @property
     def widgets(self):
         """
@@ -442,13 +459,8 @@ class Service(object):
         @return dict
         """
         if self._widgets is None:
-           sock = self.opener.open(self.root + self.WIDGETS_PATH)
-           text = sock.read()
-           sock.close()
-           data = json.loads(text)
-           if data['error'] is not None:
-               raise ServiceError(data['error'])
-           self._widgets = dict(([w['name'], w] for w in data['widgets']))
+            ws = self._get_json(self.WIDGETS_PATH)['widgets']
+            self._widgets = dict(([w['name'], w] for w in ws))
         return self._widgets
 
     def resolve_ids(self, data_type, identifiers, extra = '', case_sensitive = False, wildcards = False):
