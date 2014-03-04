@@ -541,7 +541,7 @@ class InterMineURLOpener(urllib.FancyURLopener):
             "UserAgent": USER_AGENT
         }
         if credentials and len(credentials) == 2:
-            base64string = base64.encodestring('%s:%s' % credentials)[:-1]
+            base64string = 'Basic ' + base64.encodestring('%s:%s' % credentials)[:-1]
             self.addheader("Authorization", base64string)
             self.plain_post_header["Authorization"] = base64string
             self.using_authentication = True
@@ -556,6 +556,9 @@ class InterMineURLOpener(urllib.FancyURLopener):
             "Content-Type": "%s; charset=%s" % (mimetype, charset),
             "UserAgent": USER_AGENT
         }
+        if self.using_authentication:
+            headers['Authorization'] = self.plain_post_header['Authorization']
+
         url = self.prepare_url(url)
         o = urlparse(url)
         con = httplib.HTTPConnection(o.hostname, o.port)
