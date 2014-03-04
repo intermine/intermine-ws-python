@@ -4,6 +4,7 @@ sys.path.insert(0, os.getcwd())
 
 import unittest
 from intermine.webservice import Service
+from intermine.errors import WebserviceError
 
 class LiveResultsTest(unittest.TestCase):
 
@@ -105,6 +106,26 @@ class LiveResultsTest(unittest.TestCase):
         res, facs = self.SERVICE.search('david', Category = 'Department')
         self.assertEqual(1, len(res))
         self.assertEqual('Sales', res[0]['fields']['name'])
+
+    def test_user_registration(self):
+        username = 'mayfly@noreply.intermine.org'
+        password = 'yolo'
+        try:
+            s = Service(self.SERVICE.root, username, password)
+            s.deregister(s.get_deregistration_token())
+        except:
+            pass
+
+        s = self.SERVICE.register(username, password)
+
+        self.assertEqual(s.root, self.SERVICE.root)
+        self.assertEqual([], s.get_all_lists())
+
+        drt = s.get_deregistration_token()
+        s.deregister(drt)
+
+        with self.assertRaises(WebserviceError):
+            s.get_all_lists()
 
 if __name__ == '__main__':
     unittest.main()

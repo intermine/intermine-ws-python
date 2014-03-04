@@ -30,6 +30,7 @@ from intermine.lists.listmanager import ListManager
 from intermine.errors import ServiceError, WebserviceError
 from intermine.results import InterMineURLOpener, ResultIterator
 from intermine import idresolution
+from intermine.decorators import requires_version
 
 """
 Webservice Interaction Routines for InterMine Webservices
@@ -198,6 +199,7 @@ class Service(object):
     SCHEME                 = 'http://'
     SERVICE_RESOLUTION_PATH = "/check/"
     IDS_PATH               = "/ids"
+    USERS_PATH             = "/users"
 
     def __init__(self, root,
             username=None, password=None, token=None,
@@ -436,9 +438,22 @@ class Service(object):
                 raise ServiceError(data['error'])
             return data
 
-    def search(self, term, **categories):
+    def search(self, term, **facets):
+        """
+        Perform an unstructured search by term
+        =======================================
+
+        This seach method performs a search of all objects
+        indexed by the service endpoint, returning results
+        and facets for those results.
+
+        @param term The search term
+        @param facets The facets to search by (eg: Organism = 'H. sapiens')
+
+        @return (list, dict) The results, and a dictionary of facetting informtation.
+        """
         params = [('q', term)]
-        for facet, value in categories.iteritems():
+        for facet, value in facets.iteritems():
             params.append(("facet_" + facet, value))
         payload = urllib.urlencode(params, doseq = True)
         resp = self._get_json(self.SEARCH_PATH, payload = payload)
@@ -515,6 +530,8 @@ class Service(object):
         """
         Flushes any cached data.
         """
+        self._list_manager.delete_temporary_lists()
+        self._list_manager = ListManager(self)
         self._templates = None
         self._model = None
         self._version = None
@@ -602,4 +619,44 @@ class Service(object):
         @return: L{intermine.webservice.ResultIterator}
         """
         return ResultIterator(self, path, params, rowformat, view, cld)
+
+    @requires_version(9)
+    def register(self, username, password):
+        """
+        Register a new user with this service.
+        =======================================
+
+        @return {Service} an authenticated service.
+        """
+        payload = urllib.urlencode({'name': username, 'password': password})
+        registrar = Service(self.root)
+        resp = registrar._get_json(self.USERS_PATH, payload = payload)
+        token = resp['user']['temporaryToken']
+        return Service(self.root, token = token)
+
+    @requires_version(16)
+    def get_deregistration_token(self, validity = 300):
+        params = urllib.urlencode({'validity': validity})
+        resp = self._get_json('/user/deregistration', payload = params)
+        return resp['token']
+
+    @requires_version(16)
+    def deregister(self, deregistration_token):
+        """
+        Remove a User from the service
+        ==============================
+
+        @param deregistration_token A token to prove you really want to do this
+
+        @return string All the user's data.
+        """
+        if 'uuid' in deregistration_token:
+            deregistration_token = deregistration_token['uuid']
+
+        path = self.root + '/user'
+        params = {'deregistrationToken': deregistration_token, 'format': 'xml'}
+        uri = path + '?' + urllib.urlencode(params)
+        self.flush()
+        userdata = self.opener.delete(uri)
+        return userdata
 

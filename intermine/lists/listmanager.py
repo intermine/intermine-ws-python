@@ -309,8 +309,9 @@ class ListManager(object):
 
     def delete_temporary_lists(self):
         """Delete all the lists considered temporary (those created without names)"""
-        self.delete_lists(self._temp_lists)
-        self._temp_lists = set()
+        if self._temp_lists:
+            self.delete_lists(self._temp_lists)
+            self._temp_lists = set()
 
     def intersect(self, lists, name=None, description=None, tags=[]):
         """Calculate the intersection of a given set of lists, and return the list representing the result"""
