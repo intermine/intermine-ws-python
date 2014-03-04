@@ -39,6 +39,7 @@ class LiveListTest(unittest.TestCase):
 
     LADIES_NAMES = ["Brenda", "Zop", "Carol", "Quux", "Jennifer", "Delphine", "Ina"]
     GUYS_NAMES = 'Alex Karim "Gareth Keenan" Foo Bar "Keith Bishop" Vincent Baz'
+    UNICODE_NAMES = [u'Herr P\xf6tsch', u'St\xe9phane', u'Theo H\xf6lter',u'Nad\xe8ge']
     EMPLOYEE_FILE = "tests/data/test-identifiers.list"
     TYPE = 'Employee'
 
@@ -63,6 +64,12 @@ class LiveListTest(unittest.TestCase):
         self.assertEqual(set(), l.tags)
         l.add_tags("a-tag", "b-tag")
         self.assertEqual(set(["a-tag", "b-tag"]), l.tags)
+
+    def testUnicode(self):
+        s = self.SERVICE
+        t = self.TYPE
+        l = s.create_list(self.UNICODE_NAMES, t, description = 'unicode names')
+        self.assertEqual(len(self.UNICODE_NAMES), l.size)
 
     def testListTagRemoval(self):
         s = self.SERVICE

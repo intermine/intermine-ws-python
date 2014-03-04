@@ -452,9 +452,13 @@ class Service(object):
 
         @return (list, dict) The results, and a dictionary of facetting informtation.
         """
+        if isinstance(term, unicode):
+            term = term.encode('utf8')
         params = [('q', term)]
         for facet, value in facets.iteritems():
-            params.append(("facet_" + facet, value))
+            if isinstance(value, unicode):
+                value = value.encode('utf8')
+            params.append(("facet_" + str(facet), value))
         payload = urllib.urlencode(params, doseq = True)
         resp = self._get_json(self.SEARCH_PATH, payload = payload)
         return (resp['results'], resp['facets'])
@@ -628,6 +632,10 @@ class Service(object):
 
         @return {Service} an authenticated service.
         """
+        if isinstance(username, unicode):
+            username = username.encode('utf8')
+        if isinstance(password, unicode):
+            password = password.encode('utf8')
         payload = urllib.urlencode({'name': username, 'password': password})
         registrar = Service(self.root)
         resp = registrar._get_json(self.USERS_PATH, payload = payload)
@@ -636,7 +644,9 @@ class Service(object):
 
     @requires_version(16)
     def get_deregistration_token(self, validity = 300):
-        params = urllib.urlencode({'validity': validity})
+        if validity < 1 or validity > 24 * 60 * 60:
+            raise ValueError("Validity not a reasonable value: 1ms - 2hrs")
+        params = urllib.urlencode({'validity': str(validity)})
         resp = self._get_json('/user/deregistration', payload = params)
         return resp['token']
 
@@ -652,6 +662,8 @@ class Service(object):
         """
         if 'uuid' in deregistration_token:
             deregistration_token = deregistration_token['uuid']
+        if isinstance(deregistration_token, unicode):
+            deregistration_token = deregistration_token.encode('utf8')
 
         path = self.root + '/user'
         params = {'deregistrationToken': deregistration_token, 'format': 'xml'}

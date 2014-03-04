@@ -323,8 +323,16 @@ class ResultIterator(object):
         else:
             params.update({"format" : rowformat})
 
+        encoded_params = {}
+        for k, v in params.iteritems():
+            if isinstance(v, unicode):
+                v = v.encode('utf8')
+            elif isinstance(v, str):
+                v.decode('utf8')
+            encoded_params[k] = v
+
         self.url  = service.root + path
-        self.data = urllib.urlencode(params)
+        self.data = urllib.urlencode(encoded_params, True)
         self.view = view
         self.opener = service.opener
         self.cld = cld
@@ -549,6 +557,10 @@ class InterMineURLOpener(urllib.FancyURLopener):
             self.using_authentication = False
 
     def post_plain_text(self, url, body):
+        if isinstance(body, unicode):
+            body = body.encode('utf8')
+        elif isinstance(body, str):
+            body.decode('utf8')
         return self.post_content(url, body, InterMineURLOpener.PLAIN_TEXT)
 
     def post_content(self, url, body, mimetype, charset = "utf-8"):
