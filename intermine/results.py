@@ -565,8 +565,22 @@ class InterMineURLOpener(urllib.FancyURLopener):
             self.addheader("Authorization", base64string)
             self.plain_post_header["Authorization"] = base64string
             self.using_authentication = True
+        elif self.token is not None:
+            token_header = 'Token {}'.format(self.token)
+            self.addheader('Authorization', token_header)
+            self.plain_post_header['Authorization'] = token_header
+            self.using_authentication = True
         else:
             self.using_authentication = False
+
+    def clone(self):
+        clone = InterMineURLOpener()
+        clone.token = self.token
+        clone.plain_post_header = dict(self.plain_post_header.items())
+        clone.using_authentication = self.using_authentication
+        if self.using_authentication:
+            clone.addheader('Authorization', self.plain_post_header['Authorization'])
+        return clone
 
     def post_plain_text(self, url, body):
         if isinstance(body, unicode):

@@ -186,7 +186,7 @@ class Service(object):
     QUERY_LIST_UPLOAD_PATH = '/query/tolist'
     QUERY_LIST_APPEND_PATH = '/query/append/tolist'
     MODEL_PATH             = '/model'
-    TEMPLATES_PATH         = '/templates/xml'
+    TEMPLATES_PATH         = '/templates'
     TEMPLATEQUERY_PATH     = '/template/results'
     LIST_PATH              = '/lists'
     LIST_CREATION_PATH     = '/lists'
@@ -432,11 +432,19 @@ class Service(object):
         return t
 
     def _get_json(self, path, payload = None):
-        with closing(self.opener.open(self.root + path, payload)) as resp:
+        opener = self.opener.clone()
+        opener.addheader('Accept', 'application/json')
+        with closing(opener.open(self.root + path, payload)) as resp:
             data = json.loads(resp.read())
             if data['error'] is not None:
                 raise ServiceError(data['error'])
             return data
+
+    def _get_xml(self, path):
+        opener = self.opener.clone()
+        opener.addheader('Accept', 'application/xml')
+        with closing(opener.open(self.root + path)) as sock:
+            return minidom.parse(sock)
 
     def search(self, term, **facets):
         """
@@ -564,10 +572,8 @@ class Service(object):
 
         """
         if self._templates is None:
-            sock = self.opener.open(self.root + self.TEMPLATES_PATH)
-            dom = minidom.parse(sock)
-            sock.close()
             templates = {}
+            dom = self._get_xml(self.TEMPLATES_PATH)
             for e in dom.getElementsByTagName('template'):
                 name = e.getAttribute('name')
                 if name in templates:

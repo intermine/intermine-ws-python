@@ -127,6 +127,14 @@ class LiveResultsTest(unittest.TestCase):
         with self.assertRaises(WebserviceError):
             s.get_all_lists()
 
+    def test_templates(self):
+        names = self.SERVICE.templates.keys()
+        self.assertTrue(len(names))
+
+        t0 = self.SERVICE.get_template(names[0])
+        c = t0.count()
+        self.assertTrue(c)
+
 if __name__ == '__main__':
     unittest.main()
 
