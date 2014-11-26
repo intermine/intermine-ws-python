@@ -119,7 +119,7 @@ class LiveResultsTest(unittest.TestCase):
         s = self.SERVICE.register(username, password)
 
         self.assertEqual(s.root, self.SERVICE.root)
-        self.assertEqual([], s.get_all_lists())
+        self.assertEqual(2, len(s.get_all_lists()))
 
         drt = s.get_deregistration_token()
         s.deregister(drt)
