@@ -70,7 +70,7 @@ class TestCommand(Command):
 
        log.set_verbosity(self.verbose)
 
-       server = TestServer()
+       server = TestServer(daemonise = True, silent = (self.verbose < 1))
        server.start()
        WebserviceTest.TEST_PORT = server.port
 
@@ -87,8 +87,9 @@ class TestCommand(Command):
        self.announce("Test files:" + str(testfiles), level=2)
        tests = TestLoader().loadTestsFromNames(testfiles)
        t = TextTestRunner(verbosity = self.verbose)
-       t.run(tests)
-       exit()
+       result = t.run(tests)
+       failed, errored = map(len, (result.failures, result.errors))
+       exit(failed + errored)
 
 class PrintVersion(Command):
     user_options = []

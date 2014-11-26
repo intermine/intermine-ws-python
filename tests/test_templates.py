@@ -121,7 +121,7 @@ class TestTemplates(WebserviceTest): # pragma: no cover
             </template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "(A or B or D) and C")
-    
+
     def testTemplateConstraintParsing(self):
         """Should be able to parse template constraints"""
         t = self.service.get_template("UneditableConstraints")

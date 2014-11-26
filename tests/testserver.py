@@ -14,6 +14,7 @@ class SilentRequestHandler(SimpleHTTPRequestHandler): # pragma: no cover
     def translate_path(self, path):
         """Use the file's location instead of cwd"""
         # abandon query parameters
+        self.silent = SilentRequestHandler.silent
         path = path.split('?',1)[0]
         path = path.split('#',1)[0]
         path = posixpath.normpath(urllib.unquote(path))
