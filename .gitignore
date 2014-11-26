@@ -3,3 +3,8 @@ __pycache__
 bin
 dist
 .tox
+current-docs.zip
+intermine-docs-1.00.03.zip
+build
+docs
+MANIFEST
