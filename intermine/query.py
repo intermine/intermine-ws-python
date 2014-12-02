@@ -8,6 +8,11 @@ from intermine.model import Column, Class, Model, Reference, ConstraintNode
 
 import intermine.constraints as constraints
 
+try:
+    from functools import reduce
+except ImportError:
+    pass
+
 """
 Classes representing queries against webservices
 ================================================
@@ -456,8 +461,7 @@ class Query(object):
                     if node.nodeType == node.TEXT_NODE: texts.append(node.data)
                 values.append(' '.join(texts))
             if len(values) > 0: args["values"] = values
-            for k, v in args.items():
-                if v is None or v == '': del args[k]
+            args = dict((k, v) for k, v in args.items() if v is not None and v != '')
             if "loopPath" in args:
                 args["op"] = {
                     "=" : "IS",
@@ -470,7 +474,7 @@ class Query(object):
         def group(iterator, count):
             itr = iter(iterator)
             while True:
-                yield tuple([itr.next() for i in range(count)])
+                yield tuple([next(itr) for i in range(count)])
 
         if q.getAttribute('sortOrder') is not None:
             sos = Query.SO_SPLIT_PATTERN.split(q.getAttribute('sortOrder'))
@@ -643,9 +647,9 @@ class Query(object):
                         path = self.model.make_path(p, scd)
                         cd = path.end_class
                         add_f = lambda x: p + "." + x.name
-                        vs = [p + ".id"] if id_only and cd.has_id else map(add_f, cd.attributes)
+                        vs = [p + ".id"] if id_only and cd.has_id else [add_f(a) for a in cd.attributes]
                         next_level = level - 1
-                        rs_and_cs = cd.references + cd.collections
+                        rs_and_cs = list(cd.references) + list(cd.collections)
                         for r in rs_and_cs:
                             rp = add_f(r)
                             if next_level:

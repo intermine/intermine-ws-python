@@ -5,6 +5,11 @@ import logging
 
 from intermine.util import openAnything, ReadableException
 
+try:
+    from functools import reduce
+except ImportError:
+    pass
+
 logging.basicConfig()
 
 """
@@ -529,7 +534,7 @@ class ConstraintNode(ConstraintTree):
     def as_logic(self, codes = None, start = 'A'):
         if codes is None:
             codes = (chr(c) for c in range(ord(start), ord('Z')))
-        return codes.next()
+        return next(codes)
 
 class CodelessNode(ConstraintNode):
 

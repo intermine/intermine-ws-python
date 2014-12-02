@@ -1120,7 +1120,7 @@ class ConstraintFactory(object):
         @return: A single uppercase character
         @rtype: str
         """
-        return self._codes.next()
+        return next(self._codes)
 
     def make_constraint(self, *args, **kwargs):
         """
