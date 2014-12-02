@@ -8,7 +8,7 @@ from intermine.query import *
 from intermine.constraints import *
 from intermine.lists.list import List
 
-from testserver import TestServer
+from tests.server import TestServer
 
 class WebserviceTest(unittest.TestCase): # pragma: no cover
     TEST_PORT = 8000
@@ -28,7 +28,7 @@ class WebserviceTest(unittest.TestCase): # pragma: no cover
         if attempts < WebserviceTest.MAX_ATTEMPTS:
             try:
                 test()
-            except IOError, e:
+            except IOError as e:
                 self.do_unpredictable_test(test, attempts + 1, e)
             except:
                 e, t = sys.exc_info()[:2]
@@ -48,7 +48,7 @@ class TestInstantiation(WebserviceTest): # pragma: no cover
         try:
             bad_m = Model("foo")
             self.fail("No ModelParseError thrown at bad model xml")
-        except ModelParseError, ex:
+        except ModelParseError as ex:
             self.assertEqual(ex.message, "Error parsing model")
 
     def testMakeService(self):
@@ -79,13 +79,13 @@ class TestModel(WebserviceTest):# pragma: no cover
         try:
             self.model.get_class("Foo")
             self.fail("No ModelError thrown at non existent class")
-        except ModelError, ex:
+        except ModelError as ex:
             self.assertEqual(ex.message,
                     "'Foo' is not a class in this model")
         try:
             self.model.get_class("Employee.name")
             self.fail("No ModelError thrown at bad class retrieval")
-        except ModelError, ex:
+        except ModelError as ex:
             self.assertEqual(ex.message, "'Employee.name' is not a class")
 
     def testClassFields(self):
@@ -99,7 +99,7 @@ class TestModel(WebserviceTest):# pragma: no cover
         try:
             ceo.get_field("foo")
             self.fail("No ModelError thrown at non existent field")
-        except ModelError, ex:
+        except ModelError as ex:
             self.assertEqual(ex.message,
                 "There is no field called foo in CEO")
 
@@ -336,7 +336,7 @@ class TestQuery(WebserviceTest): # pragma: no cover
         try:
             self.q.add_view("Employee.name", "Employee.age", "Employee.department")
             self.fail("No ConstraintError thrown at non attribute view")
-        except ConstraintError, ex:
+        except ConstraintError as ex:
             self.assertEqual(ex.message, "'Employee.department' does not represent an attribute")
 
     def testIDOnlyExpansion(self):
@@ -506,7 +506,7 @@ class TestQuery(WebserviceTest): # pragma: no cover
         try:
             self.q.add_constraint('Foo', 'IS NULL')
             self.fail("No ModelError thrown at bad path name")
-        except ModelError, ex:
+        except ModelError as ex:
             self.assertEqual(ex.message, "'Foo' is not a class in this model")
 
     def testUnaryConstraints(self):
@@ -534,7 +534,7 @@ class TestQuery(WebserviceTest): # pragma: no cover
         try:
             self.q.add_constraint('Employee.department', '=', "foo")
             self.fail("No ConstraintError thrown for non attribute BinaryConstraint")
-        except ConstraintError, ex:
+        except ConstraintError as ex:
             self.assertEqual(ex.message, "'Employee.department' does not represent an attribute")
 
     def testAddBinaryConstraintsSugar(self):
@@ -548,7 +548,7 @@ class TestQuery(WebserviceTest): # pragma: no cover
         try:
             self.q.add_constraint(Employee.department == "foo")
             self.fail("No ConstraintError thrown for non attribute BinaryConstraint")
-        except ConstraintError, ex:
+        except ConstraintError as ex:
             self.assertEqual(ex.message, "'Employee.department' does not represent an attribute")
 
     def testTernaryConstraint(self):
@@ -559,7 +559,7 @@ class TestQuery(WebserviceTest): # pragma: no cover
         try:
             self.q.add_constraint('Employee.department.name', 'LOOKUP', "foo")
             self.fail("No ConstraintError thrown for non object TernaryConstraint")
-        except ConstraintError, ex:
+        except ConstraintError as ex:
             self.assertEqual(ex.message, "'Employee.department.name' does not represent a class, or a reference to a class")
 
     def testTernaryConstraintImpliedRoot(self):
@@ -635,12 +635,12 @@ class TestQuery(WebserviceTest): # pragma: no cover
         try:
            self.q.add_constraint('Department.company.CEO', 'Foo')
            self.fail("No ModelError raised by bad sub class")
-        except ModelError, ex:
+        except ModelError as ex:
             self.assertEqual(ex.message, "'Foo' is not a class in this model")
         try:
             self.q.add_constraint('Department.company.CEO', 'Manager')
             self.fail("No ConstraintError raised by bad subclass relationship")
-        except ConstraintError, ex:
+        except ConstraintError as ex:
             self.assertEqual(ex.message, "'Manager' is not a subclass of 'Department.company.CEO'")
 
     def testStringLogic(self):
@@ -1153,8 +1153,8 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
             {'Employee.age': False, 'Employee.id': None, 'Employee.name': True}
         ]
         def logic():
-            self.assertEqual(self.query.get_results_list("dict"), expected)
-            self.assertEqual(self.template.get_results_list("dict"), expected)
+            self.assertEqual(expected, self.query.get_results_list("dict"))
+            self.assertEqual(expected, self.template.get_results_list("dict"))
 
         self.do_unpredictable_test(logic)
 

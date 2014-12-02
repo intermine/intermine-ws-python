@@ -607,7 +607,7 @@ class Column(object):
                 branch = Column(str(self) + "." + name, self._model, self._subclasses, self._query, self)
                 self._branches[name] = branch
                 return branch
-            except ModelError, e:
+            except ModelError as e:
                 raise AttributeError(str(e))
         raise AttributeError("No attribute '" + name + "'")
 
@@ -788,7 +788,7 @@ class Model(object):
                     col = Collection(name, type_name, cl, linked_field_name)
                     cl.field_dict[name] = col
                 self.classes[class_name] = cl
-        except Exception, error:
+        except Exception as error:
             model_src = src if src is not None else source 
             raise ModelParseError("Error parsing model", model_src, error)
         finally:
@@ -930,7 +930,7 @@ class Model(object):
         try:
             self.parse_path_string(path_string, subclasses)
             return True
-        except PathParseError, e:
+        except PathParseError as e:
             raise PathParseError("Error parsing '%s' (subclasses: %s)"
                             % ( path_string, str(subclasses) ), e )
 

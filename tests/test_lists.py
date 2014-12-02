@@ -8,7 +8,7 @@ class TestLists(WebserviceTest): # pragma: no cover
 
     def setUp(self):
         self.service = Service(self.get_test_root())
-         
+
     def testGetLists(self):
         """Should be able to get lists from a service"""
         self.assertEqual(self.service.get_list_count(), 3)
@@ -50,4 +50,3 @@ class TestLists(WebserviceTest): # pragma: no cover
     def tearDown(self):
         s = self.service
         s.__del__()
-        

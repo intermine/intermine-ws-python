@@ -4,8 +4,16 @@ import os
 import posixpath
 import urllib
 from socket import socket
-from SimpleHTTPServer import SimpleHTTPRequestHandler
-from BaseHTTPServer import HTTPServer
+
+try:
+    from SimpleHTTPServer import SimpleHTTPRequestHandler
+except ImportError:
+    from http.server import SimpleHTTPRequestHandler
+
+try:
+    from BaseHTTPServer import HTTPServer
+except ImportError:
+    from http.server import HTTPServer
 
 class SilentRequestHandler(SimpleHTTPRequestHandler): # pragma: no cover
 

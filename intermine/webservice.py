@@ -1,9 +1,16 @@
 from xml.dom import minidom
 import urllib
-from urlparse import urlparse
 import base64
-import UserDict
 from contextlib import closing
+
+try:
+    from urlparse import urlparse
+    from UserDict import DictMixin
+    from urllib import urlopen
+except ImportError:
+    from urllib.parse import urlparse
+    from collections import MutableMapping as DictMixin
+    from urllib.request import urlopen
 
 #class UJsonLibDecoder(object): # pragma: no cover
 #    def __init__(self):
@@ -46,7 +53,7 @@ __organization__ = "InterMine"
 __license__ = "LGPL"
 __contact__ = "dev@intermine.org"
 
-class Registry(object, UserDict.DictMixin):
+class Registry(DictMixin):
     """
     A Class representing an InterMine registry.
     ===========================================
@@ -109,6 +116,12 @@ class Registry(object, UserDict.DictMixin):
 
     def __delitem__(self, name):
         raise NotImplementedError("You cannot remove items from a registry")
+
+    def __len__(self):
+        return len(self.__mine_dict)
+
+    def __iter__(self):
+        return iter(self.__mine_dict)
 
     def keys(self):
         return self.__mine_dict.keys()
@@ -266,7 +279,7 @@ class Service(object):
 
         try:
             self.version
-        except WebserviceError, e:
+        except WebserviceError as e:
             raise ServiceError("Could not validate service - is the root url (%s) correct? %s" % (root, e))
 
         if token and self.version < 6:
@@ -329,12 +342,15 @@ class Service(object):
 
         @rtype: int
         """
-        if self._version is None:
-            try:
-                url = self.root + self.VERSION_PATH
-                self._version = int(self.opener.open(url).read())
-            except ValueError, e:
-                raise ServiceError("Could not parse a valid webservice version: " + str(e))
+        try:
+            if self._version is None:
+                try:
+                    url = self.root + self.VERSION_PATH
+                    self._version = int(self.opener.open(url).read())
+                except ValueError as e:
+                    raise ServiceError("Could not parse a valid webservice version: " + str(e))
+        except AttributeError as e:
+            raise Exception(e)
         return self._version
 
     def resolve_service_path(self, variant):
@@ -360,7 +376,7 @@ class Service(object):
         @rtype: string
         """
         if self._release is None:
-            self._release = urllib.urlopen(self.root + self.RELEASE_PATH).read()
+            self._release = urlopen(self.root + self.RELEASE_PATH).read()
         return self._release
 
     def load_query(self, xml, root=None):

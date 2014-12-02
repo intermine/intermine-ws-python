@@ -926,7 +926,7 @@ class TemplateConstraint(object):
         if self.editable and self.optional:
             self.switched_on = True
         else:
-            raise ValueError, "This constraint is not switchable"
+            raise ValueError("This constraint is not switchable")
 
     def switch_off(self):
         """
@@ -938,7 +938,7 @@ class TemplateConstraint(object):
         if self.editable and self.optional:
             self.switched_on = False
         else:
-            raise ValueError, "This constraint is not switchable"
+            raise ValueError("This constraint is not switchable")
 
     def to_string(self):
         """
@@ -1137,7 +1137,7 @@ class ConstraintFactory(object):
                 if hasattr(c, "code") and c.code == "A":
                     c.code = self.get_next_code()
                 return c
-            except TypeError, e:
+            except TypeError as e:
                 pass
         raise TypeError("No matching constraint class found for "
             + str(args) + ", " + str(kwargs))

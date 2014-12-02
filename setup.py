@@ -3,6 +3,8 @@ The test and clean code is shamelessly stolen from
 http://da44en.wordpress.com/2002/11/22/using-distutils/
 """
 
+from __future__ import print_function
+
 import os
 import sys
 import time
@@ -48,48 +50,52 @@ by InterMine technology.
 }
 
 class TestCommand(Command):
-    user_options = [('verbose', 'v', "produce verbose output", 1)]
+    description = "Run unit tests"
+    user_options = [
+        ('verbose', 'v', "produce verbose output"),
+        ('testmodule=', 't', 'test module name')
+    ]
+    boolean_options = ['verbose']
 
     def initialize_options(self):
         self._dir = os.getcwd()
         self.test_prefix = 'test'
+        self.verbose = 0
+        self.testmodule = None
 
     def finalize_options(self):
-       args, obj = fancy_getopt(self.user_options, {}, None, None)
-       # Ugly as sin, but distutils forced me to do it :(
-       # All I wanted was this command to default to quiet...
-       if "--verbose" not in args and "-v" not in args:
-           self.verbose = 0
+        pass
 
     def run(self):
-       '''
-       Finds all the tests modules in tests/, and runs them, exiting after they are all done
-       '''
-       from tests.testserver import TestServer
-       from tests.test import WebserviceTest
+        '''
+        Finds all the tests modules in tests/, and runs them, exiting after they are all done
+        '''
+        from tests.server import TestServer
+        from tests.test import WebserviceTest
 
-       log.set_verbosity(self.verbose)
+        log.set_verbosity(self.verbose)
 
-       server = TestServer(daemonise = True, silent = (self.verbose < 1))
-       server.start()
-       WebserviceTest.TEST_PORT = server.port
+        testfiles = [ ]
+        if self.testmodule is None:
+            for t in glob(pjoin(self._dir, 'tests', self.test_prefix + '*.py')):
+                if not t.endswith('__init__.py'):
+                    testfiles.append('.'.join(['tests', splitext(basename(t))[0]]))
+        else:
+            testfiles.append(self.testmodule)
 
-       self.announce("Waiting for test server to start on port " + str(server.port), level=2)
-       time.sleep(1)
+        server = TestServer(daemonise = True, silent = (self.verbose < 2))
+        server.start()
+        WebserviceTest.TEST_PORT = server.port
 
-       testfiles = [ ]
-       for t in glob(pjoin(self._dir, 'tests', self.test_prefix + '*.py')):
-           if not t.endswith('__init__.py'):
-               testfiles.append('.'.join(
-                   ['tests', splitext(basename(t))[0]])
-               )
+        self.announce("Waiting for test server to start on port " + str(server.port), level=2)
+        time.sleep(1)
 
-       self.announce("Test files:" + str(testfiles), level=2)
-       tests = TestLoader().loadTestsFromNames(testfiles)
-       t = TextTestRunner(verbosity = self.verbose)
-       result = t.run(tests)
-       failed, errored = map(len, (result.failures, result.errors))
-       exit(failed + errored)
+        self.announce("Test files:" + str(testfiles), level=2)
+        tests = TestLoader().loadTestsFromNames(testfiles)
+        t = TextTestRunner(verbosity = self.verbose)
+        result = t.run(tests)
+        failed, errored = map(len, (result.failures, result.errors))
+        exit(failed + errored)
 
 class PrintVersion(Command):
     user_options = []
@@ -117,7 +123,7 @@ class CleanCommand(Command):
     Remove everything from build, including that
     directory, and all .pyc files
     """
-    user_options = [('verbose', 'v', "produce verbose output", 1)]
+    user_options = [('verbose', 'v', "produce verbose output")]
 
     def initialize_options(self):
         self._files_to_delete = [ ]
@@ -136,12 +142,10 @@ class CleanCommand(Command):
         self._dirs_to_delete.reverse()
         self._dirs_to_delete.append('build')
 
+        self.verbose = 0
+
     def finalize_options(self):
-        args, obj = fancy_getopt(self.user_options, {}, None, None)
-        # Ugly as sin, but distutils forced me to do it :(
-        # All I wanted was this command to default to quiet...
-        if "--verbose" not in args and "-v" not in args:
-            self.verbose = 0
+        fancy_getopt(self.user_options, {}, self, None)
 
     def run(self):
         for clean_me in self._files_to_delete:
@@ -176,8 +180,6 @@ extra = {
         'version': PrintVersion
     }
 }
-if sys.version_info >= (3,):
-    extra['use_2to3'] = True
 
 OPTIONS.update(extra)
 

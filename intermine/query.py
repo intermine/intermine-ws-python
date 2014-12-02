@@ -5,7 +5,8 @@ from xml.dom import minidom, getDOMImplementation
 from intermine.util import openAnything, ReadableException
 from intermine.pathfeatures import PathDescription, Join, SortOrder, SortOrderList
 from intermine.model import Column, Class, Model, Reference, ConstraintNode
-import constraints
+
+import intermine.constraints as constraints
 
 """
 Classes representing queries against webservices
@@ -20,6 +21,8 @@ __organization__ = "InterMine"
 __license__ = "LGPL"
 __contact__ = "dev@intermine.org"
 
+LOGIC_OPS = ["and", "or"]
+LOGIC_PRODUCT = [(x, y) for x in LOGIC_OPS for y in LOGIC_OPS]
 
 class Query(object):
     """
@@ -300,8 +303,6 @@ class Query(object):
     TRAILING_OP_PATTERN = re.compile("\s*(and|or)\s*$", re.I)
     LEADING_OP_PATTERN = re.compile("^\s*(and|or)\s*", re.I)
     ORPHANED_OP_PATTERN = re.compile("(?:\(\s*(?:and|or)\s*|\s*(?:and|or)\s*\))", re.I)
-    LOGIC_OPS = ["and", "or"]
-    LOGIC_PRODUCT = [(x, y) for x in LOGIC_OPS for y in LOGIC_OPS]
 
     def __init__(self, model, service=None, validate=True, root=None):
         """
@@ -506,7 +507,7 @@ class Query(object):
         logic = Query.LEADING_OP_PATTERN.sub("", logic)
         logic = Query.TRAILING_OP_PATTERN.sub("", logic)
         for x in range(2): # repeat, as this process can leave doubles
-            for left, right in Query.LOGIC_PRODUCT:
+            for left, right in LOGIC_PRODUCT:
                 if left == right:
                     repl = left
                 else:
@@ -520,7 +521,7 @@ class Query(object):
         try:
             if len(logic) > 0 and logic not in ["and", "or"]:
                 self.set_logic(logic)
-        except Exception, e:
+        except Exception as e:
             raise Exception("Error parsing logic string "
                 + repr(questionable_logic)
                 + " (which is " + repr(logic) + " after irrelevant codes have been removed)"
@@ -1432,8 +1433,7 @@ class Query(object):
         @see: L{intermine.query.Query.results}
 
         """
-        rows = self.results(*args, **kwargs)
-        return [r for r in rows]
+        return list(self.results(*args, **kwargs))
 
     def get_row_list(self, start=0, size=None):
         return self.get_results_list("rr", start, size)

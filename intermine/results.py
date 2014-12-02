@@ -8,20 +8,32 @@ except ImportError: # pragma: no cover
             + "please install simplejson or jsonlib to continue")
 
 import urllib
-import httplib
 import re
 import copy
 import base64
-from urlparse import urlparse
 from itertools import groupby
-import UserDict
+
+try:
+    # Python 2.x imports
+    from UserDict import UserDict
+    from urllib import urlencode
+    from urlparse import urlparse
+    import httplib
+    from urllib import FancyURLopener
+except ImportError:
+    # Python 3.x imports
+    from urllib.parse import urlencode
+    from urllib.parse import urlparse
+    from collections import UserDict
+    import http.client as httplib
+    from urllib.request import FancyURLopener
 
 from intermine.errors import WebserviceError
 from intermine.model import Attribute, Reference, Collection
 
 USER_AGENT = 'WebserviceInterMinePythonAPIClient'
 
-class EnrichmentLine(UserDict.UserDict):
+class EnrichmentLine(UserDict):
     """
     An object that represents a result returned from the enrichment service.
     ========================================================================
@@ -210,14 +222,9 @@ class ResultRow(object):
         """Return a list view of this row"""
         return [x for x in self.data]
 
-
     def to_d(self):
         """Return a dictionary view of this row"""
-        d = {}
-        for view in self.views:
-            d[view] = self[view]
-
-        return d
+        return dict(self.items())
 
     def items(self):
         return [(view, self[view]) for view in self.views]
@@ -339,7 +346,7 @@ class ResultIterator(object):
             params.update({"format" : rowformat})
 
         self.url  = service.root + path
-        self.data = urllib.urlencode(encode_dict(params), True)
+        self.data = urlencode(encode_dict(params), True)
         self.view = view
         self.opener = service.opener
         self.cld = cld
@@ -382,7 +389,7 @@ class ResultIterator(object):
                 "dict"        : lambda: JSONIterator(con, lambda x: self.row(x, self.view).to_d()),
                 "jsonobjects" : lambda: JSONIterator(con, lambda x: ResultObject(x, self.cld, self.view))
             }.get(self.rowformat)()
-        except Exception, e:
+        except Exception as e:
             raise Exception("Couldn't get iterator for "  + self.rowformat + str(e))
         return reader
 
@@ -459,6 +466,10 @@ class JSONIterator(object):
     def __iter__(self):
         return self
 
+    def __next__(self):
+        """2.6.x-3.x bridge"""
+        return self.next()
+
     def next(self):
         """Returns a parsed row of data"""
         if self._is_finished:
@@ -516,7 +527,7 @@ class JSONIterator(object):
                 if len(line) > 0:
                     try:
                         row = json.loads(line)
-                    except json.decoder.JSONDecodeError, e:
+                    except json.decoder.JSONDecodeError as e:
                         raise WebserviceError("Error parsing line from results: '"
                                 + line + "' - " + str(e))
                     next_row = self.parser(row)
@@ -534,9 +545,9 @@ def encode_headers(headers):
                  v.encode('ascii') if isinstance(v, unicode) else v) \
                  for k, v in headers.items())
 
-class InterMineURLOpener(urllib.FancyURLopener):
+class InterMineURLOpener(FancyURLopener):
     """
-    Specific implementation of urllib.FancyURLOpener for this client
+    Specific implementation of FancyURLopener for this client
     ================================================================
 
     Provides user agent and authentication headers, and handling of errors
@@ -554,14 +565,15 @@ class InterMineURLOpener(urllib.FancyURLopener):
 
         Return a new url-opener with the appropriate credentials
         """
-        urllib.FancyURLopener.__init__(self)
+        FancyURLopener.__init__(self)
         self.token = token
         self.plain_post_header = {
             "Content-Type": "text/plain; charset=utf-8",
             "UserAgent": USER_AGENT
         }
         if credentials and len(credentials) == 2:
-            base64string = 'Basic ' + base64.encodestring('%s:%s' % credentials)[:-1]
+            encoded = '{}:{}'.format(*credentials).encode('utf8')
+            base64string = 'Basic ' + str(base64.encodestring(encoded)[:-1])
             self.addheader("Authorization", base64string)
             self.plain_post_header["Authorization"] = base64string
             self.using_authentication = True
@@ -610,11 +622,11 @@ class InterMineURLOpener(urllib.FancyURLopener):
 
     def open(self, url, data=None):
         url = self.prepare_url(url)
-        return urllib.FancyURLopener.open(self, url, data)
+        return FancyURLopener.open(self, url, data)
 
     def prepare_url(self, url):
         if self.token:
-            token_param = urllib.urlencode(encode_dict(dict(token = self.token)))
+            token_param = urlencode(encode_dict(dict(token = self.token)))
             o = urlparse(url)
             if o.query:
                 url += "&" + token_param
