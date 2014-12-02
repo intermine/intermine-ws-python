@@ -1,5 +1,6 @@
 import time
 import unittest
+import logging
 import sys
 
 from intermine.model import *
@@ -10,10 +11,13 @@ from intermine.lists.list import List
 
 from tests.server import TestServer
 
+logging.basicConfig()
+
 class WebserviceTest(unittest.TestCase): # pragma: no cover
     TEST_PORT = 8000
     MAX_ATTEMPTS = 50
     maxDiff = None
+    LOG = logging.getLogger('WebserviceTest')
 
     def assertIsNotNone(self, expr, msg = None):
         try:
@@ -89,6 +93,14 @@ class TestModel(WebserviceTest):# pragma: no cover
             self.assertEqual(ex.message, "'Employee.name' is not a class")
 
     def testClassFields(self):
+        '''The classes should have the correct fields'''
+        cls = self.model.get_class("Bank")
+        for f in ["name", "debtors"]:
+            fd = cls.get_field(f)
+            self.assertEqual(fd.name, f)
+            self.assertTrue(isinstance(fd, Field))
+
+    def testInheritedClassFields(self):
         '''The classes should have the correct fields'''
         ceo = self.model.get_class("CEO")
         for f in ["name", "age", "seniority", "address", "department"]:

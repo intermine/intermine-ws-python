@@ -1,9 +1,15 @@
+try:
+    from urllib import urlopen
+    from StringIO import StringIO
+except ImportError:
+    from urllib.request import urlopen
+    from io import StringIO
+
 def openAnything(source):
     # Try to open with urllib (http, ftp, file url)
-    import urllib
     try:
-        return urllib.urlopen(source)
-    except (IOError, OSError):
+        return urlopen(source)
+    except (ValueError, IOError, OSError):
         pass
 
     try:
@@ -11,8 +17,7 @@ def openAnything(source):
     except (IOError, OSError):
         pass
 
-    import StringIO
-    return StringIO.StringIO(str(source))
+    return StringIO(str(source))
 
 class ReadableException(Exception):
     def __init__(self, message, cause=None):

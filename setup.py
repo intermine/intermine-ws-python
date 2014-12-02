@@ -8,6 +8,7 @@ from __future__ import print_function
 import os
 import sys
 import time
+import logging
 from distutils.core import Command, setup
 from distutils import log
 from distutils.fancy_getopt import fancy_getopt
@@ -74,6 +75,9 @@ class TestCommand(Command):
         from tests.test import WebserviceTest
 
         log.set_verbosity(self.verbose)
+        if self.verbose >= 2:
+            self.announce('Setting log level to DEBUG ({})'.format(logging.DEBUG), level = 2)
+            logging.basicConfig(level = logging.DEBUG)
 
         testfiles = [ ]
         if self.testmodule is None:
@@ -83,7 +87,7 @@ class TestCommand(Command):
         else:
             testfiles.append(self.testmodule)
 
-        server = TestServer(daemonise = True, silent = (self.verbose < 2))
+        server = TestServer(daemonise = True, silent = (self.verbose < 3))
         server.start()
         WebserviceTest.TEST_PORT = server.port
 

@@ -7,13 +7,12 @@ from socket import socket
 
 try:
     from SimpleHTTPServer import SimpleHTTPRequestHandler
+    from BaseHTTPServer import HTTPServer
+    from urllib import unquote
 except ImportError:
     from http.server import SimpleHTTPRequestHandler
-
-try:
-    from BaseHTTPServer import HTTPServer
-except ImportError:
     from http.server import HTTPServer
+    from urllib.parse import unquote
 
 class SilentRequestHandler(SimpleHTTPRequestHandler): # pragma: no cover
 
@@ -25,7 +24,7 @@ class SilentRequestHandler(SimpleHTTPRequestHandler): # pragma: no cover
         self.silent = SilentRequestHandler.silent
         path = path.split('?',1)[0]
         path = path.split('#',1)[0]
-        path = posixpath.normpath(urllib.unquote(path))
+        path = posixpath.normpath(unquote(path))
         words = path.split('/')
         words = filter(None, words)
         path = os.path.dirname(__file__)

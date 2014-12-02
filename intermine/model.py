@@ -1,8 +1,11 @@
 from xml.dom import minidom
 import weakref
 import re
+import logging
 
 from intermine.util import openAnything, ReadableException
+
+logging.basicConfig()
 
 """
 Classes representing the data model
@@ -712,6 +715,8 @@ class Model(object):
 
     NUMERIC_TYPES = frozenset(["int", "Integer", "float", "Float", "double", "Double", "long", "Long", "short", "Short"])
 
+    LOG = logging.getLogger('Model')
+
     def __init__(self, source, service=None):
         """
         Constructor
@@ -753,7 +758,10 @@ class Model(object):
         """
         try:
             io = openAnything(source)
-            src = ''.join(io.readlines())
+            src = io.read()
+            if hasattr(src, 'decode'): # Handle binary and text streams equally.
+                src = src.decode('utf8')
+            self.LOG.debug("model = [{}]".format(src))
             doc = minidom.parseString(src)
             for node in doc.getElementsByTagName('model'):
                 self.name = node.getAttribute('name')
@@ -766,30 +774,33 @@ class Model(object):
                 assert class_name, "Name not defined in" + c.toxml()
                 def strip_java_prefix(x):
                     return re.sub(r'.*\.', '', x)
-                parents = map(strip_java_prefix,
-                        c.getAttribute('extends').split(' '))
+                parents = [strip_java_prefix(p) for p in c.getAttribute('extends').split(' ') if len(p)]
                 interface = c.getAttribute('is-interface') == 'true'
-                cl =  Class(class_name, parents, self, interface)
+                cl = Class(class_name, parents, self, interface)
+                self.LOG.debug('Created {}'.format(cl.name))
                 for a in c.getElementsByTagName('attribute'):
                     name = a.getAttribute('name')
                     type_name = strip_java_prefix(a.getAttribute('type'))
                     at = Attribute(name, type_name, cl)
                     cl.field_dict[name] = at
+                    self.LOG.debug('set {}.{}'.format(cl.name, at.name))
                 for r in c.getElementsByTagName('reference'):
                     name = r.getAttribute('name')
                     type_name = r.getAttribute('referenced-type')
                     linked_field_name = r.getAttribute('reverse-reference')
                     ref = Reference(name, type_name, cl, linked_field_name)
                     cl.field_dict[name] = ref
+                    self.LOG.debug('set {}.{}'.format(cl.name, ref.name))
                 for co in c.getElementsByTagName('collection'):
                     name = co.getAttribute('name')
                     type_name = co.getAttribute('referenced-type')
                     linked_field_name = co.getAttribute('reverse-reference')
                     col = Collection(name, type_name, cl, linked_field_name)
                     cl.field_dict[name] = col
+                    self.LOG.debug('set {}.{}'.format(cl.name, col.name))
                 self.classes[class_name] = cl
         except Exception as error:
-            model_src = src if src is not None else source 
+            model_src = src if src is not None else source
             raise ModelParseError("Error parsing model", model_src, error)
         finally:
             if io is not None:
@@ -808,6 +819,7 @@ class Model(object):
         """
         for c in self.classes.values():
             c.parent_classes = self.to_ancestry(c)
+            self.LOG.debug("{0.name} < {0.parent_classes}".format(c))
             for pc in c.parent_classes:
                 c.field_dict.update(pc.field_dict)
             for f in c.fields:
@@ -828,10 +840,12 @@ class Model(object):
         @rtype: list(L{intermine.model.Class})
         """
         parents = cd.parents
+        self.LOG.debug('{} < {}'.format(cd.name, cd.parents))
         def defined(x): return x is not None # weeds out the java classes
         def to_class(x): return self.classes.get(x)
-        ancestry = filter(defined, map(to_class, parents))
+        ancestry = list(filter(defined, map(to_class, parents)))
         for ancestor in ancestry:
+            self.LOG.debug('{} is ancestor of {}'.format(ancestor, cd.name))
             ancestry.extend(self.to_ancestry(ancestor))
         return ancestry
 
