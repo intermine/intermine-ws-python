@@ -126,6 +126,12 @@ class Registry(DictMixin):
     def keys(self):
         return self.__mine_dict.keys()
 
+def ensure_str(stringlike):
+    if hasattr(stringlike, 'decode'):
+        return stringlike.decode('utf8')
+    else:
+        return str(stringlike)
+
 class Service(object):
     """
     A class representing connections to different InterMine WebServices
@@ -376,7 +382,7 @@ class Service(object):
         @rtype: string
         """
         if self._release is None:
-            self._release = urlopen(self.root + self.RELEASE_PATH).read()
+            self._release = ensure_str(urlopen(self.root + self.RELEASE_PATH).read()).strip()
         return self._release
 
     def load_query(self, xml, root=None):

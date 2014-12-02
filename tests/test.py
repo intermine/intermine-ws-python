@@ -139,7 +139,7 @@ class TestService(WebserviceTest): # pragma: no cover
 
     def testRelease(self):
         """The service should have a release"""
-        self.assertEqual(self.s.release, "FOO\n")
+        self.assertEqual(self.s.release, "FOO")
 
     def testQueryMaking(self):
         """The service should be able to make a query"""
