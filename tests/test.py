@@ -11,6 +11,8 @@ from intermine.lists.list import List
 
 from tests.server import TestServer
 
+P3K = sys.version_info >= (3,0)
+
 logging.basicConfig()
 
 class WebserviceTest(unittest.TestCase): # pragma: no cover
@@ -32,14 +34,16 @@ class WebserviceTest(unittest.TestCase): # pragma: no cover
         if attempts < WebserviceTest.MAX_ATTEMPTS:
             try:
                 test()
+                return
             except IOError as e:
                 self.do_unpredictable_test(test, attempts + 1, e)
             except:
-                e, t = sys.exc_info()[:2]
-                if 104 in t: # Handle connection reset errors
-                    self.do_unpredictable_test(test, attempts + 1, t)
-                else:
-                    raise
+                if not P3K: # Handle connection reset errors
+                    e, t = sys.exc_info()[:2]
+                    if 104 in t:
+                        self.do_unpredictable_test(test, attempts + 1, t)
+                        return
+                raise
         else:
             raise RuntimeError("Max error count reached - last error: " + str(error))
 
@@ -1143,6 +1147,7 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
                     count += 1
                     self.assertTrue(0 < count < 4)
                 count = 0
+                self.assertEqual({'Employee.name': 'foo', 'Employee.age': 'bar', 'Employee.id': 'baz'}, r.to_d())
                 self.assertEqual([("Employee.name", 'foo'), ("Employee.age", 'bar'), ("Employee.id", 'baz')], r.items())
                 for (k, v) in r.iteritems():
                     count += 1
@@ -1150,7 +1155,7 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
                 self.assertEqual([pair for pair in r.iteritems()], r.items())
                 self.assertEqual(r.keys(), self.query.views)
                 self.assertEqual(r.values(), r.to_l())
-                self.assertEqual(zip(r.values(), r.keys()), zip(r.itervalues(), r.iterkeys()))
+                self.assertEqual(list(zip(r.values(), r.keys())), list(zip(r.itervalues(), r.iterkeys())))
                 self.assertTrue(r.has_key("age"))
                 self.assertTrue(r.has_key("Employee.age"))
                 self.assertTrue(not r.has_key("Employee.foo"))

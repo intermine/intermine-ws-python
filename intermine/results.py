@@ -11,12 +11,19 @@ import urllib
 import re
 import copy
 import base64
+import sys
+import logging
 from itertools import groupby
+
+P3K = sys.version_info >= (3,0)
+
+logging.basicConfig()
 
 try:
     # Python 2.x imports
     from UserDict import UserDict
     from urllib import urlencode
+    from urllib2 import urlopen
     from urlparse import urlparse
     import httplib
     from urllib import FancyURLopener
@@ -24,14 +31,49 @@ except ImportError:
     # Python 3.x imports
     from urllib.parse import urlencode
     from urllib.parse import urlparse
+    from urllib.request import urlopen
     from collections import UserDict
     import http.client as httplib
     from urllib.request import FancyURLopener
+    import io
 
 from intermine.errors import WebserviceError
 from intermine.model import Attribute, Reference, Collection
 
-USER_AGENT = 'WebserviceInterMinePythonAPIClient'
+from intermine import VERSION
+
+class BufferedLineReader(object):
+
+    def __init__(self, resp):
+        self._buffer = []
+        self.resp = resp
+
+    def __getattr__(self, name):
+        """Delegate to the response"""
+        return getattr(self.resp, name)
+
+    def __iter__(self):
+        """This is an iterator"""
+        return self
+
+    def _next_line_from_buffer(self):
+        pass
+
+    def _fill_buffer(self):
+        pass
+
+    def __next__(self):
+        """Return the next available line"""
+        next_line_from_buffer = self._next_line_from_buffer()
+
+        if next_line_from_buffer is None:
+            self._fill_buffer()
+            next_line_from_buffer = self._next_line_from_buffer()
+
+        if next_line_from_buffer is None:
+            raise StopIteration
+
+        return next_line_from_buffer
 
 class EnrichmentLine(UserDict):
     """
@@ -271,20 +313,14 @@ class TableResultRow(ResultRow):
         """Return a list view of this row"""
         return map(lambda x: x["value"], self.data)
 
-def encode_dict(input_d):
-    output = {}
-    for k, v in input_d.iteritems():
-        if isinstance(k, unicode):
-            k = k.encode('utf8')
-        elif isinstance(k, str):
-            k.decode('utf8')
+def encode_str(s):
+    return s.encode('utf8') if hasattr(s, 'encode') else s
 
-        if isinstance(v, unicode):
-            v = v.encode('utf8')
-        elif isinstance(v, str):
-            v.decode('utf8')
-        output[k] = v
-    return output
+def decode_binary(b):
+    return b.decode('utf8') if hasattr(b, 'decode') else b
+
+def encode_dict(input_d):
+    return dict((encode_str(k), encode_str(v)) for k, v in input_d.items())
 
 class ResultIterator(object):
     """
@@ -358,7 +394,8 @@ class ResultIterator(object):
         Return the number of items in this iterator
         ===========================================
 
-        Note that this requires iterating over the full result set.
+        Note that this requires iterating over the full result set, making the
+        request in the process.
         """
         c = 0
         for x in self:
@@ -390,7 +427,7 @@ class ResultIterator(object):
                 "jsonobjects" : lambda: JSONIterator(con, lambda x: ResultObject(x, self.cld, self.view))
             }.get(self.rowformat)()
         except Exception as e:
-            raise Exception("Couldn't get iterator for "  + self.rowformat + str(e))
+            raise Exception("Couldn't get iterator for "  + self.rowformat)
         return reader
 
     def next(self):
@@ -433,7 +470,7 @@ class FlatFileIterator(object):
 
     def next(self):
         """Return a parsed line of data"""
-        line = self.connection.next().strip()
+        line = decode_binary(next(self.connection)).strip()
         if line.startswith("[ERROR]"):
             raise WebserviceError(line)
         return self.parser(line)
@@ -445,6 +482,8 @@ class JSONIterator(object):
 
     This iterator can be used as the sub iterator in a ResultIterator
     """
+
+    LOG = logging.getLogger('JSONIterator')
 
     def __init__(self, connection, parser):
         """
@@ -478,8 +517,9 @@ class JSONIterator(object):
 
     def parse_header(self):
         """Reads out the header information from the connection"""
+        self.LOG.debug('Connection = {}'.format(self.connection))
         try:
-            line = self.connection.next().strip()
+            line = decode_binary(next(self.connection)).strip()
             self.header += line
             if not line.endswith('"results":['):
                 self.parse_header()
@@ -516,7 +556,7 @@ class JSONIterator(object):
         """
         next_row = None
         try:
-            line = self.connection.next()
+            line = decode_binary(next(self.connection))
             if line.startswith("]"):
                 self.footer += line;
                 for otherline in self.connection:
@@ -552,7 +592,7 @@ class InterMineURLOpener(FancyURLopener):
 
     Provides user agent and authentication headers, and handling of errors
     """
-    version = "InterMine-Python-Client-1.07.01"
+    USER_AGENT = "InterMine-Client-{}/python-{}".format(VERSION, sys.version_info)
     PLAIN_TEXT = "text/plain"
     JSON = "application/json"
 
@@ -569,7 +609,7 @@ class InterMineURLOpener(FancyURLopener):
         self.token = token
         self.plain_post_header = {
             "Content-Type": "text/plain; charset=utf-8",
-            "UserAgent": USER_AGENT
+            "UserAgent": self.USER_AGENT
         }
         if credentials and len(credentials) == 2:
             encoded = '{}:{}'.format(*credentials).encode('utf8')
@@ -622,7 +662,8 @@ class InterMineURLOpener(FancyURLopener):
 
     def open(self, url, data=None):
         url = self.prepare_url(url)
-        return FancyURLopener.open(self, url, data)
+        buff = data if data is None else bytearray(data, 'utf8')
+        return urlopen(url, buff)
 
     def prepare_url(self, url):
         if self.token:

@@ -17,11 +17,13 @@ from glob import glob
 from os.path import splitext, basename, join as pjoin
 from warnings import warn
 
+from intermine import VERSION
+
 OPTIONS = {
     'name': "intermine",
     'packages': ["intermine", "intermine.lists"],
     'provides': ["intermine"],
-    'version': "1.09.04",
+    'version': VERSION,
     'description': "InterMine WebService client",
     'author': "Alex Kalderimis",
     'author_email': "dev@intermine.org",
