@@ -292,8 +292,8 @@ class List(object):
         try:
             ids = codecs.open(content, 'r', 'UTF-8').read()
         except (TypeError, IOError):
-            if isinstance(content, basestring):
-                ids = content
+            if hasattr(content, 'strip') and hasattr(content, 'encode'):
+                ids = content # probably a string.
             else:
                 try:
                     ids = "\n".join(map(lambda x: '"' + x + '"', iter(content)))

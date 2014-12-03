@@ -1378,9 +1378,9 @@ class Query(object):
         p = self.model.make_path(self.prefix_path(summary_path), self.get_subclass_dict())
         results = self.results(summary_path = summary_path, **kwargs)
         if p.end.type_name in Model.NUMERIC_TYPES:
-            return dict([ (k, float(v)) for k, v in results.next().iteritems()])
+            return dict((k, float(v)) for k, v in next(results).items())
         else:
-            return dict([ (r["item"], r["count"]) for r in results])
+            return dict((r["item"], r["count"]) for r in results)
 
     def one(self, row="jsonobjects"):
         """Return one result, and raise an error if the result size is not 1"""

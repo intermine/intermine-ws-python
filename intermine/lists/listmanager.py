@@ -13,6 +13,13 @@ try:
 except ImportError:
     import simplejson as json
 
+try:
+    # Python 2.x imports
+    from urllib import urlencode
+except ImportError:
+    # Python 3.x imports
+    from urllib.parse import urlencode
+
 import urllib
 import codecs
 
@@ -152,7 +159,7 @@ class ListManager(object):
         params["listName"] = name
         params["description"] = description
         params["tags"] = ";".join(tags)
-        form = urllib.urlencode(params)
+        form = urlencode(params)
         resp = self.service.opener.open(uri, form)
         data = resp.read()
         resp.close()
@@ -232,7 +239,7 @@ class ListManager(object):
         }
         if len(add): query_form['add'] = [x.lower() for x in add if x]
 
-        uri += "?" + urllib.urlencode(query_form, doseq = True)
+        uri += "?" + urlencode(query_form, doseq = True)
         data = self.service.opener.post_plain_text(uri, ids)
         return self.parse_list_upload_response(data)
 
@@ -241,7 +248,7 @@ class ListManager(object):
         Intepret the response from the webserver to a list request, and return the List it describes
         """
         try:
-            response_data = json.loads(response)
+            response_data = json.loads(response.decode('utf8'))
         except ValueError:
             raise ListServiceError("Error parsing response: " + response)
 
@@ -270,9 +277,9 @@ class ListManager(object):
             self.LOG.debug('deleting {0}'.format(name))
             uri = self.service.root + self.service.LIST_PATH
             query_form = {'name': name}
-            uri += "?" + urllib.urlencode(query_form)
+            uri += "?" + urlencode(query_form)
             response = self.service.opener.delete(uri)
-            response_data = json.loads(response)
+            response_data = json.loads(response.decode('utf8'))
             if not response_data.get("wasSuccessful"):
                 raise ListServiceError(response_data.get("error"))
         self.refresh_lists()
@@ -286,7 +293,7 @@ class ListManager(object):
         """
         uri = self.service.root + self.service.LIST_TAG_PATH
         form = {"name": to_remove_from.name, "tags": ";".join(tags)}
-        uri += "?" + urllib.urlencode(form)
+        uri += "?" + urlencode(form)
         body = self.service.opener.delete(uri)
         return self._body_to_json(body)["tags"]
 
@@ -299,7 +306,7 @@ class ListManager(object):
         """
         uri = self.service.root + self.service.LIST_TAG_PATH
         form = {"name": to_tag.name, "tags": ";".join(tags)}
-        resp = self.service.opener.open(uri, urllib.urlencode(form))
+        resp = self.service.opener.open(uri, urlencode(form))
         body = resp.read()
         resp.close()
         return self._body_to_json(body)["tags"]
@@ -313,7 +320,7 @@ class ListManager(object):
         """
         uri = self.service.root + self.service.LIST_TAG_PATH
         form = {"name": im_list.name}
-        uri += "?" + urllib.urlencode(form)
+        uri += "?" + urlencode(form)
         resp = self.service.opener.open(uri)
         body = resp.read()
         resp.close()
@@ -321,7 +328,7 @@ class ListManager(object):
 
     def _body_to_json(self, body):
         try:
-            data = json.loads(body)
+            data = json.loads(body.decode('utf8'))
         except ValueError:
             raise ListServiceError("Error parsing response: " + body)
         if not data.get("wasSuccessful"):
@@ -362,7 +369,7 @@ class ListManager(object):
         if name is None:
             name = self.get_unused_list_name()
         uri = self.service.root + self.SUBTRACTION_PATH
-        uri += '?' + urllib.urlencode({
+        uri += '?' + urlencode({
             "name": name,
             "description": description,
             "references": ';'.join(left_names),
@@ -381,7 +388,7 @@ class ListManager(object):
         if name is None:
             name = self.get_unused_list_name()
         uri = self.service.root + path
-        uri += '?' + urllib.urlencode({
+        uri += '?' + urlencode({
             "name": name,
             "lists": ';'.join(list_names),
             "description": description,

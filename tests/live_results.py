@@ -1,10 +1,20 @@
+from __future__ import unicode_literals
+
 import sys
 import os
+import uuid
 sys.path.insert(0, os.getcwd())
 
 import unittest
 from intermine.webservice import Service
 from intermine.errors import WebserviceError
+
+try:
+    from functools import reduce
+except ImportError:
+    pass # py3k import.
+
+PY3K = sys.version_info >= (3,0)
 
 class LiveResultsTest(unittest.TestCase):
 
@@ -25,12 +35,12 @@ class LiveResultsTest(unittest.TestCase):
             'Glynn Williams',
             'Neil Godwin',
             'Tatjana Berkel',
-            u'Sinan Tur\xe7ulu',
+            'Sinan Tur\xe7ulu',
             'Bernd Stromberg',
             'Timo Becker',
             'Dr. Stefan Heinemann',
             'Burkhardt Wutke',
-            u'Frank M\xf6llers',
+            'Frank M\xf6llers',
             'Charles Miner',
             'Michael Scott',
             'Angela',
@@ -39,7 +49,7 @@ class LiveResultsTest(unittest.TestCase):
             'Juliette Lebrac',
             'Gilles Triquet',
             'Jacques Plagnol Jacques',
-            u'Didier Legu\xe9lec',
+            'Didier Legu\xe9lec',
             'Joel Liotard',
             "Bwa'h Ha Ha",
             'Quote Leader',
@@ -101,9 +111,18 @@ class LiveResultsTest(unittest.TestCase):
         self.assertEqual(expected_sum, sum(map(lambda x: x[0]["value"], q.results(row="jsonrows"))))
 
         import csv
-        csvReader = csv.reader(q.results(row="csv"), delimiter=",", quotechar='"')
+        if PY3K: # string handling differences
+            tab = '\t'
+            comma = ','
+            quote = '"'
+        else:
+            tab = b'\t'
+            comma = b','
+            quote = b'"'
+
+        csvReader = csv.reader(q.results(row="csv"), delimiter= comma, quotechar= quote)
         self.assertEqual(expected_sum, sum(map(lambda x: int(x[0]), csvReader)))
-        tsvReader = csv.reader(q.results(row="tsv"), delimiter="\t")
+        tsvReader = csv.reader(q.results(row="tsv"), delimiter= tab)
         self.assertEqual(expected_sum, sum(map(lambda x: int(x[0]), tsvReader)))
 
     def testModelClassAutoloading(self):
@@ -122,7 +141,7 @@ class LiveResultsTest(unittest.TestCase):
         self.assertEqual('Sales', res[0]['fields']['name'])
 
     def test_user_registration(self):
-        username = 'mayfly@noreply.intermine.org'
+        username = 'mayfly-{0}@noreply.intermine.org'.format(uuid.uuid4())
         password = 'yolo'
         try:
             s = Service(self.SERVICE.root, username, password)
@@ -144,9 +163,9 @@ class LiveResultsTest(unittest.TestCase):
         names = self.SERVICE.templates.keys()
         self.assertTrue(len(names))
 
-        t0 = self.SERVICE.get_template(names[0])
+        t0 = self.SERVICE.get_template('CEO_Rivals')
         c = t0.count()
-        self.assertTrue(c)
+        self.assertTrue(c, msg = "{0.name} should return some results".format(t0))
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import os
 import sys
 import logging
@@ -40,7 +42,7 @@ class LiveListTest(unittest.TestCase):
     CAROL = [62, '3', True, 'Carol']
     GARETH = [61, '8', True, 'Gareth Keenan']
     DAVID = [41, None, False, 'David Brent']
-    FRANK = [44, None, False, u'Frank M\xf6llers']
+    FRANK = [44, None, False, 'Frank M\xf6llers']
     JULIETTE = [71, None, False, 'Juliette Lebrac']
     BWAH_HA = [74, None, False, "Bwa'h Ha Ha"]
 
@@ -535,7 +537,7 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE;
 
         favs = s.l('My-Favourite-Employees')
-        enriched_contractors = map(lambda x: x.identifier, favs.calculate_enrichment('contractor_enrichment', maxp = 1.0))
+        enriched_contractors = [x.identifier for x in favs.calculate_enrichment('contractor_enrichment', maxp = 1.0)]
         self.assertEqual(enriched_contractors, ['Vikram'])
 
     def tearDown(self):
@@ -548,7 +550,7 @@ class LiveListTest(unittest.TestCase):
         self.assertEqual(self.SERVICE.get_list_count(), self.initialListCount)
 
 class LiveListTestWithTokens(LiveListTest):
-    SERVICE = Service(LiveListTest.TEST_ROOT, token=u"test-user-token")
+    SERVICE = Service(LiveListTest.TEST_ROOT, token="test-user-token")
 
 if __name__ == '__main__':
     unittest.main()

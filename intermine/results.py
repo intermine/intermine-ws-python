@@ -399,6 +399,10 @@ class ResultIterator(object):
             raise Exception("Couldn't get iterator for "  + self.rowformat)
         return reader
 
+    def __next__(self):
+        """2.x to 3.x bridge"""
+        return self.next()
+
     def next(self):
         """
         Returns the next row, in the appropriate format
@@ -581,7 +585,7 @@ class InterMineURLOpener(object):
         self.token = token
         if credentials and len(credentials) == 2:
             encoded = '{0}:{1}'.format(*credentials).encode('utf8')
-            base64string = 'Basic ' + str(base64.encodestring(encoded)[:-1])
+            base64string = 'Basic {0}'.format(base64.encodestring(encoded)[:-1].decode('ascii'))
             self.auth_header = base64string
             self.using_authentication = True
         elif self.token is not None:
@@ -701,7 +705,8 @@ class InterMineURLOpener(object):
         content = fp.read()
         fp.close()
         if self.using_authentication:
-            raise WebserviceError("Insufficient permissions", errcode, errmsg, content)
+            auth = self.auth_header
+            raise WebserviceError("Insufficient permissions - {0}".format(auth), errcode, errmsg, content)
         else:
             raise WebserviceError("No permissions - not logged in", errcode, errmsg, content)
 

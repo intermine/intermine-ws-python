@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from xml.dom import minidom
 import urllib
 import base64
@@ -7,8 +9,10 @@ try:
     from urlparse import urlparse
     from UserDict import DictMixin
     from urllib import urlopen
+    from urllib import urlencode
 except ImportError:
     from urllib.parse import urlparse
+    from urllib.parse import urlencode
     from collections import MutableMapping as DictMixin
     from urllib.request import urlopen
 
@@ -447,7 +451,7 @@ class Service(object):
     def _get_json(self, path, payload = None):
         headers = {'Accept': 'application/json'}
         with closing(self.opener.open(self.root + path, payload, headers = headers)) as resp:
-            data = json.loads(resp.read())
+            data = json.loads(ensure_str(resp.read()))
             if data['error'] is not None:
                 raise ServiceError(data['error'])
             return data
@@ -471,14 +475,14 @@ class Service(object):
 
         @return (list, dict) The results, and a dictionary of facetting informtation.
         """
-        if isinstance(term, unicode):
+        if hasattr(term, 'encode'):
             term = term.encode('utf8')
         params = [('q', term)]
-        for facet, value in facets.iteritems():
-            if isinstance(value, unicode):
+        for facet, value in facets.items():
+            if hasattr(value, 'encode'):
                 value = value.encode('utf8')
-            params.append(("facet_" + str(facet), value))
-        payload = urllib.urlencode(params, doseq = True)
+            params.append(("facet_{0}".format(facet), value))
+        payload = urlencode(params, doseq = True)
         resp = self._get_json(self.SEARCH_PATH, payload = payload)
         return (resp['results'], resp['facets'])
 
@@ -649,11 +653,9 @@ class Service(object):
 
         @return {Service} an authenticated service.
         """
-        if isinstance(username, unicode):
-            username = username.encode('utf8')
-        if isinstance(password, unicode):
-            password = password.encode('utf8')
-        payload = urllib.urlencode({'name': username, 'password': password})
+        username = bytearray(username, 'utf8')
+        password = bytearray(password, 'utf8')
+        payload = urlencode({'name': username, 'password': password})
         registrar = Service(self.root)
         resp = registrar._get_json(self.USERS_PATH, payload = payload)
         token = resp['user']['temporaryToken']
@@ -663,7 +665,7 @@ class Service(object):
     def get_deregistration_token(self, validity = 300):
         if validity < 1 or validity > 24 * 60 * 60:
             raise ValueError("Validity not a reasonable value: 1ms - 2hrs")
-        params = urllib.urlencode({'validity': str(validity)})
+        params = urlencode({'validity': str(validity)})
         resp = self._get_json('/user/deregistration', payload = params)
         return resp['token']
 
@@ -679,12 +681,10 @@ class Service(object):
         """
         if 'uuid' in deregistration_token:
             deregistration_token = deregistration_token['uuid']
-        if isinstance(deregistration_token, unicode):
-            deregistration_token = deregistration_token.encode('utf8')
 
         path = self.root + '/user'
         params = {'deregistrationToken': deregistration_token, 'format': 'xml'}
-        uri = path + '?' + urllib.urlencode(params)
+        uri = path + '?' + urlencode(params)
         self.flush()
         userdata = self.opener.delete(uri)
         return userdata
