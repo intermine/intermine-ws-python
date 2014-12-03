@@ -1165,7 +1165,7 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
     def testResultsDict(self):
         """Should be able to get results as one dictionary per row"""
         expected = [
-            {'Employee.age': u'bar', 'Employee.id': u'baz', 'Employee.name': u'foo'},
+            {'Employee.age': 'bar', 'Employee.id': 'baz', 'Employee.name': 'foo'},
             {'Employee.age': 1.23, 'Employee.id': -1.23, 'Employee.name': 123},
             {'Employee.age': False, 'Employee.id': None, 'Employee.name': True}
         ]
@@ -1175,7 +1175,7 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
 
         self.do_unpredictable_test(logic)
 
-class MinimalResultsTest(TestQueryResults):
+class TestMinimalResults(TestQueryResults):
 
     PATH = "/testservice/legacyjsonrows"
 

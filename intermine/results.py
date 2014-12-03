@@ -14,6 +14,7 @@ import base64
 import sys
 import logging
 from itertools import groupby
+from contextlib import closing
 
 P3K = sys.version_info >= (3,0)
 
@@ -24,56 +25,24 @@ try:
     from UserDict import UserDict
     from urllib import urlencode
     from urllib2 import urlopen
+    from urllib2 import HTTPError
+    from urllib2 import Request
     from urlparse import urlparse
     import httplib
-    from urllib import FancyURLopener
 except ImportError:
     # Python 3.x imports
     from urllib.parse import urlencode
     from urllib.parse import urlparse
     from urllib.request import urlopen
+    from urllib.request import Request
+    from urllib.error import HTTPError
     from collections import UserDict
     import http.client as httplib
-    from urllib.request import FancyURLopener
-    import io
 
 from intermine.errors import WebserviceError
 from intermine.model import Attribute, Reference, Collection
 
 from intermine import VERSION
-
-class BufferedLineReader(object):
-
-    def __init__(self, resp):
-        self._buffer = []
-        self.resp = resp
-
-    def __getattr__(self, name):
-        """Delegate to the response"""
-        return getattr(self.resp, name)
-
-    def __iter__(self):
-        """This is an iterator"""
-        return self
-
-    def _next_line_from_buffer(self):
-        pass
-
-    def _fill_buffer(self):
-        pass
-
-    def __next__(self):
-        """Return the next available line"""
-        next_line_from_buffer = self._next_line_from_buffer()
-
-        if next_line_from_buffer is None:
-            self._fill_buffer()
-            next_line_from_buffer = self._next_line_from_buffer()
-
-        if next_line_from_buffer is None:
-            raise StopIteration
-
-        return next_line_from_buffer
 
 class EnrichmentLine(UserDict):
     """
@@ -158,7 +127,7 @@ class ResultObject(object):
                 if data is None:
                     attr = []
                 else:
-                    attr = map(lambda x: ResultObject(x, fld.type_class, ref_paths), data)
+                    attr = [ResultObject(x, fld.type_class, ref_paths) for x in data]
             else:
                 if data is None:
                     attr = None
@@ -468,6 +437,10 @@ class FlatFileIterator(object):
     def __iter__(self):
         return self
 
+    def __next__(self):
+        """2.x to 3.x bridge"""
+        return self.next()
+
     def next(self):
         """Return a parsed line of data"""
         line = decode_binary(next(self.connection)).strip()
@@ -517,7 +490,7 @@ class JSONIterator(object):
 
     def parse_header(self):
         """Reads out the header information from the connection"""
-        self.LOG.debug('Connection = {}'.format(self.connection))
+        self.LOG.debug('Connection = {0}'.format(self.connection))
         try:
             line = decode_binary(next(self.connection)).strip()
             self.header += line
@@ -585,14 +558,14 @@ def encode_headers(headers):
                  v.encode('ascii') if isinstance(v, unicode) else v) \
                  for k, v in headers.items())
 
-class InterMineURLOpener(FancyURLopener):
+class InterMineURLOpener(object):
     """
     Specific implementation of FancyURLopener for this client
     ================================================================
 
     Provides user agent and authentication headers, and handling of errors
     """
-    USER_AGENT = "InterMine-Client-{}/python-{}".format(VERSION, sys.version_info)
+    USER_AGENT = "InterMine-Client-{0}/python-{1}".format(VERSION, sys.version_info)
     PLAIN_TEXT = "text/plain"
     JSON = "application/json"
 
@@ -605,22 +578,15 @@ class InterMineURLOpener(FancyURLopener):
 
         Return a new url-opener with the appropriate credentials
         """
-        FancyURLopener.__init__(self)
         self.token = token
-        self.plain_post_header = {
-            "Content-Type": "text/plain; charset=utf-8",
-            "UserAgent": self.USER_AGENT
-        }
         if credentials and len(credentials) == 2:
-            encoded = '{}:{}'.format(*credentials).encode('utf8')
+            encoded = '{0}:{1}'.format(*credentials).encode('utf8')
             base64string = 'Basic ' + str(base64.encodestring(encoded)[:-1])
-            self.addheader("Authorization", base64string)
-            self.plain_post_header["Authorization"] = base64string
+            self.auth_header = base64string
             self.using_authentication = True
         elif self.token is not None:
-            token_header = 'Token {}'.format(self.token)
-            self.addheader('Authorization', token_header)
-            self.plain_post_header['Authorization'] = token_header
+            token_header = 'Token {0}'.format(self.token)
+            self.auth_header = token_header
             self.using_authentication = True
         else:
             self.using_authentication = False
@@ -628,44 +594,61 @@ class InterMineURLOpener(FancyURLopener):
     def clone(self):
         clone = InterMineURLOpener()
         clone.token = self.token
-        clone.plain_post_header = dict(self.plain_post_header.items())
         clone.using_authentication = self.using_authentication
         if self.using_authentication:
-            clone.addheader('Authorization', self.plain_post_header['Authorization'])
+            clone.auth_header = self.auth_header
         return clone
 
+    def headers(self, content_type = None, accept = None):
+        h = {'UserAgent': self.USER_AGENT}
+        if self.using_authentication:
+            h['Authorization'] = self.auth_header
+        if content_type is not None:
+            h['Content-Type'] = content_type
+        if accept is not None:
+            h['Accept'] = accept
+        return h
+
     def post_plain_text(self, url, body):
-        if isinstance(body, unicode):
-            body = body.encode('utf8')
-        elif isinstance(body, str):
-            body.decode('utf8')
         return self.post_content(url, body, InterMineURLOpener.PLAIN_TEXT)
 
     def post_content(self, url, body, mimetype, charset = "utf-8"):
-        headers = {
-            "Content-Type": "%s; charset=%s" % (mimetype, charset),
-            "UserAgent": USER_AGENT
-        }
-        if self.using_authentication:
-            headers['Authorization'] = self.plain_post_header['Authorization']
+        content_type = "{0}; charset={1}".format(mimetype, charset)
 
-        url = self.prepare_url(url)
-        o = urlparse(url)
-        con = httplib.HTTPConnection(o.hostname, o.port)
-        con.request('POST', url, body, encode_headers(headers))
-        resp = con.getresponse()
-        content = resp.read()
-        con.close()
-        if resp.status != 200:
-            raise WebserviceError(resp.status, resp.reason, content)
-        return content
+        with closing(self.open(url, body, {'Content-Type': content_type})) as f:
+            return f.read()
 
-    def open(self, url, data=None):
+    def open(self, url, data=None, headers = None, method = None):
         url = self.prepare_url(url)
         buff = data if data is None else bytearray(data, 'utf8')
-        return urlopen(url, buff)
+        hs = self.headers()
+        if headers is not None:
+            hs.update(headers)
+        req = Request(url, buff, headers = hs)
+        if method is not None:
+            req.get_method = lambda: method
+        try:
+            return urlopen(req)
+        except HTTPError as e:
+            args = (url, e, e.code, # The next two lines are python2.6 workarounds
+                    e.reason if hasattr(e, 'reason') else None,
+                    e.headers if hasattr(e, 'headers') else None)
+            handler = {
+                    400: self.http_error_400,
+                    401: self.http_error_401,
+                    403: self.http_error_403,
+                    404: self.http_error_404,
+                    500: self.http_error_500
+                    }.get(e.code, self.http_error_default)
+            handler(*args)
+
+    def read(self, url, data = None):
+        with closing(self.open(url, data)) as conn:
+            content = conn.read()
+            return decode_binary(content)
 
     def prepare_url(self, url):
+        # Generally unnecessary these days - will be deprecated one of these days.
         if self.token:
             token_param = urlencode(encode_dict(dict(token = self.token)))
             o = urlparse(url)
@@ -677,16 +660,8 @@ class InterMineURLOpener(FancyURLopener):
         return url
 
     def delete(self, url):
-        url = self.prepare_url(url)
-        o = urlparse(url)
-        con = httplib.HTTPConnection(o.hostname, o.port)
-        con.request('DELETE', url, None, self.plain_post_header)
-        resp = con.getresponse()
-        content = resp.read()
-        con.close()
-        if resp.status != 200:
-            raise WebserviceError(resp.status, resp.reason, content)
-        return content
+        with closing(self.open(url, method = 'DELETE')) as f:
+            return f.read()
 
     def http_error_default(self, url, fp, errcode, errmsg, headers):
         """Re-implementation of http_error_default, with content now supplied by default"""
@@ -770,6 +745,7 @@ class InterMineURLOpener(FancyURLopener):
         except:
             message = content
         raise WebserviceError("Missing resource", errcode, errmsg, message)
+
     def http_error_500(self, url, fp, errcode, errmsg, headers, data=None):
         """
         Handle 500 HTTP errors, attempting to return informative error messages

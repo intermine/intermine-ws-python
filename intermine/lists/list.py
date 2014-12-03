@@ -1,5 +1,14 @@
 import weakref
-import urllib
+import logging
+
+import codecs
+
+try:
+    # Python 2.x imports
+    from urllib import urlencode
+except ImportError:
+    # Python 3.x imports
+    from urllib.parse import urlencode
 
 from intermine.results import JSONIterator, EnrichmentLine
 from intermine.model import ConstraintNode
@@ -65,6 +74,8 @@ class List(object):
 
     """
 
+    LOG = logging.getLogger('List')
+
     def __init__(self, **args):
         """
         Constructor
@@ -74,6 +85,7 @@ class List(object):
         fetched from a service or constructed using the "create_list"
         method.
         """
+        self.LOG.debug(args)
         try:
             self._service = args["service"]
             self._manager = weakref.proxy(args["manager"])
@@ -151,7 +163,7 @@ class List(object):
             "oldname": self._name,
             "newname": new_name
         }
-        uri += "?" + urllib.urlencode(params)
+        uri += "?" + urlencode(params)
         resp = self._service.opener.open(uri)
         data = resp.read()
         resp.close()
@@ -278,7 +290,7 @@ class List(object):
         data = None
 
         try:
-            ids = open(content).read()
+            ids = codecs.open(content, 'r', 'UTF-8').read()
         except (TypeError, IOError):
             if isinstance(content, basestring):
                 ids = content
@@ -291,14 +303,14 @@ class List(object):
                     params = content.to_query_params()
                     params["listName"] = name
                     params["path"] = None
-                    form = urllib.urlencode(params)
+                    form = urlencode(params)
                     resp = self._service.opener.open(uri, form)
                     data = resp.read()
 
         if data is None:
             uri = self._service.root + self._service.LIST_APPENDING_PATH
             query_form = {'name': name}
-            uri += "?" + urllib.urlencode(query_form)
+            uri += "?" + urlencode(query_form)
             data = self._service.opener.post_plain_text(uri, ids)
 
         new_list = self._manager.parse_list_upload_response(data)
@@ -343,7 +355,7 @@ class List(object):
             if self._service.version < 11:
                 raise ServiceError("This service does not support custom background populations")
             params["population"] = background
-        form = urllib.urlencode(params)
+        form = urlencode(params)
         uri = self._service.root + self._service.LIST_ENRICHMENT_PATH
         resp = self._service.opener.open(uri, form)
         return JSONIterator(resp, EnrichmentLine)

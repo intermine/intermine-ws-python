@@ -12,15 +12,6 @@ except ImportError:
     from collections import MutableMapping as DictMixin
     from urllib.request import urlopen
 
-#class UJsonLibDecoder(object): # pragma: no cover
-#    def __init__(self):
-#        self.loads = ujson.decode
-#
-# Use core json for 2.6+, simplejson for <=2.5
-#try:
-#    import ujson
-#    json = UJsonLibDecoder()
-#except ImportError: # pragma: no cover
 try:
     import simplejson as json # Prefer this as it is faster
 except ImportError: # pragma: no cover
@@ -454,18 +445,16 @@ class Service(object):
         return t
 
     def _get_json(self, path, payload = None):
-        opener = self.opener.clone()
-        opener.addheader('Accept', 'application/json')
-        with closing(opener.open(self.root + path, payload)) as resp:
+        headers = {'Accept': 'application/json'}
+        with closing(self.opener.open(self.root + path, payload, headers = headers)) as resp:
             data = json.loads(resp.read())
             if data['error'] is not None:
                 raise ServiceError(data['error'])
             return data
 
     def _get_xml(self, path):
-        opener = self.opener.clone()
-        opener.addheader('Accept', 'application/xml')
-        with closing(opener.open(self.root + path)) as sock:
+        headers = {'Accept': 'application/xml'}
+        with closing(self.opener.open(self.root + path, headers = headers)) as sock:
             return minidom.parse(sock)
 
     def search(self, term, **facets):

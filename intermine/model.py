@@ -766,7 +766,7 @@ class Model(object):
             src = io.read()
             if hasattr(src, 'decode'): # Handle binary and text streams equally.
                 src = src.decode('utf8')
-            self.LOG.debug("model = [{}]".format(src))
+            self.LOG.debug("model = [{0}]".format(src))
             doc = minidom.parseString(src)
             for node in doc.getElementsByTagName('model'):
                 self.name = node.getAttribute('name')
@@ -782,27 +782,27 @@ class Model(object):
                 parents = [strip_java_prefix(p) for p in c.getAttribute('extends').split(' ') if len(p)]
                 interface = c.getAttribute('is-interface') == 'true'
                 cl = Class(class_name, parents, self, interface)
-                self.LOG.debug('Created {}'.format(cl.name))
+                self.LOG.debug('Created {0}'.format(cl.name))
                 for a in c.getElementsByTagName('attribute'):
                     name = a.getAttribute('name')
                     type_name = strip_java_prefix(a.getAttribute('type'))
                     at = Attribute(name, type_name, cl)
                     cl.field_dict[name] = at
-                    self.LOG.debug('set {}.{}'.format(cl.name, at.name))
+                    self.LOG.debug('set {0}.{1}'.format(cl.name, at.name))
                 for r in c.getElementsByTagName('reference'):
                     name = r.getAttribute('name')
                     type_name = r.getAttribute('referenced-type')
                     linked_field_name = r.getAttribute('reverse-reference')
                     ref = Reference(name, type_name, cl, linked_field_name)
                     cl.field_dict[name] = ref
-                    self.LOG.debug('set {}.{}'.format(cl.name, ref.name))
+                    self.LOG.debug('set {0}.{1}'.format(cl.name, ref.name))
                 for co in c.getElementsByTagName('collection'):
                     name = co.getAttribute('name')
                     type_name = co.getAttribute('referenced-type')
                     linked_field_name = co.getAttribute('reverse-reference')
                     col = Collection(name, type_name, cl, linked_field_name)
                     cl.field_dict[name] = col
-                    self.LOG.debug('set {}.{}'.format(cl.name, col.name))
+                    self.LOG.debug('set {0}.{1}'.format(cl.name, col.name))
                 self.classes[class_name] = cl
         except Exception as error:
             model_src = src if src is not None else source
@@ -845,12 +845,12 @@ class Model(object):
         @rtype: list(L{intermine.model.Class})
         """
         parents = cd.parents
-        self.LOG.debug('{} < {}'.format(cd.name, cd.parents))
+        self.LOG.debug('{0} < {1}'.format(cd.name, cd.parents))
         def defined(x): return x is not None # weeds out the java classes
         def to_class(x): return self.classes.get(x)
         ancestry = list(filter(defined, map(to_class, parents)))
         for ancestor in ancestry:
-            self.LOG.debug('{} is ancestor of {}'.format(ancestor, cd.name))
+            self.LOG.debug('{0} is ancestor of {1}'.format(ancestor, cd.name))
             ancestry.extend(self.to_ancestry(ancestor))
         return ancestry
 

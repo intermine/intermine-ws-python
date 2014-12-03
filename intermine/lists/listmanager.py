@@ -1,4 +1,11 @@
+from __future__ import unicode_literals
+
 import weakref
+import sys
+import logging
+
+from functools import partial
+from contextlib import closing
 
 # Use core json for 2.6+, simplejson for <=2.5
 try:
@@ -11,6 +18,16 @@ import codecs
 
 from intermine.errors import WebserviceError
 from intermine.lists.list import List
+
+P3K = sys.version_info >= (3,0)
+
+logging.basicConfig()
+
+def safe_key(maybe_unicode):
+    if P3K:
+        return maybe_unicode # that is fine
+
+    return maybe_unicode.decode('utf8')
 
 class ListManager(object):
     """
@@ -30,7 +47,8 @@ class ListManager(object):
     and are confident that these will not conflict.
     """
 
-    DEFAULT_LIST_NAME = "my_list_"
+    LOG = logging.getLogger('listmanager')
+    DEFAULT_LIST_NAME = "my_list"
     DEFAULT_DESCRIPTION = "List created with Python client library"
 
     INTERSECTION_PATH = '/lists/intersect/json'
@@ -47,10 +65,9 @@ class ListManager(object):
         """Update the list information with the latest details from the server"""
         self.lists = {}
         url = self.service.root + self.service.LIST_PATH
-        sock = self.service.opener.open(url)
-        data = sock.read()
-        sock.close()
+        data = self.service.opener.read(url)
         list_info = json.loads(data)
+        self.LOG.debug("LIST INFO: {0}".format(list_info))
         if not list_info.get("wasSuccessful"):
             raise ListServiceError(list_info.get("error"))
         for l in list_info["lists"]:
@@ -61,7 +78,7 @@ class ListManager(object):
     def safe_dict(d):
         """Recursively clone json structure with UTF-8 dictionary keys"""
         if isinstance(d, dict):
-            return dict([(k.encode('utf-8'), v) for k,v in d.iteritems()])
+            return dict((safe_key(k), v) for k, v in d.items())
         else:
             return d
 
@@ -105,12 +122,15 @@ class ListManager(object):
         The list name is only guaranteed to be unused at the time
         of allocation.
         """
+        self.refresh_lists()
         list_names = self.get_all_list_names()
+        self.LOG.debug("CURRENT LIST NAMES: {0}".format(list_names))
         counter = 1
-        name = self.DEFAULT_LIST_NAME + str(counter)
+        get_name = partial('{0}_{1}'.format, self.DEFAULT_LIST_NAME)
+        name = get_name(counter)
         while name in list_names:
             counter += 1
-            name = self.DEFAULT_LIST_NAME + str(counter)
+            name = get_name(counter)
         self._temp_lists.add(name)
         return name
 
@@ -188,7 +208,7 @@ class ListManager(object):
             ids = content.read() # File like thing
         except AttributeError:
             try:
-                with open(content) as c: # File name
+                with closing(codecs.open(content, 'r', 'UTF-8')) as c: # File name
                     ids = c.read()
             except (TypeError, IOError):
                 try:
@@ -198,7 +218,8 @@ class ListManager(object):
                         return self._create_list_from_queryable(content, name, description, tags)
                     except AttributeError:
                         try: # Array of idents
-                            ids = "\n".join(map(lambda x: u'"{0}"'.format(x), iter(content)))
+                            idents = iter(content)
+                            ids = "\n".join(map('"{0}"'.format, idents))
                         except AttributeError:
                             raise TypeError("Cannot create list from " + repr(content))
 
@@ -223,8 +244,11 @@ class ListManager(object):
             response_data = json.loads(response)
         except ValueError:
             raise ListServiceError("Error parsing response: " + response)
+
         if not response_data.get("wasSuccessful"):
             raise ListServiceError(response_data.get("error"))
+
+        self.LOG.debug("response data: {0}".format(response_data))
         self.refresh_lists()
         new_list = self.get_list(response_data["listName"])
         failed_matches = response_data.get("unmatchedIdentifiers")
@@ -233,6 +257,7 @@ class ListManager(object):
 
     def delete_lists(self, lists):
         """Delete the given lists from the webserver"""
+        self.refresh_lists()
         all_names = self.get_all_list_names()
         for l in lists:
             if isinstance(l, List):
@@ -240,7 +265,9 @@ class ListManager(object):
             else:
                 name = str(l)
             if name not in all_names:
+                self.LOG.debug('{0} does not exist - skipping'.format(name))
                 continue
+            self.LOG.debug('deleting {0}'.format(name))
             uri = self.service.root + self.service.LIST_PATH
             query_form = {'name': name}
             uri += "?" + urllib.urlencode(query_form)
@@ -305,6 +332,7 @@ class ListManager(object):
         return self
 
     def __exit__(self, exc_type, exc_val, traceback):
+        self.LOG.debug("Exiting context - deleting {0}".format(self._temp_lists))
         self.delete_temporary_lists()
 
     def delete_temporary_lists(self):

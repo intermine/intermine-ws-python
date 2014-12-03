@@ -8,12 +8,7 @@ except ImportError:
     import simplejson as json
 
 def get_json(service, path, key):
-    sock = None
-    try:
-        sock = service.opener.open(service.root + path)
-        text = sock.read()
-    finally:
-        if sock: sock.close()
+    text = service.opener.read(service.root + path)
     data = json.loads(text)
     if data['error'] is not None:
         raise Exception(data['error'])

@@ -1713,8 +1713,7 @@ class Template(Query):
         interesting. This property returns this subset of constraints
         that have the editable flag set to true.
         """
-        isEditable = lambda x: x.editable
-        return filter(isEditable, self.constraints)
+        return [c for c in self.constraints if c.editable]
 
     def to_query_params(self):
         """

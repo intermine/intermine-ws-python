@@ -1,38 +1,53 @@
 import unittest
-from test import WebserviceTest
+import sys
 
 from intermine.webservice import *
 from intermine.query import Template
 from intermine.constraints import TemplateConstraint
+
+from tests.test_core import WebserviceTest
+
+P3K = sys.version_info >= (3,0)
 
 class TestTemplates(WebserviceTest): # pragma: no cover
 
     def setUp(self):
         self.service = Service(self.get_test_root())
 
+    def testGetTemplatesLength(self):
+        """Should be able to see how many templates there are"""
+        self.assertEqual(len(self.service.templates), 12)
+
     def testGetTemplate(self):
         """Should be able to get a template from the webservice, if it exists, and get its results"""
-        self.assertEqual(len(self.service.templates), 12)
         t = self.service.get_template("MultiValueConstraints")
         self.assertTrue(isinstance(t, Template))
-        expected = "[<TemplateMultiConstraint: Employee.name ONE OF [u'Dick', u'Jane', u'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
-        self.assertEqual(t.editable_constraints.__repr__(), expected)
-        expected = [[u'foo', u'bar', u'baz'], [123, 1.23, -1.23], [True, False, None]] 
-        attempts = 0
-        def do_tests(error=None):
+        if P3K:
+            expected = "[<TemplateMultiConstraint: Employee.name ONE OF ['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
+        else:
+            expected = "[<TemplateMultiConstraint: Employee.name ONE OF [u'Dick', u'Jane', u'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
+        self.assertEqual(repr(list(t.editable_constraints)), expected)
+
+    def testGetTemplateResults(self):
+        """Should be able to get a template from the webservice, if it exists, and get its results"""
+        t = self.service.get_template("MultiValueConstraints")
+        expected = [['foo', 'bar', 'baz'], [123, 1.23, -1.23], [True, False, None]]
+        def do_tests(error=None, attempts = 0):
             if attempts < 5:
                 try:
                     self.assertEqual(t.get_results_list("list"), expected)
-                except IOError, e:
-                    do_tests(e)
+                except IOError as e:
+                    do_tests(e, attempts + 1)
             else:
                 raise RuntimeError("Error connecting to " + self.query.service.root, error)
-
         do_tests()
+
+    def testNonExistantTemplate(self):
+        """Should not be able to get templates that don't exist"""
         try:
             self.service.get_template("Non_Existant")
             self.fail("No ServiceError raised by non-existant template")
-        except ServiceError, ex:
+        except ServiceError as ex:
             self.assertEqual(ex.message, "There is no template called 'Non_Existant' at this service")
 
     def testIrrelevantSO(self):

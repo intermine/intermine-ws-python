@@ -1,8 +1,9 @@
 import unittest
-from test import WebserviceTest
 
 from intermine.webservice import *
 from intermine.lists.list import List
+
+from tests.test_core import WebserviceTest
 
 class TestLists(WebserviceTest): # pragma: no cover
 

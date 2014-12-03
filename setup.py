@@ -62,7 +62,7 @@ class TestCommand(Command):
 
     def initialize_options(self):
         self._dir = os.getcwd()
-        self.test_prefix = 'test'
+        self.test_prefix = 'test_'
         self.verbose = 0
         self.testmodule = None
 
@@ -74,11 +74,11 @@ class TestCommand(Command):
         Finds all the tests modules in tests/, and runs them, exiting after they are all done
         '''
         from tests.server import TestServer
-        from tests.test import WebserviceTest
+        from tests.test_core import WebserviceTest
 
         log.set_verbosity(self.verbose)
         if self.verbose >= 2:
-            self.announce('Setting log level to DEBUG ({})'.format(logging.DEBUG), level = 2)
+            self.announce('Setting log level to DEBUG ({0})'.format(logging.DEBUG), level = 2)
             logging.basicConfig(level = logging.DEBUG)
 
         testfiles = [ ]

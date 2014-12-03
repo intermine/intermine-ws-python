@@ -49,6 +49,20 @@ class LiveResultsTest(unittest.TestCase):
 
         self.assertEqual(expected, managers)
 
+    def assertIsNotNone(self, *args, **kwargs):
+        if hasattr(unittest.TestCase, 'assertIsNotNone'): # py2.6 workaround
+            return unittest.TestCase.assertIsNotNone(self, *args, **kwargs)
+        thing = args[0]
+        if thing is None:
+            raise Exception("It is None")
+
+    def assertIsNone(self, *args, **kwargs):
+        if hasattr(unittest.TestCase, 'assertIsNone'): # py2.6 workaround
+            return unittest.TestCase.assertIsNone(self, *args, **kwargs)
+        thing = args[0]
+        if thing is not None:
+            raise Exception("{0} is not None".format(thing))
+
     def testLazyReferenceFetching(self):
         dave = self.SERVICE.select("Employee.*").where(name = "David Brent").one()
         self.assertEqual("Sales", dave.department.name)
@@ -124,8 +138,7 @@ class LiveResultsTest(unittest.TestCase):
         drt = s.get_deregistration_token()
         s.deregister(drt)
 
-        with self.assertRaises(WebserviceError):
-            s.get_all_lists()
+        self.assertRaises(WebserviceError, s.get_all_lists)
 
     def test_templates(self):
         names = self.SERVICE.templates.keys()
