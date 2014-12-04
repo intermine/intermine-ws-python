@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import sys
 import os
 import uuid
+import csv
 sys.path.insert(0, os.getcwd())
 
 import unittest
@@ -16,15 +17,30 @@ except ImportError:
 
 PY3K = sys.version_info >= (3,0)
 
+def unicode_csv_reader(data, **kwargs):
+    """Only needed in py2.x"""
+    reader = csv.reader(utf_8_encoder(data), **kwargs)
+    for row in reader:
+        # Decode back.
+        yield [cell.decode('utf-8') for cell in row]
+
+def utf_8_encoder(unicode_data):
+    for line in unicode_data:
+        yield line.encode('utf-8')
+
 class LiveResultsTest(unittest.TestCase):
 
     TEST_ROOT = os.getenv("TESTMODEL_URL", "http://localhost/intermine-test/service")
 
     SERVICE = Service(TEST_ROOT)
 
+    def setUp(self):
+        self.manager_q = self.SERVICE.select('Manager.age', 'Manager.name')
+        self.manager_age_sum = 1383
+
     def testLazyReferenceFetching(self):
-        results = self.SERVICE.select("Department.*").results()
-        managers = map(lambda x: x.manager.name, results)
+        departments = self.SERVICE.select("Department.*").results()
+        managers = [d.manager.name for d in departments]
         expected = [
             'EmployeeA1',
             'EmployeeB1',
@@ -91,39 +107,50 @@ class LiveResultsTest(unittest.TestCase):
         banks = self.SERVICE.select("Bank.*").results()
         self.assertEqual([1, 0, 0, 2, 2], [len(bank.corporateCustomers) for bank in banks])
 
-    def testAllFormats(self):
-        q = self.SERVICE.select("Manager.age")
+    def assertManagerAgeIsSum(self, fmt, accessor):
+        total = sum(accessor(x) for x in self.manager_q.results(row = fmt))
+        self.assertEqual(self.manager_age_sum, total)
 
-        expected_sum = 1383
+    def test_attr_access(self):
+        for synonym in ['object', 'objects', 'jsonobjects']:
+            self.assertManagerAgeIsSum(synonym, lambda row: row.age)
 
-        self.assertEqual(expected_sum, sum(map(lambda x: x.age, q.results(row="object"))))
-        self.assertEqual(expected_sum, sum(map(lambda x: x.age, q.results(row="objects"))))
-        self.assertEqual(expected_sum, sum(map(lambda x: x.age, q.results(row="jsonobjects"))))
+    def test_rr_indexed_access(self):
+        self.assertManagerAgeIsSum('rr', lambda row: row['age'])
+        self.assertManagerAgeIsSum('rr', lambda row: row[0])
 
-        self.assertEqual(expected_sum, sum(map(lambda x: x["age"], q.results(row="rr"))))
-        self.assertEqual(expected_sum, sum(map(lambda x: x[0], q.results(row="rr"))))
-        self.assertEqual(expected_sum, sum(map(lambda x: x("age"), q.results(row="rr"))))
-        self.assertEqual(expected_sum, sum(map(lambda x: x(0), q.results(row="rr"))))
+    def test_row_as_function(self):
+        self.assertManagerAgeIsSum('rr', lambda row: row('age'))
+        self.assertManagerAgeIsSum('rr', lambda row: row(0))
 
-        self.assertEqual(expected_sum, sum(map(lambda x: x["Manager.age"], q.results(row="dict"))))
-        self.assertEqual(expected_sum, sum(map(lambda x: x[0], q.results(row="list"))))
+    def test_dict_row(self):
+        self.assertManagerAgeIsSum('dict', lambda row: row['Manager.age'])
 
-        self.assertEqual(expected_sum, sum(map(lambda x: x[0]["value"], q.results(row="jsonrows"))))
+    def test_list_row(self):
+        self.assertManagerAgeIsSum('list', lambda row: row[0])
 
-        import csv
+    def test_json_rows(self):
+        self.assertManagerAgeIsSum('jsonrows', lambda row: row[0]['value'])
+
+    def test_csv(self):
         if PY3K: # string handling differences
-            tab = '\t'
-            comma = ','
-            quote = '"'
+            parse = lambda data: csv.reader(data, delimiter = ',', quotechar = '"')
         else:
-            tab = b'\t'
-            comma = b','
-            quote = b'"'
+            parse = lambda data: unicode_csv_reader(data, delimiter = b',', quotechar = b'"')
 
-        csvReader = csv.reader(q.results(row="csv"), delimiter= comma, quotechar= quote)
-        self.assertEqual(expected_sum, sum(map(lambda x: int(x[0]), csvReader)))
-        tsvReader = csv.reader(q.results(row="tsv"), delimiter= tab)
-        self.assertEqual(expected_sum, sum(map(lambda x: int(x[0]), tsvReader)))
+        results = self.manager_q.results(row = 'csv')
+        reader = parse(results)
+        self.assertEqual(self.manager_age_sum, sum(int(row[0]) for row in reader))
+
+    def test_tsv(self):
+        if PY3K: # string handling differences
+            parse = lambda data: csv.reader(data, delimiter = '\t')
+        else:
+            parse = lambda data: unicode_csv_reader(data, delimiter = b'\t')
+
+        results = self.manager_q.results(row = 'tsv')
+        reader = parse(results)
+        self.assertEqual(self.manager_age_sum, sum(int(row[0]) for row in reader))
 
     def testModelClassAutoloading(self):
         q = self.SERVICE.model.Manager.select("name", "age")
