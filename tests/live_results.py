@@ -164,7 +164,7 @@ class LiveResultsTest(unittest.TestCase):
 
     def testSearchFacets(self):
         res, facs = self.SERVICE.search('david')
-        self.assertIn('Manager', facs['Category'])
+        self.assertTrue('Manager' in facs['Category'])
         self.assertEqual(1, facs['Category']['Manager'])
 
     def testSearchWithFacet(self):
