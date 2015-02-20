@@ -158,11 +158,16 @@ class LiveResultsTest(unittest.TestCase):
 
         self.assertEqual(expected_sum, sum(map(lambda x: x.age, q.results(row="object"))))
 
-    def testSearch(self):
+    def testSearchRes(self):
         res, facs = self.SERVICE.search('david')
         self.assertEqual(2, len(res))
+
+    def testSearchFacets(self):
+        res, facs = self.SERVICE.search('david')
+        self.assertIn('Manager', facs['Category'])
         self.assertEqual(1, facs['Category']['Manager'])
 
+    def testSearchWithFacet(self):
         res, facs = self.SERVICE.search('david', Category = 'Department')
         self.assertEqual(1, len(res))
         self.assertEqual('Sales', res[0]['fields']['name'])

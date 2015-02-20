@@ -334,6 +334,48 @@ class Class(object):
                 return True
         return False
 
+class ComposedClass(Class):
+    """
+    An abstraction of dynamic objects that are in two classes
+    ==========================================================
+
+    These objects are structural unions of two or more different data-types.
+    """
+
+    def __init__(self, parts, model):
+        self.is_interface = True
+        self.parts = parts
+        self.model = weakref.proxy(model)
+
+    @property
+    def parents(self):
+        return reduce(lambda ps, cls: ps + cls.parents, self.parts, [])
+
+    @property
+    def name(self):
+        return '_'.join(c.name for c in self.parts)
+
+    @property
+    def has_id(self):
+        return "Object" not in self.parents
+
+    @property
+    def field_dict(self):
+        """The combined field dictionary of all parts"""
+        fields = {}
+        if self.has_id:
+            # All InterMineObject classes have an id attribute.
+            fields["id"] = Attribute("id", "Integer", self)
+        for p in self.parts:
+            fields.update(p.field_dict)
+        return fields
+
+    @property
+    def parent_classes(self):
+        """The flattened list of parent classes, with the parts"""
+        all_parents = [pc for pc in p.parent_classes for p in self.parts]
+        return all_parents + self.parts
+
 
 class Path(object):
     """
@@ -896,13 +938,17 @@ class Model(object):
 
         @rtype: L{intermine.model.Class}
         """
-        if name.find(".") != -1:
+        if name.find(',') != -1:
+            names = name.split(',')
+            classes = [self.get_class(n) for n in names]
+            return ComposedClass(classes, self)
+        elif name.find(".") != -1:
             path = self.make_path(name)
             if path.is_attribute():
                 raise ModelError("'" + str(path) + "' is not a class")
             else:
                 return path.get_class()
-        if name in self.classes:
+        elif name in self.classes:
           return self.classes[name]
         else:
           raise ModelError("'" + name + "' is not a class in this model")

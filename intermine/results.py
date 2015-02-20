@@ -90,7 +90,13 @@ class ResultObject(object):
         self.selected_attributes = [v for v in stripped if "." not in v]
         self.reference_paths = dict(((k, list(i)) for k, i in groupby(stripped, lambda x: x[:x.find(".") + 1])))
         self._data = data
-        self._cld = cld if "class" not in data or cld.name == data["class"] else cld.model.get_class(data["class"])
+        # Make sure this object has the most specific class desc. possible
+        class_name = data['class']
+        if "class" not in data or cld.name == class_name:
+            self._cld = cld
+        else: # this could be a composed class - behave accordingly.
+            self._cld = cld.model.get_class(class_name)
+
         self._attr_cache = {}
 
     def __str__(self):
