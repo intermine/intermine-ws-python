@@ -14,13 +14,14 @@ use of InterMine datawarehouses (ie. Biologists)
 and who want a quicker, more automated way 
 to perform queries. Some examples of sites that
 are powered by InterMine software, and thus offer
-a compatible webservice API are:
+a compatible webservice API, are:
 
 * FlyMine
-* MetabolicMine
-* modMine
+* HumanMine
+* MouseMine
 * RatMine
 * YeastMine
+* ZebrafishMine
 
 Queries here refer to database queries over the 
 integrated datawarehouse. Instead of using 
@@ -80,7 +81,7 @@ Also see:
 License:
 --------
 
-All InterMine code is freely available under the LGPL license: http://www.gnu.org/licenses/lgpl.html 
+All InterMine code is freely available under the LGPL license: http://www.gnu.org/licenses/lgpl.html. Client libraries are also available under the BSD licence: https://opensource.org/licenses/bsd-license.php.
 
 Changes:
 --------
