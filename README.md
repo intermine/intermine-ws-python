@@ -3,8 +3,8 @@ The InterMine Python Webservice Client
 
 [![Build Status][badge]][ci]
 
-> An implementation of a webservice client 
-> for InterMine webservices, written in Python
+An implementation of a webservice client 
+for InterMine webservices, written in Python
 
 Who should use this software?
 -----------------------------
