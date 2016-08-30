@@ -81,7 +81,7 @@ Also see:
 License:
 --------
 
-All InterMine code is freely available under the LGPL license: http://www.gnu.org/licenses/lgpl.html. Client libraries are also available under the BSD licence: https://opensource.org/licenses/bsd-license.php.
+All code in this project is dual licensed under the LGPL version 3 license and the BSD 2-clause license
 
 Changes:
 --------
