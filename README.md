@@ -113,7 +113,7 @@ Changes:
     1.01.00  Added widget listing requests.
     1.05.00  Allowed constraints to be added on root paths implicitly, eg:
                 q.where('LOOKUP', 'eve') or q.where('IN', 'My List')
-    1.06.00  Provide ListManagers as context managers, where users need to create
+    1.07.00  Provide ListManagers as context managers, where users need to create
             temporary lists and clean up after themselves.
             Added ID resolution.
 
