@@ -116,6 +116,7 @@ Changes:
     1.07.00  Provide ListManagers as context managers, where users need to create
             temporary lists and clean up after themselves.
             Added ID resolution.
+    1.09.06  Dual license under BSD as well as LGPL
 
 [badge]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py.svg?branch=master
 [ci]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py
