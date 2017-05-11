@@ -29,6 +29,10 @@ SQL, InterMine services use a flexible and
 powerful sub-set of database query language
 to enable wide-ranging and arbitrary queries.
 
+Requirements
+------------
+This package is compatible with both Python 2.7 and 3.x.  It may be compatible with older versions of Python 2 but this is untested.
+
 Downloading:
 ------------
 
@@ -117,6 +121,7 @@ Changes:
             temporary lists and clean up after themselves.
             Added ID resolution.
     1.09.06  Dual license under BSD as well as LGPL
+    1.09.08  Add Python 3 support
 
 [badge]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py.svg?branch=master
 [ci]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py

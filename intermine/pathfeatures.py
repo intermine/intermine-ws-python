@@ -112,8 +112,11 @@ class SortOrderList(object):
         return len(self.sort_orders) == 0
     def __len__(self):
         return len(self.sort_orders)
+    def __next__(self):
+        """2.x to 3.x bridge"""
+        return self.next()
     def next(self):
-        return self.sort_orders.next()
+        return next(self.sort_orders)
     def __iter__(self):
         return iter(self.sort_orders)
 

@@ -963,7 +963,7 @@ class TemplateConstraint(object):
         """
         c_args = {}
         t_args = {}
-        for k, v in args.items():
+        for k, v in list(args.items()):
             if k == "editable":
                 t_args[k] = v == "true"
             elif k == "optional":

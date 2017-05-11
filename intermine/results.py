@@ -62,7 +62,7 @@ class EnrichmentLine(UserDict):
     def __getattr__(self, name):
         if name is not None:
             key_name = name.replace('_', '-')
-            if key_name in self.keys():
+            if key_name in list(self.keys()):
                 return self.data[key_name]
         raise AttributeError(name)
 
@@ -101,12 +101,12 @@ class ResultObject(object):
 
     def __str__(self):
         dont_show = set(["objectId", "class"])
-        return "%s(%s)" % (self._cld.name, ",  ".join("%s = %r" % (k, v) for k, v in self._data.items()
+        return "%s(%s)" % (self._cld.name, ",  ".join("%s = %r" % (k, v) for k, v in list(self._data.items())
             if not isinstance(v, dict) and not isinstance(v, list) and k not in dont_show))
 
     def __repr__(self):
         dont_show = set(["objectId", "class"])
-        return "%s(%s)" % (self._cld.name, ", ".join("%s = %r" % (k, getattr(self, k)) for k in self._data.keys()
+        return "%s(%s)" % (self._cld.name, ", ".join("%s = %r" % (k, getattr(self, k)) for k in list(self._data.keys())
             if k not in dont_show))
 
     def __getattr__(self, name):
@@ -241,7 +241,7 @@ class ResultRow(object):
 
     def to_d(self):
         """Return a dictionary view of this row"""
-        return dict(self.items())
+        return dict(list(self.items()))
 
     def items(self):
         return [(view, self[view]) for view in self.views]
@@ -278,15 +278,14 @@ class TableResultRow(ResultRow):
         if isinstance(key, int):
             return self.data[key]["value"]
         elif isinstance(key, slice):
-            vals = map(lambda x: x["value"], self.data[key])
-            return vals
+            return [x["value"] for x in self.data[key]]
         else:
             index = self._get_index_for(key)
             return self.data[index]["value"]
 
     def to_l(self):
         """Return a list view of this row"""
-        return map(lambda x: x["value"], self.data)
+        return [x["value"] for x in self.data]
 
 def encode_str(s):
     return s.encode('utf8') if hasattr(s, 'encode') else s
@@ -295,7 +294,7 @@ def decode_binary(b):
     return b.decode('utf8') if hasattr(b, 'decode') else b
 
 def encode_dict(input_d):
-    return dict((encode_str(k), encode_str(v)) for k, v in input_d.items())
+    return dict((encode_str(k), encode_str(v)) for k, v in list(input_d.items()))
 
 class ResultIterator(object):
     """
@@ -566,7 +565,7 @@ class JSONIterator(object):
 def encode_headers(headers):
     return dict((k.encode('ascii') if isinstance(k, unicode) else k, \
                  v.encode('ascii') if isinstance(v, unicode) else v) \
-                 for k, v in headers.items())
+                 for k, v in list(headers.items()))
 
 class InterMineURLOpener(object):
     """

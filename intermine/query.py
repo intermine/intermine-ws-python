@@ -461,7 +461,7 @@ class Query(object):
                     if node.nodeType == node.TEXT_NODE: texts.append(node.data)
                 values.append(' '.join(texts))
             if len(values) > 0: args["values"] = values
-            args = dict((k, v) for k, v in args.items() if v is not None and v != '')
+            args = dict((k, v) for k, v in list(args.items()) if v is not None and v != '')
             if "loopPath" in args:
                 args["op"] = {
                     "=" : "IS",
@@ -635,7 +635,7 @@ class Query(object):
             else:
                 views.extend(re.split("(?:,?\s+|,)", str(p)))
 
-        views = map(self.prefix_path, views)
+        views = list(map(self.prefix_path, views))
 
         views_to_add = []
         for view in views:
@@ -750,7 +750,7 @@ class Query(object):
                     con = args[0]
         else:
             if len(args) == 0 and len(kwargs) == 1:
-                k, v = kwargs.items()[0]
+                k, v = list(kwargs.items())[0]
                 d = {"path": k}
                 if v in constraints.UnaryConstraint.OPS:
                     d["op"] = v
@@ -796,7 +796,7 @@ class Query(object):
                     c.set_logic(lstr + conset.as_logic(start = start_c))
                 except constraints.EmptyLogicError:
                     pass
-            for path, value in kwargs.items():
+            for path, value in list(kwargs.items()):
                 c.add_constraint(path, "=", value)
         except AttributeError:
             c.add_constraint(*cons, **kwargs)
@@ -880,7 +880,7 @@ class Query(object):
 
         @rtype: list(Constraint)
         """
-        ret = sorted(self.constraint_dict.values(), key=lambda con: con.code)
+        ret = sorted(list(self.constraint_dict.values()), key=lambda con: con.code)
         ret.extend(self.uncoded_constraints)
         return ret
 
@@ -1023,7 +1023,7 @@ class Query(object):
 
         @rtype: list(L{intermine.constraints.CodedConstraint})
         """
-        return sorted(self.constraint_dict.values(), key=lambda con: con.code)
+        return sorted(list(self.constraint_dict.values()), key=lambda con: con.code)
 
     def get_logic(self):
         """
@@ -1191,7 +1191,7 @@ class Query(object):
 
     def _from_paths(self):
         scd = self.get_subclass_dict()
-        froms = set(map(lambda x: self.model.make_path(x, scd).prefix(), self.views))
+        froms = set([self.model.make_path(x, scd).prefix() for x in self.views])
         for c in self.constraints:
             p = self.model.make_path(c.path, scd)
             if p.is_attribute():
@@ -1306,7 +1306,7 @@ class Query(object):
             for c in self.coded_constraints:
                 p = to_run.column(c.path)._path
                 from_p = p if p.end_class is not None else p.prefix()
-                if not filter(lambda v: v.startswith(str(from_p)), to_run.views):
+                if not [v for v in to_run.views if v.startswith(str(from_p))]:
                     if p.is_attribute():
                         to_run.add_view(p)
                     else:
@@ -1378,7 +1378,7 @@ class Query(object):
         p = self.model.make_path(self.prefix_path(summary_path), self.get_subclass_dict())
         results = self.results(summary_path = summary_path, **kwargs)
         if p.end.type_name in Model.NUMERIC_TYPES:
-            return dict((k, float(v)) for k, v in next(results).items())
+            return dict((k, float(v)) for k, v in list(next(results).items()))
         else:
             return dict((r["item"], r["count"]) for r in results)
 
@@ -1412,7 +1412,7 @@ class Query(object):
         else:
             size = 1
         try:
-            return self.results(row, start=start, size=size, **kw).next()
+            return next(self.results(row, start=start, size=size, **kw))
         except StopIteration:
             return None
 
@@ -1582,7 +1582,7 @@ class Query(object):
 
         for c in self.children():
             element = doc.createElement(c.child_type)
-            for name, value in c.to_dict().items():
+            for name, value in list(c.to_dict().items()):
                 if isinstance(value, (set, list)):
                     for v in value:
                         subelement = doc.createElement(name)
@@ -1740,7 +1740,7 @@ class Template(Query):
         i = 1
         for c in self.editable_constraints:
             if not c.switched_on: next
-            for k, v in c.to_dict().items():
+            for k, v in list(c.to_dict().items()):
                 if k == "extraValue": k = "extra"
                 if k == "path": k = "constraint"
                 p[k + str(i)] = v
@@ -1782,13 +1782,13 @@ class Template(Query):
         @rtype: L{Template}
         """
         clone = self.clone()
-        for code, options in con_values.items():
+        for code, options in list(con_values.items()):
             con = clone.get_constraint(code)
             if not con.editable:
                 raise ConstraintError("There is a constraint '" + code
                                        + "' on this query, but it is not editable")
             try:
-                for key, value in options.items():
+                for key, value in list(options.items()):
                     setattr(con, key, value)
             except AttributeError:
                 setattr(con, "value", options)

@@ -249,15 +249,15 @@ class Class(object):
 
         @rtype: list(L{Field})
         """
-        return sorted(self.field_dict.values(), key=lambda field: field.name)
+        return sorted(list(self.field_dict.values()), key=lambda field: field.name)
 
     def __iter__(self):
-        for f in self.field_dict.values():
+        for f in list(self.field_dict.values()):
             yield f
 
     def __contains__(self, item):
         if isinstance(item, Field):
-            return item in self.field_dict.values()
+            return item in list(self.field_dict.values())
         else:
             return str(item) in self.field_dict
 
@@ -269,7 +269,7 @@ class Class(object):
 
         @rtype: list(L{Attribute})
         """
-        return filter(lambda x: isinstance(x, Attribute), self.fields)
+        return [x for x in self.fields if isinstance(x, Attribute)]
 
     @property
     def references(self):
@@ -280,7 +280,7 @@ class Class(object):
         @rtype: list(L{Reference})
         """
         def isRef(x): return isinstance(x, Reference) and not isinstance(x, Collection)
-        return filter(isRef, self.fields)
+        return list(filter(isRef, self.fields))
 
     @property
     def collections(self):
@@ -290,7 +290,7 @@ class Class(object):
 
         @rtype: list(L{Collection})
         """
-        return filter(lambda x: isinstance(x, Collection), self.fields)
+        return [x for x in self.fields if isinstance(x, Collection)]
 
     def get_field(self, name):
         """
@@ -455,7 +455,7 @@ class Path(object):
         parts.pop()
         if len(parts) < 1:
             raise PathParseError(str(self) + " does not have a prefix")
-        s = ".".join(map(lambda x: x.name, parts))
+        s = ".".join([x.name for x in parts])
         return Path(s, self.model._unproxied(), self.subclasses)
 
     def append(self, *elements):
@@ -539,7 +539,7 @@ class Path(object):
 
     def __hash__(self):
         i = hash(str(self))
-        return reduce(lambda a, b: a ^ b, [hash(k) ^ hash(v) for k, v in self.subclasses.items()], i)
+        return reduce(lambda a, b: a ^ b, [hash(k) ^ hash(v) for k, v in list(self.subclasses.items())], i)
 
 class ConstraintTree(object):
 
@@ -864,7 +864,7 @@ class Model(object):
 
         @raise ModelError: if the names point to non-existent objects
         """
-        for c in self.classes.values():
+        for c in list(self.classes.values()):
             c.parent_classes = self.to_ancestry(c)
             self.LOG.debug("{0.name} < {0.parent_classes}".format(c))
             for pc in c.parent_classes:
@@ -890,7 +890,7 @@ class Model(object):
         self.LOG.debug('{0} < {1}'.format(cd.name, cd.parents))
         def defined(x): return x is not None # weeds out the java classes
         def to_class(x): return self.classes.get(x)
-        ancestry = list(filter(defined, map(to_class, parents)))
+        ancestry = list(filter(defined, list(map(to_class, parents))))
         for ancestor in ancestry:
             self.LOG.debug('{0} is ancestor of {1}'.format(ancestor, cd.name))
             ancestry.extend(self.to_ancestry(ancestor))
@@ -910,7 +910,7 @@ class Model(object):
 
         @rtype: list(L{intermine.model.Class})
         """
-        return map(self.get_class, classnames)
+        return list(map(self.get_class, classnames))
 
     def column(self, path, *rest):
         return Column(path, self, *rest)
@@ -1031,7 +1031,7 @@ class Model(object):
             descriptors.append(field)
 
             if isinstance(field, Reference):
-                key = '.'.join(map(lambda x: x.name, descriptors))
+                key = '.'.join([x.name for x in descriptors])
                 if key in subclasses:
                     current_class = self.get_class(subclasses[key])
                 else:
