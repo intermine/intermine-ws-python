@@ -121,7 +121,7 @@ Changes:
             temporary lists and clean up after themselves.
             Added ID resolution.
     1.09.06  Dual license under BSD as well as LGPL
-    1.09.08  Add Python 3 support
+    1.09.09  Add Python 3 support
 
 [badge]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py.svg?branch=master
 [ci]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py

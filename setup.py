@@ -49,8 +49,7 @@ OPTIONS = {
 InterMine Webservice Client
 ----------------------------
 
-Provides access routines to datawarehouses powered
-by InterMine technology.
+A Python API to access bioinformatics data warehouses powered by the InterMine platform.
 
 """
 }
