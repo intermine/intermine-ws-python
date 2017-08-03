@@ -80,7 +80,6 @@ Extensive documentation is available by using the "pydoc" command, eg:
 Also see:
 
 * Documentation on PyPi: http://packages.python.org/intermine/
-* Documentation at InterMine: http://www.flymine.org/download/python-docs http://www.intermine.org/wiki/PythonClient
 
 License:
 --------
