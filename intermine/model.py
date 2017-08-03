@@ -958,7 +958,7 @@ class Model(object):
         Return a path object for the given path string
         ==============================================
 
-            >>> path = Model.make_path("Gene.organism.name")
+            >>> path = model.make_path("Gene.organism.name")
             <intermine.model.Path: Gene.organism.name>
 
         This is recommended manner of constructing path objects.
