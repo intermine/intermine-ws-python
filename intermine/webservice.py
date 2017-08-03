@@ -406,12 +406,14 @@ class Service(object):
             view = columns[0]
             if isinstance(view, Attribute):
                 return Query(self.model, self).select("%s.%s" % (view.declared_in.name, view))
+
             if isinstance(view, Reference):
                 return Query(self.model, self).select("%s.%s.*" % (view.declared_in.name, view))
             elif not isinstance(view, Column) and not str(view).endswith("*"):
                 path = self.model.make_path(view)
                 if not path.is_attribute():
                     return Query(self.model, self).select(str(view) + ".*")
+
         return Query(self.model, self).select(*columns)
 
     new_query = select

@@ -780,10 +780,10 @@ class Model(object):
         """
         assert source is not None
         self.source = source
+
         if service is not None:
             self.service = weakref.proxy(service)
-        else:
-            self.service = service
+
         self.classes= {}
         self.parse_model(source)
         self.vivify()

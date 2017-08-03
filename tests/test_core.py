@@ -272,11 +272,14 @@ class TestQuery(WebserviceTest): # pragma: no cover
     def setUp(self):
         if self.service is None:
             self.__class__.service = Service(self.get_test_root())
+
         if self.model is None:
             self.__class__.model = Model(self.get_test_root() + "/model", self.service)
+
         self.q = Query(self.model, self.service)
         class DummyManager:
             pass
+
         list_dict = {"service": None, "manager": DummyManager(), "name": "my-list", "title": None, "type": "Employee", "size": 10}
         self.l = List(**list_dict)
 
