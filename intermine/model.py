@@ -783,6 +783,8 @@ class Model(object):
 
         if service is not None:
             self.service = weakref.proxy(service)
+        else:
+            self.service = None
 
         self.classes= {}
         self.parse_model(source)
