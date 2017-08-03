@@ -6,7 +6,6 @@ http://da44en.wordpress.com/2002/11/22/using-distutils/
 from __future__ import print_function
 
 import os
-import sys
 import time
 import logging
 from distutils.core import Command, setup
@@ -15,7 +14,6 @@ from distutils.fancy_getopt import fancy_getopt
 from unittest import TextTestRunner, TestLoader
 from glob import glob
 from os.path import splitext, basename, join as pjoin
-from warnings import warn
 
 from intermine import VERSION
 
