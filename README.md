@@ -1,7 +1,8 @@
 The InterMine Python Webservice Client
 =====================================
 
-[![Build Status][badge]][ci]
+[![Build Status][badge]][ci] 
+[![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/intermine/intermine)
 
 An implementation of a webservice client 
 for InterMine webservices, written in Python
