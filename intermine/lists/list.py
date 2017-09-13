@@ -97,6 +97,7 @@ class List(object):
             self._date_created = args.get("dateCreated")
             self._is_authorized = args.get("authorized")
             self._status = args.get("status")
+            self._id = int(args["listId"])
 
             if self._is_authorized is None: self._is_authorized = True
 
@@ -302,6 +303,7 @@ class List(object):
                     uri = content.get_list_append_uri()
                     params = content.to_query_params()
                     params["listName"] = name
+                    params["listId"] = id
                     params["path"] = None
                     form = urlencode(params)
                     resp = self._service.opener.open(uri, form)
