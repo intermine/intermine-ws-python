@@ -59,10 +59,18 @@ The source code can be downloaded from a variety of places:
 Running the Tests:
 ------------------
 
-If you would like to run the test suite, you can do so by executing
+If you would like to run the test suite against a local mock server, you can do so by executing
 the following command: (from the source directory)
 
   python setup.py test
+
+If you want to run the suite against a live server (e.g. as deployed by the testmodel/setup.sh in 
+the InterMine distribution, then you can run:
+
+  python setup.py livetest
+
+By default this will use the location http://localhost:8080/intermine-demo/service.  If you want
+it to use a different service, set the service URL in the TESTMODEL_URL shell environment variable.
 
 Installation:
 -------------
