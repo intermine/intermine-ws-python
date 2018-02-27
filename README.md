@@ -1,6 +1,7 @@
 The InterMine Python Webservice Client
 =====================================
 
+
 [![Build Status][badge]][ci]
 
 > An implementation of a webservice client 
@@ -37,10 +38,6 @@ The easiest way to install is to use easy_install:
 
 The source code can be downloaded from a variety of places:
 
-* From InterMine
-
-  wget http://www.intermine.org/lib/python-webservice-client-0.96.00.tar.gz
-
 * From PyPi
 
   wget http://pypi.python.org/packages/source/i/intermine/intermine-0.96.00.tar.gz
@@ -75,7 +72,6 @@ Extensive documentation is available by using the "pydoc" command, eg:
 Also see:
 
 * Documentation on PyPi: http://packages.python.org/intermine/
-* Documentation at InterMine: http://www.flymine.org/download/python-docs http://www.intermine.org/wiki/PythonClient
 
 License:
 --------
