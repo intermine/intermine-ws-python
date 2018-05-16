@@ -17,17 +17,22 @@ def get_query():
 
     name = input("Enter the name of query: ")
     x = "http://registry.intermine.org/service/instances/" + mine
+
     r=requests.get(x)
     dict=yaml.load(r.text)
     link = dict["instance"]["url"] + "/service/user/queries?token=" + token
+
     r=requests.get(link)
     dict=yaml.load(r.text)
+    count=0
     for key in dict['queries'].keys():
         if(name==key):
-            print("Coloumns:")
+            count=count+1
+            print("Columns:")
             for i in range(len(dict['queries'][name]['select'])):
                 print(dict['queries'][name]['select'][i])
-            print("Type of model: " + dict['queries'][name]['model']['name'])
+    if(count==0):
+        print("No such query available")
 
 
 def delete_query():
