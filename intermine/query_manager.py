@@ -30,9 +30,13 @@ def get_all_query_names():
     link = dict["instance"]["url"] + "/service/user/queries?token=" + token
     r = requests.get(link)
     dict = yaml.load(r.text)
-
+    count = 0
     for key in dict['queries'].keys():
+        count = count + 1
         print(key)
+
+    if(count == 0):
+        print("No saved queries")
 
 def get_query(name):
     """
@@ -56,7 +60,7 @@ def get_query(name):
     count = 0
     for key in dict['queries'].keys():
         if(name == key):
-            count = count+1
+            count = count + 1
             print("Columns:")
             for i in range(len(dict['queries'][name]['select'])):
                 print(dict['queries'][name]['select'][i])
@@ -78,9 +82,30 @@ def delete_query(name):
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = yaml.load(r.text)
+
+    y = dict["instance"]["url"] + "/service/user/queries?token=" + token
+    r = requests.get(y)
+    z = yaml.load(r.text)
+    count = 0
+    for key in z['queries'].keys():
+        if (key == name):
+            count = count + 1
+    if(count == 0):
+        print("No such query available")
+
+    else:
+        link = dict["instance"]["url"] + "/service/user/queries/" + name +\
+         "?token=" + token
+        requests.delete(link)
+
+    '''
+    x = "http://registry.intermine.org/service/instances/" + mine
+    r = requests.get(x)
+    dict = yaml.load(r.text)
     link = dict["instance"]["url"] + "/service/user/queries/" + name +\
      "?token=" + token
     requests.delete(link)
+    '''
 
 def xml_to_link(xml):
     """
@@ -124,8 +149,26 @@ def post_query(xml):
     dict = yaml.load(r.text)
     link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
     xml_to_link(xml) + "&token=" + token
-    requests.put(link)
+    try:
+        requests.put(link)
+    except:
+        print("incorrect xml")
 
 
-token = input("Enter the api token: ")
+
 mine = input("Enter the mine name: ")
+l = "http://registry.intermine.org/service/instances/" + mine
+try:
+    m = requests.get(l)
+    d = yaml.load(m.text)
+    n = d["instance"]["url"]
+    token = input("Enter the api token: ")
+    n = d["instance"]["url"] + "/service/user/queries?token=" + token
+    try:
+        o = requests.get(n)
+        d = yaml.load(o.text)
+        p = d['queries'].keys()
+    except:
+        print ("Invalid token")
+except:
+    print ("Invalid mine name")
