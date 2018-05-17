@@ -147,14 +147,38 @@ def post_query(xml):
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = yaml.load(r.text)
-    link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
-    xml_to_link(xml) + "&token=" + token
-    try:
+    name = []
+    for i in range(13,len(xml)):
+        if(xml[i]!='"'):
+            name.append(xml[i])
+        else:
+            break
+    name = "".join(name)
+    link = dict["instance"]["url"] + "/service/user/queries?token=" + token
+    r = requests.get(link)
+    raw = yaml.load(r.text)
+    count = 0
+    for key in raw['queries'].keys():
+        if(key == name):
+            count = count + 1
+            print("Use another query name")
+            resp = input("Or do you want to replace the old query? [y/n]")
+            if(resp == 'y'):
+                count = 0
+
+    if(count == 0):
+
+        link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
+        xml_to_link(xml) + "&token=" + token
         requests.put(link)
-    except:
-        print("incorrect xml")
-
-
+        flag = 0
+        r = requests.get(link)
+        raw = yaml.load(r.text)
+        for key in raw['queries'].keys():
+            if(key == name):
+                flag = 1
+        if(flag == 0):
+            print("Incorrect xml (Note: name should contain no special symbols)")
 
 mine = input("Enter the mine name: ")
 l = "http://registry.intermine.org/service/instances/" + mine
