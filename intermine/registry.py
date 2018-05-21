@@ -7,6 +7,7 @@ Functions for making use of registry data
 
 """
 
+
 def getInfo(mine):
     """
     A function to get information about a mine
@@ -45,6 +46,7 @@ def getInfo(mine):
     except:
         print("No such mine available")
 
+
 def getData(mine):
     """
     A function to get datasets corresponding to a mine
@@ -77,7 +79,7 @@ def getData(mine):
                 list.append(row["name"])
 
             except:
-                print ("No info available")
+                print("No info available")
         list.sort()
         for i in range(len(list)):
             print("Name: " + list[i])
