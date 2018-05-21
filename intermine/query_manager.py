@@ -1,7 +1,7 @@
 import requests
-import yaml
-import json
 
+import json
+import urllib.request as req
 """
 Functions for better usage of queries
 ================================================
@@ -26,16 +26,16 @@ def get_all_query_names():
     """
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
-    dict = yaml.load(r.text)
+    dict = json.loads(r.text)
     link = dict["instance"]["url"] + "/service/user/queries?token=" + token
     r = requests.get(link)
-    dict = yaml.load(r.text)
+    dict = json.loads(r.text)
     count = 0
     for key in dict['queries'].keys():
         count = count + 1
         print(key)
 
-    if(count == 0):
+    if count == 0:
         print("No saved queries")
 
 def get_query(name):
@@ -52,19 +52,19 @@ def get_query(name):
     x = "http://registry.intermine.org/service/instances/" + mine
 
     r = requests.get(x)
-    dict = yaml.load(r.text)
+    dict = json.loads(r.text)
     link = dict["instance"]["url"] + "/service/user/queries?token=" + token
 
     r = requests.get(link)
-    dict = yaml.load(r.text)
+    dict = json.loads(r.text)
     count = 0
     for key in dict['queries'].keys():
-        if(name == key):
+        if name == key:
             count = count + 1
             print("Columns:")
             for i in range(len(dict['queries'][name]['select'])):
                 print(dict['queries'][name]['select'][i])
-    if(count == 0):
+    if count == 0:
         print("No such query available")
 
 
@@ -81,16 +81,16 @@ def delete_query(name):
     """
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
-    dict = yaml.load(r.text)
+    dict = json.loads(r.text)
 
     y = dict["instance"]["url"] + "/service/user/queries?token=" + token
     r = requests.get(y)
-    z = yaml.load(r.text)
+    z = json.loads(r.text)
     count = 0
     for key in z['queries'].keys():
-        if (key == name):
+        if key == name:
             count = count + 1
-    if(count == 0):
+    if count == 0:
         print("No such query available")
 
     else:
@@ -98,42 +98,7 @@ def delete_query(name):
          "?token=" + token
         requests.delete(link)
 
-    '''
-    x = "http://registry.intermine.org/service/instances/" + mine
-    r = requests.get(x)
-    dict = yaml.load(r.text)
-    link = dict["instance"]["url"] + "/service/user/queries/" + name +\
-     "?token=" + token
-    requests.delete(link)
-    '''
 
-def xml_to_link(xml):
-    """
-    Converts xml to the link we desire while posting queries
-    ================================================
-    example:
-        >>>xml_to_link('<query></query>')
-        '%3Cquery%3E%3C%2Fquery%3E'
-    """
-    count = 0
-    link = []
-    for i in xml:
-        if (i == "<"):
-            link.append('%3C')
-        elif (i == ">"):
-            link.append('%3E')
-        elif (i == "="):
-            link.append('%3D')
-        elif (i == " "):
-            link.append('%20')
-        elif (i == '"'):
-            link.append('%22')
-        elif (i == "/"):
-            link.append('%2F')
-        else:
-            link.append(i)
-    link = "".join(link)
-    return link
 
 def post_query(xml):
     """
@@ -146,51 +111,52 @@ def post_query(xml):
     """
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
-    dict = yaml.load(r.text)
+    dict = json.loads(r.text)
     name = []
-    for i in range(13,len(xml)):
-        if(xml[i]!='"'):
+    for i in range(position,len(xml)):
+        if xml[i]!='"':
             name.append(xml[i])
         else:
             break
     name = "".join(name)
     link = dict["instance"]["url"] + "/service/user/queries?token=" + token
     r = requests.get(link)
-    raw = yaml.load(r.text)
+    raw = json.loads(r.text)
     count = 0
     for key in raw['queries'].keys():
-        if(key == name):
+        if key == name:
             count = count + 1
             print("Use another query name")
             resp = input("Or do you want to replace the old query? [y/n]")
-            if(resp == 'y'):
+            if resp == 'y':
                 count = 0
 
-    if(count == 0):
+    if count == 0:
 
         link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
-        xml_to_link(xml) + "&token=" + token
+        req.pathname2url(xml) + "&token=" + token
         requests.put(link)
         flag = 0
         r = requests.get(link)
-        raw = yaml.load(r.text)
+        raw = json.loads(r.text)
         for key in raw['queries'].keys():
-            if(key == name):
+            if key == name:
                 flag = 1
-        if(flag == 0):
-            print("Incorrect xml (Note: name should contain no special symbols)")
+        if flag == 0:
+            print("Incorrect xml (Note: name should contain no special symbol)")
 
+position = 13
 mine = input("Enter the mine name: ")
 l = "http://registry.intermine.org/service/instances/" + mine
 try:
     m = requests.get(l)
-    d = yaml.load(m.text)
+    d = json.loads(m.text)
     n = d["instance"]["url"]
     token = input("Enter the api token: ")
     n = d["instance"]["url"] + "/service/user/queries?token=" + token
     try:
         o = requests.get(n)
-        d = yaml.load(o.text)
+        d = json.loads(o.text)
         p = d['queries'].keys()
     except:
         print ("Invalid token")
