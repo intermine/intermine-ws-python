@@ -1,2 +1,2 @@
-Pyyaml==3.12
+
 Requests==2.18.4
