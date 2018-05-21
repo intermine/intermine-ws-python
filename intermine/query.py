@@ -257,11 +257,12 @@ class Query(object):
 
 
     If you just want the raw results, for printing to a file, or for piping to another program,
-    you can request strings instead:
+    you can request the results in one of these formats: json', 'rr', 'tsv', 'jsonobjects', 'jsonrows', 'list', 'dict', 'csv'
 
-        >>> for row in query.result("string")
+        >>> for row in query.result("<format name>", size = <size>)
         ...     print(row)
-
+    
+    
     Result Processing: Results
     --------------------------
 
