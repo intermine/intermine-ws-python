@@ -108,6 +108,8 @@ def post_query(xml):
 
         >>>qm.post_query('<query name="" model="genomic" view="Gene.length Gene.symbol" \
            longDescription="" sortOrder="Gene.length asc"></query>')
+    
+    Note that the name should be defined first
     """
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
@@ -143,7 +145,7 @@ def post_query(xml):
             if key == name:
                 flag = 1
         if flag == 0:
-            print("Incorrect xml (Note: name should contain no special symbol)")
+            print("Incorrect xml (Note: name should contain no special symbol and should be defined first)")
 
 position = 13
 mine = input("Enter the mine name: ")
