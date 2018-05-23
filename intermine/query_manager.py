@@ -13,6 +13,7 @@ example:
     Enter the mine name: <enter mine name>
 """
 
+
 def get_all_query_names():
     """
     A function to list all the queries that are saved in a user account
@@ -37,6 +38,7 @@ def get_all_query_names():
 
     if count == 0:
         print("No saved queries")
+
 
 def get_query(name):
     """
@@ -99,24 +101,24 @@ def delete_query(name):
         requests.delete(link)
 
 
-
 def post_query(xml):
     """
-    A function to post a query(in the form of string containg xml) to a user account
+    A function to post a query(in the form of string containing xml)
+    to a user account
     ================================================
     example:
 
-        >>>qm.post_query('<query name="" model="genomic" view="Gene.length Gene.symbol" \
-           longDescription="" sortOrder="Gene.length asc"></query>')
-    
+        >>>qm.post_query('<query name="" model="genomic" view="Gene.length\
+            Gene.symbol" longDescription="" sortOrder="Gene.length asc">\
+            </query>')
     Note that the name should be defined first
     """
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = json.loads(r.text)
     name = []
-    for i in range(position,len(xml)):
-        if xml[i]!='"':
+    for i in range(position, len(xml)):
+        if xml[i] != '"':
             name.append(xml[i])
         else:
             break
@@ -145,7 +147,9 @@ def post_query(xml):
             if key == name:
                 flag = 1
         if flag == 0:
-            print("Incorrect xml (Note: name should contain no special symbol and should be defined first)")
+            print("Incorrect xml (Note: name should contain no special symbol\
+             and should be defined first)")
+
 
 position = 13
 mine = input("Enter the mine name: ")
@@ -161,6 +165,6 @@ try:
         d = json.loads(o.text)
         p = d['queries'].keys()
     except:
-        print ("Invalid token")
+        print("Invalid token")
 except:
-    print ("Invalid mine name")
+    print("Invalid mine name")
