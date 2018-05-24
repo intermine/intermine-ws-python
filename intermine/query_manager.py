@@ -25,19 +25,25 @@ def get_all_query_names():
         <returns the names of all the saved queries in user account>
 
     """
-    #source of the initial request
+    # source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
+    # data retreived as an object
     r = requests.get(x)
+    # data converted to dict
     dict = json.loads(r.text)
+    # source of next requests
     link = dict["instance"]["url"] + "/service/user/queries?token=" + token
     r = requests.get(link)
     dict = json.loads(r.text)
+    # count used to check existence of the query
     count = 0
     for key in dict['queries'].keys():
         count = count + 1
+        # prints the names
         print(key)
 
     if count == 0:
+        # if no such query name exists in the account
         print("No saved queries")
 
 
@@ -52,9 +58,8 @@ def get_query(name):
         <returns information about the query whose name is 'queryName'>
 
     """
-    #source of the initial request
+    # source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
-
     r = requests.get(x)
     dict = json.loads(r.text)
     link = dict["instance"]["url"] + "/service/user/queries?token=" + token
@@ -65,6 +70,7 @@ def get_query(name):
     for key in dict['queries'].keys():
         if name == key:
             count = count + 1
+            # prints the columns a query is made of
             print("Columns:")
             for i in range(len(dict['queries'][name]['select'])):
                 print(dict['queries'][name]['select'][i])
@@ -83,13 +89,14 @@ def delete_query(name):
         <deletes the query whose name is 'queryName' from user's account>
 
     """
-    #source of the initial request
+    # source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = json.loads(r.text)
-    #source of the next request
+    # source of the next request
     y = dict["instance"]["url"] + "/service/user/queries?token=" + token
     r = requests.get(y)
+    # dictionary form of data
     z = json.loads(r.text)
     count = 0
     for key in z['queries'].keys():
@@ -116,7 +123,7 @@ def post_query(xml):
             </query>')
     Note that the name should be defined first
     """
-    #source of the initial request
+    # source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = json.loads(r.text)
@@ -155,20 +162,20 @@ def post_query(xml):
              and should be defined first)")
 
 
-#position at which name occurs in xml
+# position at which name occurs in xml
 position = 13
 mine = input("Enter the mine name: ")
-#source of the request
+# source of the request
 src = "http://registry.intermine.org/service/instances/" + mine
 try:
-    #tests if mine is valid by checking if object 'obj' exists
+    # tests if mine is valid by checking if object 'obj' exists
     m = requests.get(src)
     data = json.loads(m.text)
     obj = data["instance"]["url"]
     token = input("Enter the api token: ")
     obj = data["instance"]["url"] + "/service/user/queries?token=" + token
     try:
-        #tests if token is valid by checking if object 'obj' exists
+        # tests if token is valid by checking if object 'obj' exists
         o = requests.get(n)
         data = json.loads(o.text)
         obj = data['queries'].keys()
