@@ -176,7 +176,7 @@ try:
     obj = data["instance"]["url"] + "/service/user/queries?token=" + token
     try:
         # tests if token is valid by checking if object 'obj' exists
-        o = requests.get(n)
+        o = requests.get(obj)
         data = json.loads(o.text)
         obj = data['queries'].keys()
     except:
