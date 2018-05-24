@@ -25,6 +25,7 @@ def get_all_query_names():
         <returns the names of all the saved queries in user account>
 
     """
+    #source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = json.loads(r.text)
@@ -51,6 +52,7 @@ def get_query(name):
         <returns information about the query whose name is 'queryName'>
 
     """
+    #source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
 
     r = requests.get(x)
@@ -81,10 +83,11 @@ def delete_query(name):
         <deletes the query whose name is 'queryName' from user's account>
 
     """
+    #source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = json.loads(r.text)
-
+    #source of the next request
     y = dict["instance"]["url"] + "/service/user/queries?token=" + token
     r = requests.get(y)
     z = json.loads(r.text)
@@ -113,6 +116,7 @@ def post_query(xml):
             </query>')
     Note that the name should be defined first
     """
+    #source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = json.loads(r.text)
@@ -151,19 +155,23 @@ def post_query(xml):
              and should be defined first)")
 
 
+#position at which name occurs in xml
 position = 13
 mine = input("Enter the mine name: ")
-l = "http://registry.intermine.org/service/instances/" + mine
+#source of the request
+src = "http://registry.intermine.org/service/instances/" + mine
 try:
-    m = requests.get(l)
-    d = json.loads(m.text)
-    n = d["instance"]["url"]
+    #tests if mine is valid by checking if object 'obj' exists
+    m = requests.get(src)
+    data = json.loads(m.text)
+    obj = data["instance"]["url"]
     token = input("Enter the api token: ")
-    n = d["instance"]["url"] + "/service/user/queries?token=" + token
+    obj = data["instance"]["url"] + "/service/user/queries?token=" + token
     try:
+        #tests if token is valid by checking if object 'obj' exists
         o = requests.get(n)
-        d = json.loads(o.text)
-        p = d['queries'].keys()
+        data = json.loads(o.text)
+        obj = data['queries'].keys()
     except:
         print("Invalid token")
 except:
