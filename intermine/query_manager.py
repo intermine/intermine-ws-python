@@ -1,5 +1,5 @@
 import requests
-
+from lxml import etree
 import json
 import urllib.request as req
 """
@@ -127,19 +127,15 @@ def post_query(xml):
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = json.loads(r.text)
-    name = []
-    for i in range(position, len(xml)):
-        if xml[i] != '"':
-            name.append(xml[i])
-        else:
-            break
-    name = "".join(name)
+    # xml parsing
+    root = etree.fromstring(xml)
+
     link = dict["instance"]["url"] + "/service/user/queries?token=" + token
     r = requests.get(link)
     raw = json.loads(r.text)
     count = 0
     for key in raw['queries'].keys():
-        if key == name:
+        if key == root.attrib['name']:
             count = count + 1
             print("Use another query name")
             resp = input("Or do you want to replace the old query? [y/n]")
@@ -155,15 +151,13 @@ def post_query(xml):
         r = requests.get(link)
         raw = json.loads(r.text)
         for key in raw['queries'].keys():
-            if key == name:
+            if key == root.attrib['name']:
                 flag = 1
         if flag == 0:
             print("Incorrect xml (Note: name should contain no special symbol\
              and should be defined first)")
 
 
-# position at which name occurs in xml
-position = 13
 mine = input("Enter the mine name: ")
 # source of the request
 src = "http://registry.intermine.org/service/instances/" + mine
@@ -179,7 +173,7 @@ try:
         o = requests.get(obj)
         data = json.loads(o.text)
         obj = data['queries'].keys()
-    except:
+    except KeyError:
         print("Invalid token")
-except:
+except KeyError:
     print("Invalid mine name")
