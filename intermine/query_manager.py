@@ -173,7 +173,12 @@ try:
         o = requests.get(obj)
         data = json.loads(o.text)
         obj = data['queries'].keys()
-    except KeyError:
-        print("Invalid token")
-except KeyError:
-    print("Invalid mine name")
+        # checks the type fo exception
+    except Exception as ex:
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print(message)
+except Exception as ex:
+    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+    message = template.format(type(ex).__name__, ex.args)
+    print(message)
