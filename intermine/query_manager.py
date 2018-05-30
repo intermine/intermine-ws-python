@@ -1,7 +1,10 @@
 import requests
 from lxml import etree
 import json
-import urllib.request as req
+try:
+    import urllib.request as req
+except ImportError:
+    import urllib as req
 """
 Functions for better usage of queries
 ================================================
@@ -25,6 +28,7 @@ def get_all_query_names():
         <returns the names of all the saved queries in user account>
 
     """
+
     # source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
     # data retreived as an object
@@ -46,6 +50,8 @@ def get_all_query_names():
         # if no such query name exists in the account
         print("No saved queries")
 
+    return None
+
 
 def get_query(name):
     """
@@ -58,7 +64,9 @@ def get_query(name):
         <returns information about the query whose name is 'queryName'>
 
     """
+
     # source of the initial request
+
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
     dict = json.loads(r.text)
@@ -75,7 +83,9 @@ def get_query(name):
             for i in range(len(dict['queries'][name]['select'])):
                 print(dict['queries'][name]['select'][i])
     if count == 0:
-        print("No such query available")
+        return "No such query available"
+    else:
+        return None
 
 
 def delete_query(name):
@@ -89,6 +99,7 @@ def delete_query(name):
         <deletes the query whose name is 'queryName' from user's account>
 
     """
+
     # source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
@@ -103,13 +114,13 @@ def delete_query(name):
         if key == name:
             count = count + 1
     if count == 0:
-        print("No such query available")
+        return "No such query available"
 
     else:
         link = dict["instance"]["url"] + "/service/user/queries/" + name +\
          "?token=" + token
         requests.delete(link)
-
+        return name + " is deleted"
 
 def post_query(xml):
     """
@@ -123,6 +134,7 @@ def post_query(xml):
             </query>')
     Note that the name should be defined first
     """
+
     # source of the initial request
     x = "http://registry.intermine.org/service/instances/" + mine
     r = requests.get(x)
@@ -137,8 +149,11 @@ def post_query(xml):
     for key in raw['queries'].keys():
         if key == root.attrib['name']:
             count = count + 1
-            print("Use another query name")
-            resp = input("Or do you want to replace the old query? [y/n]")
+            print("The query name exists")
+            try:
+                resp = input("Do you want to replace the old query? [y/n]")
+            except NameError:
+                resp = raw_input("Please enter response again [y/n]")
             if resp == 'y':
                 count = 0
 
@@ -154,31 +169,41 @@ def post_query(xml):
             if key == root.attrib['name']:
                 flag = 1
         if flag == 0:
-            print("Incorrect xml (Note: name should contain no special symbol\
-             and should be defined first)")
+            print("Note: name should contain no special symbol\
+            and should be defined first")
+            return "Incorrect xml"
+        else:
+            return root.attrib['name'] + " is posted"
+
+    else:
+        return "Use a query name other than " + root.attrib['name']
 
 
-mine = input("Enter the mine name: ")
-# source of the request
-src = "http://registry.intermine.org/service/instances/" + mine
-try:
-    # tests if mine is valid by checking if object 'obj' exists
-    m = requests.get(src)
-    data = json.loads(m.text)
-    obj = data["instance"]["url"]
-    token = input("Enter the api token: ")
-    obj = data["instance"]["url"] + "/service/user/queries?token=" + token
+def save_mine_and_token(m,t):
+    global mine
+    mine = m
+    # source of the request
+    src = "http://registry.intermine.org/service/instances/" + mine
     try:
-        # tests if token is valid by checking if object 'obj' exists
-        o = requests.get(obj)
-        data = json.loads(o.text)
-        obj = data['queries'].keys()
-        # checks the type fo exception
+        # tests if mine is valid by checking if object 'obj' exists
+        m = requests.get(src)
+        data = json.loads(m.text)
+        obj = data["instance"]["url"]
+        global token
+        token = t
+        obj = data["instance"]["url"] + "/service/user/queries?token=" + token
+        try:
+            # tests if token is valid by checking if object 'obj' exists
+            o = requests.get(obj)
+            data = json.loads(o.text)
+            obj = data['queries'].keys()
+            # checks the type fo exception
+        except Exception as ex:
+            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+            message = template.format(type(ex).__name__, ex.args)
+            return message
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
-        print(message)
-except Exception as ex:
-    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-    message = template.format(type(ex).__name__, ex.args)
-    print(message)
+
+        return message
