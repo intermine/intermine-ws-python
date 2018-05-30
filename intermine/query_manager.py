@@ -122,6 +122,7 @@ def delete_query(name):
         requests.delete(link)
         return name + " is deleted"
 
+
 def post_query(xml):
     """
     A function to post a query(in the form of string containing xml)
@@ -160,7 +161,7 @@ def post_query(xml):
     if count == 0:
 
         link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
-        req.pathname2url(xml) + "&token=" + token
+            req.pathname2url(xml) + "&token=" + token
         requests.put(link)
         flag = 0
         r = requests.get(link)
@@ -179,7 +180,7 @@ def post_query(xml):
         return "Use a query name other than " + root.attrib['name']
 
 
-def save_mine_and_token(m,t):
+def save_mine_and_token(m, t):
     global mine
     mine = m
     # source of the request
