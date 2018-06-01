@@ -1,5 +1,8 @@
-from intermine import registry
+from __future__ import absolute_import
 import unittest
+
+from ..intermine import registry
+
 
 
 class RegistryTest(unittest.TestCase):
@@ -23,8 +26,8 @@ class RegistryTest(unittest.TestCase):
         self.assertEqual(registry.getMines('D. melanogaster'), None)
         # function returns a message if anything goes wrong,
         # example: organism name is not correct
-        self.assertEqual\
-            (registry.getMines('D. melanogaste'), "No such mine available")
+        self.assertEqual(registry.getMines('D. \
+            melanogaste'), "No such mine available")
 
 
 if __name__ == '__main__':

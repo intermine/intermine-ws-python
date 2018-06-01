@@ -1,14 +1,14 @@
-from intermine import query_manager as qm
-
 import unittest
+
+from ..intermine import query_manager as qm
 qm.save_mine_and_token('flymine', 'k136n1HfFd31n6O4han1')
 
 
 class QueryManagerTest(unittest.TestCase):
     def test_save_mine_and_token(self):
         # Function returns none if there is no error
-        self.assertIsNone\
-            (qm.save_mine_and_token('flymine', 'k136n1HfFd31n6O4han1'))
+        self.assertIsNone(qm.save_mine_and_token('flymine', \
+        'k136n1HfFd31n6O4han1'))
 
     def test_get_all_query_names(self):
         # Function returns none if there is no error
@@ -33,16 +33,18 @@ class QueryManagerTest(unittest.TestCase):
         qm.delete_query('yyy')
 
     def test_delete_query(self):
-        # to delete any existing query named 'xx' if existing previously
-        qm.delete_query('xx')
-        # posting a query named 'xx'
-        qm.post_query('<query name="xx" model="genomic" \
-            view="Gene.secondaryIdentifier Gene.symbol \
-            Gene.pathways.identifier " sortOrder="Gene.secondaryIdentifier\
-            ASC" >  <constraint path="Gene" op="LOOKUP" value="bsk" \
-            extraValue="D. melanogaster" code="A" /> </query>')
-        # deletes a query 'xx' if it exists and returns a message
-        self.assertEqual(qm.delete_query('xx'), "xx is deleted")
+        # to delete any existing query named 'zz' if existing previously
+        qm.delete_query('zz')
+        # posting a query named 'zz'
+        qm.post_query('<query name="zz" model="genomic" \
+            view="Gene.secondaryIdentifier \
+            Gene.symbol Gene.pathways.identifier " \
+            sortOrder="Gene.secondaryIdentifier ASC" > \
+            <constraint path="Gene" \
+            op="LOOKUP" value="bsk" extraValue="D. melanogaster" code="A" /> \
+            </query>')
+        # deletes a query 'zz' if it exists and returns a message
+        self.assertEqual(qm.delete_query('zz'), "zz is deleted")
         # returns a message if query doesn't exists in user account
         self.assertEqual(qm.delete_query('xxx'), "No such query available")
 
