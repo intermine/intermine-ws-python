@@ -8,7 +8,7 @@ class QueryManagerTest(unittest.TestCase):
     def test_save_mine_and_token(self):
         # Function returns none if there is no error
         self.assertIsNone(qm.save_mine_and_token('flymine',
-            'k136n1HfFd31n6O4han1'))
+                                                'k136n1HfFd31n6O4han1'))
 
     def test_get_all_query_names(self):
         # Function returns none if there is no error
