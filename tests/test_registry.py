@@ -4,7 +4,6 @@ import unittest
 from ..intermine import registry
 
 
-
 class RegistryTest(unittest.TestCase):
 
     def test_getInfo(self):
