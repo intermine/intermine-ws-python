@@ -1,72 +1,34 @@
 import unittest
 
 from ..intermine import query_manager as qm
-qm.save_mine_and_token('flymine', 'k136n1HfFd31n6O4han1')
+qm.save_mine_and_token('mock', 'x')
 
 
 class QueryManagerTest(unittest.TestCase):
-    def test_save_mine_and_token(self):
-        # Function returns none if there is no error
-        self.assertIsNone(qm.save_mine_and_token('flymine',
-                                                 'k136n1HfFd31n6O4han1'))
 
     def test_get_all_query_names(self):
-        # Function returns none if there is no error
-        self.assertIsNone(qm.get_all_query_names())
+        # Function returns none if there is no error and mine is nonempty
+        self.assertEqual(qm.get_all_query_names(), None)
 
     def test_get_query(self):
-        # to delete any existing query named 'yyy' if existing previously
-        qm.delete_query('yyy')
-        # posting a query named 'yyy'
-        qm.post_query('<query name="yyy" model="genomic"\
-            view="Gene.secondaryIdentifier Gene.symbol \
-            Gene.pathways.identifier "\
-            sortOrder="Gene.secondaryIdentifier ASC" >  \
-            <constraint path="Gene"\
-            op="LOOKUP" value="bsk" extraValue="D. melanogaster" \
-            code="A" /> </query>')
         # Function returns none if the query exists in user account
-        self.assertEqual(qm.get_query('yyy'), None)
+        self.assertEqual(qm.get_query('query1'), None)
         # Function returns a message if query doesn't exists in user account
-        self.assertEqual(qm.get_query('xxx'), "No such query available")
-        # deletes the query 'yyy' we created to return to original state
-        qm.delete_query('yyy')
+        self.assertEqual(qm.get_query('query3'), "No such query available")
 
     def test_delete_query(self):
-        # to delete any existing query named 'zz' if existing previously
-        qm.delete_query('zz')
-        # posting a query named 'zz'
-        qm.post_query('<query name="zz" model="genomic" \
-            view="Gene.secondaryIdentifier \
-            Gene.symbol Gene.pathways.identifier " \
-            sortOrder="Gene.secondaryIdentifier ASC" > \
-            <constraint path="Gene" \
-            op="LOOKUP" value="bsk" extraValue="D. melanogaster" code="A" /> \
-            </query>')
-        # deletes a query 'zz' if it exists and returns a message
-        self.assertEqual(qm.delete_query('zz'), "zz is deleted")
+        # deletes a query 'query1' if it exists and returns a message
+        self.assertEqual(qm.delete_query('query1'), "query1 is deleted")
         # returns a message if query doesn't exists in user account
-        self.assertEqual(qm.delete_query('xxx'), "No such query available")
+        self.assertEqual(qm.delete_query('query3'), "No such query available")
 
     def test_post_query(self):
-        # to delete any existing query named 'xx' if existing previously
-        qm.delete_query('xx')
-        # posts a query and if xml is right, returns a message
-        self.assertEqual(qm.post_query('<query name="xx" model="genomic" \
-            view="Gene.secondaryIdentifier Gene.symbol \
-            Gene.pathways.identifier "\
-            sortOrder="Gene.secondaryIdentifier ASC" > \
-            <constraint path="Gene" op="LOOKUP" value="bsk" extraValue="D.\
-             melanogaster" code="A" /> </query>'), 'xx is posted')
-        # deletes the query 'xx' we created to return to original state
-        qm.delete_query('xx')
+        # posts a query if xml is right
+        self.assertEqual(qm.post_query('<query name="query3"></query>'),
+                                       "query3 is posted")
         # can't post if xml is wrong and returns a message
-        self.assertEqual(qm.post_query('<query name="xxy" model="gnomic" \
-            view="Gene.secondaryIdentifier Gene.symbol \
-            Gene.pathways.identifier "\
-            sortOrder="Gene.secondaryIdentifier ASC" >  \
-            <constraint path="Gene" op="LOOKUP" value="bsk" extraValue="D.\
-            melanogaster" code="A" /> </query>'), "Incorrect xml")
+        self.assertEqual(qm.post_query('<query name="query4"></query>'),
+                                       "Incorrect xml")
 
 
 if __name__ == '__main__':

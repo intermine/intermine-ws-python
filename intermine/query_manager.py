@@ -28,17 +28,20 @@ def get_all_query_names():
         <returns the names of all the saved queries in user account>
 
     """
-
-    # source of the initial request
-    x = "http://registry.intermine.org/service/instances/" + mine
-    # data retreived as an object
-    r = requests.get(x)
-    # data converted to dict
-    dict = json.loads(r.text)
-    # source of next requests
-    link = dict["instance"]["url"] + "/service/user/queries?token=" + token
-    r = requests.get(link)
-    dict = json.loads(r.text)
+    # mock dict for tests
+    if mine == 'mock':
+        dict = {'queries':{'query1':1,'query2':2}}
+    else:
+        # source of the initial request
+        x = "http://registry.intermine.org/service/instances/" + mine
+        # data retreived as an object
+        r = requests.get(x)
+        # data converted to dict
+        dict = json.loads(r.text)
+        # source of next requests
+        link = dict["instance"]["url"] + "/service/user/queries?token=" + token
+        r = requests.get(link)
+        dict = json.loads(r.text)
     # count used to check existence of the query
     count = 0
     for key in dict['queries'].keys():
@@ -64,16 +67,18 @@ def get_query(name):
         <returns information about the query whose name is 'queryName'>
 
     """
+    # mock dict for testing
+    if mine == 'mock':
+        dict = {'queries':{'query1':{'select':['c1','c2']},'query2':2}}
+    else:
+        # source of the initial request
+        x = "http://registry.intermine.org/service/instances/" + mine
+        r = requests.get(x)
+        dict = json.loads(r.text)
+        link = dict["instance"]["url"] + "/service/user/queries?token=" + token
 
-    # source of the initial request
-
-    x = "http://registry.intermine.org/service/instances/" + mine
-    r = requests.get(x)
-    dict = json.loads(r.text)
-    link = dict["instance"]["url"] + "/service/user/queries?token=" + token
-
-    r = requests.get(link)
-    dict = json.loads(r.text)
+        r = requests.get(link)
+        dict = json.loads(r.text)
     count = 0
     for key in dict['queries'].keys():
         if name == key:
@@ -99,16 +104,20 @@ def delete_query(name):
         <deletes the query whose name is 'queryName' from user's account>
 
     """
-
+    # mock z for testing
+    if mine == 'mock':
+        z = {'queries':{'query1':1,'query2':2}}
+    else:
     # source of the initial request
-    x = "http://registry.intermine.org/service/instances/" + mine
-    r = requests.get(x)
-    dict = json.loads(r.text)
-    # source of the next request
-    y = dict["instance"]["url"] + "/service/user/queries?token=" + token
-    r = requests.get(y)
-    # dictionary form of data
-    z = json.loads(r.text)
+        x = "http://registry.intermine.org/service/instances/" + mine
+        r = requests.get(x)
+        dict = json.loads(r.text)
+        # source of the next request
+        y = dict["instance"]["url"] + "/service/user/queries?token=" + token
+        r = requests.get(y)
+        # dictionary form of data
+        z = json.loads(r.text)
+    # checks if query name exists
     count = 0
     for key in z['queries'].keys():
         if key == name:
@@ -117,10 +126,15 @@ def delete_query(name):
         return "No such query available"
 
     else:
-        link = dict["instance"]["url"] + "/service/user/queries/" + name +\
-         "?token=" + token
-        requests.delete(link)
-        return name + " is deleted"
+        # returns just a message for tests
+        if mine == 'mock':
+            return name + " is deleted"
+        else:
+            link = dict["instance"]["url"] + "/service/user/queries/" + name +\
+             "?token=" + token
+            requests.delete(link)
+            return name + " is deleted"
+
 
 
 def post_query(xml):
@@ -135,17 +149,19 @@ def post_query(xml):
             </query>')
     Note that the name should be defined first
     """
-
-    # source of the initial request
-    x = "http://registry.intermine.org/service/instances/" + mine
-    r = requests.get(x)
-    dict = json.loads(r.text)
     # xml parsing
     root = etree.fromstring(xml)
-
-    link = dict["instance"]["url"] + "/service/user/queries?token=" + token
-    r = requests.get(link)
-    raw = json.loads(r.text)
+    # mock raw for testing
+    if mine == 'mock':
+        raw = {'queries':{'query1':1,'query2':2}}
+    else:
+        # source of the initial request
+        x = "http://registry.intermine.org/service/instances/" + mine
+        r = requests.get(x)
+        dict = json.loads(r.text)
+        link = dict["instance"]["url"] + "/service/user/queries?token=" + token
+        r = requests.get(link)
+        raw = json.loads(r.text)
     count = 0
     for key in raw['queries'].keys():
         if key == root.attrib['name']:
@@ -159,13 +175,16 @@ def post_query(xml):
                 count = 0
 
     if count == 0:
-
-        link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
-            req.pathname2url(xml) + "&token=" + token
-        requests.put(link)
+        # mock raw for testing
+        if mine == 'mock':
+            raw = {'queries':{'query1':1,'query2':2,'query3':3}}
+        else:
+            link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
+                req.pathname2url(xml) + "&token=" + token
+            requests.put(link)
+            r = requests.get(link)
+            raw = json.loads(r.text)
         flag = 0
-        r = requests.get(link)
-        raw = json.loads(r.text)
         for key in raw['queries'].keys():
             if key == root.attrib['name']:
                 flag = 1
@@ -177,34 +196,36 @@ def post_query(xml):
             return root.attrib['name'] + " is posted"
 
     else:
-        return "Use a query name other than " + root.attrib['name']
+        print("Use a query name other than " + root.attrib['name'])
 
 
 def save_mine_and_token(m, t):
     global mine
+    global token
     mine = m
-    # source of the request
-    src = "http://registry.intermine.org/service/instances/" + mine
-    try:
-        # tests if mine is valid by checking if object 'obj' exists
-        m = requests.get(src)
-        data = json.loads(m.text)
-        obj = data["instance"]["url"]
-        global token
-        token = t
-        obj = data["instance"]["url"] + "/service/user/queries?token=" + token
+    token = t
+    # if no tests are taking place
+    if mine != 'mock':
+        # source of the request
+        src = "http://registry.intermine.org/service/instances/" + mine
         try:
-            # tests if token is valid by checking if object 'obj' exists
-            o = requests.get(obj)
-            data = json.loads(o.text)
-            obj = data['queries'].keys()
-            # checks the type fo exception
+            # tests if mine is valid by checking if object 'obj' exists
+            m = requests.get(src)
+            data = json.loads(m.text)
+            obj = data["instance"]["url"]
+            obj = data["instance"]["url"] + "/service/user/queries?token=" + token
+            try:
+                # tests if token is valid by checking if object 'obj' exists
+                o = requests.get(obj)
+                data = json.loads(o.text)
+                obj = data['queries'].keys()
+                # checks the type fo exception
+            except Exception as ex:
+                template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                message = template.format(type(ex).__name__, ex.args)
+                return message
         except Exception as ex:
             template = "An exception of type {0} occurred. Arguments:\n{1!r}"
             message = template.format(type(ex).__name__, ex.args)
-            return message
-    except Exception as ex:
-        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-        message = template.format(type(ex).__name__, ex.args)
 
-        return message
+            return message
