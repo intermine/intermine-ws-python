@@ -30,7 +30,7 @@ def get_all_query_names():
     """
     # mock dict for tests
     if mine == 'mock':
-        dict = {'queries':{'query1':1,'query2':2}}
+        dict = {'queries': {'query1': 1, 'query2': 2}}
     else:
         # source of the initial request
         x = "http://registry.intermine.org/service/instances/" + mine
@@ -69,7 +69,7 @@ def get_query(name):
     """
     # mock dict for testing
     if mine == 'mock':
-        dict = {'queries':{'query1':{'select':['c1','c2']},'query2':2}}
+        dict = {'queries': {'query1': {'select': ['c1', 'c2']}, 'query2': 2}}
     else:
         # source of the initial request
         x = "http://registry.intermine.org/service/instances/" + mine
@@ -106,9 +106,9 @@ def delete_query(name):
     """
     # mock z for testing
     if mine == 'mock':
-        z = {'queries':{'query1':1,'query2':2}}
+        z = {'queries': {'query1': 1, 'query2': 2}}
     else:
-    # source of the initial request
+        # source of the initial request
         x = "http://registry.intermine.org/service/instances/" + mine
         r = requests.get(x)
         dict = json.loads(r.text)
@@ -136,7 +136,6 @@ def delete_query(name):
             return name + " is deleted"
 
 
-
 def post_query(xml):
     """
     A function to post a query(in the form of string containing xml)
@@ -153,7 +152,7 @@ def post_query(xml):
     root = etree.fromstring(xml)
     # mock raw for testing
     if mine == 'mock':
-        raw = {'queries':{'query1':1,'query2':2}}
+        raw = {'queries': {'query1': 1, 'query2': 2}}
     else:
         # source of the initial request
         x = "http://registry.intermine.org/service/instances/" + mine
@@ -177,7 +176,7 @@ def post_query(xml):
     if count == 0:
         # mock raw for testing
         if mine == 'mock':
-            raw = {'queries':{'query1':1,'query2':2,'query3':3}}
+            raw = {'queries': {'query1': 1, 'query2': 2, 'query3': 3}}
         else:
             link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
                 req.pathname2url(xml) + "&token=" + token
@@ -213,7 +212,8 @@ def save_mine_and_token(m, t):
             m = requests.get(src)
             data = json.loads(m.text)
             obj = data["instance"]["url"]
-            obj = data["instance"]["url"] + "/service/user/queries?token=" + token
+            obj = data["instance"]["url"] + "/service/user/queries?token=" + \
+                token
             try:
                 # tests if token is valid by checking if object 'obj' exists
                 o = requests.get(obj)
@@ -221,11 +221,10 @@ def save_mine_and_token(m, t):
                 obj = data['queries'].keys()
                 # checks the type fo exception
             except Exception as ex:
-                template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                template = "An exception of type {0} occurred."
                 message = template.format(type(ex).__name__, ex.args)
-                return message
+                return message + " Check token"
         except Exception as ex:
-            template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+            template = "An exception of type {0} occurred."
             message = template.format(type(ex).__name__, ex.args)
-
-            return message
+            return message + " Check mine"
