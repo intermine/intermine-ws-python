@@ -1,6 +1,7 @@
 The InterMine Python Webservice Client
 =====================================
 
+
 [![Build Status][badge]][ci] 
 ![Version](http://img.shields.io/badge/version-1.10.0-blue.svg?style=flat)
 [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/intermine/intermine/blob/master/LICENSE) 
@@ -9,6 +10,7 @@ The InterMine Python Webservice Client
 [![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/bioconda/intermine)
 [![Anaconda-Server Badge](https://anaconda.org/bioconda/intermine/badges/version.svg)](https://anaconda.org/bioconda/intermine)
 [![Downloads](https://anaconda.org/bioconda/intermine/badges/downloads.svg)](https://anaconda.org/bioconda/intermine)
+
 
 An implementation of a webservice client 
 for InterMine webservices, written in Python
@@ -58,13 +60,22 @@ The client is also available via [bioconda](https://anaconda.org/bioconda/interm
 Running the Tests:
 ------------------
 
-If you would like to run the test suite, you can do so by executing
+If you would like to run the test suite against a local mock server, you can do so by executing
 the following command: (from the source directory)
 
 ```
   python setup.py test
+```
+
+If you want to run the suite against a live server (e.g. as deployed by the testmodel/setup.sh in 
+the InterMine distribution, then you can run:
 
 ```
+  python setup.py livetest
+```
+
+By default this will use the location http://localhost:8080/intermine-demo/service.  If you want
+it to use a different service, set the service URL in the TESTMODEL_URL shell environment variable.
 
 Installation:
 -------------
