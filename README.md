@@ -43,10 +43,6 @@ The easiest way to install is to use easy_install:
 
 The source code can be downloaded from a variety of places:
 
-* From InterMine
-
-  wget http://www.intermine.org/lib/python-webservice-client-0.96.00.tar.gz
-
 * From PyPi
 
   wget http://pypi.python.org/packages/source/i/intermine/intermine-0.96.00.tar.gz
