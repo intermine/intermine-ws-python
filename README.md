@@ -71,20 +71,19 @@ Further documentation:
 
 We have detailed tutorials:
 
-  https://github.com/intermine/intermine-ws-python-docs/
+* https://github.com/intermine/intermine-ws-python-docs/
 
 Extensive documentation is available by using the "pydoc" command, eg:
 
+```
   pydoc intermine.query.Query
+```
 
 Also see:
 
 * Documentation on PyPi: http://packages.python.org/intermine/
 
-License:
---------
 
-All code in this project is dual licensed under the LGPL version 3 license and the BSD 2-clause license
 
 Changes:
 --------
@@ -130,7 +129,7 @@ Copyright and Licence
 
 Copyright (C) 2002-2018 InterMine
 
-See [LICENSE](LICENSE) file for licensing information.
+All code in this project is dual licensed under the LGPL version 3 license and the BSD 2-clause license
 
 Please cite
 ------------------------
