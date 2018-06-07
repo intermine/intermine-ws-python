@@ -64,7 +64,9 @@ Installation:
 
 Once downloaded, you can install the module with the command (from the source directory):
 
+```
   python setup.py install
+```
 
 Further documentation:
 ----------------------
