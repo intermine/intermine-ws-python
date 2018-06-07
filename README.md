@@ -2,11 +2,14 @@ The InterMine Python Webservice Client
 =====================================
 
 [![Build Status][badge]][ci] 
-[![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/bioconda/intermine)
-
 ![Version](http://img.shields.io/badge/version-1.10.0-blue.svg?style=flat)
 [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/intermine/intermine/blob/master/LICENSE) 
 [![Research software impact](http://depsy.org/api/package/pypi/intermine/badge.svg)](http://depsy.org/package/python/intermine)
+
+[![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/bioconda/intermine)
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/intermine/badges/version.svg)](https://anaconda.org/bioconda/intermine)
+[![Downloads](https://anaconda.org/bioconda/intermine/badges/downloads.svg)](https://anaconda.org/bioconda/intermine)
+[![Last-Updated](https://anaconda.org/bioconda/intermine/badges/latest_release_date.svg)](https://anaconda.org/bioconda/intermine)
 
 An implementation of a webservice client 
 for InterMine webservices, written in Python
@@ -51,13 +54,18 @@ The easiest way to install is to use easy_install:
   sudo easy_install intermine
 ```
 
+The client is also available via [bioconda](https://anaconda.org/bioconda/intermine).
+
 Running the Tests:
 ------------------
 
 If you would like to run the test suite, you can do so by executing
 the following command: (from the source directory)
 
+```
   python setup.py test
+
+```
 
 Installation:
 -------------
