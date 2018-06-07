@@ -4,6 +4,10 @@ The InterMine Python Webservice Client
 [![Build Status][badge]][ci] 
 [![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/bioconda/intermine)
 
+![Version](http://img.shields.io/badge/version-1.10.0-blue.svg?style=flat)
+[![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/intermine/intermine/blob/master/LICENSE) 
+[![Research software impact](http://depsy.org/api/package/pypi/intermine/badge.svg)](http://depsy.org/package/python/intermine)
+
 An implementation of a webservice client 
 for InterMine webservices, written in Python
 
@@ -17,12 +21,14 @@ to perform queries. Some examples of sites that
 are powered by InterMine software, and thus offer
 a compatible webservice API, are:
 
-* FlyMine
-* HumanMine
-* MouseMine
-* RatMine
-* YeastMine
-* ZebrafishMine
+  * [FlyMine](http://www.flymine.org)
+  * [MouseMine](http://www.mousemine.org)
+  * [YeastMine](http://yeastmine.yeastgenome.org)
+  * [ZebrafishMine](http://zebrafishmine.org)
+  * [RatMine](http://ratmine.mcw.edu/ratmine/begin.do)
+  * [TargetMine](http://targetmine.mizuguchilab.org/)
+  * [ThaleMine](https://apps.araport.org/thalemine)
+  * [PhytoMine](https://phytozome.jgi.doe.gov/phytomine)
 
 See the [InterMine registry](http://registry.intermine.org/) for the full list of available InterMines.
 
@@ -118,4 +124,24 @@ Changes:
 
 [badge]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py.svg?branch=master
 [ci]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py
+
+Copyright and Licence
+------------------------
+
+Copyright (C) 2002-2018 InterMine
+
+See [LICENSE](LICENSE) file for licensing information.
+
+Please cite
+------------------------
+
+**InterMine: extensive web services for modern biology.**<br/>
+
+*Kalderimis A, Lyne R, Butano D, Contrino S, Lyne M, Heimbach J, Hu F, Smith R, Stěpán R, Sullivan J, Micklem G.*<br/>
+
+[Nucleic Acids Res. 2014 Jul;42(Web Server issue):W468-72](https://academic.oup.com/nar/article/42/W1/W468/2435235)
+
+[![doi](http://img.shields.io/badge/doi-10.1093/nar/gku301-blue.svg?style=flat)](https://doi.org/10.1093/nar/gku301) 
+[![pubmed](http://img.shields.io/badge/pubmed-24753429-blue.svg?style=flat)](http://www.ncbi.nlm.nih.gov/pubmed/24753429)
+
 
