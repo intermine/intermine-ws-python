@@ -2,7 +2,7 @@ The InterMine Python Webservice Client
 =====================================
 
 [![Build Status][badge]][ci] 
-[![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/intermine/intermine)
+[![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/bioconda/intermine)
 
 An implementation of a webservice client 
 for InterMine webservices, written in Python
@@ -24,6 +24,8 @@ a compatible webservice API, are:
 * YeastMine
 * ZebrafishMine
 
+See the [InterMine registry](http://registry.intermine.org/) for the full list of available InterMines.
+
 Queries here refer to database queries over the 
 integrated datawarehouse. Instead of using 
 SQL, InterMine services use a flexible and 
@@ -32,25 +34,16 @@ to enable wide-ranging and arbitrary queries.
 
 Requirements
 ------------
-This package is compatible with both Python 2.7 and 3.x.  It may be compatible with older versions of Python 2 but this is untested.
+This package is compatible with both Python 2.7 and 3.x. We plan to drop 2.7 support next year.
 
 Downloading:
 ------------
 
 The easiest way to install is to use easy_install:
 
+```
   sudo easy_install intermine
-
-The source code can be downloaded from a variety of places:
-
-* From PyPi
-
-  wget http://pypi.python.org/packages/source/i/intermine/intermine-0.96.00.tar.gz
-
-* From Github
-
-  git clone git://github.com/alexkalderimis/intermine-ws-python.git
-
+```
 
 Running the Tests:
 ------------------
@@ -70,6 +63,10 @@ Once downloaded, you can install the module with the command (from the source di
 Further documentation:
 ----------------------
 
+We have detailed tutorials:
+
+  https://github.com/intermine/intermine-ws-python-docs/
+
 Extensive documentation is available by using the "pydoc" command, eg:
 
   pydoc intermine.query.Query
@@ -86,6 +83,7 @@ All code in this project is dual licensed under the LGPL version 3 license and t
 Changes:
 --------
 
+    1.10.00   Added registry features
     1.09.09   Add Python 3 support
     1.09.06   Dual license under BSD as well as LGPL
     1.07.00   Provide ListManagers as context managers, where users need to create
