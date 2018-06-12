@@ -25,10 +25,10 @@ class QueryManagerTest(unittest.TestCase):
     def test_post_query(self):
         # posts a query if xml is right
         self.assertEqual(qm.post_query('<query name="query3"></query>'),
-            "query3 is posted")
+                                       "query3 is posted")
         # can't post if xml is wrong and returns a message
         self.assertEqual(qm.post_query('<query name="query4"></query>'),
-            "Incorrect xml")
+                                       "Incorrect xml")
 
 
 if __name__ == '__main__':
