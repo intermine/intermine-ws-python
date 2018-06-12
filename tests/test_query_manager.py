@@ -8,7 +8,7 @@ class QueryManagerTest(unittest.TestCase):
 
     def test_get_all_query_names(self):
         # Function returns none if there is no error and mine is nonempty
-        self.assertEqual(qm.get_all_query_names(), 'query1, query2')
+        self.assertEqual(qm.get_all_query_names(), 'query1')
 
     def test_get_query(self):
         # Function returns none if the query exists in user account

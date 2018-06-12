@@ -30,7 +30,7 @@ def get_all_query_names():
     """
     # mock dict for tests
     if mine == 'mock':
-        dict = {'queries': {'query1': 1, 'query2': 2}}
+        dict = {'queries': {'query1': 1}}
     else:
         # source of the initial request
         x = "http://registry.intermine.org/service/instances/" + mine
