@@ -1,7 +1,7 @@
 
 import unittest
 
-from ..intermine import registry
+from intermine import registry
 
 
 class RegistryTest(unittest.TestCase):

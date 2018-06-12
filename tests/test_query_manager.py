@@ -1,6 +1,6 @@
 import unittest
 
-from ..intermine import query_manager as qm
+from intermine import query_manager as qm
 qm.save_mine_and_token('mock', 'x')
 
 
