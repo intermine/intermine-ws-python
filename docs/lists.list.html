@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module lists.list</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="lists.html"><font color="#ffffff">lists</font></a>.list</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/nupurgunwant/intermine-ws-python/intermine/lists/list.py">/Users/nupurgunwant/intermine-ws-python/intermine/lists/list.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="codecs.html">codecs</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="weakref.html">weakref</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="lists.list.html#List">List</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="List">class <strong>List</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;for&nbsp;representing&nbsp;a&nbsp;<a href="#List">List</a>&nbsp;on&nbsp;an&nbsp;InterMine&nbsp;Webservice<br>
+========================================================<br>
+&nbsp;<br>
+Lists&nbsp;represent&nbsp;stored&nbsp;collections&nbsp;of&nbsp;data&nbsp;and&nbsp;saved&nbsp;result<br>
+sets&nbsp;in&nbsp;an&nbsp;InterMine&nbsp;data&nbsp;warehouse.&nbsp;This&nbsp;class&nbsp;is&nbsp;an&nbsp;abstraction<br>
+of&nbsp;this&nbsp;information,&nbsp;and&nbsp;provides&nbsp;mechanisms&nbsp;for&nbsp;managing&nbsp;the<br>
+data.<br>
+&nbsp;<br>
+SYNOPSIS<br>
+--------<br>
+&nbsp;<br>
+example::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;from&nbsp;intermine.webservice&nbsp;import&nbsp;Service<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;flymine&nbsp;=&nbsp;Service("www.flymine.org/query",&nbsp;"SOMETOKEN")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;new_list&nbsp;=&nbsp;flymine.create_list(["h",&nbsp;"zen",&nbsp;"eve",&nbsp;"bib"],&nbsp;"Gene",&nbsp;name="My&nbsp;New&nbsp;<a href="#List">List</a>")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;another_list&nbsp;=&nbsp;flymine.get_list("Some&nbsp;other&nbsp;list")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;combined_list&nbsp;=&nbsp;new_list&nbsp;|&nbsp;another_list&nbsp;#&nbsp;Same&nbsp;syntax&nbsp;as&nbsp;for&nbsp;sets<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;combined_list.name&nbsp;=&nbsp;"Union&nbsp;of&nbsp;the&nbsp;other&nbsp;lists"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;"The&nbsp;combination&nbsp;of&nbsp;the&nbsp;two&nbsp;lists&nbsp;has&nbsp;%d&nbsp;elements"&nbsp;%&nbsp;combined_list.size<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print&nbsp;"The&nbsp;combination&nbsp;of&nbsp;the&nbsp;two&nbsp;lists&nbsp;has&nbsp;%d&nbsp;elements"&nbsp;%&nbsp;len(combined_list)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;for&nbsp;row&nbsp;in&nbsp;combined_list:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;row<br>
+&nbsp;<br>
+OVERVIEW<br>
+--------<br>
+&nbsp;<br>
+Lists&nbsp;are&nbsp;created&nbsp;from&nbsp;a&nbsp;webservice,&nbsp;and&nbsp;can&nbsp;be&nbsp;manipulated&nbsp;in&nbsp;various&nbsp;ways.<br>
+The&nbsp;operations&nbsp;are::<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Union:&nbsp;this&nbsp;|&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Intersection:&nbsp;this&nbsp;&amp;&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Symmetric&nbsp;Difference:&nbsp;this&nbsp;^&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Asymmetric&nbsp;Difference&nbsp;(subtraction):&nbsp;this&nbsp;-&nbsp;that<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Appending:&nbsp;this&nbsp;+=&nbsp;that<br>
+&nbsp;<br>
+Lists&nbsp;can&nbsp;be&nbsp;created&nbsp;from&nbsp;a&nbsp;list&nbsp;of&nbsp;identifiers&nbsp;that&nbsp;could&nbsp;be::<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;stored&nbsp;in&nbsp;a&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;held&nbsp;in&nbsp;a&nbsp;list&nbsp;or&nbsp;set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;contained&nbsp;in&nbsp;a&nbsp;string<br>
+In&nbsp;all&nbsp;these&nbsp;cases&nbsp;the&nbsp;syntax&nbsp;is&nbsp;the&nbsp;same:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;new_list&nbsp;=&nbsp;service.create_list(content,&nbsp;type,&nbsp;name="Some&nbsp;name",&nbsp;description="Some&nbsp;description",&nbsp;tags=["some",&nbsp;"tags"])<br>
+&nbsp;<br>
+Lists&nbsp;can&nbsp;also&nbsp;be&nbsp;created&nbsp;from&nbsp;a&nbsp;query's&nbsp;result&nbsp;with&nbsp;the&nbsp;exact<br>
+same&nbsp;syntax.&nbsp;In&nbsp;the&nbsp;case&nbsp;of&nbsp;queries,&nbsp;the&nbsp;type&nbsp;is&nbsp;not&nbsp;required,<br>
+but&nbsp;the&nbsp;query&nbsp;should&nbsp;have&nbsp;just&nbsp;one&nbsp;view,&nbsp;and&nbsp;it&nbsp;should&nbsp;be&nbsp;an&nbsp;id.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;query&nbsp;=&nbsp;service.new_query()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;query.add_view("Gene.id")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;query.add_constraint("Gene.length",&nbsp;"&lt;",&nbsp;100)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;new_list&nbsp;=&nbsp;service.create_list(query,&nbsp;name="Short&nbsp;Genes")<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="List-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;the&nbsp;union&nbsp;of&nbsp;this&nbsp;list&nbsp;and&nbsp;another</tt></dd></dl>
+
+<dl><dt><a name="List-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Intersect&nbsp;this&nbsp;list&nbsp;and&nbsp;another</tt></dd></dl>
+
+<dl><dt><a name="List-__getitem__"><strong>__getitem__</strong></a>(self, index)</dt><dd><tt>Get&nbsp;a&nbsp;member&nbsp;of&nbsp;this&nbsp;list&nbsp;by&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="List-__iadd__"><strong>__iadd__</strong></a>(self, other)</dt><dd><tt>Append&nbsp;other&nbsp;to&nbsp;this&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="List-__iand__"><strong>__iand__</strong></a>(self, other)</dt><dd><tt>Intersect&nbsp;this&nbsp;list&nbsp;and&nbsp;another,&nbsp;and&nbsp;replace&nbsp;this&nbsp;list&nbsp;with&nbsp;the&nbsp;result&nbsp;of&nbsp;the<br>
+intersection</tt></dd></dl>
+
+<dl><dt><a name="List-__init__"><strong>__init__</strong></a>(self, **args)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+Do&nbsp;not&nbsp;construct&nbsp;these&nbsp;objects&nbsp;yourself.&nbsp;They&nbsp;should&nbsp;be<br>
+fetched&nbsp;from&nbsp;a&nbsp;service&nbsp;or&nbsp;constructed&nbsp;using&nbsp;the&nbsp;"create_list"<br>
+method.</tt></dd></dl>
+
+<dl><dt><a name="List-__isub__"><strong>__isub__</strong></a>(self, other)</dt><dd><tt>Replace&nbsp;this&nbsp;list&nbsp;with&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;the&nbsp;other&nbsp;from&nbsp;this&nbsp;list</tt></dd></dl>
+
+<dl><dt><a name="List-__iter__"><strong>__iter__</strong></a>(self)</dt><dd><tt>Return&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;objects&nbsp;in&nbsp;this&nbsp;list,&nbsp;with&nbsp;all&nbsp;attributes&nbsp;selected&nbsp;for&nbsp;output</tt></dd></dl>
+
+<dl><dt><a name="List-__ixor__"><strong>__ixor__</strong></a>(self, other)</dt><dd><tt>Calculate&nbsp;the&nbsp;symmetric&nbsp;difference&nbsp;of&nbsp;this&nbsp;list&nbsp;and&nbsp;another&nbsp;and&nbsp;replace&nbsp;this&nbsp;list&nbsp;with&nbsp;the&nbsp;result</tt></dd></dl>
+
+<dl><dt><a name="List-__len__"><strong>__len__</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;<a href="builtins.html#object">object</a></tt></dd></dl>
+
+<dl><dt><a name="List-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;the&nbsp;union&nbsp;of&nbsp;this&nbsp;list&nbsp;and&nbsp;another</tt></dd></dl>
+
+<dl><dt><a name="List-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="List-__sub__"><strong>__sub__</strong></a>(self, other)</dt><dd><tt>Subtract&nbsp;the&nbsp;other&nbsp;from&nbsp;this&nbsp;list</tt></dd></dl>
+
+<dl><dt><a name="List-__xor__"><strong>__xor__</strong></a>(self, other)</dt><dd><tt>Calculate&nbsp;the&nbsp;symmetric&nbsp;difference&nbsp;of&nbsp;this&nbsp;list&nbsp;and&nbsp;another</tt></dd></dl>
+
+<dl><dt><a name="List-add_tags"><strong>add_tags</strong></a>(self, *tags)</dt><dd><tt>Tag&nbsp;this&nbsp;list&nbsp;with&nbsp;one&nbsp;or&nbsp;more&nbsp;categories<br>
+=========================================<br>
+&nbsp;<br>
+Calls&nbsp;the&nbsp;server&nbsp;to&nbsp;add&nbsp;these&nbsp;tags,&nbsp;and&nbsp;updates&nbsp;this&nbsp;lists&nbsp;tags.</tt></dd></dl>
+
+<dl><dt><a name="List-append"><strong>append</strong></a>(self, appendix)</dt><dd><tt>Append&nbsp;the&nbsp;arguments&nbsp;to&nbsp;this&nbsp;list</tt></dd></dl>
+
+<dl><dt><a name="List-calculate_enrichment"><strong>calculate_enrichment</strong></a>(self, widget, background=None, correction='Holm-Bonferroni', maxp=0.05, filter='')</dt><dd><tt>Perform&nbsp;an&nbsp;enrichment&nbsp;calculation&nbsp;on&nbsp;this&nbsp;list<br>
+==============================================<br>
+&nbsp;<br>
+example::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;for&nbsp;item&nbsp;in&nbsp;service.get_list("some&nbsp;list").<a href="#List-calculate_enrichment">calculate_enrichment</a>("thingy_enrichment"):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;item.identifier,&nbsp;item.p_value<br>
+&nbsp;<br>
+Gets&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;rows&nbsp;for&nbsp;an&nbsp;enrichment&nbsp;calculation.&nbsp;Each&nbsp;row&nbsp;represents<br>
+a&nbsp;record&nbsp;with&nbsp;the&nbsp;following&nbsp;properties:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;identifier&nbsp;{str}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;p-value&nbsp;{float}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;matches&nbsp;{int}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;description&nbsp;{str}<br>
+&nbsp;<br>
+The&nbsp;enrichment&nbsp;row&nbsp;<a href="builtins.html#object">object</a>&nbsp;may&nbsp;be&nbsp;treated&nbsp;as&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;with&nbsp;property&nbsp;access,&nbsp;or&nbsp;as<br>
+a&nbsp;dictionary,&nbsp;supporting&nbsp;key&nbsp;lookup&nbsp;with&nbsp;the&nbsp;[]&nbsp;operator:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;p_value&nbsp;=&nbsp;row['p-value']</tt></dd></dl>
+
+<dl><dt><a name="List-del_name"><strong>del_name</strong></a>(self)</dt><dd><tt>Raises&nbsp;an&nbsp;error&nbsp;-&nbsp;lists&nbsp;must&nbsp;always&nbsp;have&nbsp;a&nbsp;name</tt></dd></dl>
+
+<dl><dt><a name="List-delete"><strong>delete</strong></a>(self)</dt><dd><tt>Delete&nbsp;this&nbsp;list&nbsp;from&nbsp;the&nbsp;webservice<br>
+====================================<br>
+&nbsp;<br>
+Calls&nbsp;the&nbsp;webservice&nbsp;to&nbsp;delete&nbsp;this&nbsp;list&nbsp;immediately.&nbsp;This<br>
+<a href="builtins.html#object">object</a>&nbsp;should&nbsp;not&nbsp;be&nbsp;used&nbsp;after&nbsp;this&nbsp;method&nbsp;is&nbsp;called&nbsp;-&nbsp;attempts<br>
+to&nbsp;do&nbsp;so&nbsp;will&nbsp;raise&nbsp;errors.</tt></dd></dl>
+
+<dl><dt><a name="List-get_name"><strong>get_name</strong></a>(self)</dt><dd><tt>The&nbsp;name&nbsp;of&nbsp;the&nbsp;list&nbsp;used&nbsp;to&nbsp;access&nbsp;it&nbsp;programmatically</tt></dd></dl>
+
+<dl><dt><a name="List-make_list_constraint"><strong>make_list_constraint</strong></a>(self, path, op)</dt><dd><tt>Implementation&nbsp;of&nbsp;trait&nbsp;that&nbsp;allows&nbsp;use&nbsp;of&nbsp;these&nbsp;objects&nbsp;in&nbsp;list&nbsp;constraints</tt></dd></dl>
+
+<dl><dt><a name="List-remove_tags"><strong>remove_tags</strong></a>(self, *tags)</dt><dd><tt>Remove&nbsp;tags&nbsp;associated&nbsp;with&nbsp;this&nbsp;list.<br>
+======================================<br>
+&nbsp;<br>
+Calls&nbsp;the&nbsp;server&nbsp;to&nbsp;remove&nbsp;these&nbsp;tags,&nbsp;and&nbsp;updates&nbsp;this&nbsp;lists&nbsp;tags.</tt></dd></dl>
+
+<dl><dt><a name="List-set_name"><strong>set_name</strong></a>(self, new_name)</dt><dd><tt>Set&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;list<br>
+========================<br>
+&nbsp;<br>
+Setting&nbsp;the&nbsp;list's&nbsp;name&nbsp;causes&nbsp;the&nbsp;list's&nbsp;name&nbsp;to&nbsp;be&nbsp;updated&nbsp;on&nbsp;the&nbsp;server.</tt></dd></dl>
+
+<dl><dt><a name="List-to_query"><strong>to_query</strong></a>(self)</dt><dd><tt>Construct&nbsp;a&nbsp;query&nbsp;to&nbsp;fetch&nbsp;the&nbsp;items&nbsp;in&nbsp;this&nbsp;list<br>
+=================================================<br>
+&nbsp;<br>
+Return&nbsp;a&nbsp;new&nbsp;query&nbsp;constrained&nbsp;to&nbsp;the&nbsp;objects&nbsp;in&nbsp;this&nbsp;list,<br>
+and&nbsp;with&nbsp;a&nbsp;single&nbsp;view&nbsp;column&nbsp;of&nbsp;the&nbsp;objects&nbsp;ids.<br>
+&nbsp;<br>
+@rtype:&nbsp;intermine.query.Query</tt></dd></dl>
+
+<dl><dt><a name="List-update_tags"><strong>update_tags</strong></a>(self, *tags)</dt><dd><tt>Remove&nbsp;tags&nbsp;associated&nbsp;with&nbsp;this&nbsp;list.<br>
+======================================<br>
+&nbsp;<br>
+Calls&nbsp;the&nbsp;server&nbsp;to&nbsp;remove&nbsp;these&nbsp;tags,&nbsp;and&nbsp;updates&nbsp;this&nbsp;lists&nbsp;tags.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>count</strong></dt>
+<dd><tt>Alias&nbsp;for&nbsp;obj.size.&nbsp;Also&nbsp;available&nbsp;as&nbsp;len(obj)</tt></dd>
+</dl>
+<dl><dt><strong>date_created</strong></dt>
+<dd><tt>When&nbsp;this&nbsp;list&nbsp;was&nbsp;originally&nbsp;created</tt></dd>
+</dl>
+<dl><dt><strong>description</strong></dt>
+<dd><tt>The&nbsp;human&nbsp;readable&nbsp;description&nbsp;of&nbsp;this&nbsp;list</tt></dd>
+</dl>
+<dl><dt><strong>is_authorized</strong></dt>
+<dd><tt>Whether&nbsp;or&nbsp;not&nbsp;the&nbsp;current&nbsp;user&nbsp;is&nbsp;authorised&nbsp;to&nbsp;make&nbsp;changes&nbsp;to&nbsp;this&nbsp;list</tt></dd>
+</dl>
+<dl><dt><strong>list_type</strong></dt>
+<dd><tt>The&nbsp;type&nbsp;of&nbsp;the&nbsp;InterMine&nbsp;objects&nbsp;this&nbsp;list&nbsp;can&nbsp;contain</tt></dd>
+</dl>
+<dl><dt><strong>name</strong></dt>
+<dd><tt>The&nbsp;name&nbsp;of&nbsp;this&nbsp;list</tt></dd>
+</dl>
+<dl><dt><strong>size</strong></dt>
+<dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;list.&nbsp;Also&nbsp;available&nbsp;as&nbsp;len(obj)</tt></dd>
+</dl>
+<dl><dt><strong>status</strong></dt>
+<dd><tt>The&nbsp;upgrade&nbsp;status&nbsp;of&nbsp;this&nbsp;list</tt></dd>
+</dl>
+<dl><dt><strong>tags</strong></dt>
+<dd><tt>The&nbsp;tags&nbsp;associated&nbsp;with&nbsp;this&nbsp;list</tt></dd>
+</dl>
+<dl><dt><strong>title</strong></dt>
+<dd><tt>The&nbsp;fixed&nbsp;title&nbsp;of&nbsp;this&nbsp;list</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>LOG</strong> = &lt;Logger List (WARNING)&gt;</dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

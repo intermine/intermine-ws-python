@@ -1,0 +1,551 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module intermine.webservice</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="intermine.html"><font color="#ffffff">intermine</font></a>.webservice</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/nupurgunwant/intermine-ws-python/intermine/webservice.py">/Users/nupurgunwant/intermine-ws-python/intermine/webservice.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="intermine.idresolution.html">intermine.idresolution</a><br>
+</td><td width="25%" valign=top><a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="xml.dom.minidom.html">xml.dom.minidom</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.webservice.html#Service">Service</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="collections.abc.html#MutableMapping">collections.abc.MutableMapping</a>(<a href="collections.abc.html#Mapping">collections.abc.Mapping</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.webservice.html#Registry">Registry</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Registry">class <strong>Registry</strong></a>(<a href="collections.abc.html#MutableMapping">collections.abc.MutableMapping</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;Class&nbsp;representing&nbsp;an&nbsp;InterMine&nbsp;registry.<br>
+===========================================<br>
+&nbsp;<br>
+Registries&nbsp;are&nbsp;web-services&nbsp;that&nbsp;mines&nbsp;can&nbsp;automatically&nbsp;register<br>
+themselves&nbsp;with,&nbsp;and&nbsp;thus&nbsp;enable&nbsp;service&nbsp;discovery&nbsp;by&nbsp;clients.<br>
+&nbsp;<br>
+SYNOPSIS<br>
+--------<br>
+&nbsp;<br>
+example::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;intermine.webservice&nbsp;import&nbsp;<a href="#Registry">Registry</a><br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Connect&nbsp;to&nbsp;the&nbsp;default&nbsp;registry&nbsp;service<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;at&nbsp;www.intermine.org/registry<br>
+&nbsp;&nbsp;&nbsp;&nbsp;registry&nbsp;=&nbsp;<a href="#Registry">Registry</a>()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Find&nbsp;all&nbsp;the&nbsp;available&nbsp;mines:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;name,&nbsp;mine&nbsp;in&nbsp;registry.<a href="#Registry-items">items</a>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;name,&nbsp;mine.version<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Dict-like&nbsp;interface&nbsp;for&nbsp;accessing&nbsp;mines.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;flymine&nbsp;=&nbsp;registry["flymine"]<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;The&nbsp;mine&nbsp;<a href="builtins.html#object">object</a>&nbsp;is&nbsp;a&nbsp;<a href="#Service">Service</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;gene&nbsp;in&nbsp;flymine.select("Gene.*").results():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;process(gene)<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;is&nbsp;meant&nbsp;to&nbsp;aid&nbsp;with&nbsp;interoperation&nbsp;between<br>
+mines&nbsp;by&nbsp;allowing&nbsp;them&nbsp;to&nbsp;discover&nbsp;one-another,&nbsp;and<br>
+allow&nbsp;users&nbsp;to&nbsp;always&nbsp;have&nbsp;correct&nbsp;connection&nbsp;information.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.webservice.html#Registry">Registry</a></dd>
+<dd><a href="collections.abc.html#MutableMapping">collections.abc.MutableMapping</a></dd>
+<dd><a href="collections.abc.html#Mapping">collections.abc.Mapping</a></dd>
+<dd><a href="collections.abc.html#Collection">collections.abc.Collection</a></dd>
+<dd><a href="collections.abc.html#Sized">collections.abc.Sized</a></dd>
+<dd><a href="collections.abc.html#Iterable">collections.abc.Iterable</a></dd>
+<dd><a href="collections.abc.html#Container">collections.abc.Container</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Registry-__contains__"><strong>__contains__</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="Registry-__delitem__"><strong>__delitem__</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="Registry-__getitem__"><strong>__getitem__</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="Registry-__init__"><strong>__init__</strong></a>(self, registry_url='http://www.intermine.org/registry')</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="Registry-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Registry-__len__"><strong>__len__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Registry-__setitem__"><strong>__setitem__</strong></a>(self, name, item)</dt></dl>
+
+<dl><dt><a name="Registry-keys"><strong>keys</strong></a>(self)</dt><dd><tt>D.<a href="#Registry-keys">keys</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>MINES_PATH</strong> = '/mines.json'</dl>
+
+<dl><dt><strong>__abstractmethods__</strong> = frozenset()</dl>
+
+<hr>
+Methods inherited from <a href="collections.abc.html#MutableMapping">collections.abc.MutableMapping</a>:<br>
+<dl><dt><a name="Registry-clear"><strong>clear</strong></a>(self)</dt><dd><tt>D.<a href="#Registry-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</tt></dd></dl>
+
+<dl><dt><a name="Registry-pop"><strong>pop</strong></a>(self, key, default=&lt;object object at 0x101a72050&gt;)</dt><dd><tt>D.<a href="#Registry-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value.<br>
+If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nbsp;given,&nbsp;otherwise&nbsp;KeyError&nbsp;is&nbsp;raised.</tt></dd></dl>
+
+<dl><dt><a name="Registry-popitem"><strong>popitem</strong></a>(self)</dt><dd><tt>D.<a href="#Registry-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair<br>
+as&nbsp;a&nbsp;2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty.</tt></dd></dl>
+
+<dl><dt><a name="Registry-setdefault"><strong>setdefault</strong></a>(self, key, default=None)</dt><dd><tt>D.<a href="#Registry-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#Registry-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Registry-update"><strong>update</strong></a>(*args, **kwds)</dt><dd><tt>D.<a href="#Registry-update">update</a>([E,&nbsp;]**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;mapping/iterable&nbsp;E&nbsp;and&nbsp;F.<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;has&nbsp;a&nbsp;.<a href="#Registry-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;lacks&nbsp;.<a href="#Registry-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v<br>
+In&nbsp;either&nbsp;case,&nbsp;this&nbsp;is&nbsp;followed&nbsp;by:&nbsp;for&nbsp;k,&nbsp;v&nbsp;in&nbsp;F.<a href="#Registry-items">items</a>():&nbsp;D[k]&nbsp;=&nbsp;v</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="collections.abc.html#Mapping">collections.abc.Mapping</a>:<br>
+<dl><dt><a name="Registry-__eq__"><strong>__eq__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="Registry-get"><strong>get</strong></a>(self, key, default=None)</dt><dd><tt>D.<a href="#Registry-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="Registry-items"><strong>items</strong></a>(self)</dt><dd><tt>D.<a href="#Registry-items">items</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;items</tt></dd></dl>
+
+<dl><dt><a name="Registry-values"><strong>values</strong></a>(self)</dt><dd><tt>D.<a href="#Registry-values">values</a>()&nbsp;-&gt;&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="collections.abc.html#Mapping">collections.abc.Mapping</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+<dl><dt><strong>__reversed__</strong> = None</dl>
+
+<hr>
+Class methods inherited from <a href="collections.abc.html#Collection">collections.abc.Collection</a>:<br>
+<dl><dt><a name="Registry-__subclasshook__"><strong>__subclasshook__</strong></a>(C)<font color="#909090"><font face="helvetica, arial"> from <a href="abc.html#ABCMeta">abc.ABCMeta</a></font></font></dt><dd><tt>Abstract&nbsp;classes&nbsp;can&nbsp;override&nbsp;this&nbsp;to&nbsp;customize&nbsp;issubclass().<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;invoked&nbsp;early&nbsp;on&nbsp;by&nbsp;abc.ABCMeta.__subclasscheck__().<br>
+It&nbsp;should&nbsp;return&nbsp;True,&nbsp;False&nbsp;or&nbsp;NotImplemented.&nbsp;&nbsp;If&nbsp;it&nbsp;returns<br>
+NotImplemented,&nbsp;the&nbsp;normal&nbsp;algorithm&nbsp;is&nbsp;used.&nbsp;&nbsp;Otherwise,&nbsp;it<br>
+overrides&nbsp;the&nbsp;normal&nbsp;algorithm&nbsp;(and&nbsp;the&nbsp;outcome&nbsp;is&nbsp;cached).</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Service">class <strong>Service</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;class&nbsp;representing&nbsp;connections&nbsp;to&nbsp;different&nbsp;InterMine&nbsp;WebServices<br>
+===================================================================<br>
+&nbsp;<br>
+The&nbsp;intermine.webservice.<a href="#Service">Service</a>&nbsp;class&nbsp;is&nbsp;the&nbsp;main&nbsp;interface&nbsp;for&nbsp;the&nbsp;user.<br>
+It&nbsp;will&nbsp;provide&nbsp;access&nbsp;to&nbsp;queries&nbsp;and&nbsp;templates,&nbsp;as&nbsp;well&nbsp;as&nbsp;doing&nbsp;the<br>
+background&nbsp;task&nbsp;of&nbsp;fetching&nbsp;the&nbsp;data&nbsp;model,&nbsp;and&nbsp;actually&nbsp;requesting<br>
+the&nbsp;query&nbsp;results.<br>
+&nbsp;<br>
+SYNOPSIS<br>
+--------<br>
+&nbsp;<br>
+example::<br>
+&nbsp;<br>
+&nbsp;&nbsp;from&nbsp;intermine.webservice&nbsp;import&nbsp;<a href="#Service">Service</a><br>
+&nbsp;&nbsp;service&nbsp;=&nbsp;<a href="#Service">Service</a>("<a href="http://www.flymine.org/query/service">http://www.flymine.org/query/service</a>")<br>
+&nbsp;<br>
+&nbsp;&nbsp;template&nbsp;=&nbsp;service.<a href="#Service-get_template">get_template</a>("Gene_Pathways")<br>
+&nbsp;&nbsp;for&nbsp;row&nbsp;in&nbsp;template.results(A={"value":"zen"}):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;do_something_with(row)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+&nbsp;<br>
+&nbsp;&nbsp;query&nbsp;=&nbsp;service.<a href="#Service-new_query">new_query</a>()<br>
+&nbsp;&nbsp;query.add_view("Gene.symbol",&nbsp;"Gene.pathway.name")<br>
+&nbsp;&nbsp;query.add_constraint("Gene",&nbsp;"LOOKUP",&nbsp;"zen")<br>
+&nbsp;&nbsp;for&nbsp;row&nbsp;in&nbsp;query.results():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;do_something_with(row)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+&nbsp;<br>
+&nbsp;&nbsp;new_list&nbsp;=&nbsp;service.create_list("some/file/with.ids",&nbsp;"Gene")<br>
+&nbsp;&nbsp;list_on_server&nbsp;=&nbsp;service.get_list("On&nbsp;server")<br>
+&nbsp;&nbsp;in_both&nbsp;=&nbsp;new_list&nbsp;&amp;&nbsp;list_on_server<br>
+&nbsp;&nbsp;in_both.name&nbsp;=&nbsp;"Intersection&nbsp;of&nbsp;these&nbsp;lists"<br>
+&nbsp;&nbsp;for&nbsp;row&nbsp;in&nbsp;in_both:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;do_something_with(row)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+&nbsp;<br>
+OVERVIEW<br>
+--------<br>
+The&nbsp;two&nbsp;methods&nbsp;the&nbsp;user&nbsp;will&nbsp;be&nbsp;most&nbsp;concerned&nbsp;with&nbsp;are:<br>
+&nbsp;&nbsp;-&nbsp;L{<a href="#Service">Service</a>.new_query}:&nbsp;constructs&nbsp;a&nbsp;new&nbsp;query&nbsp;to&nbsp;query&nbsp;a&nbsp;service&nbsp;with<br>
+&nbsp;&nbsp;-&nbsp;L{<a href="#Service">Service</a>.get_template}:&nbsp;gets&nbsp;a&nbsp;template&nbsp;from&nbsp;the&nbsp;service<br>
+&nbsp;&nbsp;-&nbsp;L{ListManager.create_list}:&nbsp;creates&nbsp;a&nbsp;new&nbsp;list&nbsp;on&nbsp;the&nbsp;service<br>
+&nbsp;<br>
+For&nbsp;list&nbsp;management&nbsp;information,&nbsp;see&nbsp;L{ListManager}.<br>
+&nbsp;<br>
+TERMINOLOGY<br>
+-----------<br>
+X{Query}&nbsp;is&nbsp;the&nbsp;term&nbsp;for&nbsp;an&nbsp;arbitrarily&nbsp;complex&nbsp;structured&nbsp;request&nbsp;for<br>
+data&nbsp;from&nbsp;the&nbsp;webservice.&nbsp;The&nbsp;user&nbsp;is&nbsp;responsible&nbsp;for&nbsp;specifying&nbsp;the<br>
+structure&nbsp;that&nbsp;determines&nbsp;what&nbsp;records&nbsp;are&nbsp;returned,&nbsp;and&nbsp;what&nbsp;information<br>
+about&nbsp;each&nbsp;record&nbsp;is&nbsp;provided.<br>
+&nbsp;<br>
+X{Template}&nbsp;is&nbsp;the&nbsp;term&nbsp;for&nbsp;a&nbsp;predefined&nbsp;"Query",&nbsp;ie:&nbsp;one&nbsp;that&nbsp;has&nbsp;been<br>
+written&nbsp;and&nbsp;saved&nbsp;on&nbsp;the&nbsp;webservice&nbsp;you&nbsp;will&nbsp;access.&nbsp;The&nbsp;definition<br>
+of&nbsp;the&nbsp;query&nbsp;is&nbsp;already&nbsp;done,&nbsp;but&nbsp;the&nbsp;user&nbsp;may&nbsp;want&nbsp;to&nbsp;specify&nbsp;the<br>
+values&nbsp;of&nbsp;the&nbsp;constraints&nbsp;that&nbsp;exist&nbsp;on&nbsp;the&nbsp;template.&nbsp;Templates&nbsp;are&nbsp;accessed<br>
+by&nbsp;name,&nbsp;and&nbsp;while&nbsp;you&nbsp;can&nbsp;easily&nbsp;introspect&nbsp;templates,&nbsp;it&nbsp;is&nbsp;assumed<br>
+you&nbsp;know&nbsp;what&nbsp;they&nbsp;do&nbsp;when&nbsp;you&nbsp;use&nbsp;them<br>
+&nbsp;<br>
+X{List}&nbsp;is&nbsp;a&nbsp;saved&nbsp;result&nbsp;set&nbsp;containing&nbsp;a&nbsp;set&nbsp;of&nbsp;objects&nbsp;previously&nbsp;identified<br>
+in&nbsp;the&nbsp;database.&nbsp;Lists&nbsp;can&nbsp;be&nbsp;created&nbsp;and&nbsp;managed&nbsp;using&nbsp;this&nbsp;client&nbsp;library.<br>
+&nbsp;<br>
+@see:&nbsp;L{intermine.query}<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Service-__del__"><strong>__del__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Service-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="Service-__getattribute__"><strong>__getattribute__</strong></a>(self, name)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="Service-__init__"><strong>__init__</strong></a>(self, root, username=None, password=None, token=None, prefetch_depth=1, prefetch_id_only=False)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+Construct&nbsp;a&nbsp;connection&nbsp;to&nbsp;a&nbsp;webservice::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;=&nbsp;"<a href="http://www.flymine.org/query/service">http://www.flymine.org/query/service</a>"<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;An&nbsp;unauthenticated&nbsp;connection&nbsp;-&nbsp;access&nbsp;to&nbsp;all&nbsp;public&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;service&nbsp;=&nbsp;<a href="#Service">Service</a>(url)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;An&nbsp;authenticated&nbsp;connection&nbsp;-&nbsp;access&nbsp;to&nbsp;private&nbsp;and&nbsp;public&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;service&nbsp;=&nbsp;<a href="#Service">Service</a>(url,&nbsp;token="ABC123456")<br>
+&nbsp;<br>
+&nbsp;<br>
+@param&nbsp;root:&nbsp;the&nbsp;root&nbsp;url&nbsp;of&nbsp;the&nbsp;webservice&nbsp;(required)<br>
+@param&nbsp;username:&nbsp;your&nbsp;login&nbsp;name&nbsp;(optional)<br>
+@param&nbsp;password:&nbsp;your&nbsp;password&nbsp;(required&nbsp;if&nbsp;a&nbsp;username&nbsp;is&nbsp;given)<br>
+@param&nbsp;token:&nbsp;your&nbsp;API&nbsp;access&nbsp;token(optional&nbsp;-&nbsp;used&nbsp;in&nbsp;preference&nbsp;to&nbsp;username&nbsp;and&nbsp;password)<br>
+&nbsp;<br>
+@raise&nbsp;ServiceError:&nbsp;if&nbsp;the&nbsp;version&nbsp;cannot&nbsp;be&nbsp;fetched&nbsp;and&nbsp;parsed<br>
+@raise&nbsp;ValueError:&nbsp;&nbsp;&nbsp;if&nbsp;a&nbsp;username&nbsp;is&nbsp;supplied,&nbsp;but&nbsp;no&nbsp;password<br>
+&nbsp;<br>
+There&nbsp;are&nbsp;two&nbsp;alternative&nbsp;authentication&nbsp;systems&nbsp;supported&nbsp;by&nbsp;InterMine<br>
+webservices.&nbsp;The&nbsp;first&nbsp;is&nbsp;username&nbsp;and&nbsp;password&nbsp;authentication,&nbsp;which<br>
+is&nbsp;supported&nbsp;by&nbsp;all&nbsp;webservices.&nbsp;Newer&nbsp;webservices&nbsp;(version&nbsp;6+)<br>
+also&nbsp;support&nbsp;API&nbsp;access&nbsp;token&nbsp;authentication,&nbsp;which&nbsp;is&nbsp;the&nbsp;recommended<br>
+system&nbsp;to&nbsp;use.&nbsp;Token&nbsp;access&nbsp;is&nbsp;more&nbsp;secure&nbsp;as&nbsp;you&nbsp;will&nbsp;never&nbsp;have<br>
+to&nbsp;transmit&nbsp;your&nbsp;username&nbsp;or&nbsp;password,&nbsp;and&nbsp;the&nbsp;token&nbsp;can&nbsp;be&nbsp;easily&nbsp;changed<br>
+or&nbsp;disabled&nbsp;without&nbsp;changing&nbsp;your&nbsp;webapp&nbsp;login&nbsp;details.</tt></dd></dl>
+
+<dl><dt><a name="Service-deregister"><strong>deregister</strong></a>(self, deregistration_token)</dt><dd><tt>Remove&nbsp;a&nbsp;User&nbsp;from&nbsp;the&nbsp;service<br>
+==============================<br>
+&nbsp;<br>
+@param&nbsp;deregistration_token&nbsp;A&nbsp;token&nbsp;to&nbsp;prove&nbsp;you&nbsp;really&nbsp;want&nbsp;to&nbsp;do&nbsp;this<br>
+&nbsp;<br>
+@return&nbsp;string&nbsp;All&nbsp;the&nbsp;user's&nbsp;data.</tt></dd></dl>
+
+<dl><dt><a name="Service-flush"><strong>flush</strong></a>(self)</dt><dd><tt>Flushes&nbsp;any&nbsp;cached&nbsp;data.</tt></dd></dl>
+
+<dl><dt><a name="Service-get_deregistration_token"><strong>get_deregistration_token</strong></a>(self, validity=300)</dt></dl>
+
+<dl><dt><a name="Service-get_results"><strong>get_results</strong></a>(self, path, params, rowformat, view, cld=None)</dt><dd><tt>Return&nbsp;an&nbsp;Iterator&nbsp;over&nbsp;the&nbsp;rows&nbsp;of&nbsp;the&nbsp;results<br>
+===============================================<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;internally&nbsp;by&nbsp;the&nbsp;query&nbsp;objects<br>
+when&nbsp;they&nbsp;are&nbsp;called&nbsp;to&nbsp;get&nbsp;results.&nbsp;You&nbsp;will&nbsp;not<br>
+normally&nbsp;need&nbsp;to&nbsp;call&nbsp;it&nbsp;directly<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;resource&nbsp;path&nbsp;(eg:&nbsp;"/query/results")<br>
+@type&nbsp;path:&nbsp;string<br>
+@param&nbsp;params:&nbsp;The&nbsp;query&nbsp;parameters&nbsp;for&nbsp;this&nbsp;request&nbsp;as&nbsp;a&nbsp;dictionary<br>
+@type&nbsp;params:&nbsp;dict<br>
+@param&nbsp;rowformat:&nbsp;One&nbsp;of&nbsp;"rr",&nbsp;"<a href="builtins.html#object">object</a>",&nbsp;"count",&nbsp;"dict",&nbsp;"list",&nbsp;"tsv",&nbsp;"csv",&nbsp;"jsonrows",&nbsp;"jsonobjects"<br>
+@type&nbsp;rowformat:&nbsp;string<br>
+@param&nbsp;view:&nbsp;The&nbsp;output&nbsp;columns<br>
+@type&nbsp;view:&nbsp;list<br>
+&nbsp;<br>
+@raise&nbsp;WebserviceError:&nbsp;for&nbsp;failed&nbsp;requests<br>
+&nbsp;<br>
+@return:&nbsp;L{intermine.webservice.ResultIterator}</tt></dd></dl>
+
+<dl><dt><a name="Service-get_template"><strong>get_template</strong></a>(self, name)</dt><dd><tt>Returns&nbsp;a&nbsp;template&nbsp;of&nbsp;the&nbsp;given&nbsp;name<br>
+====================================<br>
+&nbsp;<br>
+Tries&nbsp;to&nbsp;retrieve&nbsp;a&nbsp;template&nbsp;of&nbsp;the&nbsp;given&nbsp;name<br>
+from&nbsp;the&nbsp;webservice.&nbsp;If&nbsp;you&nbsp;are&nbsp;trying&nbsp;to&nbsp;fetch<br>
+a&nbsp;private&nbsp;template&nbsp;(ie.&nbsp;one&nbsp;you&nbsp;made&nbsp;yourself<br>
+and&nbsp;is&nbsp;not&nbsp;available&nbsp;to&nbsp;others)&nbsp;then&nbsp;you&nbsp;may&nbsp;need&nbsp;to&nbsp;authenticate<br>
+&nbsp;<br>
+@see:&nbsp;L{intermine.webservice.<a href="#Service">Service</a>.__init__}<br>
+&nbsp;<br>
+@param&nbsp;name:&nbsp;the&nbsp;template's&nbsp;name<br>
+@type&nbsp;name:&nbsp;string<br>
+&nbsp;<br>
+@raise&nbsp;ServiceError:&nbsp;if&nbsp;the&nbsp;template&nbsp;does&nbsp;not&nbsp;exist<br>
+@raise&nbsp;QueryParseError:&nbsp;if&nbsp;the&nbsp;template&nbsp;cannot&nbsp;be&nbsp;parsed<br>
+&nbsp;<br>
+@return:&nbsp;L{intermine.query.Template}</tt></dd></dl>
+
+<dl><dt><a name="Service-list_manager"><strong>list_manager</strong></a>(self)</dt><dd><tt>Get&nbsp;a&nbsp;new&nbsp;ListManager&nbsp;to&nbsp;use&nbsp;with&nbsp;this&nbsp;service.<br>
+===============================================<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;primarily&nbsp;useful&nbsp;as&nbsp;a&nbsp;context&nbsp;manager<br>
+when&nbsp;creating&nbsp;temporary&nbsp;lists,&nbsp;since&nbsp;on&nbsp;context&nbsp;exit&nbsp;all<br>
+temporary&nbsp;lists&nbsp;will&nbsp;be&nbsp;cleaned&nbsp;up::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;service.<a href="#Service-list_manager">list_manager</a>()&nbsp;as&nbsp;manager:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp_a&nbsp;=&nbsp;manager.create_list(file_a,&nbsp;"Gene")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp_b&nbsp;=&nbsp;manager.create_list(file_b,&nbsp;"Gene")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;gene&nbsp;in&nbsp;(temp_a&nbsp;&amp;&nbsp;temp_b):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;gene.primaryIdentifier,&nbsp;"is&nbsp;in&nbsp;both"<br>
+&nbsp;<br>
+@rtype:&nbsp;ListManager</tt></dd></dl>
+
+<dl><dt><a name="Service-load_query"><strong>load_query</strong></a>(self, xml, root=None)</dt><dd><tt>Construct&nbsp;a&nbsp;new&nbsp;Query&nbsp;<a href="builtins.html#object">object</a>&nbsp;for&nbsp;the&nbsp;given&nbsp;webservice<br>
+=====================================================<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;standard&nbsp;method&nbsp;for&nbsp;instantiating&nbsp;new&nbsp;Query<br>
+objects.&nbsp;Queries&nbsp;require&nbsp;access&nbsp;to&nbsp;the&nbsp;data&nbsp;model,&nbsp;as&nbsp;well<br>
+as&nbsp;the&nbsp;service&nbsp;itself,&nbsp;so&nbsp;it&nbsp;is&nbsp;easiest&nbsp;to&nbsp;access&nbsp;them&nbsp;through<br>
+this&nbsp;factory&nbsp;method.<br>
+&nbsp;<br>
+@return:&nbsp;L{intermine.query.Query}</tt></dd></dl>
+
+<dl><dt><a name="Service-new_query"><strong>new_query</strong></a> = <a href="#Service-select">select</a>(self, *columns, **kwargs)</dt></dl>
+
+<dl><dt><a name="Service-register"><strong>register</strong></a>(self, username, password)</dt><dd><tt>Register&nbsp;a&nbsp;new&nbsp;user&nbsp;with&nbsp;this&nbsp;service.<br>
+=======================================<br>
+&nbsp;<br>
+@return&nbsp;{<a href="#Service">Service</a>}&nbsp;an&nbsp;authenticated&nbsp;service.</tt></dd></dl>
+
+<dl><dt><a name="Service-resolve_ids"><strong>resolve_ids</strong></a>(self, data_type, identifiers, extra='', case_sensitive=False, wildcards=False)</dt><dd><tt>Submit&nbsp;an&nbsp;Identifier&nbsp;Resolution&nbsp;Job<br>
+===================================<br>
+&nbsp;<br>
+Request&nbsp;that&nbsp;a&nbsp;set&nbsp;of&nbsp;identifiers&nbsp;be&nbsp;resolved&nbsp;to&nbsp;objects&nbsp;in<br>
+the&nbsp;data&nbsp;store.<br>
+&nbsp;<br>
+@param&nbsp;data_type:&nbsp;The&nbsp;type&nbsp;of&nbsp;these&nbsp;identifiers&nbsp;(eg.&nbsp;'Gene')<br>
+@type&nbsp;data_type:&nbsp;String<br>
+&nbsp;<br>
+@param&nbsp;identifiers:&nbsp;The&nbsp;ids&nbsp;to&nbsp;resolve&nbsp;(eg.&nbsp;['eve',&nbsp;'zen',&nbsp;'pparg'])<br>
+@type&nbsp;identifiers:&nbsp;iterable&nbsp;of&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;extra:&nbsp;A&nbsp;disambiguating&nbsp;value&nbsp;(eg.&nbsp;"Drosophila&nbsp;melanogaster")<br>
+@type&nbsp;extra:&nbsp;String<br>
+&nbsp;<br>
+@param&nbsp;case_sensitive:&nbsp;Whether&nbsp;to&nbsp;treat&nbsp;IDs&nbsp;case&nbsp;sensitively.<br>
+@type&nbsp;case_sensitive:&nbsp;Boolean<br>
+&nbsp;<br>
+@param&nbsp;wildcards:&nbsp;Whether&nbsp;or&nbsp;not&nbsp;to&nbsp;interpret&nbsp;wildcards&nbsp;(eg:&nbsp;"eve*")<br>
+@type&nbsp;wildcards:&nbsp;Boolean<br>
+&nbsp;<br>
+@return:&nbsp;{idresolution.Job}&nbsp;The&nbsp;job.</tt></dd></dl>
+
+<dl><dt><a name="Service-resolve_service_path"><strong>resolve_service_path</strong></a>(self, variant)</dt><dd><tt>Resolve&nbsp;the&nbsp;path&nbsp;to&nbsp;optional&nbsp;services</tt></dd></dl>
+
+<dl><dt><a name="Service-search"><strong>search</strong></a>(self, term, **facets)</dt><dd><tt>Perform&nbsp;an&nbsp;unstructured&nbsp;search&nbsp;by&nbsp;term<br>
+=======================================<br>
+&nbsp;<br>
+This&nbsp;seach&nbsp;method&nbsp;performs&nbsp;a&nbsp;search&nbsp;of&nbsp;all&nbsp;objects<br>
+indexed&nbsp;by&nbsp;the&nbsp;service&nbsp;endpoint,&nbsp;returning&nbsp;results<br>
+and&nbsp;facets&nbsp;for&nbsp;those&nbsp;results.<br>
+&nbsp;<br>
+@param&nbsp;term&nbsp;The&nbsp;search&nbsp;term<br>
+@param&nbsp;facets&nbsp;The&nbsp;facets&nbsp;to&nbsp;search&nbsp;by&nbsp;(eg:&nbsp;Organism&nbsp;=&nbsp;'H.&nbsp;sapiens')<br>
+&nbsp;<br>
+@return&nbsp;(list,&nbsp;dict)&nbsp;The&nbsp;results,&nbsp;and&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;facetting&nbsp;informtation.</tt></dd></dl>
+
+<dl><dt><a name="Service-select"><strong>select</strong></a>(self, *columns, **kwargs)</dt><dd><tt>Construct&nbsp;a&nbsp;new&nbsp;Query&nbsp;<a href="builtins.html#object">object</a>&nbsp;with&nbsp;the&nbsp;given&nbsp;columns&nbsp;selected.<br>
+=============================================================<br>
+&nbsp;<br>
+As&nbsp;new_query,&nbsp;except&nbsp;that&nbsp;instead&nbsp;of&nbsp;a&nbsp;root&nbsp;class,&nbsp;a&nbsp;list&nbsp;of<br>
+output&nbsp;column&nbsp;expressions&nbsp;are&nbsp;passed&nbsp;instead.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>model</strong></dt>
+<dd><tt>The&nbsp;data&nbsp;model&nbsp;for&nbsp;the&nbsp;webservice&nbsp;you&nbsp;are&nbsp;querying<br>
+==================================================<br>
+&nbsp;<br>
+Service.model&nbsp;S{-&gt;}&nbsp;L{intermine.model.Model}<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;used&nbsp;when&nbsp;constructing&nbsp;queries&nbsp;to&nbsp;provide&nbsp;them<br>
+with&nbsp;information&nbsp;on&nbsp;the&nbsp;structure&nbsp;of&nbsp;the&nbsp;data&nbsp;model<br>
+they&nbsp;are&nbsp;accessing.&nbsp;You&nbsp;are&nbsp;very&nbsp;unlikely&nbsp;to&nbsp;want&nbsp;to<br>
+access&nbsp;this&nbsp;object&nbsp;directly.<br>
+&nbsp;<br>
+raises&nbsp;ModelParseError:&nbsp;if&nbsp;the&nbsp;model&nbsp;cannot&nbsp;be&nbsp;read<br>
+&nbsp;<br>
+@rtype:&nbsp;L{intermine.model.Model}</tt></dd>
+</dl>
+<dl><dt><strong>release</strong></dt>
+<dd><tt>Returns&nbsp;the&nbsp;datawarehouse&nbsp;release<br>
+=================================<br>
+&nbsp;<br>
+Service.release&nbsp;S{-&gt;}&nbsp;string<br>
+&nbsp;<br>
+The&nbsp;release&nbsp;is&nbsp;an&nbsp;arbitrary&nbsp;string&nbsp;used&nbsp;to&nbsp;distinguish<br>
+releases&nbsp;of&nbsp;the&nbsp;datawarehouse.&nbsp;This&nbsp;usually&nbsp;coincides<br>
+with&nbsp;updates&nbsp;to&nbsp;the&nbsp;data&nbsp;contained&nbsp;within.&nbsp;While&nbsp;a&nbsp;string,<br>
+releases&nbsp;usually&nbsp;sort&nbsp;in&nbsp;ascending&nbsp;order&nbsp;of&nbsp;recentness<br>
+(eg:&nbsp;"release-26",&nbsp;"release-27",&nbsp;"release-28").&nbsp;They&nbsp;can&nbsp;also<br>
+have&nbsp;less&nbsp;machine&nbsp;readable&nbsp;meanings&nbsp;(eg:&nbsp;"beta")<br>
+&nbsp;<br>
+@rtype:&nbsp;string</tt></dd>
+</dl>
+<dl><dt><strong>templates</strong></dt>
+<dd><tt>The&nbsp;dictionary&nbsp;of&nbsp;templates&nbsp;from&nbsp;the&nbsp;webservice<br>
+===============================================<br>
+&nbsp;<br>
+Service.templates&nbsp;S{-&gt;}&nbsp;dict(intermine.query.Template|string)<br>
+&nbsp;<br>
+For&nbsp;efficiency's&nbsp;sake,&nbsp;Templates&nbsp;are&nbsp;not&nbsp;parsed&nbsp;until<br>
+they&nbsp;are&nbsp;required,&nbsp;and&nbsp;until&nbsp;then&nbsp;they&nbsp;are&nbsp;stored&nbsp;as&nbsp;XML<br>
+strings.&nbsp;It&nbsp;is&nbsp;recommended&nbsp;that&nbsp;in&nbsp;most&nbsp;cases&nbsp;you&nbsp;would&nbsp;want<br>
+to&nbsp;use&nbsp;L{Service.get_template}.<br>
+&nbsp;<br>
+You&nbsp;can&nbsp;use&nbsp;this&nbsp;property&nbsp;however&nbsp;to&nbsp;test&nbsp;for&nbsp;template&nbsp;existence&nbsp;though::<br>
+&nbsp;<br>
+&nbsp;if&nbsp;name&nbsp;in&nbsp;service.templates:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;template&nbsp;=&nbsp;service.get_template(name)<br>
+&nbsp;<br>
+@rtype:&nbsp;dict</tt></dd>
+</dl>
+<dl><dt><strong>version</strong></dt>
+<dd><tt>Returns&nbsp;the&nbsp;webservice&nbsp;version<br>
+==============================<br>
+&nbsp;<br>
+The&nbsp;version&nbsp;specifies&nbsp;what&nbsp;capabilities&nbsp;a<br>
+specific&nbsp;webservice&nbsp;provides.&nbsp;The&nbsp;most&nbsp;current<br>
+version&nbsp;is&nbsp;3<br>
+&nbsp;<br>
+may&nbsp;raise&nbsp;ServiceError:&nbsp;if&nbsp;the&nbsp;version&nbsp;cannot&nbsp;be&nbsp;fetched<br>
+&nbsp;<br>
+@rtype:&nbsp;int</tt></dd>
+</dl>
+<dl><dt><strong>widgets</strong></dt>
+<dd><tt>The&nbsp;dictionary&nbsp;of&nbsp;widgets&nbsp;from&nbsp;the&nbsp;webservice<br>
+==============================================<br>
+&nbsp;<br>
+The&nbsp;set&nbsp;of&nbsp;widgets&nbsp;available&nbsp;to&nbsp;a&nbsp;service&nbsp;does&nbsp;not<br>
+change&nbsp;between&nbsp;releases,&nbsp;so&nbsp;they&nbsp;are&nbsp;cached.<br>
+If&nbsp;you&nbsp;are&nbsp;running&nbsp;a&nbsp;long&nbsp;running&nbsp;process,&nbsp;you&nbsp;may<br>
+wish&nbsp;to&nbsp;periodically&nbsp;dump&nbsp;the&nbsp;cache&nbsp;by&nbsp;calling<br>
+L{Service.flush},&nbsp;or&nbsp;simply&nbsp;get&nbsp;a&nbsp;new&nbsp;Service&nbsp;object.<br>
+&nbsp;<br>
+@return&nbsp;dict</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>IDS_PATH</strong> = '/ids'</dl>
+
+<dl><dt><strong>LIST_APPENDING_PATH</strong> = '/lists/append'</dl>
+
+<dl><dt><strong>LIST_CREATION_PATH</strong> = '/lists'</dl>
+
+<dl><dt><strong>LIST_ENRICHMENT_PATH</strong> = '/list/enrichment'</dl>
+
+<dl><dt><strong>LIST_MANAGER_METHODS</strong> = frozenset({'create_list', 'delete_lists', 'get_all_list_names', 'get_all_lists', 'get_list', 'get_list_count', ...})</dl>
+
+<dl><dt><strong>LIST_PATH</strong> = '/lists'</dl>
+
+<dl><dt><strong>LIST_RENAME_PATH</strong> = '/lists/rename'</dl>
+
+<dl><dt><strong>LIST_TAG_PATH</strong> = '/list/tags'</dl>
+
+<dl><dt><strong>MODEL_PATH</strong> = '/model'</dl>
+
+<dl><dt><strong>QUERY_LIST_APPEND_PATH</strong> = '/query/append/tolist'</dl>
+
+<dl><dt><strong>QUERY_LIST_UPLOAD_PATH</strong> = '/query/tolist'</dl>
+
+<dl><dt><strong>QUERY_PATH</strong> = '/query/results'</dl>
+
+<dl><dt><strong>RELEASE_PATH</strong> = '/version/release'</dl>
+
+<dl><dt><strong>SAVEDQUERY_PATH</strong> = '/savedqueries/xml'</dl>
+
+<dl><dt><strong>SCHEME</strong> = 'http://'</dl>
+
+<dl><dt><strong>SEARCH_PATH</strong> = '/search'</dl>
+
+<dl><dt><strong>SERVICE_RESOLUTION_PATH</strong> = '/check/'</dl>
+
+<dl><dt><strong>TEMPLATEQUERY_PATH</strong> = '/template/results'</dl>
+
+<dl><dt><strong>TEMPLATES_PATH</strong> = '/templates'</dl>
+
+<dl><dt><strong>USERS_PATH</strong> = '/users'</dl>
+
+<dl><dt><strong>VERSION_PATH</strong> = '/version/ws'</dl>
+
+<dl><dt><strong>WIDGETS_PATH</strong> = '/widgets'</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-ensure_str"><strong>ensure_str</strong></a>(stringlike)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__contact__</strong> = 'dev@intermine.org'<br>
+<strong>__license__</strong> = 'LGPL'<br>
+<strong>__organization__</strong> = 'InterMine'<br>
+<strong>unicode_literals</strong> = _Feature((2, 6, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 131072)</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Alex&nbsp;Kalderimis</td></tr></table>
+</body></html>

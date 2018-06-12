@@ -1,0 +1,3118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module intermine.constraints</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="intermine.html"><font color="#ffffff">intermine</font></a>.constraints</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/nupurgunwant/intermine-ws-python/intermine/constraints.py">/Users/nupurgunwant/intermine-ws-python/intermine/constraints.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#ValueError">builtins.ValueError</a>(<a href="builtins.html#Exception">builtins.Exception</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#EmptyLogicError">EmptyLogicError</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#ConstraintFactory">ConstraintFactory</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateConstraintFactory">TemplateConstraintFactory</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#LogicNode">LogicNode</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#LogicGroup">LogicGroup</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#LogicParser">LogicParser</a>
+</font></dt><dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>(<a href="builtins.html#object">builtins.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#Constraint">Constraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>(<a href="intermine.constraints.html#Constraint">Constraint</a>, <a href="intermine.constraints.html#LogicNode">LogicNode</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateBinaryConstraint">TemplateBinaryConstraint</a>(<a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt><dt><font face="helvetica, arial"><a href="intermine.constraints.html#TernaryConstraint">TernaryConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateTernaryConstraint">TemplateTernaryConstraint</a>(<a href="intermine.constraints.html#TernaryConstraint">TernaryConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#ListConstraint">ListConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateListConstraint">TemplateListConstraint</a>(<a href="intermine.constraints.html#ListConstraint">ListConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#LoopConstraint">LoopConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateLoopConstraint">TemplateLoopConstraint</a>(<a href="intermine.constraints.html#LoopConstraint">LoopConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#IsaConstraint">IsaConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateIsaConstraint">TemplateIsaConstraint</a>(<a href="intermine.constraints.html#IsaConstraint">IsaConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#RangeConstraint">RangeConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateRangeConstraint">TemplateRangeConstraint</a>(<a href="intermine.constraints.html#RangeConstraint">RangeConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateMultiConstraint">TemplateMultiConstraint</a>(<a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#UnaryConstraint">UnaryConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateUnaryConstraint">TemplateUnaryConstraint</a>(<a href="intermine.constraints.html#UnaryConstraint">UnaryConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#SubClassConstraint">SubClassConstraint</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#TemplateSubClassConstraint">TemplateSubClassConstraint</a>(<a href="intermine.constraints.html#SubClassConstraint">SubClassConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.util.html#ReadableException">intermine.util.ReadableException</a>(<a href="builtins.html#Exception">builtins.Exception</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="intermine.constraints.html#LogicParseError">LogicParseError</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BinaryConstraint">class <strong>BinaryConstraint</strong></a>(<a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;which&nbsp;have&nbsp;an&nbsp;operator&nbsp;and&nbsp;a&nbsp;value<br>
+==============================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;assert&nbsp;a&nbsp;relationship&nbsp;between&nbsp;the<br>
+value&nbsp;represented&nbsp;by&nbsp;the&nbsp;path&nbsp;(it&nbsp;must&nbsp;be&nbsp;a&nbsp;representation<br>
+of&nbsp;a&nbsp;value,&nbsp;ie&nbsp;an&nbsp;Attribute)&nbsp;and&nbsp;another&nbsp;value&nbsp;-&nbsp;ie.&nbsp;the<br>
+operator&nbsp;takes&nbsp;two&nbsp;parameters.<br>
+&nbsp;<br>
+In&nbsp;all&nbsp;case&nbsp;the&nbsp;'left'&nbsp;side&nbsp;of&nbsp;the&nbsp;relationship&nbsp;is&nbsp;the&nbsp;path,<br>
+and&nbsp;the&nbsp;'right'&nbsp;side&nbsp;is&nbsp;the&nbsp;supplied&nbsp;value.<br>
+&nbsp;<br>
+Valid&nbsp;operators&nbsp;are:<br>
+&nbsp;-&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(equal&nbsp;to)<br>
+&nbsp;-&nbsp;!=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;equal&nbsp;to)<br>
+&nbsp;-&nbsp;&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(less&nbsp;than)<br>
+&nbsp;-&nbsp;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(greater&nbsp;than)<br>
+&nbsp;-&nbsp;&lt;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(less&nbsp;than&nbsp;or&nbsp;equal&nbsp;to)<br>
+&nbsp;-&nbsp;&gt;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(greater&nbsp;than&nbsp;or&nbsp;equal&nbsp;to)<br>
+&nbsp;-&nbsp;LIKE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(same&nbsp;as&nbsp;equal&nbsp;to,&nbsp;but&nbsp;with&nbsp;implied&nbsp;wildcards)<br>
+&nbsp;-&nbsp;CONTAINS&nbsp;(same&nbsp;as&nbsp;equal&nbsp;to,&nbsp;but&nbsp;with&nbsp;implied&nbsp;wildcards)<br>
+&nbsp;-&nbsp;NOT&nbsp;LIKE&nbsp;(same&nbsp;as&nbsp;not&nbsp;equal&nbsp;to,&nbsp;but&nbsp;with&nbsp;implied&nbsp;wildcards)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="BinaryConstraint-__init__"><strong>__init__</strong></a>(self, path, op, value, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;value&nbsp;represented&nbsp;by&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;value&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;value:&nbsp;The&nbsp;value&nbsp;to&nbsp;compare&nbsp;the&nbsp;stored&nbsp;value&nbsp;to<br>
+@type&nbsp;value:&nbsp;string&nbsp;or&nbsp;number<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="BinaryConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="BinaryConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = {'!=', '&lt;', '&lt;=', '=', '&gt;', '&gt;=', ...}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="BinaryConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="BinaryConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="BinaryConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="BinaryConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="BinaryConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="BinaryConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CodedConstraint">class <strong>CodedConstraint</strong></a>(<a href="intermine.constraints.html#Constraint">Constraint</a>, <a href="intermine.constraints.html#LogicNode">LogicNode</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;parent&nbsp;class&nbsp;for&nbsp;all&nbsp;constraints&nbsp;that&nbsp;have&nbsp;codes<br>
+==================================================<br>
+&nbsp;<br>
+Constraints&nbsp;that&nbsp;have&nbsp;codes&nbsp;are&nbsp;the&nbsp;principal&nbsp;logical<br>
+filters&nbsp;on&nbsp;queries,&nbsp;and&nbsp;need&nbsp;to&nbsp;be&nbsp;refered&nbsp;to&nbsp;individually<br>
+(hence&nbsp;the&nbsp;codes).&nbsp;They&nbsp;will&nbsp;all&nbsp;have&nbsp;a&nbsp;logical&nbsp;operation&nbsp;they<br>
+embody,&nbsp;and&nbsp;so&nbsp;have&nbsp;a&nbsp;reference&nbsp;to&nbsp;an&nbsp;operator.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;is&nbsp;not&nbsp;meant&nbsp;to&nbsp;be&nbsp;instantiated&nbsp;directly,&nbsp;but&nbsp;instead<br>
+inherited&nbsp;from&nbsp;to&nbsp;supply&nbsp;default&nbsp;behaviour.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="CodedConstraint-__init__"><strong>__init__</strong></a>(self, path, op, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;operation&nbsp;to&nbsp;apply&nbsp;-&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;OPS&nbsp;set<br>
+@type&nbsp;op:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="CodedConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="CodedConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CodedConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="CodedConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = set()</dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="CodedConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="CodedConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="CodedConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="CodedConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Constraint">class <strong>Constraint</strong></a>(<a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;class&nbsp;representing&nbsp;constraints&nbsp;on&nbsp;a&nbsp;query<br>
+===========================================<br>
+&nbsp;<br>
+All&nbsp;constraints&nbsp;inherit&nbsp;from&nbsp;this&nbsp;class,&nbsp;which<br>
+simply&nbsp;defines&nbsp;the&nbsp;type&nbsp;of&nbsp;element&nbsp;for&nbsp;the<br>
+purposes&nbsp;of&nbsp;serialisation.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="Constraint-__init__"><strong>__init__</strong></a>(self, path)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="Constraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="Constraint-to_dict"><strong>to_dict</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Constraint-to_string"><strong>to_string</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ConstraintFactory">class <strong>ConstraintFactory</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;factory&nbsp;for&nbsp;creating&nbsp;constraints&nbsp;from&nbsp;a&nbsp;set&nbsp;of&nbsp;arguments.<br>
+===========================================================<br>
+&nbsp;<br>
+A&nbsp;constraint&nbsp;factory&nbsp;is&nbsp;responsible&nbsp;for&nbsp;finding&nbsp;an&nbsp;appropriate<br>
+constraint&nbsp;class&nbsp;for&nbsp;the&nbsp;given&nbsp;arguments&nbsp;and&nbsp;instantiating&nbsp;the<br>
+constraint.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ConstraintFactory-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+Creates&nbsp;a&nbsp;new&nbsp;<a href="#ConstraintFactory">ConstraintFactory</a></tt></dd></dl>
+
+<dl><dt><a name="ConstraintFactory-get_next_code"><strong>get_next_code</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;available&nbsp;constraint&nbsp;code.<br>
+&nbsp;<br>
+@return:&nbsp;A&nbsp;single&nbsp;uppercase&nbsp;character<br>
+@rtype:&nbsp;str</tt></dd></dl>
+
+<dl><dt><a name="ConstraintFactory-make_constraint"><strong>make_constraint</strong></a>(self, *args, **kwargs)</dt><dd><tt>Create&nbsp;a&nbsp;constraint&nbsp;from&nbsp;a&nbsp;set&nbsp;of&nbsp;arguments.<br>
+============================================<br>
+&nbsp;<br>
+Finds&nbsp;a&nbsp;suitable&nbsp;constraint&nbsp;class,&nbsp;and&nbsp;instantiates&nbsp;it.<br>
+&nbsp;<br>
+@rtype:&nbsp;<a href="#Constraint">Constraint</a></tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>CONSTRAINT_CLASSES</strong> = {&lt;class 'intermine.constraints.ListConstraint'&gt;, &lt;class 'intermine.constraints.SubClassConstraint'&gt;, &lt;class 'intermine.constraints.BinaryConstraint'&gt;, &lt;class 'intermine.constraints.IsaConstraint'&gt;, &lt;class 'intermine.constraints.MultiConstraint'&gt;, &lt;class 'intermine.constraints.UnaryConstraint'&gt;, ...}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="EmptyLogicError">class <strong>EmptyLogicError</strong></a>(<a href="builtins.html#ValueError">builtins.ValueError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;error&nbsp;representing&nbsp;the&nbsp;fact&nbsp;that&nbsp;an&nbsp;the&nbsp;logic&nbsp;string&nbsp;to&nbsp;be&nbsp;parsed&nbsp;was&nbsp;empty<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#EmptyLogicError">EmptyLogicError</a></dd>
+<dd><a href="builtins.html#ValueError">builtins.ValueError</a></dd>
+<dd><a href="builtins.html#Exception">builtins.Exception</a></dd>
+<dd><a href="builtins.html#BaseException">builtins.BaseException</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#ValueError">builtins.ValueError</a>:<br>
+<dl><dt><a name="EmptyLogicError-__init__"><strong>__init__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="EmptyLogicError-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><a name="EmptyLogicError-__delattr__"><strong>__delattr__</strong></a>(self, name, /)</dt><dd><tt>Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="EmptyLogicError-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="EmptyLogicError-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt>helper&nbsp;for&nbsp;pickle</tt></dd></dl>
+
+<dl><dt><a name="EmptyLogicError-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="EmptyLogicError-__setattr__"><strong>__setattr__</strong></a>(self, name, value, /)</dt><dd><tt>Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="EmptyLogicError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="EmptyLogicError-__str__"><strong>__str__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="EmptyLogicError-with_traceback"><strong>with_traceback</strong></a>(...)</dt><dd><tt>Exception.<a href="#EmptyLogicError-with_traceback">with_traceback</a>(tb)&nbsp;--<br>
+set&nbsp;self.<strong>__traceback__</strong>&nbsp;to&nbsp;tb&nbsp;and&nbsp;return&nbsp;self.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><strong>__cause__</strong></dt>
+<dd><tt>exception&nbsp;cause</tt></dd>
+</dl>
+<dl><dt><strong>__context__</strong></dt>
+<dd><tt>exception&nbsp;context</tt></dd>
+</dl>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>__suppress_context__</strong></dt>
+</dl>
+<dl><dt><strong>__traceback__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="IsaConstraint">class <strong>IsaConstraint</strong></a>(<a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;for&nbsp;testing&nbsp;the&nbsp;class&nbsp;of&nbsp;a&nbsp;value,&nbsp;as&nbsp;a&nbsp;disjoint&nbsp;union<br>
+======================================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;require&nbsp;that&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;path&nbsp;they&nbsp;constrain<br>
+should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;classes&nbsp;provided.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;ISA&nbsp;:&nbsp;The&nbsp;value&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;provided&nbsp;classes.<br>
+&nbsp;<br>
+For&nbsp;example:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SequenceFeature&nbsp;ISA&nbsp;[Exon,&nbsp;Intron]<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#IsaConstraint">IsaConstraint</a></dd>
+<dd><a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = {'ISA'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>:<br>
+<dl><dt><a name="IsaConstraint-__init__"><strong>__init__</strong></a>(self, path, op, values, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;Here&nbsp;it&nbsp;must&nbsp;be&nbsp;an&nbsp;attribute&nbsp;of&nbsp;some&nbsp;<a href="builtins.html#object">object</a>.<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;values:&nbsp;The&nbsp;set&nbsp;of&nbsp;values&nbsp;which&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;the&nbsp;constraint&nbsp;either&nbsp;must&nbsp;or&nbsp;must&nbsp;not&nbsp;belong&nbsp;to.<br>
+@type&nbsp;values:&nbsp;set&nbsp;or&nbsp;list<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="IsaConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="IsaConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="IsaConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="IsaConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="IsaConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="IsaConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="IsaConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="IsaConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ListConstraint">class <strong>ListConstraint</strong></a>(<a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;which&nbsp;refer&nbsp;to&nbsp;an&nbsp;objects&nbsp;membership&nbsp;of&nbsp;lists<br>
+=========================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;assert&nbsp;a&nbsp;membership&nbsp;relationship&nbsp;between&nbsp;the<br>
+<a href="builtins.html#object">object</a>&nbsp;represented&nbsp;by&nbsp;the&nbsp;path&nbsp;(it&nbsp;must&nbsp;always&nbsp;be&nbsp;an&nbsp;<a href="builtins.html#object">object</a>,&nbsp;ie.<br>
+a&nbsp;Reference&nbsp;or&nbsp;a&nbsp;Class)&nbsp;and&nbsp;a&nbsp;List.&nbsp;Lists&nbsp;are&nbsp;collections&nbsp;of<br>
+objects&nbsp;in&nbsp;the&nbsp;database&nbsp;which&nbsp;are&nbsp;stored&nbsp;in&nbsp;InterMine<br>
+datawarehouses.&nbsp;These&nbsp;lists&nbsp;must&nbsp;be&nbsp;set&nbsp;up&nbsp;before&nbsp;the&nbsp;query&nbsp;is&nbsp;run,&nbsp;either<br>
+manually&nbsp;in&nbsp;the&nbsp;webapp&nbsp;or&nbsp;by&nbsp;using&nbsp;the&nbsp;webservice&nbsp;API&nbsp;list<br>
+upload&nbsp;feature.<br>
+&nbsp;<br>
+Valid&nbsp;operators&nbsp;are:<br>
+&nbsp;-&nbsp;IN<br>
+&nbsp;-&nbsp;NOT&nbsp;IN<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#ListConstraint">ListConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ListConstraint-__init__"><strong>__init__</strong></a>(self, path, op, list_name, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;operation&nbsp;to&nbsp;apply&nbsp;-&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;OPS&nbsp;set<br>
+@type&nbsp;op:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="ListConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="ListConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = {'IN', 'NOT IN'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="ListConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="ListConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="ListConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="ListConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="ListConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="ListConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LogicGroup">class <strong>LogicGroup</strong></a>(<a href="intermine.constraints.html#LogicNode">LogicNode</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;logic&nbsp;node&nbsp;that&nbsp;represents&nbsp;two&nbsp;sub-nodes&nbsp;joined&nbsp;in&nbsp;some&nbsp;way<br>
+=============================================================<br>
+&nbsp;<br>
+A&nbsp;logic&nbsp;group&nbsp;is&nbsp;a&nbsp;logic&nbsp;node&nbsp;with&nbsp;two&nbsp;child&nbsp;nodes,&nbsp;which&nbsp;are<br>
+either&nbsp;connected&nbsp;by&nbsp;AND&nbsp;or&nbsp;by&nbsp;OR&nbsp;logic.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#LogicGroup">LogicGroup</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="LogicGroup-__init__"><strong>__init__</strong></a>(self, left, op, right, parent=None)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+Makes&nbsp;a&nbsp;new&nbsp;node&nbsp;composes&nbsp;of&nbsp;two&nbsp;nodes&nbsp;(left&nbsp;and&nbsp;right),<br>
+and&nbsp;some&nbsp;operator.<br>
+&nbsp;<br>
+Groups&nbsp;may&nbsp;have&nbsp;a&nbsp;reference&nbsp;to&nbsp;their&nbsp;parent.</tt></dd></dl>
+
+<dl><dt><a name="LogicGroup-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;sensible&nbsp;representation&nbsp;of&nbsp;a&nbsp;node</tt></dd></dl>
+
+<dl><dt><a name="LogicGroup-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;version&nbsp;of&nbsp;the&nbsp;group.&nbsp;The<br>
+string&nbsp;version&nbsp;should&nbsp;be&nbsp;able&nbsp;to&nbsp;be&nbsp;parsed&nbsp;back&nbsp;into&nbsp;the<br>
+original&nbsp;logic&nbsp;group.</tt></dd></dl>
+
+<dl><dt><a name="LogicGroup-get_codes"><strong>get_codes</strong></a>(self)</dt><dd><tt>Get&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;constraint&nbsp;codes&nbsp;used&nbsp;in&nbsp;this&nbsp;group.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>LEGAL_OPS</strong> = frozenset({'AND', 'OR'})</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="LogicGroup-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="LogicGroup-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="LogicGroup-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LogicNode">class <strong>LogicNode</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;class&nbsp;representing&nbsp;nodes&nbsp;in&nbsp;a&nbsp;logic&nbsp;graph<br>
+===========================================<br>
+&nbsp;<br>
+Objects&nbsp;which&nbsp;can&nbsp;be&nbsp;represented&nbsp;as&nbsp;nodes<br>
+in&nbsp;the&nbsp;AST&nbsp;of&nbsp;a&nbsp;constraint&nbsp;logic&nbsp;graph&nbsp;should<br>
+inherit&nbsp;from&nbsp;this&nbsp;class,&nbsp;which&nbsp;defines<br>
+methods&nbsp;for&nbsp;overloading&nbsp;built-in&nbsp;operations.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="LogicNode-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="LogicNode-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="LogicNode-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LogicParseError">class <strong>LogicParseError</strong></a>(<a href="intermine.util.html#ReadableException">intermine.util.ReadableException</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;error&nbsp;representing&nbsp;problems&nbsp;in&nbsp;parsing&nbsp;constraint&nbsp;logic.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#LogicParseError">LogicParseError</a></dd>
+<dd><a href="intermine.util.html#ReadableException">intermine.util.ReadableException</a></dd>
+<dd><a href="builtins.html#Exception">builtins.Exception</a></dd>
+<dd><a href="builtins.html#BaseException">builtins.BaseException</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.util.html#ReadableException">intermine.util.ReadableException</a>:<br>
+<dl><dt><a name="LogicParseError-__init__"><strong>__init__</strong></a>(self, message, cause=None)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="LogicParseError-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.util.html#ReadableException">intermine.util.ReadableException</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#Exception">builtins.Exception</a>:<br>
+<dl><dt><a name="LogicParseError-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><a name="LogicParseError-__delattr__"><strong>__delattr__</strong></a>(self, name, /)</dt><dd><tt>Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="LogicParseError-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="LogicParseError-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt>helper&nbsp;for&nbsp;pickle</tt></dd></dl>
+
+<dl><dt><a name="LogicParseError-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="LogicParseError-__setattr__"><strong>__setattr__</strong></a>(self, name, value, /)</dt><dd><tt>Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="LogicParseError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LogicParseError-with_traceback"><strong>with_traceback</strong></a>(...)</dt><dd><tt>Exception.<a href="#LogicParseError-with_traceback">with_traceback</a>(tb)&nbsp;--<br>
+set&nbsp;self.<strong>__traceback__</strong>&nbsp;to&nbsp;tb&nbsp;and&nbsp;return&nbsp;self.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><strong>__cause__</strong></dt>
+<dd><tt>exception&nbsp;cause</tt></dd>
+</dl>
+<dl><dt><strong>__context__</strong></dt>
+<dd><tt>exception&nbsp;context</tt></dd>
+</dl>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>__suppress_context__</strong></dt>
+</dl>
+<dl><dt><strong>__traceback__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LogicParser">class <strong>LogicParser</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Parses&nbsp;logic&nbsp;strings&nbsp;into&nbsp;logic&nbsp;groups<br>
+======================================<br>
+&nbsp;<br>
+Instances&nbsp;of&nbsp;this&nbsp;class&nbsp;are&nbsp;used&nbsp;to&nbsp;parse&nbsp;logic&nbsp;strings&nbsp;into<br>
+abstract&nbsp;syntax&nbsp;trees,&nbsp;and&nbsp;then&nbsp;logic&nbsp;groups.&nbsp;This&nbsp;aims&nbsp;to&nbsp;provide<br>
+robust&nbsp;parsing&nbsp;of&nbsp;logic&nbsp;strings,&nbsp;with&nbsp;the&nbsp;ability&nbsp;to&nbsp;identify&nbsp;syntax<br>
+errors&nbsp;in&nbsp;such&nbsp;strings.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="LogicParser-__init__"><strong>__init__</strong></a>(self, query)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+Parsers&nbsp;need&nbsp;access&nbsp;to&nbsp;the&nbsp;query&nbsp;they&nbsp;are&nbsp;parsing&nbsp;for,&nbsp;in<br>
+order&nbsp;to&nbsp;reference&nbsp;the&nbsp;constraints&nbsp;on&nbsp;the&nbsp;query.<br>
+&nbsp;<br>
+@param&nbsp;query:&nbsp;The&nbsp;parent&nbsp;query&nbsp;<a href="builtins.html#object">object</a><br>
+@type&nbsp;query:&nbsp;intermine.query.Query</tt></dd></dl>
+
+<dl><dt><a name="LogicParser-check_syntax"><strong>check_syntax</strong></a>(self, infix_tokens)</dt><dd><tt>Check&nbsp;the&nbsp;syntax&nbsp;for&nbsp;errors&nbsp;before&nbsp;parsing<br>
+==========================================<br>
+&nbsp;<br>
+Syntax&nbsp;is&nbsp;checked&nbsp;before&nbsp;parsing&nbsp;to&nbsp;provide&nbsp;better&nbsp;errors,<br>
+which&nbsp;should&nbsp;hopefully&nbsp;lead&nbsp;to&nbsp;more&nbsp;informative&nbsp;error&nbsp;messages.<br>
+&nbsp;<br>
+This&nbsp;checks&nbsp;for:<br>
+&nbsp;-&nbsp;correct&nbsp;operator&nbsp;positions&nbsp;(cannot&nbsp;put&nbsp;two&nbsp;codes&nbsp;next&nbsp;to&nbsp;each&nbsp;other&nbsp;without&nbsp;intervening&nbsp;operators)<br>
+&nbsp;-&nbsp;correct&nbsp;grouping&nbsp;(all&nbsp;brackets&nbsp;are&nbsp;matched,&nbsp;and&nbsp;contain&nbsp;valid&nbsp;expressions)<br>
+&nbsp;<br>
+@param&nbsp;infix_tokens:&nbsp;The&nbsp;input&nbsp;parsed&nbsp;into&nbsp;a&nbsp;list&nbsp;of&nbsp;tokens.<br>
+@type&nbsp;infix_tokens:&nbsp;iterable<br>
+&nbsp;<br>
+@raise&nbsp;<a href="#LogicParseError">LogicParseError</a>:&nbsp;if&nbsp;there&nbsp;is&nbsp;a&nbsp;problem.</tt></dd></dl>
+
+<dl><dt><a name="LogicParser-get_constraint"><strong>get_constraint</strong></a>(self, code)</dt><dd><tt>Get&nbsp;the&nbsp;constraint&nbsp;with&nbsp;the&nbsp;given&nbsp;code<br>
+======================================<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;fetches&nbsp;the&nbsp;constraint&nbsp;from&nbsp;the<br>
+parent&nbsp;query&nbsp;with&nbsp;the&nbsp;matching&nbsp;code.<br>
+&nbsp;<br>
+@see:&nbsp;intermine.query.Query.get_constraint<br>
+@rtype:&nbsp;intermine.constraints.<a href="#CodedConstraint">CodedConstraint</a></tt></dd></dl>
+
+<dl><dt><a name="LogicParser-get_priority"><strong>get_priority</strong></a>(self, op)</dt><dd><tt>Get&nbsp;the&nbsp;priority&nbsp;for&nbsp;a&nbsp;given&nbsp;operator<br>
+=====================================<br>
+&nbsp;<br>
+Operators&nbsp;have&nbsp;a&nbsp;specific&nbsp;precedence,&nbsp;from&nbsp;highest<br>
+to&nbsp;lowest:<br>
+&nbsp;&nbsp;-&nbsp;()<br>
+&nbsp;&nbsp;-&nbsp;AND<br>
+&nbsp;&nbsp;-&nbsp;OR<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;returns&nbsp;an&nbsp;integer&nbsp;which&nbsp;can&nbsp;be<br>
+used&nbsp;to&nbsp;compare&nbsp;operator&nbsp;priorities.<br>
+&nbsp;<br>
+@rtype:&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="LogicParser-infix_to_postfix"><strong>infix_to_postfix</strong></a>(self, infix_tokens)</dt><dd><tt>Convert&nbsp;a&nbsp;list&nbsp;of&nbsp;infix&nbsp;tokens&nbsp;to&nbsp;postfix&nbsp;notation<br>
+==================================================<br>
+&nbsp;<br>
+Take&nbsp;in&nbsp;a&nbsp;set&nbsp;of&nbsp;infix&nbsp;tokens&nbsp;and&nbsp;return&nbsp;the&nbsp;set&nbsp;parsed<br>
+to&nbsp;a&nbsp;postfix&nbsp;sequence.<br>
+&nbsp;<br>
+@param&nbsp;infix_tokens:&nbsp;The&nbsp;list&nbsp;of&nbsp;tokens<br>
+@type&nbsp;infix_tokens:&nbsp;iterable<br>
+&nbsp;<br>
+@rtype:&nbsp;list</tt></dd></dl>
+
+<dl><dt><a name="LogicParser-parse"><strong>parse</strong></a>(self, logic_str)</dt><dd><tt>Parse&nbsp;a&nbsp;logic&nbsp;string&nbsp;into&nbsp;an&nbsp;abstract&nbsp;syntax&nbsp;tree<br>
+=================================================<br>
+&nbsp;<br>
+Takes&nbsp;a&nbsp;string&nbsp;such&nbsp;as&nbsp;"A&nbsp;and&nbsp;B&nbsp;or&nbsp;C&nbsp;and&nbsp;D",&nbsp;and&nbsp;parses&nbsp;it<br>
+into&nbsp;a&nbsp;structure&nbsp;which&nbsp;represents&nbsp;this&nbsp;logic&nbsp;as&nbsp;a&nbsp;binary<br>
+abstract&nbsp;syntax&nbsp;tree.&nbsp;The&nbsp;above&nbsp;string&nbsp;would&nbsp;parse&nbsp;to<br>
+"(A&nbsp;and&nbsp;B)&nbsp;or&nbsp;(C&nbsp;and&nbsp;D)",&nbsp;as&nbsp;AND&nbsp;binds&nbsp;more&nbsp;tightly&nbsp;than&nbsp;OR.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;only&nbsp;singly&nbsp;rooted&nbsp;trees&nbsp;are&nbsp;parsed.<br>
+&nbsp;<br>
+@param&nbsp;logic_str:&nbsp;The&nbsp;logic&nbsp;defininition&nbsp;as&nbsp;a&nbsp;string<br>
+@type&nbsp;logic_str:&nbsp;string<br>
+&nbsp;<br>
+@rtype:&nbsp;<a href="#LogicGroup">LogicGroup</a><br>
+&nbsp;<br>
+@raise&nbsp;<a href="#LogicParseError">LogicParseError</a>:&nbsp;if&nbsp;there&nbsp;is&nbsp;a&nbsp;syntax&nbsp;error&nbsp;in&nbsp;the&nbsp;logic</tt></dd></dl>
+
+<dl><dt><a name="LogicParser-postfix_to_tree"><strong>postfix_to_tree</strong></a>(self, postfix_tokens)</dt><dd><tt>Convert&nbsp;a&nbsp;set&nbsp;of&nbsp;structured&nbsp;tokens&nbsp;to&nbsp;a&nbsp;single&nbsp;<a href="#LogicGroup">LogicGroup</a><br>
+=========================================================<br>
+&nbsp;<br>
+Convert&nbsp;a&nbsp;set&nbsp;of&nbsp;tokens&nbsp;in&nbsp;postfix&nbsp;notation&nbsp;to&nbsp;a&nbsp;single<br>
+<a href="#LogicGroup">LogicGroup</a>&nbsp;<a href="builtins.html#object">object</a>.<br>
+&nbsp;<br>
+@param&nbsp;postfix_tokens:&nbsp;A&nbsp;list&nbsp;of&nbsp;tokens&nbsp;in&nbsp;postfix&nbsp;notation.<br>
+@type&nbsp;postfix_tokens:&nbsp;list<br>
+&nbsp;<br>
+@rtype:&nbsp;<a href="#LogicGroup">LogicGroup</a><br>
+&nbsp;<br>
+@raise&nbsp;AssertionError:&nbsp;is&nbsp;the&nbsp;tree&nbsp;doesn't&nbsp;have&nbsp;a&nbsp;unique&nbsp;root.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>ops</strong> = {'&amp;': 'AND', '&amp;&amp;': 'AND', '(': '(', ')': ')', 'AND': 'AND', 'OR': 'OR', '|': 'OR', '||': 'OR'}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LoopConstraint">class <strong>LoopConstraint</strong></a>(<a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;with&nbsp;refer&nbsp;to&nbsp;<a href="builtins.html#object">object</a>&nbsp;identity<br>
+=========================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;assert&nbsp;that&nbsp;two&nbsp;paths&nbsp;refer&nbsp;to&nbsp;the&nbsp;same<br>
+<a href="builtins.html#object">object</a>.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;IS<br>
+&nbsp;-&nbsp;IS&nbsp;NOT<br>
+&nbsp;<br>
+The&nbsp;operators&nbsp;IS&nbsp;and&nbsp;IS&nbsp;NOT&nbsp;map&nbsp;to&nbsp;the&nbsp;ops&nbsp;"="&nbsp;and&nbsp;"!="&nbsp;when&nbsp;they<br>
+are&nbsp;used&nbsp;in&nbsp;XML&nbsp;serialisation.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#LoopConstraint">LoopConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="LoopConstraint-__init__"><strong>__init__</strong></a>(self, path, op, loopPath, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;loopPath:&nbsp;The&nbsp;path&nbsp;to&nbsp;check&nbsp;for&nbsp;identity&nbsp;against<br>
+@type&nbsp;loopPath:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="LoopConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="LoopConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = {'IS', 'IS NOT'}</dl>
+
+<dl><dt><strong>SERIALISED_OPS</strong> = {'IS': '=', 'IS NOT': '!='}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="LoopConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="LoopConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="LoopConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="LoopConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="LoopConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="LoopConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MultiConstraint">class <strong>MultiConstraint</strong></a>(<a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;for&nbsp;checking&nbsp;membership&nbsp;of&nbsp;a&nbsp;set&nbsp;of&nbsp;values<br>
+======================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;require&nbsp;the&nbsp;value&nbsp;they&nbsp;constrain&nbsp;to&nbsp;be<br>
+either&nbsp;a&nbsp;member&nbsp;of&nbsp;a&nbsp;set&nbsp;of&nbsp;values,&nbsp;or&nbsp;not&nbsp;a&nbsp;member.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;ONE&nbsp;OF<br>
+&nbsp;-&nbsp;NONE&nbsp;OF<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;are&nbsp;similar&nbsp;in&nbsp;use&nbsp;to&nbsp;List&nbsp;constraints,&nbsp;with<br>
+the&nbsp;following&nbsp;differences:<br>
+&nbsp;&nbsp;-&nbsp;The&nbsp;list&nbsp;in&nbsp;this&nbsp;case&nbsp;is&nbsp;a&nbsp;defined&nbsp;set&nbsp;of&nbsp;values&nbsp;that&nbsp;is&nbsp;passed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;the&nbsp;query&nbsp;itself,&nbsp;rather&nbsp;than&nbsp;anything&nbsp;stored<br>
+&nbsp;&nbsp;&nbsp;&nbsp;independently&nbsp;on&nbsp;a&nbsp;server.<br>
+&nbsp;&nbsp;-&nbsp;The&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;the&nbsp;constaint&nbsp;is&nbsp;the&nbsp;value&nbsp;of&nbsp;an&nbsp;attribute,&nbsp;rather<br>
+&nbsp;&nbsp;&nbsp;&nbsp;than&nbsp;an&nbsp;<a href="builtins.html#object">object</a>'s&nbsp;identity.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="MultiConstraint-__init__"><strong>__init__</strong></a>(self, path, op, values, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;Here&nbsp;it&nbsp;must&nbsp;be&nbsp;an&nbsp;attribute&nbsp;of&nbsp;some&nbsp;<a href="builtins.html#object">object</a>.<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;values:&nbsp;The&nbsp;set&nbsp;of&nbsp;values&nbsp;which&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;the&nbsp;constraint&nbsp;either&nbsp;must&nbsp;or&nbsp;must&nbsp;not&nbsp;belong&nbsp;to.<br>
+@type&nbsp;values:&nbsp;set&nbsp;or&nbsp;list<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="MultiConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="MultiConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = {'NONE OF', 'ONE OF'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="MultiConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="MultiConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="MultiConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="MultiConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="MultiConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="MultiConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="RangeConstraint">class <strong>RangeConstraint</strong></a>(<a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;for&nbsp;testing&nbsp;where&nbsp;a&nbsp;value&nbsp;lies&nbsp;relative&nbsp;to&nbsp;a&nbsp;set&nbsp;of&nbsp;ranges<br>
+======================================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;require&nbsp;that&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;path&nbsp;they&nbsp;constrain<br>
+should&nbsp;lie&nbsp;in&nbsp;relationship&nbsp;to&nbsp;the&nbsp;set&nbsp;of&nbsp;values&nbsp;passed&nbsp;according&nbsp;to<br>
+the&nbsp;specific&nbsp;operator.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;OVERLAPS&nbsp;:&nbsp;The&nbsp;value&nbsp;overlaps&nbsp;at&nbsp;least&nbsp;one&nbsp;of&nbsp;the&nbsp;given&nbsp;ranges<br>
+&nbsp;-&nbsp;WITHIN&nbsp;:&nbsp;The&nbsp;value&nbsp;is&nbsp;wholly&nbsp;outside&nbsp;the&nbsp;given&nbsp;set&nbsp;of&nbsp;ranges<br>
+&nbsp;-&nbsp;CONTAINS&nbsp;:&nbsp;The&nbsp;value&nbsp;contains&nbsp;all&nbsp;the&nbsp;given&nbsp;ranges<br>
+&nbsp;-&nbsp;DOES&nbsp;NOT&nbsp;CONTAIN&nbsp;:&nbsp;The&nbsp;value&nbsp;does&nbsp;not&nbsp;contain&nbsp;all&nbsp;the&nbsp;given&nbsp;ranges<br>
+&nbsp;-&nbsp;OUTSIDE&nbsp;:&nbsp;Some&nbsp;part&nbsp;is&nbsp;outside&nbsp;the&nbsp;given&nbsp;set&nbsp;of&nbsp;ranges<br>
+&nbsp;-&nbsp;DOES&nbsp;NOT&nbsp;OVERLAP&nbsp;:&nbsp;The&nbsp;value&nbsp;does&nbsp;not&nbsp;overlap&nbsp;with&nbsp;any&nbsp;of&nbsp;the&nbsp;ranges<br>
+&nbsp;<br>
+For&nbsp;example:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;WITHIN&nbsp;[1..5,&nbsp;20..25]&nbsp;=&gt;&nbsp;True<br>
+&nbsp;<br>
+The&nbsp;format&nbsp;of&nbsp;the&nbsp;ranges&nbsp;depends&nbsp;on&nbsp;the&nbsp;value&nbsp;being&nbsp;constrained&nbsp;and&nbsp;what&nbsp;range<br>
+parsers&nbsp;have&nbsp;been&nbsp;configured&nbsp;on&nbsp;the&nbsp;target&nbsp;server.&nbsp;A&nbsp;common&nbsp;range&nbsp;parser&nbsp;for<br>
+biological&nbsp;mines&nbsp;is&nbsp;the&nbsp;one&nbsp;for&nbsp;Locations:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Gene.chromosomeLocation&nbsp;OVERLAPS&nbsp;[2X:54321..67890,&nbsp;3R:12345..456789]<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#RangeConstraint">RangeConstraint</a></dd>
+<dd><a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = {'CONTAINS', 'DOES NOT CONTAIN', 'DOES NOT OVERLAP', 'OUTSIDE', 'OVERLAPS', 'WITHIN'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>:<br>
+<dl><dt><a name="RangeConstraint-__init__"><strong>__init__</strong></a>(self, path, op, values, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;Here&nbsp;it&nbsp;must&nbsp;be&nbsp;an&nbsp;attribute&nbsp;of&nbsp;some&nbsp;<a href="builtins.html#object">object</a>.<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;values:&nbsp;The&nbsp;set&nbsp;of&nbsp;values&nbsp;which&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;the&nbsp;constraint&nbsp;either&nbsp;must&nbsp;or&nbsp;must&nbsp;not&nbsp;belong&nbsp;to.<br>
+@type&nbsp;values:&nbsp;set&nbsp;or&nbsp;list<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="RangeConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="RangeConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="RangeConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="RangeConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="RangeConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="RangeConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="RangeConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="RangeConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SubClassConstraint">class <strong>SubClassConstraint</strong></a>(<a href="intermine.constraints.html#Constraint">Constraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;on&nbsp;the&nbsp;class&nbsp;of&nbsp;a&nbsp;reference<br>
+=======================================<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;has&nbsp;a&nbsp;reference&nbsp;X&nbsp;to&nbsp;another&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;type&nbsp;A,<br>
+and&nbsp;type&nbsp;B&nbsp;extends&nbsp;type&nbsp;A,&nbsp;then&nbsp;any&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;type&nbsp;B&nbsp;may&nbsp;be<br>
+the&nbsp;value&nbsp;of&nbsp;the&nbsp;reference&nbsp;X.&nbsp;If&nbsp;you&nbsp;only&nbsp;want&nbsp;to&nbsp;see&nbsp;X's<br>
+which&nbsp;are&nbsp;B's,&nbsp;this&nbsp;may&nbsp;be&nbsp;achieved&nbsp;with&nbsp;subclass&nbsp;constraints,<br>
+which&nbsp;allow&nbsp;the&nbsp;type&nbsp;of&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;be&nbsp;limited&nbsp;to&nbsp;one&nbsp;of&nbsp;the<br>
+subclasses&nbsp;(at&nbsp;any&nbsp;depth)&nbsp;of&nbsp;the&nbsp;class&nbsp;type&nbsp;required<br>
+by&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;do&nbsp;not&nbsp;use&nbsp;operators.&nbsp;Since&nbsp;they&nbsp;cannot&nbsp;be<br>
+conditional&nbsp;(eg.&nbsp;"A&nbsp;is&nbsp;a&nbsp;B&nbsp;or&nbsp;A&nbsp;is&nbsp;a&nbsp;C"&nbsp;would&nbsp;not&nbsp;be&nbsp;possible<br>
+in&nbsp;an&nbsp;InterMine&nbsp;query),&nbsp;they&nbsp;do&nbsp;not&nbsp;have&nbsp;codes<br>
+and&nbsp;cannot&nbsp;be&nbsp;referenced&nbsp;in&nbsp;logic&nbsp;expressions.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#SubClassConstraint">SubClassConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="SubClassConstraint-__init__"><strong>__init__</strong></a>(self, path, subclass)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;This&nbsp;must&nbsp;refer&nbsp;to&nbsp;a&nbsp;class&nbsp;or&nbsp;a&nbsp;reference&nbsp;to&nbsp;a&nbsp;class.<br>
+@type&nbsp;path:&nbsp;str<br>
+&nbsp;<br>
+@param&nbsp;subclass:&nbsp;The&nbsp;class&nbsp;to&nbsp;subclass&nbsp;the&nbsp;path&nbsp;to.&nbsp;This&nbsp;must&nbsp;be&nbsp;a&nbsp;simple&nbsp;class&nbsp;name&nbsp;(not&nbsp;a&nbsp;dotted&nbsp;name)<br>
+@type&nbsp;subclass:&nbsp;str</tt></dd></dl>
+
+<dl><dt><a name="SubClassConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="SubClassConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="SubClassConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateBinaryConstraint">class <strong>TemplateBinaryConstraint</strong></a>(<a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;which&nbsp;have&nbsp;an&nbsp;operator&nbsp;and&nbsp;a&nbsp;value<br>
+==============================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;assert&nbsp;a&nbsp;relationship&nbsp;between&nbsp;the<br>
+value&nbsp;represented&nbsp;by&nbsp;the&nbsp;path&nbsp;(it&nbsp;must&nbsp;be&nbsp;a&nbsp;representation<br>
+of&nbsp;a&nbsp;value,&nbsp;ie&nbsp;an&nbsp;Attribute)&nbsp;and&nbsp;another&nbsp;value&nbsp;-&nbsp;ie.&nbsp;the<br>
+operator&nbsp;takes&nbsp;two&nbsp;parameters.<br>
+&nbsp;<br>
+In&nbsp;all&nbsp;case&nbsp;the&nbsp;'left'&nbsp;side&nbsp;of&nbsp;the&nbsp;relationship&nbsp;is&nbsp;the&nbsp;path,<br>
+and&nbsp;the&nbsp;'right'&nbsp;side&nbsp;is&nbsp;the&nbsp;supplied&nbsp;value.<br>
+&nbsp;<br>
+Valid&nbsp;operators&nbsp;are:<br>
+&nbsp;-&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(equal&nbsp;to)<br>
+&nbsp;-&nbsp;!=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;equal&nbsp;to)<br>
+&nbsp;-&nbsp;&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(less&nbsp;than)<br>
+&nbsp;-&nbsp;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(greater&nbsp;than)<br>
+&nbsp;-&nbsp;&lt;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(less&nbsp;than&nbsp;or&nbsp;equal&nbsp;to)<br>
+&nbsp;-&nbsp;&gt;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(greater&nbsp;than&nbsp;or&nbsp;equal&nbsp;to)<br>
+&nbsp;-&nbsp;LIKE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(same&nbsp;as&nbsp;equal&nbsp;to,&nbsp;but&nbsp;with&nbsp;implied&nbsp;wildcards)<br>
+&nbsp;-&nbsp;CONTAINS&nbsp;(same&nbsp;as&nbsp;equal&nbsp;to,&nbsp;but&nbsp;with&nbsp;implied&nbsp;wildcards)<br>
+&nbsp;-&nbsp;NOT&nbsp;LIKE&nbsp;(same&nbsp;as&nbsp;not&nbsp;equal&nbsp;to,&nbsp;but&nbsp;with&nbsp;implied&nbsp;wildcards)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateBinaryConstraint">TemplateBinaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateBinaryConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;value&nbsp;represented&nbsp;by&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;value&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;value:&nbsp;The&nbsp;value&nbsp;to&nbsp;compare&nbsp;the&nbsp;stored&nbsp;value&nbsp;to<br>
+@type&nbsp;value:&nbsp;string&nbsp;or&nbsp;number<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TemplateBinaryConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a>:<br>
+<dl><dt><a name="TemplateBinaryConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a>:<br>
+<dl><dt><strong>OPS</strong> = {'!=', '&lt;', '&lt;=', '=', '&gt;', '&gt;=', ...}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TemplateBinaryConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TemplateBinaryConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateBinaryConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TemplateBinaryConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TemplateBinaryConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TemplateBinaryConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateBinaryConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateBinaryConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateBinaryConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateBinaryConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateConstraint">class <strong>TemplateConstraint</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;mixin&nbsp;to&nbsp;supply&nbsp;the&nbsp;behaviour&nbsp;and&nbsp;state&nbsp;of&nbsp;constraints&nbsp;on&nbsp;templates<br>
+=====================================================================<br>
+&nbsp;<br>
+Constraints&nbsp;on&nbsp;templates&nbsp;can&nbsp;also&nbsp;be&nbsp;designated&nbsp;as&nbsp;"on",&nbsp;"off"&nbsp;or&nbsp;"locked",&nbsp;which&nbsp;refers<br>
+to&nbsp;whether&nbsp;they&nbsp;are&nbsp;active&nbsp;or&nbsp;not.&nbsp;Inactive&nbsp;constraints&nbsp;are&nbsp;still&nbsp;configured,&nbsp;but&nbsp;behave<br>
+as&nbsp;if&nbsp;absent&nbsp;for&nbsp;the&nbsp;purpose&nbsp;of&nbsp;results.&nbsp;In&nbsp;addition,&nbsp;template&nbsp;constraints&nbsp;can&nbsp;be<br>
+editable&nbsp;or&nbsp;not.&nbsp;Only&nbsp;values&nbsp;for&nbsp;editable&nbsp;constraints&nbsp;can&nbsp;be&nbsp;provided&nbsp;when&nbsp;requesting&nbsp;results,<br>
+and&nbsp;only&nbsp;constraints&nbsp;that&nbsp;can&nbsp;participate&nbsp;in&nbsp;logic&nbsp;expressions&nbsp;can&nbsp;be&nbsp;editable.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TemplateConstraint-__init__"><strong>__init__</strong></a>(self, editable=True, optional='locked')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;editable:&nbsp;Whether&nbsp;or&nbsp;not&nbsp;this&nbsp;constraint&nbsp;should&nbsp;accept&nbsp;new&nbsp;values.<br>
+@type&nbsp;editable:&nbsp;bool<br>
+&nbsp;<br>
+@param&nbsp;optional:&nbsp;Whether&nbsp;a&nbsp;value&nbsp;for&nbsp;this&nbsp;constraint&nbsp;must&nbsp;be&nbsp;provided&nbsp;when&nbsp;running.<br>
+@type&nbsp;optional:&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off"</tt></dd></dl>
+
+<dl><dt><a name="TemplateConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateConstraintFactory">class <strong>TemplateConstraintFactory</strong></a>(<a href="intermine.constraints.html#ConstraintFactory">ConstraintFactory</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;factory&nbsp;for&nbsp;creating&nbsp;constraints&nbsp;with&nbsp;template&nbsp;specific&nbsp;characteristics.<br>
+==========================================================================<br>
+&nbsp;<br>
+A&nbsp;constraint&nbsp;factory&nbsp;is&nbsp;responsible&nbsp;for&nbsp;finding&nbsp;an&nbsp;appropriate<br>
+constraint&nbsp;class&nbsp;for&nbsp;the&nbsp;given&nbsp;arguments&nbsp;and&nbsp;instantiating&nbsp;the<br>
+constraint.&nbsp;TemplateConstraintFactories&nbsp;make&nbsp;constraints&nbsp;with&nbsp;the<br>
+extra&nbsp;set&nbsp;of&nbsp;<a href="#TemplateConstraint">TemplateConstraint</a>&nbsp;qualities.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateConstraintFactory">TemplateConstraintFactory</a></dd>
+<dd><a href="intermine.constraints.html#ConstraintFactory">ConstraintFactory</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>CONSTRAINT_CLASSES</strong> = {&lt;class 'intermine.constraints.TemplateTernaryConstraint'&gt;, &lt;class 'intermine.constraints.TemplateLoopConstraint'&gt;, &lt;class 'intermine.constraints.TemplateSubClassConstraint'&gt;, &lt;class 'intermine.constraints.TemplateListConstraint'&gt;, &lt;class 'intermine.constraints.TemplateIsaConstraint'&gt;, &lt;class 'intermine.constraints.TemplateBinaryConstraint'&gt;, ...}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#ConstraintFactory">ConstraintFactory</a>:<br>
+<dl><dt><a name="TemplateConstraintFactory-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+Creates&nbsp;a&nbsp;new&nbsp;<a href="#ConstraintFactory">ConstraintFactory</a></tt></dd></dl>
+
+<dl><dt><a name="TemplateConstraintFactory-get_next_code"><strong>get_next_code</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;available&nbsp;constraint&nbsp;code.<br>
+&nbsp;<br>
+@return:&nbsp;A&nbsp;single&nbsp;uppercase&nbsp;character<br>
+@rtype:&nbsp;str</tt></dd></dl>
+
+<dl><dt><a name="TemplateConstraintFactory-make_constraint"><strong>make_constraint</strong></a>(self, *args, **kwargs)</dt><dd><tt>Create&nbsp;a&nbsp;constraint&nbsp;from&nbsp;a&nbsp;set&nbsp;of&nbsp;arguments.<br>
+============================================<br>
+&nbsp;<br>
+Finds&nbsp;a&nbsp;suitable&nbsp;constraint&nbsp;class,&nbsp;and&nbsp;instantiates&nbsp;it.<br>
+&nbsp;<br>
+@rtype:&nbsp;<a href="#Constraint">Constraint</a></tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#ConstraintFactory">ConstraintFactory</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateIsaConstraint">class <strong>TemplateIsaConstraint</strong></a>(<a href="intermine.constraints.html#IsaConstraint">IsaConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;for&nbsp;testing&nbsp;the&nbsp;class&nbsp;of&nbsp;a&nbsp;value,&nbsp;as&nbsp;a&nbsp;disjoint&nbsp;union<br>
+======================================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;require&nbsp;that&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;path&nbsp;they&nbsp;constrain<br>
+should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;classes&nbsp;provided.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;ISA&nbsp;:&nbsp;The&nbsp;value&nbsp;is&nbsp;an&nbsp;instance&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;provided&nbsp;classes.<br>
+&nbsp;<br>
+For&nbsp;example:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SequenceFeature&nbsp;ISA&nbsp;[Exon,&nbsp;Intron]<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateIsaConstraint">TemplateIsaConstraint</a></dd>
+<dd><a href="intermine.constraints.html#IsaConstraint">IsaConstraint</a></dd>
+<dd><a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateIsaConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;Here&nbsp;it&nbsp;must&nbsp;be&nbsp;an&nbsp;attribute&nbsp;of&nbsp;some&nbsp;<a href="builtins.html#object">object</a>.<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;values:&nbsp;The&nbsp;set&nbsp;of&nbsp;values&nbsp;which&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;the&nbsp;constraint&nbsp;either&nbsp;must&nbsp;or&nbsp;must&nbsp;not&nbsp;belong&nbsp;to.<br>
+@type&nbsp;values:&nbsp;set&nbsp;or&nbsp;list<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TemplateIsaConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#IsaConstraint">IsaConstraint</a>:<br>
+<dl><dt><strong>OPS</strong> = {'ISA'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>:<br>
+<dl><dt><a name="TemplateIsaConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TemplateIsaConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TemplateIsaConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateIsaConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TemplateIsaConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TemplateIsaConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TemplateIsaConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateIsaConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateIsaConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateIsaConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateIsaConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateListConstraint">class <strong>TemplateListConstraint</strong></a>(<a href="intermine.constraints.html#ListConstraint">ListConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;which&nbsp;refer&nbsp;to&nbsp;an&nbsp;objects&nbsp;membership&nbsp;of&nbsp;lists<br>
+=========================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;assert&nbsp;a&nbsp;membership&nbsp;relationship&nbsp;between&nbsp;the<br>
+<a href="builtins.html#object">object</a>&nbsp;represented&nbsp;by&nbsp;the&nbsp;path&nbsp;(it&nbsp;must&nbsp;always&nbsp;be&nbsp;an&nbsp;<a href="builtins.html#object">object</a>,&nbsp;ie.<br>
+a&nbsp;Reference&nbsp;or&nbsp;a&nbsp;Class)&nbsp;and&nbsp;a&nbsp;List.&nbsp;Lists&nbsp;are&nbsp;collections&nbsp;of<br>
+objects&nbsp;in&nbsp;the&nbsp;database&nbsp;which&nbsp;are&nbsp;stored&nbsp;in&nbsp;InterMine<br>
+datawarehouses.&nbsp;These&nbsp;lists&nbsp;must&nbsp;be&nbsp;set&nbsp;up&nbsp;before&nbsp;the&nbsp;query&nbsp;is&nbsp;run,&nbsp;either<br>
+manually&nbsp;in&nbsp;the&nbsp;webapp&nbsp;or&nbsp;by&nbsp;using&nbsp;the&nbsp;webservice&nbsp;API&nbsp;list<br>
+upload&nbsp;feature.<br>
+&nbsp;<br>
+Valid&nbsp;operators&nbsp;are:<br>
+&nbsp;-&nbsp;IN<br>
+&nbsp;-&nbsp;NOT&nbsp;IN<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateListConstraint">TemplateListConstraint</a></dd>
+<dd><a href="intermine.constraints.html#ListConstraint">ListConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateListConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;operation&nbsp;to&nbsp;apply&nbsp;-&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;OPS&nbsp;set<br>
+@type&nbsp;op:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TemplateListConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#ListConstraint">ListConstraint</a>:<br>
+<dl><dt><a name="TemplateListConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#ListConstraint">ListConstraint</a>:<br>
+<dl><dt><strong>OPS</strong> = {'IN', 'NOT IN'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TemplateListConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TemplateListConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateListConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TemplateListConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TemplateListConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TemplateListConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateListConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateListConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateListConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateListConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateLoopConstraint">class <strong>TemplateLoopConstraint</strong></a>(<a href="intermine.constraints.html#LoopConstraint">LoopConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;with&nbsp;refer&nbsp;to&nbsp;<a href="builtins.html#object">object</a>&nbsp;identity<br>
+=========================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;assert&nbsp;that&nbsp;two&nbsp;paths&nbsp;refer&nbsp;to&nbsp;the&nbsp;same<br>
+<a href="builtins.html#object">object</a>.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;IS<br>
+&nbsp;-&nbsp;IS&nbsp;NOT<br>
+&nbsp;<br>
+The&nbsp;operators&nbsp;IS&nbsp;and&nbsp;IS&nbsp;NOT&nbsp;map&nbsp;to&nbsp;the&nbsp;ops&nbsp;"="&nbsp;and&nbsp;"!="&nbsp;when&nbsp;they<br>
+are&nbsp;used&nbsp;in&nbsp;XML&nbsp;serialisation.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateLoopConstraint">TemplateLoopConstraint</a></dd>
+<dd><a href="intermine.constraints.html#LoopConstraint">LoopConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateLoopConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;loopPath:&nbsp;The&nbsp;path&nbsp;to&nbsp;check&nbsp;for&nbsp;identity&nbsp;against<br>
+@type&nbsp;loopPath:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TemplateLoopConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LoopConstraint">LoopConstraint</a>:<br>
+<dl><dt><a name="TemplateLoopConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#LoopConstraint">LoopConstraint</a>:<br>
+<dl><dt><strong>OPS</strong> = {'IS', 'IS NOT'}</dl>
+
+<dl><dt><strong>SERIALISED_OPS</strong> = {'IS': '=', 'IS NOT': '!='}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TemplateLoopConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TemplateLoopConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateLoopConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TemplateLoopConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TemplateLoopConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TemplateLoopConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateLoopConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateLoopConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateLoopConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateLoopConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateMultiConstraint">class <strong>TemplateMultiConstraint</strong></a>(<a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;for&nbsp;checking&nbsp;membership&nbsp;of&nbsp;a&nbsp;set&nbsp;of&nbsp;values<br>
+======================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;require&nbsp;the&nbsp;value&nbsp;they&nbsp;constrain&nbsp;to&nbsp;be<br>
+either&nbsp;a&nbsp;member&nbsp;of&nbsp;a&nbsp;set&nbsp;of&nbsp;values,&nbsp;or&nbsp;not&nbsp;a&nbsp;member.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;ONE&nbsp;OF<br>
+&nbsp;-&nbsp;NONE&nbsp;OF<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;are&nbsp;similar&nbsp;in&nbsp;use&nbsp;to&nbsp;List&nbsp;constraints,&nbsp;with<br>
+the&nbsp;following&nbsp;differences:<br>
+&nbsp;&nbsp;-&nbsp;The&nbsp;list&nbsp;in&nbsp;this&nbsp;case&nbsp;is&nbsp;a&nbsp;defined&nbsp;set&nbsp;of&nbsp;values&nbsp;that&nbsp;is&nbsp;passed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;the&nbsp;query&nbsp;itself,&nbsp;rather&nbsp;than&nbsp;anything&nbsp;stored<br>
+&nbsp;&nbsp;&nbsp;&nbsp;independently&nbsp;on&nbsp;a&nbsp;server.<br>
+&nbsp;&nbsp;-&nbsp;The&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;the&nbsp;constaint&nbsp;is&nbsp;the&nbsp;value&nbsp;of&nbsp;an&nbsp;attribute,&nbsp;rather<br>
+&nbsp;&nbsp;&nbsp;&nbsp;than&nbsp;an&nbsp;<a href="builtins.html#object">object</a>'s&nbsp;identity.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateMultiConstraint">TemplateMultiConstraint</a></dd>
+<dd><a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateMultiConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;Here&nbsp;it&nbsp;must&nbsp;be&nbsp;an&nbsp;attribute&nbsp;of&nbsp;some&nbsp;<a href="builtins.html#object">object</a>.<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;values:&nbsp;The&nbsp;set&nbsp;of&nbsp;values&nbsp;which&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;the&nbsp;constraint&nbsp;either&nbsp;must&nbsp;or&nbsp;must&nbsp;not&nbsp;belong&nbsp;to.<br>
+@type&nbsp;values:&nbsp;set&nbsp;or&nbsp;list<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TemplateMultiConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>:<br>
+<dl><dt><a name="TemplateMultiConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>:<br>
+<dl><dt><strong>OPS</strong> = {'NONE OF', 'ONE OF'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TemplateMultiConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TemplateMultiConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateMultiConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TemplateMultiConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TemplateMultiConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TemplateMultiConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateMultiConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateMultiConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateMultiConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateMultiConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateRangeConstraint">class <strong>TemplateRangeConstraint</strong></a>(<a href="intermine.constraints.html#RangeConstraint">RangeConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;for&nbsp;testing&nbsp;where&nbsp;a&nbsp;value&nbsp;lies&nbsp;relative&nbsp;to&nbsp;a&nbsp;set&nbsp;of&nbsp;ranges<br>
+======================================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;require&nbsp;that&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;path&nbsp;they&nbsp;constrain<br>
+should&nbsp;lie&nbsp;in&nbsp;relationship&nbsp;to&nbsp;the&nbsp;set&nbsp;of&nbsp;values&nbsp;passed&nbsp;according&nbsp;to<br>
+the&nbsp;specific&nbsp;operator.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;OVERLAPS&nbsp;:&nbsp;The&nbsp;value&nbsp;overlaps&nbsp;at&nbsp;least&nbsp;one&nbsp;of&nbsp;the&nbsp;given&nbsp;ranges<br>
+&nbsp;-&nbsp;WITHIN&nbsp;:&nbsp;The&nbsp;value&nbsp;is&nbsp;wholly&nbsp;outside&nbsp;the&nbsp;given&nbsp;set&nbsp;of&nbsp;ranges<br>
+&nbsp;-&nbsp;CONTAINS&nbsp;:&nbsp;The&nbsp;value&nbsp;contains&nbsp;all&nbsp;the&nbsp;given&nbsp;ranges<br>
+&nbsp;-&nbsp;DOES&nbsp;NOT&nbsp;CONTAIN&nbsp;:&nbsp;The&nbsp;value&nbsp;does&nbsp;not&nbsp;contain&nbsp;all&nbsp;the&nbsp;given&nbsp;ranges<br>
+&nbsp;-&nbsp;OUTSIDE&nbsp;:&nbsp;Some&nbsp;part&nbsp;is&nbsp;outside&nbsp;the&nbsp;given&nbsp;set&nbsp;of&nbsp;ranges<br>
+&nbsp;-&nbsp;DOES&nbsp;NOT&nbsp;OVERLAP&nbsp;:&nbsp;The&nbsp;value&nbsp;does&nbsp;not&nbsp;overlap&nbsp;with&nbsp;any&nbsp;of&nbsp;the&nbsp;ranges<br>
+&nbsp;<br>
+For&nbsp;example:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;WITHIN&nbsp;[1..5,&nbsp;20..25]&nbsp;=&gt;&nbsp;True<br>
+&nbsp;<br>
+The&nbsp;format&nbsp;of&nbsp;the&nbsp;ranges&nbsp;depends&nbsp;on&nbsp;the&nbsp;value&nbsp;being&nbsp;constrained&nbsp;and&nbsp;what&nbsp;range<br>
+parsers&nbsp;have&nbsp;been&nbsp;configured&nbsp;on&nbsp;the&nbsp;target&nbsp;server.&nbsp;A&nbsp;common&nbsp;range&nbsp;parser&nbsp;for<br>
+biological&nbsp;mines&nbsp;is&nbsp;the&nbsp;one&nbsp;for&nbsp;Locations:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Gene.chromosomeLocation&nbsp;OVERLAPS&nbsp;[2X:54321..67890,&nbsp;3R:12345..456789]<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateRangeConstraint">TemplateRangeConstraint</a></dd>
+<dd><a href="intermine.constraints.html#RangeConstraint">RangeConstraint</a></dd>
+<dd><a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateRangeConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;Here&nbsp;it&nbsp;must&nbsp;be&nbsp;an&nbsp;attribute&nbsp;of&nbsp;some&nbsp;<a href="builtins.html#object">object</a>.<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;values:&nbsp;The&nbsp;set&nbsp;of&nbsp;values&nbsp;which&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;the&nbsp;constraint&nbsp;either&nbsp;must&nbsp;or&nbsp;must&nbsp;not&nbsp;belong&nbsp;to.<br>
+@type&nbsp;values:&nbsp;set&nbsp;or&nbsp;list<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TemplateRangeConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#RangeConstraint">RangeConstraint</a>:<br>
+<dl><dt><strong>OPS</strong> = {'CONTAINS', 'DOES NOT CONTAIN', 'DOES NOT OVERLAP', 'OUTSIDE', 'OVERLAPS', 'WITHIN'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#MultiConstraint">MultiConstraint</a>:<br>
+<dl><dt><a name="TemplateRangeConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TemplateRangeConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TemplateRangeConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateRangeConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TemplateRangeConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TemplateRangeConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TemplateRangeConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateRangeConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateRangeConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateRangeConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateRangeConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateSubClassConstraint">class <strong>TemplateSubClassConstraint</strong></a>(<a href="intermine.constraints.html#SubClassConstraint">SubClassConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;on&nbsp;the&nbsp;class&nbsp;of&nbsp;a&nbsp;reference<br>
+=======================================<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;has&nbsp;a&nbsp;reference&nbsp;X&nbsp;to&nbsp;another&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;type&nbsp;A,<br>
+and&nbsp;type&nbsp;B&nbsp;extends&nbsp;type&nbsp;A,&nbsp;then&nbsp;any&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;type&nbsp;B&nbsp;may&nbsp;be<br>
+the&nbsp;value&nbsp;of&nbsp;the&nbsp;reference&nbsp;X.&nbsp;If&nbsp;you&nbsp;only&nbsp;want&nbsp;to&nbsp;see&nbsp;X's<br>
+which&nbsp;are&nbsp;B's,&nbsp;this&nbsp;may&nbsp;be&nbsp;achieved&nbsp;with&nbsp;subclass&nbsp;constraints,<br>
+which&nbsp;allow&nbsp;the&nbsp;type&nbsp;of&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;be&nbsp;limited&nbsp;to&nbsp;one&nbsp;of&nbsp;the<br>
+subclasses&nbsp;(at&nbsp;any&nbsp;depth)&nbsp;of&nbsp;the&nbsp;class&nbsp;type&nbsp;required<br>
+by&nbsp;the&nbsp;attribute.<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;do&nbsp;not&nbsp;use&nbsp;operators.&nbsp;Since&nbsp;they&nbsp;cannot&nbsp;be<br>
+conditional&nbsp;(eg.&nbsp;"A&nbsp;is&nbsp;a&nbsp;B&nbsp;or&nbsp;A&nbsp;is&nbsp;a&nbsp;C"&nbsp;would&nbsp;not&nbsp;be&nbsp;possible<br>
+in&nbsp;an&nbsp;InterMine&nbsp;query),&nbsp;they&nbsp;do&nbsp;not&nbsp;have&nbsp;codes<br>
+and&nbsp;cannot&nbsp;be&nbsp;referenced&nbsp;in&nbsp;logic&nbsp;expressions.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateSubClassConstraint">TemplateSubClassConstraint</a></dd>
+<dd><a href="intermine.constraints.html#SubClassConstraint">SubClassConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateSubClassConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;This&nbsp;must&nbsp;refer&nbsp;to&nbsp;a&nbsp;class&nbsp;or&nbsp;a&nbsp;reference&nbsp;to&nbsp;a&nbsp;class.<br>
+@type&nbsp;path:&nbsp;str<br>
+&nbsp;<br>
+@param&nbsp;subclass:&nbsp;The&nbsp;class&nbsp;to&nbsp;subclass&nbsp;the&nbsp;path&nbsp;to.&nbsp;This&nbsp;must&nbsp;be&nbsp;a&nbsp;simple&nbsp;class&nbsp;name&nbsp;(not&nbsp;a&nbsp;dotted&nbsp;name)<br>
+@type&nbsp;subclass:&nbsp;str</tt></dd></dl>
+
+<dl><dt><a name="TemplateSubClassConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#SubClassConstraint">SubClassConstraint</a>:<br>
+<dl><dt><a name="TemplateSubClassConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateSubClassConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateSubClassConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateSubClassConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateSubClassConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateSubClassConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateTernaryConstraint">class <strong>TemplateTernaryConstraint</strong></a>(<a href="intermine.constraints.html#TernaryConstraint">TernaryConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;for&nbsp;broad,&nbsp;general&nbsp;searching&nbsp;over&nbsp;all&nbsp;fields<br>
+========================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;request&nbsp;a&nbsp;wide-ranging&nbsp;search&nbsp;for&nbsp;matching<br>
+fields&nbsp;over&nbsp;all&nbsp;aspects&nbsp;of&nbsp;an&nbsp;<a href="builtins.html#object">object</a>,&nbsp;including&nbsp;up&nbsp;to&nbsp;coercion<br>
+from&nbsp;related&nbsp;classes.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;LOOKUP<br>
+&nbsp;<br>
+To&nbsp;aid&nbsp;disambiguation,&nbsp;Ternary&nbsp;constaints&nbsp;accept&nbsp;an&nbsp;extra_value&nbsp;as<br>
+well&nbsp;as&nbsp;the&nbsp;main&nbsp;value.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateTernaryConstraint">TemplateTernaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#TernaryConstraint">TernaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateTernaryConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;Here&nbsp;is&nbsp;must&nbsp;be&nbsp;a&nbsp;class,&nbsp;or&nbsp;a&nbsp;reference&nbsp;to&nbsp;a&nbsp;class.<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;value:&nbsp;The&nbsp;value&nbsp;to&nbsp;check&nbsp;other&nbsp;fields&nbsp;against.<br>
+@type&nbsp;value:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;extra_value:&nbsp;A&nbsp;further&nbsp;value&nbsp;for&nbsp;disambiguation.&nbsp;The&nbsp;meaning&nbsp;of&nbsp;this&nbsp;value&nbsp;varies&nbsp;by&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;configuration.&nbsp;For&nbsp;example,&nbsp;if&nbsp;the&nbsp;class&nbsp;of&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;is&nbsp;Gene,&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extra_value&nbsp;will&nbsp;refer&nbsp;to&nbsp;the&nbsp;Organism.<br>
+@type&nbsp;extra_value:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TemplateTernaryConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TernaryConstraint">TernaryConstraint</a>:<br>
+<dl><dt><a name="TemplateTernaryConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TernaryConstraint">TernaryConstraint</a>:<br>
+<dl><dt><strong>OPS</strong> = {'LOOKUP'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TemplateTernaryConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TemplateTernaryConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateTernaryConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TemplateTernaryConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TemplateTernaryConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TemplateTernaryConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateTernaryConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateTernaryConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateTernaryConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateTernaryConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TemplateUnaryConstraint">class <strong>TemplateUnaryConstraint</strong></a>(<a href="intermine.constraints.html#UnaryConstraint">UnaryConstraint</a>, <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;which&nbsp;have&nbsp;just&nbsp;a&nbsp;path&nbsp;and&nbsp;an&nbsp;operator<br>
+==================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;are&nbsp;simple&nbsp;assertions&nbsp;about&nbsp;the<br>
+<a href="builtins.html#object">object</a>/value&nbsp;refered&nbsp;to&nbsp;by&nbsp;the&nbsp;path.&nbsp;The&nbsp;set&nbsp;of&nbsp;valid<br>
+operators&nbsp;is:<br>
+&nbsp;-&nbsp;IS&nbsp;NULL<br>
+&nbsp;-&nbsp;IS&nbsp;NOT&nbsp;NULL<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TemplateUnaryConstraint">TemplateUnaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#UnaryConstraint">UnaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TemplateUnaryConstraint-__init__"><strong>__init__</strong></a>(self, *a, **d)</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;operation&nbsp;to&nbsp;apply&nbsp;-&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;OPS&nbsp;set<br>
+@type&nbsp;op:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TemplateUnaryConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;template&nbsp;specific&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the<br>
+constraint.&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#UnaryConstraint">UnaryConstraint</a>:<br>
+<dl><dt><strong>OPS</strong> = {'IS NOT NULL', 'IS NULL'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TemplateUnaryConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TemplateUnaryConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TemplateUnaryConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TemplateUnaryConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TemplateUnaryConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TemplateUnaryConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TemplateUnaryConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><a name="TemplateUnaryConstraint-get_switchable_status"><strong>get_switchable_status</strong></a>(self)</dt><dd><tt>Returns&nbsp;either&nbsp;"locked",&nbsp;"on"&nbsp;or&nbsp;"off".</tt></dd></dl>
+
+<dl><dt><a name="TemplateUnaryConstraint-separate_arg_sets"><strong>separate_arg_sets</strong></a>(self, args)</dt><dd><tt>A&nbsp;static&nbsp;function&nbsp;to&nbsp;use&nbsp;when&nbsp;building&nbsp;template&nbsp;constraints.<br>
+============================================================<br>
+&nbsp;<br>
+dict&nbsp;-&gt;&nbsp;(dict,&nbsp;dict)<br>
+&nbsp;<br>
+Splits&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;arguments&nbsp;into&nbsp;two&nbsp;separate&nbsp;dictionaries,&nbsp;one&nbsp;with<br>
+arguments&nbsp;for&nbsp;the&nbsp;main&nbsp;constraint,&nbsp;and&nbsp;one&nbsp;with&nbsp;arguments&nbsp;for&nbsp;the&nbsp;template<br>
+portion&nbsp;of&nbsp;the&nbsp;behaviour</tt></dd></dl>
+
+<dl><dt><a name="TemplateUnaryConstraint-switch_off"><strong>switch_off</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;inactive<br>
+=====================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<dl><dt><a name="TemplateUnaryConstraint-switch_on"><strong>switch_on</strong></a>(self)</dt><dd><tt>Make&nbsp;sure&nbsp;this&nbsp;constraint&nbsp;is&nbsp;active<br>
+===================================<br>
+&nbsp;<br>
+@raise&nbsp;<a href="builtins.html#ValueError">ValueError</a>:&nbsp;if&nbsp;the&nbsp;constraint&nbsp;is&nbsp;not&nbsp;editable&nbsp;and&nbsp;optional</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>required</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;a&nbsp;value&nbsp;must&nbsp;be&nbsp;provided&nbsp;for&nbsp;this&nbsp;constraint.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<dl><dt><strong>switched_off</strong></dt>
+<dd><tt>True&nbsp;if&nbsp;this&nbsp;constraint&nbsp;is&nbsp;currently&nbsp;inactive.<br>
+&nbsp;<br>
+@rtype:&nbsp;bool</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#TemplateConstraint">TemplateConstraint</a>:<br>
+<dl><dt><strong>OPTIONAL_OFF</strong> = 'off'</dl>
+
+<dl><dt><strong>OPTIONAL_ON</strong> = 'on'</dl>
+
+<dl><dt><strong>REQUIRED</strong> = 'locked'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TernaryConstraint">class <strong>TernaryConstraint</strong></a>(<a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;for&nbsp;broad,&nbsp;general&nbsp;searching&nbsp;over&nbsp;all&nbsp;fields<br>
+========================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;request&nbsp;a&nbsp;wide-ranging&nbsp;search&nbsp;for&nbsp;matching<br>
+fields&nbsp;over&nbsp;all&nbsp;aspects&nbsp;of&nbsp;an&nbsp;<a href="builtins.html#object">object</a>,&nbsp;including&nbsp;up&nbsp;to&nbsp;coercion<br>
+from&nbsp;related&nbsp;classes.<br>
+&nbsp;<br>
+Valid&nbsp;operators:<br>
+&nbsp;-&nbsp;LOOKUP<br>
+&nbsp;<br>
+To&nbsp;aid&nbsp;disambiguation,&nbsp;Ternary&nbsp;constaints&nbsp;accept&nbsp;an&nbsp;extra_value&nbsp;as<br>
+well&nbsp;as&nbsp;the&nbsp;main&nbsp;value.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#TernaryConstraint">TernaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#BinaryConstraint">BinaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TernaryConstraint-__init__"><strong>__init__</strong></a>(self, path, op, value, extra_value=None, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain.&nbsp;Here&nbsp;is&nbsp;must&nbsp;be&nbsp;a&nbsp;class,&nbsp;or&nbsp;a&nbsp;reference&nbsp;to&nbsp;a&nbsp;class.<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;relationship&nbsp;between&nbsp;the&nbsp;path&nbsp;and&nbsp;the&nbsp;path&nbsp;provided&nbsp;(must&nbsp;be&nbsp;a&nbsp;valid&nbsp;operator)<br>
+@type&nbsp;op:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;value:&nbsp;The&nbsp;value&nbsp;to&nbsp;check&nbsp;other&nbsp;fields&nbsp;against.<br>
+@type&nbsp;value:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;extra_value:&nbsp;A&nbsp;further&nbsp;value&nbsp;for&nbsp;disambiguation.&nbsp;The&nbsp;meaning&nbsp;of&nbsp;this&nbsp;value&nbsp;varies&nbsp;by&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;configuration.&nbsp;For&nbsp;example,&nbsp;if&nbsp;the&nbsp;class&nbsp;of&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;is&nbsp;Gene,&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extra_value&nbsp;will&nbsp;refer&nbsp;to&nbsp;the&nbsp;Organism.<br>
+@type&nbsp;extra_value:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;code:&nbsp;The&nbsp;code&nbsp;for&nbsp;this&nbsp;constraint&nbsp;(default&nbsp;=&nbsp;"A")<br>
+@type&nbsp;code:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="TernaryConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="TernaryConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = {'LOOKUP'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="TernaryConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="TernaryConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="TernaryConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="TernaryConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="TernaryConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="TernaryConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UnaryConstraint">class <strong>UnaryConstraint</strong></a>(<a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;which&nbsp;have&nbsp;just&nbsp;a&nbsp;path&nbsp;and&nbsp;an&nbsp;operator<br>
+==================================================<br>
+&nbsp;<br>
+These&nbsp;constraints&nbsp;are&nbsp;simple&nbsp;assertions&nbsp;about&nbsp;the<br>
+<a href="builtins.html#object">object</a>/value&nbsp;refered&nbsp;to&nbsp;by&nbsp;the&nbsp;path.&nbsp;The&nbsp;set&nbsp;of&nbsp;valid<br>
+operators&nbsp;is:<br>
+&nbsp;-&nbsp;IS&nbsp;NULL<br>
+&nbsp;-&nbsp;IS&nbsp;NOT&nbsp;NULL<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="intermine.constraints.html#UnaryConstraint">UnaryConstraint</a></dd>
+<dd><a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a></dd>
+<dd><a href="intermine.constraints.html#Constraint">Constraint</a></dd>
+<dd><a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a></dd>
+<dd><a href="intermine.constraints.html#LogicNode">LogicNode</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>OPS</strong> = {'IS NOT NULL', 'IS NULL'}</dl>
+
+<hr>
+Methods inherited from <a href="intermine.constraints.html#CodedConstraint">CodedConstraint</a>:<br>
+<dl><dt><a name="UnaryConstraint-__init__"><strong>__init__</strong></a>(self, path, op, code='A')</dt><dd><tt>Constructor<br>
+===========<br>
+&nbsp;<br>
+@param&nbsp;path:&nbsp;The&nbsp;path&nbsp;to&nbsp;constrain<br>
+@type&nbsp;path:&nbsp;string<br>
+&nbsp;<br>
+@param&nbsp;op:&nbsp;The&nbsp;operation&nbsp;to&nbsp;apply&nbsp;-&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;OPS&nbsp;set<br>
+@type&nbsp;op:&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="UnaryConstraint-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Stringify&nbsp;to&nbsp;the&nbsp;code&nbsp;they&nbsp;are&nbsp;refered&nbsp;to&nbsp;by.</tt></dd></dl>
+
+<dl><dt><a name="UnaryConstraint-get_codes"><strong>get_codes</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UnaryConstraint-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;dict&nbsp;<a href="builtins.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;construct&nbsp;a<br>
+DOM&nbsp;element&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="UnaryConstraint-to_string"><strong>to_string</strong></a>(self)</dt><dd><tt>Provide&nbsp;a&nbsp;human&nbsp;readable&nbsp;representation&nbsp;of&nbsp;the&nbsp;logic.<br>
+This&nbsp;method&nbsp;is&nbsp;called&nbsp;by&nbsp;repr.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="intermine.constraints.html#Constraint">Constraint</a>:<br>
+<dl><dt><strong>child_type</strong> = 'constraint'</dl>
+
+<hr>
+Methods inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><a name="UnaryConstraint-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="intermine.pathfeatures.html#PathFeature">intermine.pathfeatures.PathFeature</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="intermine.constraints.html#LogicNode">LogicNode</a>:<br>
+<dl><dt><a name="UnaryConstraint-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;+<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;addition&nbsp;to&nbsp;sum<br>
+logic&nbsp;nodes::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;+&nbsp;con_b&nbsp;+&nbsp;con_c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B&nbsp;and&nbsp;C</tt></dd></dl>
+
+<dl><dt><a name="UnaryConstraint-__and__"><strong>__and__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;&amp;<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;&amp;&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;&amp;&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;sr(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;and&nbsp;B</tt></dd></dl>
+
+<dl><dt><a name="UnaryConstraint-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Overloads&nbsp;|<br>
+===========<br>
+&nbsp;<br>
+Logic&nbsp;may&nbsp;be&nbsp;defined&nbsp;by&nbsp;using&nbsp;the&nbsp;|&nbsp;operator::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;query.set_logic(con_a&nbsp;|&nbsp;con_b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;str(query.logic)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;A&nbsp;or&nbsp;B</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>PATH_PATTERN</strong> = re.compile('^(?:\\w+\\.)*\\w+$')</td></tr></table>
+</body></html>

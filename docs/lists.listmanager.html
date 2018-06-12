@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module lists.listmanager</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="lists.html"><font color="#ffffff">lists</font></a>.listmanager</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/nupurgunwant/intermine-ws-python/intermine/lists/listmanager.py">/Users/nupurgunwant/intermine-ws-python/intermine/lists/listmanager.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="codecs.html">codecs</a><br>
+<a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
+<a href="weakref.html">weakref</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="lists.listmanager.html#ListManager">ListManager</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="intermine.errors.html#WebserviceError">intermine.errors.WebserviceError</a>(<a href="builtins.html#OSError">builtins.OSError</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="lists.listmanager.html#ListServiceError">ListServiceError</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ListManager">class <strong>ListManager</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;Class&nbsp;for&nbsp;Managing&nbsp;List&nbsp;Content&nbsp;and&nbsp;Operations<br>
+================================================<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;provides&nbsp;methods&nbsp;to&nbsp;manage&nbsp;list&nbsp;contents&nbsp;and&nbsp;operations.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;may&nbsp;be&nbsp;called&nbsp;itself,&nbsp;but&nbsp;all&nbsp;the&nbsp;useful&nbsp;methods&nbsp;it&nbsp;has<br>
+are&nbsp;also&nbsp;available&nbsp;on&nbsp;the&nbsp;Service&nbsp;<a href="builtins.html#object">object</a>,&nbsp;which&nbsp;delegates&nbsp;to&nbsp;this&nbsp;class,&nbsp;while<br>
+other&nbsp;methods&nbsp;are&nbsp;more&nbsp;coneniently&nbsp;accessed&nbsp;through&nbsp;the&nbsp;list&nbsp;objects&nbsp;themselves.<br>
+&nbsp;<br>
+NB:&nbsp;The&nbsp;methods&nbsp;for&nbsp;creating&nbsp;lists&nbsp;can&nbsp;conflict&nbsp;in&nbsp;threaded&nbsp;applications,&nbsp;if<br>
+two&nbsp;threads&nbsp;are&nbsp;each&nbsp;allocated&nbsp;the&nbsp;same&nbsp;unused&nbsp;list&nbsp;name.&nbsp;You&nbsp;are<br>
+strongly&nbsp;advised&nbsp;to&nbsp;use&nbsp;locks&nbsp;to&nbsp;synchronise&nbsp;any&nbsp;list&nbsp;creation&nbsp;requests&nbsp;(create_list,<br>
+or&nbsp;intersect,&nbsp;union,&nbsp;subtract,&nbsp;diff)&nbsp;unless&nbsp;you&nbsp;are&nbsp;choosing&nbsp;your&nbsp;own&nbsp;names&nbsp;each&nbsp;time<br>
+and&nbsp;are&nbsp;confident&nbsp;that&nbsp;these&nbsp;will&nbsp;not&nbsp;conflict.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ListManager-__enter__"><strong>__enter__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ListManager-__exit__"><strong>__exit__</strong></a>(self, exc_type, exc_val, traceback)</dt></dl>
+
+<dl><dt><a name="ListManager-__init__"><strong>__init__</strong></a>(self, service)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="ListManager-add_tags"><strong>add_tags</strong></a>(self, to_tag, tags)</dt><dd><tt>Add&nbsp;the&nbsp;tags&nbsp;to&nbsp;the&nbsp;given&nbsp;list<br>
+==============================<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;current&nbsp;tags&nbsp;of&nbsp;this&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="ListManager-create_list"><strong>create_list</strong></a>(self, content, list_type='', name=None, description=None, tags=[], add=[])</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;list&nbsp;in&nbsp;the&nbsp;webservice<br>
+===================================<br>
+&nbsp;<br>
+If&nbsp;no&nbsp;name&nbsp;is&nbsp;given,&nbsp;the&nbsp;list&nbsp;will&nbsp;be&nbsp;considered&nbsp;to&nbsp;be&nbsp;a&nbsp;temporary<br>
+list,&nbsp;and&nbsp;will&nbsp;be&nbsp;automatically&nbsp;deleted&nbsp;when&nbsp;the&nbsp;program&nbsp;ends.&nbsp;To&nbsp;prevent<br>
+this&nbsp;happening,&nbsp;give&nbsp;the&nbsp;list&nbsp;a&nbsp;name,&nbsp;either&nbsp;on&nbsp;creation,&nbsp;or&nbsp;by&nbsp;renaming&nbsp;it.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;not&nbsp;thread&nbsp;safe&nbsp;for&nbsp;anonymous&nbsp;lists&nbsp;-&nbsp;it&nbsp;will&nbsp;need&nbsp;synchronisation<br>
+with&nbsp;locks&nbsp;if&nbsp;you&nbsp;intend&nbsp;to&nbsp;create&nbsp;lists&nbsp;with&nbsp;multiple&nbsp;threads&nbsp;in&nbsp;parallel.<br>
+&nbsp;<br>
+@param&nbsp;content:&nbsp;The&nbsp;source&nbsp;of&nbsp;the&nbsp;identifiers&nbsp;for&nbsp;this&nbsp;list.&nbsp;This&nbsp;can&nbsp;be:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;A&nbsp;string&nbsp;with&nbsp;white-space&nbsp;separated&nbsp;terms.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;The&nbsp;name&nbsp;of&nbsp;a&nbsp;file&nbsp;that&nbsp;contains&nbsp;the&nbsp;terms.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;A&nbsp;file-handle&nbsp;like&nbsp;thing&nbsp;(something&nbsp;with&nbsp;a&nbsp;'read'&nbsp;method)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;An&nbsp;iterable&nbsp;of&nbsp;identifiers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;A&nbsp;query&nbsp;with&nbsp;a&nbsp;single&nbsp;column.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Another&nbsp;list.<br>
+@param&nbsp;list_type:&nbsp;The&nbsp;type&nbsp;of&nbsp;objects&nbsp;to&nbsp;include&nbsp;in&nbsp;the&nbsp;list.&nbsp;This&nbsp;parameter&nbsp;is&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required&nbsp;if&nbsp;the&nbsp;content&nbsp;parameter&nbsp;implicitly&nbsp;includes&nbsp;the&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(as&nbsp;queries&nbsp;and&nbsp;lists&nbsp;do).<br>
+@param&nbsp;name:&nbsp;The&nbsp;name&nbsp;for&nbsp;the&nbsp;new&nbsp;list.&nbsp;If&nbsp;none&nbsp;is&nbsp;provided&nbsp;one&nbsp;will&nbsp;be&nbsp;generated,&nbsp;and&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;will&nbsp;be&nbsp;deleted&nbsp;when&nbsp;the&nbsp;list&nbsp;manager&nbsp;exits&nbsp;context.<br>
+@param&nbsp;description:&nbsp;A&nbsp;description&nbsp;for&nbsp;the&nbsp;list&nbsp;(free&nbsp;text,&nbsp;default&nbsp;=&nbsp;None)<br>
+@param&nbsp;tags:&nbsp;A&nbsp;set&nbsp;of&nbsp;strings&nbsp;to&nbsp;use&nbsp;as&nbsp;tags&nbsp;(default&nbsp;=&nbsp;[])<br>
+@param&nbsp;add:&nbsp;The&nbsp;issues&nbsp;groups&nbsp;that&nbsp;can&nbsp;be&nbsp;treated&nbsp;as&nbsp;matches.&nbsp;This&nbsp;should&nbsp;be&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;collection&nbsp;of&nbsp;strings&nbsp;naming&nbsp;issue&nbsp;groups&nbsp;that&nbsp;would&nbsp;otherwise&nbsp;be&nbsp;ignored,&nbsp;but<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;this&nbsp;case&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;list.&nbsp;The&nbsp;available&nbsp;groups&nbsp;are:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;DUPLICATE&nbsp;-&nbsp;More&nbsp;than&nbsp;one&nbsp;match&nbsp;was&nbsp;found.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;WILDCARD&nbsp;-&nbsp;A&nbsp;wildcard&nbsp;match&nbsp;was&nbsp;made.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;TYPE_CONVERTED&nbsp;-&nbsp;A&nbsp;match&nbsp;was&nbsp;found,&nbsp;but&nbsp;in&nbsp;another&nbsp;type&nbsp;(eg.&nbsp;found&nbsp;a&nbsp;protein<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;we&nbsp;could&nbsp;convert&nbsp;it&nbsp;to&nbsp;a&nbsp;gene).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;OTHER&nbsp;-&nbsp;other&nbsp;issue&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;:all&nbsp;-&nbsp;All&nbsp;issues&nbsp;should&nbsp;be&nbsp;considered&nbsp;acceptable.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;only&nbsp;makes&nbsp;sense&nbsp;with&nbsp;text&nbsp;uploads&nbsp;-&nbsp;it&nbsp;is&nbsp;not&nbsp;required&nbsp;(or&nbsp;used)&nbsp;when<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;content&nbsp;is&nbsp;a&nbsp;list&nbsp;or&nbsp;a&nbsp;query.<br>
+&nbsp;<br>
+@rtype:&nbsp;intermine.lists.List</tt></dd></dl>
+
+<dl><dt><a name="ListManager-delete_lists"><strong>delete_lists</strong></a>(self, lists)</dt><dd><tt>Delete&nbsp;the&nbsp;given&nbsp;lists&nbsp;from&nbsp;the&nbsp;webserver</tt></dd></dl>
+
+<dl><dt><a name="ListManager-delete_temporary_lists"><strong>delete_temporary_lists</strong></a>(self)</dt><dd><tt>Delete&nbsp;all&nbsp;the&nbsp;lists&nbsp;considered&nbsp;temporary&nbsp;(those&nbsp;created&nbsp;without&nbsp;names)</tt></dd></dl>
+
+<dl><dt><a name="ListManager-get_all_list_names"><strong>get_all_list_names</strong></a>(self)</dt><dd><tt>Get&nbsp;all&nbsp;the&nbsp;names&nbsp;of&nbsp;the&nbsp;lists&nbsp;in&nbsp;a&nbsp;particular&nbsp;webservice</tt></dd></dl>
+
+<dl><dt><a name="ListManager-get_all_lists"><strong>get_all_lists</strong></a>(self)</dt><dd><tt>Get&nbsp;all&nbsp;the&nbsp;lists&nbsp;on&nbsp;a&nbsp;webservice</tt></dd></dl>
+
+<dl><dt><a name="ListManager-get_list"><strong>get_list</strong></a>(self, name)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;from&nbsp;the&nbsp;service&nbsp;by&nbsp;name,&nbsp;if&nbsp;it&nbsp;exists</tt></dd></dl>
+
+<dl><dt><a name="ListManager-get_list_count"><strong>get_list_count</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;lists&nbsp;accessible&nbsp;at&nbsp;the&nbsp;given&nbsp;webservice.<br>
+This&nbsp;number&nbsp;will&nbsp;vary&nbsp;depending&nbsp;on&nbsp;who&nbsp;you&nbsp;are&nbsp;authenticated&nbsp;as.</tt></dd></dl>
+
+<dl><dt><a name="ListManager-get_tags"><strong>get_tags</strong></a>(self, im_list)</dt><dd><tt>Get&nbsp;the&nbsp;up-to-date&nbsp;set&nbsp;of&nbsp;tags&nbsp;for&nbsp;a&nbsp;given&nbsp;list<br>
+===============================================<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;current&nbsp;tags&nbsp;of&nbsp;this&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="ListManager-get_unused_list_name"><strong>get_unused_list_name</strong></a>(self)</dt><dd><tt>Get&nbsp;an&nbsp;unused&nbsp;list&nbsp;name<br>
+=======================<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;returns&nbsp;a&nbsp;new&nbsp;name&nbsp;that&nbsp;does&nbsp;not&nbsp;conflict<br>
+with&nbsp;any&nbsp;currently&nbsp;existing&nbsp;list&nbsp;name.<br>
+&nbsp;<br>
+The&nbsp;list&nbsp;name&nbsp;is&nbsp;only&nbsp;guaranteed&nbsp;to&nbsp;be&nbsp;unused&nbsp;at&nbsp;the&nbsp;time<br>
+of&nbsp;allocation.</tt></dd></dl>
+
+<dl><dt><a name="ListManager-intersect"><strong>intersect</strong></a>(self, lists, name=None, description=None, tags=[])</dt><dd><tt>Calculate&nbsp;the&nbsp;intersection&nbsp;of&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;lists,&nbsp;and&nbsp;return&nbsp;the&nbsp;list&nbsp;representing&nbsp;the&nbsp;result</tt></dd></dl>
+
+<dl><dt><a name="ListManager-l"><strong>l</strong></a>(self, name)</dt><dd><tt>Alias&nbsp;for&nbsp;get_list</tt></dd></dl>
+
+<dl><dt><a name="ListManager-make_list_names"><strong>make_list_names</strong></a>(self, lists)</dt><dd><tt>Turn&nbsp;a&nbsp;list&nbsp;of&nbsp;things&nbsp;into&nbsp;a&nbsp;list&nbsp;of&nbsp;list&nbsp;names</tt></dd></dl>
+
+<dl><dt><a name="ListManager-parse_list_upload_response"><strong>parse_list_upload_response</strong></a>(self, response)</dt><dd><tt>Intepret&nbsp;the&nbsp;response&nbsp;from&nbsp;the&nbsp;webserver&nbsp;to&nbsp;a&nbsp;list&nbsp;request,&nbsp;and&nbsp;return&nbsp;the&nbsp;List&nbsp;it&nbsp;describes</tt></dd></dl>
+
+<dl><dt><a name="ListManager-refresh_lists"><strong>refresh_lists</strong></a>(self)</dt><dd><tt>Update&nbsp;the&nbsp;list&nbsp;information&nbsp;with&nbsp;the&nbsp;latest&nbsp;details&nbsp;from&nbsp;the&nbsp;server</tt></dd></dl>
+
+<dl><dt><a name="ListManager-remove_tags"><strong>remove_tags</strong></a>(self, to_remove_from, tags)</dt><dd><tt>Add&nbsp;the&nbsp;tags&nbsp;to&nbsp;the&nbsp;given&nbsp;list<br>
+==============================<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;current&nbsp;tags&nbsp;of&nbsp;this&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="ListManager-subtract"><strong>subtract</strong></a>(self, lefts, rights, name=None, description=None, tags=[])</dt><dd><tt>Calculate&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;rights&nbsp;from&nbsp;lefts,&nbsp;and&nbsp;return&nbsp;the&nbsp;list&nbsp;representing&nbsp;the&nbsp;result</tt></dd></dl>
+
+<dl><dt><a name="ListManager-union"><strong>union</strong></a>(self, lists, name=None, description=None, tags=[])</dt><dd><tt>Calculate&nbsp;the&nbsp;union&nbsp;of&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;lists,&nbsp;and&nbsp;return&nbsp;the&nbsp;list&nbsp;representing&nbsp;the&nbsp;result</tt></dd></dl>
+
+<dl><dt><a name="ListManager-xor"><strong>xor</strong></a>(self, lists, name=None, description=None, tags=[])</dt><dd><tt>Calculate&nbsp;the&nbsp;symmetric&nbsp;difference&nbsp;of&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;lists,&nbsp;and&nbsp;return&nbsp;the&nbsp;list&nbsp;representing&nbsp;the&nbsp;result</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="ListManager-safe_dict"><strong>safe_dict</strong></a>(d)</dt><dd><tt>Recursively&nbsp;clone&nbsp;json&nbsp;structure&nbsp;with&nbsp;UTF-8&nbsp;dictionary&nbsp;keys</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>DEFAULT_DESCRIPTION</strong> = 'List created with Python client library'</dl>
+
+<dl><dt><strong>DEFAULT_LIST_NAME</strong> = 'my_list'</dl>
+
+<dl><dt><strong>DIFFERENCE_PATH</strong> = '/lists/diff/json'</dl>
+
+<dl><dt><strong>INTERSECTION_PATH</strong> = '/lists/intersect/json'</dl>
+
+<dl><dt><strong>LOG</strong> = &lt;Logger listmanager (WARNING)&gt;</dl>
+
+<dl><dt><strong>SUBTRACTION_PATH</strong> = '/lists/subtract/json'</dl>
+
+<dl><dt><strong>UNION_PATH</strong> = '/lists/union/json'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ListServiceError">class <strong>ListServiceError</strong></a>(<a href="intermine.errors.html#WebserviceError">intermine.errors.WebserviceError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Errors&nbsp;thrown&nbsp;when&nbsp;something&nbsp;goes&nbsp;wrong&nbsp;with&nbsp;list&nbsp;requests<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="lists.listmanager.html#ListServiceError">ListServiceError</a></dd>
+<dd><a href="intermine.errors.html#WebserviceError">intermine.errors.WebserviceError</a></dd>
+<dd><a href="builtins.html#OSError">builtins.OSError</a></dd>
+<dd><a href="builtins.html#Exception">builtins.Exception</a></dd>
+<dd><a href="builtins.html#BaseException">builtins.BaseException</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="intermine.errors.html#WebserviceError">intermine.errors.WebserviceError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#OSError">builtins.OSError</a>:<br>
+<dl><dt><a name="ListServiceError-__init__"><strong>__init__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="ListServiceError-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="ListServiceError-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt>helper&nbsp;for&nbsp;pickle</tt></dd></dl>
+
+<dl><dt><a name="ListServiceError-__str__"><strong>__str__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="builtins.html#OSError">builtins.OSError</a>:<br>
+<dl><dt><strong>characters_written</strong></dt>
+</dl>
+<dl><dt><strong>errno</strong></dt>
+<dd><tt>POSIX&nbsp;exception&nbsp;code</tt></dd>
+</dl>
+<dl><dt><strong>filename</strong></dt>
+<dd><tt>exception&nbsp;filename</tt></dd>
+</dl>
+<dl><dt><strong>filename2</strong></dt>
+<dd><tt>second&nbsp;exception&nbsp;filename</tt></dd>
+</dl>
+<dl><dt><strong>strerror</strong></dt>
+<dd><tt>exception&nbsp;strerror</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><a name="ListServiceError-__delattr__"><strong>__delattr__</strong></a>(self, name, /)</dt><dd><tt>Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="ListServiceError-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="ListServiceError-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="ListServiceError-__setattr__"><strong>__setattr__</strong></a>(self, name, value, /)</dt><dd><tt>Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="ListServiceError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ListServiceError-with_traceback"><strong>with_traceback</strong></a>(...)</dt><dd><tt>Exception.<a href="#ListServiceError-with_traceback">with_traceback</a>(tb)&nbsp;--<br>
+set&nbsp;self.<strong>__traceback__</strong>&nbsp;to&nbsp;tb&nbsp;and&nbsp;return&nbsp;self.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><strong>__cause__</strong></dt>
+<dd><tt>exception&nbsp;cause</tt></dd>
+</dl>
+<dl><dt><strong>__context__</strong></dt>
+<dd><tt>exception&nbsp;context</tt></dd>
+</dl>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>__suppress_context__</strong></dt>
+</dl>
+<dl><dt><strong>__traceback__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-safe_key"><strong>safe_key</strong></a>(maybe_unicode)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>P3K</strong> = True<br>
+<strong>unicode_literals</strong> = _Feature((2, 6, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 131072)</td></tr></table>
+</body></html>
