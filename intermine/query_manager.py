@@ -44,16 +44,18 @@ def get_all_query_names():
         dict = json.loads(r.text)
     # count used to check existence of the query
     count = 0
+    # list where output is stored
+    result = []
     for key in dict['queries'].keys():
         count = count + 1
-        # prints the names
-        print(key)
+        # appends the names in result
+        result.append(key)
 
     if count == 0:
         # if no such query name exists in the account
-        print("No saved queries")
+        return "No saved queries"
 
-    return None
+    return ", ".join(result)
 
 
 def get_query(name):
@@ -80,17 +82,20 @@ def get_query(name):
         r = requests.get(link)
         dict = json.loads(r.text)
     count = 0
+    # list where output is stored
+    result = []
     for key in dict['queries'].keys():
         if name == key:
             count = count + 1
-            # prints the columns a query is made of
-            print("Columns:")
+            # appends the columns a query is made of in result
             for i in range(len(dict['queries'][name]['select'])):
-                print(dict['queries'][name]['select'][i])
+                result.append(dict['queries'][name]['select'][i])
+
     if count == 0:
         return "No such query available"
     else:
-        return None
+        print("Columns:")
+        return ", ".join(result)
 
 
 def delete_query(name):
