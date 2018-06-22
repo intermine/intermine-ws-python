@@ -1,8 +1,16 @@
 The InterMine Python Webservice Client
 =====================================
 
+
 [![Build Status][badge]][ci] 
-[![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/intermine/intermine)
+![Version](http://img.shields.io/badge/version-1.10.0-blue.svg?style=flat)
+[![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/intermine/intermine/blob/master/LICENSE) 
+[![Research software impact](http://depsy.org/api/package/pypi/intermine/badge.svg)](http://depsy.org/package/python/intermine)
+
+[![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/bioconda/intermine)
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/intermine/badges/version.svg)](https://anaconda.org/bioconda/intermine)
+[![Downloads](https://anaconda.org/bioconda/intermine/badges/downloads.svg)](https://anaconda.org/bioconda/intermine)
+
 
 An implementation of a webservice client 
 for InterMine webservices, written in Python
@@ -17,12 +25,16 @@ to perform queries. Some examples of sites that
 are powered by InterMine software, and thus offer
 a compatible webservice API, are:
 
-* FlyMine
-* HumanMine
-* MouseMine
-* RatMine
-* YeastMine
-* ZebrafishMine
+  * [FlyMine](http://www.flymine.org)
+  * [MouseMine](http://www.mousemine.org)
+  * [YeastMine](http://yeastmine.yeastgenome.org)
+  * [ZebrafishMine](http://zebrafishmine.org)
+  * [RatMine](http://ratmine.mcw.edu/ratmine/begin.do)
+  * [TargetMine](http://targetmine.mizuguchilab.org/)
+  * [ThaleMine](https://apps.araport.org/thalemine)
+  * [PhytoMine](https://phytozome.jgi.doe.gov/phytomine)
+
+See the [InterMine registry](http://registry.intermine.org/) for the full list of available InterMines.
 
 Queries here refer to database queries over the 
 integrated datawarehouse. Instead of using 
@@ -32,64 +44,71 @@ to enable wide-ranging and arbitrary queries.
 
 Requirements
 ------------
-This package is compatible with both Python 2.7 and 3.x.  It may be compatible with older versions of Python 2 but this is untested.
+This package is compatible with both Python 2.7 and 3.x. We plan to drop 2.7 support next year.
 
 Downloading:
 ------------
 
 The easiest way to install is to use easy_install:
 
+```
   sudo easy_install intermine
+```
 
-The source code can be downloaded from a variety of places:
-
-* From InterMine
-
-  wget http://www.intermine.org/lib/python-webservice-client-0.96.00.tar.gz
-
-* From PyPi
-
-  wget http://pypi.python.org/packages/source/i/intermine/intermine-0.96.00.tar.gz
-
-* From Github
-
-  git clone git://github.com/alexkalderimis/intermine-ws-python.git
-
+The client is also available via [bioconda](https://anaconda.org/bioconda/intermine).
 
 Running the Tests:
 ------------------
 
-If you would like to run the test suite, you can do so by executing
+If you would like to run the test suite against a local mock server, you can do so by executing
 the following command: (from the source directory)
 
+```
   python setup.py test
+```
+
+If you want to run the suite against a live server (e.g. as deployed by the testmodel/setup.sh in 
+the InterMine distribution, then you can run:
+
+```
+  python setup.py livetest
+```
+
+By default this will use the location http://localhost:8080/intermine-demo/service.  If you want
+it to use a different service, set the service URL in the TESTMODEL_URL shell environment variable.
 
 Installation:
 -------------
 
 Once downloaded, you can install the module with the command (from the source directory):
 
+```
   python setup.py install
+```
 
 Further documentation:
 ----------------------
 
+We have detailed tutorials:
+
+* https://github.com/intermine/intermine-ws-python-docs/
+
 Extensive documentation is available by using the "pydoc" command, eg:
 
+```
   pydoc intermine.query.Query
+```
 
 Also see:
 
 * Documentation on PyPi: http://packages.python.org/intermine/
 
-License:
---------
 
-All code in this project is dual licensed under the LGPL version 3 license and the BSD 2-clause license
 
 Changes:
 --------
 
+    1.10.00   Added registry features
     1.09.09   Add Python 3 support
     1.09.06   Dual license under BSD as well as LGPL
     1.07.00   Provide ListManagers as context managers, where users need to create
@@ -124,4 +143,24 @@ Changes:
 
 [badge]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py.svg?branch=master
 [ci]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py
+
+Copyright and Licence
+------------------------
+
+Copyright (C) 2002-2018 InterMine
+
+All code in this project is dual licensed under the LGPL version 3 license and the BSD 2-clause license
+
+Please cite
+------------------------
+
+**InterMine: extensive web services for modern biology.**<br/>
+
+*Kalderimis A, Lyne R, Butano D, Contrino S, Lyne M, Heimbach J, Hu F, Smith R, Stěpán R, Sullivan J, Micklem G.*<br/>
+
+[Nucleic Acids Res. 2014 Jul;42(Web Server issue):W468-72](https://academic.oup.com/nar/article/42/W1/W468/2435235)
+
+[![doi](http://img.shields.io/badge/doi-10.1093/nar/gku301-blue.svg?style=flat)](https://doi.org/10.1093/nar/gku301) 
+[![pubmed](http://img.shields.io/badge/pubmed-24753429-blue.svg?style=flat)](http://www.ncbi.nlm.nih.gov/pubmed/24753429)
+
 
