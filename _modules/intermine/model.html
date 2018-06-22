@@ -1,0 +1,1152 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="python">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>intermine.model &#8212; Intermine 1.10.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for intermine.model</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">xml.dom</span> <span class="k">import</span> <span class="n">minidom</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">intermine.util</span> <span class="k">import</span> <span class="n">openAnything</span><span class="p">,</span> <span class="n">ReadableException</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Classes representing the data model</span>
+<span class="sd">===================================</span>
+
+<span class="sd">Representations of tables and columns, and behaviour</span>
+<span class="sd">for validating connections between them.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Alex Kalderimis&quot;</span>
+<span class="n">__organization__</span> <span class="o">=</span> <span class="s2">&quot;InterMine&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;LGPL&quot;</span>
+<span class="n">__contact__</span> <span class="o">=</span> <span class="s2">&quot;dev@intermine.org&quot;</span>
+
+<div class="viewcode-block" id="Field"><a class="viewcode-back" href="../../intermine.html#intermine.model.Field">[docs]</a><span class="k">class</span> <span class="nc">Field</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing columns on database tables</span>
+<span class="sd">    ===============================================</span>
+
+<span class="sd">    The base class for attributes, references and collections. All</span>
+<span class="sd">    columns in DB tables are represented by fields</span>
+
+<span class="sd">    SYNOPSIS</span>
+<span class="sd">    --------</span>
+
+<span class="sd">        &gt;&gt;&gt; service = Service(&quot;http://www.flymine.org/query/service&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; model = service.model</span>
+<span class="sd">        &gt;&gt;&gt; cd = model.get_class(&quot;Gene&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print &quot;Gene has&quot;, len(cd.fields), &quot;fields&quot;</span>
+<span class="sd">        &gt;&gt;&gt; for field in gene_cd.fields:</span>
+<span class="sd">        ...        print &quot; - &quot;, field</span>
+<span class="sd">        Gene has 45 fields</span>
+<span class="sd">            -  CDSs is a group of CDS objects, which link back to this as gene</span>
+<span class="sd">            -  GLEANRsymbol is a String</span>
+<span class="sd">            -  UTRs is a group of UTR objects, which link back to this as gene</span>
+<span class="sd">            -  alleles is a group of Allele objects, which link back to this as gene</span>
+<span class="sd">            -  chromosome is a Chromosome</span>
+<span class="sd">            -  chromosomeLocation is a Location</span>
+<span class="sd">            -  clones is a group of CDNAClone objects, which link back to this as gene</span>
+<span class="sd">            -  crossReferences is a group of CrossReference objects, which link back to this as subject</span>
+<span class="sd">            -  cytoLocation is a String</span>
+<span class="sd">            -  dataSets is a group of DataSet objects, which link back to this as bioEntities</span>
+<span class="sd">            -  downstreamIntergenicRegion is a IntergenicRegion</span>
+<span class="sd">            -  exons is a group of Exon objects, which link back to this as gene</span>
+<span class="sd">            -  flankingRegions is a group of GeneFlankingRegion objects, which link back to this as gene</span>
+<span class="sd">            -  goAnnotation is a group of GOAnnotation objects</span>
+<span class="sd">            -  homologues is a group of Homologue objects, which link back to this as gene</span>
+<span class="sd">            -  id is a Integer</span>
+<span class="sd">            -  interactions is a group of Interaction objects, which link back to this as gene</span>
+<span class="sd">            -  length is a Integer</span>
+<span class="sd">            ...</span>
+
+<span class="sd">    @see: L{Attribute}</span>
+<span class="sd">    @see: L{Reference}</span>
+<span class="sd">    @see: L{Collection}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">class_origin</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor - DO NOT USE</span>
+<span class="sd">        ========================</span>
+
+<span class="sd">        THIS CLASS IS NOT MEANT TO BE INSTANTIATED DIRECTLY</span>
+
+<span class="sd">        you are unlikely to need to do</span>
+<span class="sd">        so anyway: it is recommended you access fields</span>
+<span class="sd">        through the classes generated by the model</span>
+
+<span class="sd">        @param name: The name of the reference</span>
+<span class="sd">        @param type_name: The name of the model.Class this refers to</span>
+<span class="sd">        @param class_origin: The model.Class this was declared in</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span> <span class="o">=</span> <span class="n">type_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_class</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declared_in</span> <span class="o">=</span> <span class="n">class_origin</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; is a &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_name</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fieldtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Fields should never be directly instantiated&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Attribute"><a class="viewcode-back" href="../../intermine.html#intermine.model.Attribute">[docs]</a><span class="k">class</span> <span class="nc">Attribute</span><span class="p">(</span><span class="n">Field</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attributes represent columns that contain actual data</span>
+<span class="sd">    =====================================================</span>
+
+<span class="sd">    The Attribute class inherits all the behaviour of L{intermine.model.Field}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fieldtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;attribute&quot;</span></div>
+
+<div class="viewcode-block" id="Reference"><a class="viewcode-back" href="../../intermine.html#intermine.model.Reference">[docs]</a><span class="k">class</span> <span class="nc">Reference</span><span class="p">(</span><span class="n">Field</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    References represent columns that refer to records in other tables</span>
+<span class="sd">    ==================================================================</span>
+
+<span class="sd">    In addition the the behaviour and properties of Field, references</span>
+<span class="sd">    may also have a reverse reference, if the other record points</span>
+<span class="sd">    back to this one as well. And all references will have their</span>
+<span class="sd">    type upgraded to a type_class during parsing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">class_origin</span><span class="p">,</span> <span class="n">reverse_ref</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        In addition to the a parameters of Field, Reference also</span>
+<span class="sd">        takes an optional reverse reference name (str)</span>
+
+<span class="sd">        @param name: The name of the reference</span>
+<span class="sd">        @param type_name: The name of the model.Class this refers to</span>
+<span class="sd">        @param class_origin: The model.Class this was declared in</span>
+<span class="sd">        @param reverse_ref: The name of the reverse reference (default: None)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_reference_name</span> <span class="o">=</span> <span class="n">reverse_ref</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Reference</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">class_origin</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_reference</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a string representation</span>
+<span class="sd">        ==============================</span>
+
+<span class="sd">        @rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Reference</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;, which links back to this as &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_reference</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fieldtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;reference&quot;</span></div>
+
+<div class="viewcode-block" id="Collection"><a class="viewcode-back" href="../../intermine.html#intermine.model.Collection">[docs]</a><span class="k">class</span> <span class="nc">Collection</span><span class="p">(</span><span class="n">Reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Collections are references which refer to groups of objects</span>
+<span class="sd">    ===========================================================</span>
+
+<span class="sd">    Collections have all the same behaviour and properties as References</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a string representation&quot;&quot;&quot;</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Collection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; is a &quot;</span><span class="p">,</span> <span class="s2">&quot; is a group of &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ret</span> <span class="o">+</span> <span class="s2">&quot; objects&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ret</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;, which links&quot;</span><span class="p">,</span> <span class="s2">&quot; objects, which link&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fieldtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;collection&quot;</span></div>
+
+<div class="viewcode-block" id="Class"><a class="viewcode-back" href="../../intermine.html#intermine.model.Class">[docs]</a><span class="k">class</span> <span class="nc">Class</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An abstraction of database tables in the data model</span>
+<span class="sd">    ===================================================</span>
+
+<span class="sd">    These objects refer to the table objects in the</span>
+<span class="sd">    InterMine ORM layer.</span>
+
+<span class="sd">    SYNOPSIS</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt;  service = Service(&quot;http://www.flymine.org/query/service&quot;)</span>
+<span class="sd">    &gt;&gt;&gt;  model = service.model</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;  if &quot;Gene&quot; in model.classes:</span>
+<span class="sd">    ...      gene_cd = model.get_class(&quot;Gene&quot;)</span>
+<span class="sd">    ...      print &quot;Gene has&quot;, len(gene_cd.fields), &quot;fields&quot;</span>
+<span class="sd">    ...      for field in gene_cd.fields:</span>
+<span class="sd">    ...          print &quot; - &quot;, field.name</span>
+
+<span class="sd">    OVERVIEW</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Each class can have attributes (columns) of various types,</span>
+<span class="sd">    and can have references to other classes (tables), on either</span>
+<span class="sd">    a one-to-one (references) or one-to-many (collections) basis</span>
+
+<span class="sd">    Classes should not be instantiated by hand, but rather used</span>
+<span class="sd">    as part of the model they belong to.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parents</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">interface</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor - Creates a new Class descriptor</span>
+<span class="sd">        ============================================</span>
+
+<span class="sd">        &gt;&gt;&gt; cd = intermine.model.Class(&quot;Gene&quot;, [&quot;SequenceFeature&quot;])</span>
+<span class="sd">        &lt;intermine.model.Class: Gene&gt;</span>
+
+<span class="sd">        This constructor is called when deserialising the</span>
+<span class="sd">        model - you should have no need to create Classes by hand</span>
+
+<span class="sd">        @param name: The name of this class</span>
+<span class="sd">        @param parents: a list of parental names</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents</span> <span class="o">=</span> <span class="n">parents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent_classes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_interface</span> <span class="o">=</span> <span class="n">interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_id</span> <span class="o">=</span> <span class="s2">&quot;Object&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parents</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_id</span><span class="p">:</span>
+            <span class="c1"># All InterMineObject classes have an id attribute.</span>
+            <span class="n">id_field</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;Integer&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_dict</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_field</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">package_name</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;package_name&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;__test__&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The fields of this class</span>
+<span class="sd">        ========================</span>
+
+<span class="sd">        The fields are returned sorted by name. Fields</span>
+<span class="sd">        includes all Attributes, References and Collections</span>
+
+<span class="sd">        @rtype: list(L{Field})</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">field</span><span class="p">:</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">yield</span> <span class="n">f</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Field</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_dict</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The fields of this class which contain data</span>
+<span class="sd">        ===========================================</span>
+
+<span class="sd">        @rtype: list(L{Attribute})</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Attribute</span><span class="p">)]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">references</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        fields which reference other objects</span>
+<span class="sd">        ====================================</span>
+
+<span class="sd">        @rtype: list(L{Reference})</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">isRef</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Reference</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Collection</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">isRef</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">collections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        fields which reference many other objects</span>
+<span class="sd">        =========================================</span>
+
+<span class="sd">        @rtype: list(L{Collection})</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Collection</span><span class="p">)]</span>
+
+<div class="viewcode-block" id="Class.get_field"><a class="viewcode-back" href="../../intermine.html#intermine.model.Class.get_field">[docs]</a>    <span class="k">def</span> <span class="nf">get_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a field by name</span>
+<span class="sd">        ===================</span>
+
+<span class="sd">        The standard way of retrieving a field</span>
+
+<span class="sd">        @raise ModelError: if the Class does not have such a field</span>
+
+<span class="sd">        @rtype: subclass of L{intermine.model.Field}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ModelError</span><span class="p">(</span><span class="s2">&quot;There is no field called </span><span class="si">%s</span><span class="s2"> in </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Class.isa"><a class="viewcode-back" href="../../intermine.html#intermine.model.Class.isa">[docs]</a>    <span class="k">def</span> <span class="nf">isa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if self is, or inherits from other</span>
+<span class="sd">        ========================================</span>
+
+<span class="sd">        This method validates statements about inheritance.</span>
+<span class="sd">        Returns true if the &quot;other&quot; is, or is within the</span>
+<span class="sd">        ancestry of, this class</span>
+
+<span class="sd">        Other can be passed as a name (str), or as the class object itself</span>
+
+<span class="sd">        @rtype: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Class</span><span class="p">):</span>
+            <span class="n">other_name</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other_name</span> <span class="o">=</span> <span class="n">other</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">other_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_classes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">isa</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+
+<div class="viewcode-block" id="ComposedClass"><a class="viewcode-back" href="../../intermine.html#intermine.model.ComposedClass">[docs]</a><span class="k">class</span> <span class="nc">ComposedClass</span><span class="p">(</span><span class="n">Class</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An abstraction of dynamic objects that are in two classes</span>
+<span class="sd">    ==========================================================</span>
+
+<span class="sd">    These objects are structural unions of two or more different data-types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_interface</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ps</span><span class="p">,</span> <span class="bp">cls</span><span class="p">:</span> <span class="n">ps</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parents</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">has_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Object&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">field_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The combined field dictionary of all parts&quot;&quot;&quot;</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_id</span><span class="p">:</span>
+            <span class="c1"># All InterMineObject classes have an id attribute.</span>
+            <span class="n">fields</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;Integer&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
+            <span class="n">fields</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">field_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fields</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parent_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The flattened list of parent classes, with the parts&quot;&quot;&quot;</span>
+        <span class="n">all_parents</span> <span class="o">=</span> <span class="p">[</span><span class="n">pc</span> <span class="k">for</span> <span class="n">pc</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">parent_classes</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">all_parents</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span></div>
+
+
+<div class="viewcode-block" id="Path"><a class="viewcode-back" href="../../intermine.html#intermine.model.Path">[docs]</a><span class="k">class</span> <span class="nc">Path</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing a validated dotted string path</span>
+<span class="sd">    ===================================================</span>
+
+<span class="sd">    A path represents a connection between records and fields</span>
+
+<span class="sd">    SYNOPSIS</span>
+<span class="sd">    --------</span>
+
+<span class="sd">        &gt;&gt;&gt; service = Service(&quot;http://www.flymine.org/query/service&quot;)</span>
+<span class="sd">            model = service.model</span>
+<span class="sd">            path = model.make_path(&quot;Gene.organism.name&quot;)</span>
+<span class="sd">            path.is_attribute()</span>
+<span class="sd">        ... True</span>
+<span class="sd">        &gt;&gt;&gt; path2 = model.make_path(&quot;Gene.proteins&quot;)</span>
+<span class="sd">            path2.is_attribute()</span>
+<span class="sd">        ... False</span>
+<span class="sd">        &gt;&gt;&gt; path2.is_reference()</span>
+<span class="sd">        ... True</span>
+<span class="sd">        &gt;&gt;&gt; path2.get_class()</span>
+<span class="sd">        ... &lt;intermine.model.Class: gene&gt;</span>
+
+<span class="sd">    OVERVIEW</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    This class is used for performing validation on dotted path strings.</span>
+<span class="sd">    The simple act of parsing it into existence will validate the path</span>
+<span class="sd">    to some extent, but there are additional methods for verifying certain</span>
+<span class="sd">    relationships as well</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">subclasses</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">          &gt;&gt;&gt; path = Path(&quot;Gene.name&quot;, model)</span>
+
+<span class="sd">        You will not need to use this constructor directly. Instead,</span>
+<span class="sd">        use the &quot;make_path&quot; method on the model to construct paths for you.</span>
+
+<span class="sd">        @param path: the dotted path string (eg: Gene.proteins.name)</span>
+<span class="sd">        @type path: str</span>
+<span class="sd">        @param model: the model to validate the path against</span>
+<span class="sd">        @type model: L{Model}</span>
+<span class="sd">        @param subclasses: a dict which maps subclasses (defaults to an empty dict)</span>
+<span class="sd">        @type subclasses: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subclasses</span> <span class="o">=</span> <span class="n">subclasses</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">Class</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_string</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parse_path_string</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">subclasses</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span>
+
+<div class="viewcode-block" id="Path.prefix"><a class="viewcode-back" href="../../intermine.html#intermine.model.Path.prefix">[docs]</a>    <span class="k">def</span> <span class="nf">prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The path one step above this path.</span>
+<span class="sd">        ==================================</span>
+
+<span class="sd">          &gt;&gt;&gt; p1 = Path(&quot;Gene.exons.name&quot;, model)</span>
+<span class="sd">          &gt;&gt;&gt; p2 = p1.prefix()</span>
+<span class="sd">          &gt;&gt;&gt; print p2</span>
+<span class="sd">          ... Gene.exons</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PathParseError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; does not have a prefix&quot;</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_unproxied</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">subclasses</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Path.append"><a class="viewcode-back" href="../../intermine.html#intermine.model.Path.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">elements</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new path by adding elements to the end of this one.</span>
+<span class="sd">        ===============================================================</span>
+
+<span class="sd">          &gt;&gt;&gt; p1 = Path(&quot;Gene.exons&quot;, model)</span>
+<span class="sd">          &gt;&gt;&gt; p2 = p1.append(&quot;name&quot;)</span>
+<span class="sd">          &gt;&gt;&gt; print p2</span>
+<span class="sd">          ... Gene.exons.name</span>
+
+<span class="sd">        This is the inverse of prefix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_unproxied</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">subclasses</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The descriptor for the first part of the string. This should always a class descriptor.</span>
+
+<span class="sd">        @rtype: L{intermine.model.Class}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The descriptor for the last part of the string.</span>
+
+<span class="sd">        @rtype: L{model.Class} or L{model.Field}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Path.get_class"><a class="viewcode-back" href="../../intermine.html#intermine.model.Path.get_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the class object for this path, if it refers to a class</span>
+<span class="sd">        or a reference. Attribute paths return None</span>
+
+<span class="sd">        @rtype: L{model.Class}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_class</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_reference</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subclasses</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subclasses</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)])</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">type_class</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="n">end_class</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_class</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Path.is_reference"><a class="viewcode-back" href="../../intermine.html#intermine.model.Path.is_reference">[docs]</a>    <span class="k">def</span> <span class="nf">is_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return true if the path is a reference, eg: Gene.organism or Gene.proteins</span>
+<span class="sd">        Note: Collections are ALSO references</span>
+
+<span class="sd">        @rtype: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">Reference</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Path.is_class"><a class="viewcode-back" href="../../intermine.html#intermine.model.Path.is_class">[docs]</a>    <span class="k">def</span> <span class="nf">is_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return true if the path just refers to a class, eg: Gene</span>
+
+<span class="sd">        @rtype: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">Class</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Path.is_attribute"><a class="viewcode-back" href="../../intermine.html#intermine.model.Path.is_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">is_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return true if the path refers to an attribute, eg: Gene.length</span>
+
+<span class="sd">        @rtype: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">Attribute</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">^</span> <span class="n">b</span><span class="p">,</span> <span class="p">[</span><span class="nb">hash</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">^</span> <span class="nb">hash</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subclasses</span><span class="o">.</span><span class="n">items</span><span class="p">())],</span> <span class="n">i</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConstraintTree"><a class="viewcode-back" href="../../intermine.html#intermine.model.ConstraintTree">[docs]</a><span class="k">class</span> <span class="nc">ConstraintTree</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+
+    <span class="k">def</span> <span class="nf">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ConstraintTree</span><span class="p">(</span><span class="s1">&#39;AND&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ConstraintTree</span><span class="p">(</span><span class="s1">&#39;OR&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">subn</span> <span class="ow">in</span> <span class="n">n</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">subn</span>
+
+<div class="viewcode-block" id="ConstraintTree.as_logic"><a class="viewcode-back" href="../../intermine.html#intermine.model.ConstraintTree.as_logic">[docs]</a>    <span class="k">def</span> <span class="nf">as_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">codes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">codes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">codes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">as_logic</span><span class="p">(</span><span class="n">codes</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">as_logic</span><span class="p">(</span><span class="n">codes</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="ConstraintNode"><a class="viewcode-back" href="../../intermine.html#intermine.model.ConstraintNode">[docs]</a><span class="k">class</span> <span class="nc">ConstraintNode</span><span class="p">(</span><span class="n">ConstraintTree</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vargs</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="ConstraintNode.as_logic"><a class="viewcode-back" href="../../intermine.html#intermine.model.ConstraintNode.as_logic">[docs]</a>    <span class="k">def</span> <span class="nf">as_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">codes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">codes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">codes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="CodelessNode"><a class="viewcode-back" href="../../intermine.html#intermine.model.CodelessNode">[docs]</a><span class="k">class</span> <span class="nc">CodelessNode</span><span class="p">(</span><span class="n">ConstraintNode</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CodelessNode.as_logic"><a class="viewcode-back" href="../../intermine.html#intermine.model.CodelessNode.as_logic">[docs]</a>    <span class="k">def</span> <span class="nf">as_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div></div>
+
+<div class="viewcode-block" id="Column"><a class="viewcode-back" href="../../intermine.html#intermine.model.Column">[docs]</a><span class="k">class</span> <span class="nc">Column</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A representation of a path in a query that can be constrained</span>
+<span class="sd">    =============================================================</span>
+
+<span class="sd">    Column objects allow constraints to be constructed in something</span>
+<span class="sd">    close to a declarative style</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">subclasses</span><span class="o">=</span><span class="p">{},</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query</span> <span class="o">=</span> <span class="n">query</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subclasses</span> <span class="o">=</span> <span class="n">subclasses</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">where</span> <span class="c1"># alias</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">make_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">subclasses</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_branches</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Column.select"><a class="viewcode-back" href="../../intermine.html#intermine.model.Column.select">[docs]</a>    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">cols</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new query with this column as the base class, selecting the given fields.</span>
+
+<span class="sd">        If no fields are given, then just this column will be selected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">new_query</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="n">cols</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">q</span></div>
+
+<div class="viewcode-block" id="Column.where"><a class="viewcode-back" href="../../intermine.html#intermine.model.Column.where">[docs]</a>    <span class="k">def</span> <span class="nf">where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new query based on this column, filtered with the given constraint.</span>
+
+<span class="sd">        also available as &quot;filter&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the number of values in this column.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate over the things this column represents.</span>
+
+<span class="sd">        In the case of an attribute column, that is the values it may have. In the case</span>
+<span class="sd">        of a reference or class column, it is the objects that this path may refer to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">is_attribute</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">q</span><span class="o">.</span><span class="n">rows</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">q</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_branches</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_branches</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">cld</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">get_class</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cld</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fld</span> <span class="o">=</span> <span class="n">cld</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">branch</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subclasses</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_branches</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">branch</span>
+                <span class="k">return</span> <span class="n">branch</span>
+            <span class="k">except</span> <span class="n">ModelError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;No attribute &#39;&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s1">&#39;LOOKUP&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s1">&#39;LOOKUP&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CodelessNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+
+    <span class="fm">__lshift__</span> <span class="o">=</span> <span class="fm">__rshift__</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;IS NULL&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Column</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;IS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;make_list_constraint&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">make_list_constraint</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;IN&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;ONE OF&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;IS NOT NULL&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Column</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;IS NOT&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;make_list_constraint&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">make_list_constraint</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;NOT IN&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;NONE OF&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;!=&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;make_list_constraint&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">make_list_constraint</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;NOT IN&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;NONE OF&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Invalid argument for xor: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">other</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Column.in_"><a class="viewcode-back" href="../../intermine.html#intermine.model.Column.in_">[docs]</a>    <span class="k">def</span> <span class="nf">in_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;make_list_constraint&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">make_list_constraint</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;IN&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;ONE OF&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Invalid argument for in_: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">other</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Column</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_subclasses</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_branches</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">return</span> <span class="n">CodelessNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Column</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">CodelessNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ConstraintNode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for representing the data model of an InterMine datawarehouse</span>
+<span class="sd">    =====================================================================</span>
+
+<span class="sd">    An abstraction of the database schema</span>
+
+<span class="sd">    SYNOPSIS</span>
+<span class="sd">    --------</span>
+
+<span class="sd">        &gt;&gt;&gt; service = Service(&quot;http://www.flymine.org/query/service&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; model = service.model</span>
+<span class="sd">        &gt;&gt;&gt; model.get_class(&quot;Gene&quot;)</span>
+<span class="sd">        &lt;intermine.model.Class: Gene&gt;</span>
+
+<span class="sd">    OVERVIEW</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    This class represents the data model  - ie. an abstraction</span>
+<span class="sd">    of the database schema. It can be used to introspect what</span>
+<span class="sd">    data is available and how it is inter-related</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">NUMERIC_TYPES</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">([</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;Integer&quot;</span><span class="p">,</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;Float&quot;</span><span class="p">,</span> <span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="s2">&quot;Double&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">,</span> <span class="s2">&quot;Long&quot;</span><span class="p">,</span> <span class="s2">&quot;short&quot;</span><span class="p">,</span> <span class="s2">&quot;Short&quot;</span><span class="p">])</span>
+
+    <span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;Model&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">          &gt;&gt;&gt; model = Model(xml)</span>
+
+<span class="sd">        You will most like not need to create a model directly,</span>
+<span class="sd">        instead get one from the Service object:</span>
+
+<span class="sd">        @see: L{intermine.webservice.Service}</span>
+
+<span class="sd">        @param source: the model.xml, as a local file, string, or url</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+
+        <span class="k">if</span> <span class="n">service</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_model</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vivify</span><span class="p">()</span>
+
+        <span class="c1"># Make sugary aliases</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span>
+
+<div class="viewcode-block" id="Model.parse_model"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.parse_model">[docs]</a>    <span class="k">def</span> <span class="nf">parse_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create classes, attributes, references and collections from the model.xml</span>
+<span class="sd">        =========================================================================</span>
+
+<span class="sd">        The xml can be provided as a file, url or string. This method</span>
+<span class="sd">        is called during instantiation - it does not need to be called</span>
+<span class="sd">        directly.</span>
+
+<span class="sd">        @param source:  the model.xml, as a local file, string, or url</span>
+<span class="sd">        @raise ModelParseError: if there is a problem parsing the source</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">io</span> <span class="o">=</span> <span class="n">openAnything</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">&#39;decode&#39;</span><span class="p">):</span> <span class="c1"># Handle binary and text streams equally.</span>
+                <span class="n">src</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;model = [</span><span class="si">{0}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">src</span><span class="p">))</span>
+            <span class="n">doc</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">package_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;package&#39;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">node</span><span class="o">.</span><span class="n">nextSibling</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;More than one model element&quot;</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">package_name</span><span class="p">,</span> <span class="s2">&quot;No model name or package name&quot;</span>
+
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">):</span>
+                <span class="n">class_name</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">class_name</span><span class="p">,</span> <span class="s2">&quot;Name not defined in&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span>
+                <span class="k">def</span> <span class="nf">strip_java_prefix</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;.*\.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                <span class="n">parents</span> <span class="o">=</span> <span class="p">[</span><span class="n">strip_java_prefix</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;extends&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+                <span class="n">interface</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;is-interface&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span>
+                <span class="n">cl</span> <span class="o">=</span> <span class="n">Class</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">parents</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Created </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;attribute&#39;</span><span class="p">):</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                    <span class="n">type_name</span> <span class="o">=</span> <span class="n">strip_java_prefix</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">))</span>
+                    <span class="n">at</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">cl</span><span class="p">)</span>
+                    <span class="n">cl</span><span class="o">.</span><span class="n">field_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">at</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;set </span><span class="si">{0}</span><span class="s1">.</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">at</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;reference&#39;</span><span class="p">):</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                    <span class="n">type_name</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;referenced-type&#39;</span><span class="p">)</span>
+                    <span class="n">linked_field_name</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;reverse-reference&#39;</span><span class="p">)</span>
+                    <span class="n">ref</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">linked_field_name</span><span class="p">)</span>
+                    <span class="n">cl</span><span class="o">.</span><span class="n">field_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;set </span><span class="si">{0}</span><span class="s1">.</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;collection&#39;</span><span class="p">):</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">co</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                    <span class="n">type_name</span> <span class="o">=</span> <span class="n">co</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;referenced-type&#39;</span><span class="p">)</span>
+                    <span class="n">linked_field_name</span> <span class="o">=</span> <span class="n">co</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;reverse-reference&#39;</span><span class="p">)</span>
+                    <span class="n">col</span> <span class="o">=</span> <span class="n">Collection</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">linked_field_name</span><span class="p">)</span>
+                    <span class="n">cl</span><span class="o">.</span><span class="n">field_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;set </span><span class="si">{0}</span><span class="s1">.</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cl</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">model_src</span> <span class="o">=</span> <span class="n">src</span> <span class="k">if</span> <span class="n">src</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">source</span>
+            <span class="k">raise</span> <span class="n">ModelParseError</span><span class="p">(</span><span class="s2">&quot;Error parsing model&quot;</span><span class="p">,</span> <span class="n">model_src</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">io</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">io</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Model.vivify"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.vivify">[docs]</a>    <span class="k">def</span> <span class="nf">vivify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make names point to instances and insert inherited fields</span>
+<span class="sd">        =========================================================</span>
+
+<span class="sd">        This method ensures the model is internally consistent. This method</span>
+<span class="sd">        is called during instantiaton. It does not need to be called</span>
+<span class="sd">        directly.</span>
+
+<span class="sd">        @raise ModelError: if the names point to non-existent objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">parent_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ancestry</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0.name}</span><span class="s2"> &lt; </span><span class="si">{0.parent_classes}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">pc</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">parent_classes</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">field_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">field_dict</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">type_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">type_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;reverse_reference_name&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">reverse_reference_name</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">rrn</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">reverse_reference_name</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">reverse_reference</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">type_class</span><span class="o">.</span><span class="n">field_dict</span><span class="p">[</span><span class="n">rrn</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Model.to_ancestry"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.to_ancestry">[docs]</a>    <span class="k">def</span> <span class="nf">to_ancestry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cd</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the lineage of the class</span>
+<span class="sd">        ================================</span>
+
+<span class="sd">            &gt;&gt;&gt; classes = Model.to_ancestry(cd)</span>
+
+<span class="sd">        Returns the class&#39; parents, and all the class&#39; parents&#39; parents</span>
+
+<span class="sd">        @rtype: list(L{intermine.model.Class})</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parents</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">parents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &lt; </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cd</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cd</span><span class="o">.</span><span class="n">parents</span><span class="p">))</span>
+        <span class="k">def</span> <span class="nf">defined</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="c1"># weeds out the java classes</span>
+        <span class="k">def</span> <span class="nf">to_class</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">ancestry</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">defined</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">to_class</span><span class="p">,</span> <span class="n">parents</span><span class="p">))))</span>
+        <span class="k">for</span> <span class="n">ancestor</span> <span class="ow">in</span> <span class="n">ancestry</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> is ancestor of </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ancestor</span><span class="p">,</span> <span class="n">cd</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">ancestry</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_ancestry</span><span class="p">(</span><span class="n">ancestor</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ancestry</span></div>
+
+<div class="viewcode-block" id="Model.to_classes"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.to_classes">[docs]</a>    <span class="k">def</span> <span class="nf">to_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classnames</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        take a list of class names and return a list of classes</span>
+<span class="sd">        =======================================================</span>
+
+<span class="sd">            &gt;&gt;&gt; classes = model.to_classes([&quot;Gene&quot;, &quot;Protein&quot;, &quot;Organism&quot;])</span>
+
+<span class="sd">        This simply maps from a list of strings to a list of</span>
+<span class="sd">        classes in the calling model.</span>
+
+<span class="sd">        @raise ModelError: if the list of class names includes ones that don&#39;t exist</span>
+
+<span class="sd">        @rtype: list(L{intermine.model.Class})</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_class</span><span class="p">,</span> <span class="n">classnames</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Model.column"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.column">[docs]</a>    <span class="k">def</span> <span class="nf">column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Column</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Model.get_class"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.get_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a class by its name, or by a dotted path</span>
+<span class="sd">        ============================================</span>
+
+<span class="sd">            &gt;&gt;&gt; model = Model(&quot;http://www.flymine.org/query/service/model&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; model.get_class(&quot;Gene&quot;)</span>
+<span class="sd">            &lt;intermine.model.Class: Gene&gt;</span>
+<span class="sd">            &gt;&gt;&gt; model.get_class(&quot;Gene.proteins&quot;)</span>
+<span class="sd">            &lt;intermine.model.Class: Protein&gt;</span>
+
+<span class="sd">        This is the recommended way of retrieving a class from</span>
+<span class="sd">        the model. As well as handling class names, you can also</span>
+<span class="sd">        pass in a path such as &quot;Gene.proteins&quot; and get the</span>
+<span class="sd">        corresponding class back (&lt;intermine.model.Class: Protein&gt;)</span>
+
+<span class="sd">        @raise ModelError: if the class name refers to a non-existant object</span>
+
+<span class="sd">        @rtype: L{intermine.model.Class}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">ComposedClass</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_path</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_attribute</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">ModelError</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39; is not a class&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">get_class</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">:</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="n">ModelError</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;&#39; is not a class in this model&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.make_path"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.make_path">[docs]</a>    <span class="k">def</span> <span class="nf">make_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">subclasses</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a path object for the given path string</span>
+<span class="sd">        ==============================================</span>
+
+<span class="sd">            &gt;&gt;&gt; path = model.make_path(&quot;Gene.organism.name&quot;)</span>
+<span class="sd">            &lt;intermine.model.Path: Gene.organism.name&gt;</span>
+
+<span class="sd">        This is recommended manner of constructing path objects.</span>
+
+<span class="sd">        @type path: str</span>
+<span class="sd">        @type subclasses: dict</span>
+
+<span class="sd">        @raise PathParseError: if there is a problem parsing the path string</span>
+
+<span class="sd">        @rtype: L{intermine.model.Path}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">subclasses</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.validate_path"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.validate_path">[docs]</a>    <span class="k">def</span> <span class="nf">validate_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_string</span><span class="p">,</span> <span class="n">subclasses</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate a path</span>
+<span class="sd">        ===============</span>
+
+<span class="sd">            &gt;&gt;&gt; try:</span>
+<span class="sd">            ...     model.validate_path(&quot;Gene.symbol&quot;)</span>
+<span class="sd">            ...     return &quot;path is valid&quot;</span>
+<span class="sd">            ... except PathParseError:</span>
+<span class="sd">            ...     return &quot;path is invalid&quot;</span>
+<span class="sd">            &quot;path is valid&quot;</span>
+
+<span class="sd">        When you don&#39;t need to interrogate relationships</span>
+<span class="sd">        between paths, simply using this method to validate</span>
+<span class="sd">        a path string is enough. It guarantees that there</span>
+<span class="sd">        is a descriptor for each section of the string,</span>
+<span class="sd">        with the appropriate relationships</span>
+
+<span class="sd">        @raise PathParseError: if there is a problem parsing the path string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parse_path_string</span><span class="p">(</span><span class="n">path_string</span><span class="p">,</span> <span class="n">subclasses</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">PathParseError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PathParseError</span><span class="p">(</span><span class="s2">&quot;Error parsing &#39;</span><span class="si">%s</span><span class="s2">&#39; (subclasses: </span><span class="si">%s</span><span class="s2">)&quot;</span>
+                            <span class="o">%</span> <span class="p">(</span> <span class="n">path_string</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">subclasses</span><span class="p">)</span> <span class="p">),</span> <span class="n">e</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.parse_path_string"><a class="viewcode-back" href="../../intermine.html#intermine.model.Model.parse_path_string">[docs]</a>    <span class="k">def</span> <span class="nf">parse_path_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_string</span><span class="p">,</span> <span class="n">subclasses</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse a path string into a list of descriptors - one for each section</span>
+<span class="sd">        =====================================================================</span>
+
+<span class="sd">            &gt;&gt;&gt; parts = Model.parse_path_string(string)</span>
+
+<span class="sd">        This method is used when making paths from a model, and</span>
+<span class="sd">        when validating path strings. It probably won&#39;t need to</span>
+<span class="sd">        be called directly.</span>
+
+<span class="sd">        @see: L{intermine.model.Model.make_path}</span>
+<span class="sd">        @see: L{intermine.model.Model.validate_path}</span>
+<span class="sd">        @see: L{intermine.model.Path}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">descriptors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">path_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">root_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">root_descriptor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="n">root_name</span><span class="p">)</span>
+        <span class="n">descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">root_descriptor</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">root_name</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">:</span>
+            <span class="n">current_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="n">subclasses</span><span class="p">[</span><span class="n">root_name</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_class</span> <span class="o">=</span> <span class="n">root_descriptor</span>
+
+        <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">current_class</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
+            <span class="n">descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">Reference</span><span class="p">):</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">:</span>
+                    <span class="n">current_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="n">subclasses</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">current_class</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">type_class</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">current_class</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">descriptors</span></div>
+
+    <span class="k">def</span> <span class="nf">_unproxied</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ModelError"><a class="viewcode-back" href="../../intermine.html#intermine.model.ModelError">[docs]</a><span class="k">class</span> <span class="nc">ModelError</span><span class="p">(</span><span class="n">ReadableException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="PathParseError"><a class="viewcode-back" href="../../intermine.html#intermine.model.PathParseError">[docs]</a><span class="k">class</span> <span class="nc">PathParseError</span><span class="p">(</span><span class="n">ModelError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ModelParseError"><a class="viewcode-back" href="../../intermine.html#intermine.model.ModelParseError">[docs]</a><span class="k">class</span> <span class="nc">ModelParseError</span><span class="p">(</span><span class="n">ModelError</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">cause</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ModelParseError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">cause</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cause</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">base</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">base</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cause</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../query.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alex Kalderimis, Julie Sullivan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
