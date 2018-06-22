@@ -1,0 +1,506 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="python">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>intermine.lists.listmanager &#8212; Intermine 1.10.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for intermine.lists.listmanager</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">closing</span>
+
+<span class="c1"># Use core json for 2.6+, simplejson for &lt;=2.5</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">simplejson</span> <span class="k">as</span> <span class="nn">json</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Python 2.x imports</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">urlencode</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Python 3.x imports</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlencode</span>
+
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
+
+<span class="kn">from</span> <span class="nn">intermine.errors</span> <span class="k">import</span> <span class="n">WebserviceError</span>
+<span class="kn">from</span> <span class="nn">intermine.lists.list</span> <span class="k">import</span> <span class="n">List</span>
+
+<span class="n">P3K</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+
+<div class="viewcode-block" id="safe_key"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.safe_key">[docs]</a><span class="k">def</span> <span class="nf">safe_key</span><span class="p">(</span><span class="n">maybe_unicode</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">P3K</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">maybe_unicode</span> <span class="c1"># that is fine</span>
+
+    <span class="k">return</span> <span class="n">maybe_unicode</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListManager"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager">[docs]</a><span class="k">class</span> <span class="nc">ListManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Class for Managing List Content and Operations</span>
+<span class="sd">    ================================================</span>
+
+<span class="sd">    This class provides methods to manage list contents and operations.</span>
+
+<span class="sd">    This class may be called itself, but all the useful methods it has</span>
+<span class="sd">    are also available on the Service object, which delegates to this class, while</span>
+<span class="sd">    other methods are more coneniently accessed through the list objects themselves.</span>
+
+<span class="sd">    NB: The methods for creating lists can conflict in threaded applications, if</span>
+<span class="sd">    two threads are each allocated the same unused list name. You are</span>
+<span class="sd">    strongly advised to use locks to synchronise any list creation requests (create_list,</span>
+<span class="sd">    or intersect, union, subtract, diff) unless you are choosing your own names each time</span>
+<span class="sd">    and are confident that these will not conflict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;listmanager&#39;</span><span class="p">)</span>
+    <span class="n">DEFAULT_LIST_NAME</span> <span class="o">=</span> <span class="s2">&quot;my_list&quot;</span>
+    <span class="n">DEFAULT_DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;List created with Python client library&quot;</span>
+
+    <span class="n">INTERSECTION_PATH</span> <span class="o">=</span> <span class="s1">&#39;/lists/intersect/json&#39;</span>
+    <span class="n">UNION_PATH</span> <span class="o">=</span> <span class="s1">&#39;/lists/union/json&#39;</span>
+    <span class="n">DIFFERENCE_PATH</span> <span class="o">=</span> <span class="s1">&#39;/lists/diff/json&#39;</span>
+    <span class="n">SUBTRACTION_PATH</span> <span class="o">=</span> <span class="s1">&#39;/lists/subtract/json&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lists</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp_lists</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ListManager.refresh_lists"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.refresh_lists">[docs]</a>    <span class="k">def</span> <span class="nf">refresh_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the list information with the latest details from the server&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lists</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">LIST_PATH</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">list_info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;LIST INFO: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">list_info</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">list_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wasSuccessful&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ListServiceError</span><span class="p">(</span><span class="n">list_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">list_info</span><span class="p">[</span><span class="s2">&quot;lists&quot;</span><span class="p">]:</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">ListManager</span><span class="o">.</span><span class="n">safe_dict</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="c1"># Workaround for python 2.6 unicode key issues</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lists</span><span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">manager</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">l</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListManager.safe_dict"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.safe_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">safe_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Recursively clone json structure with UTF-8 dictionary keys&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">safe_key</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ListManager.get_list"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.get_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list from the service by name, if it exists&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lists</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh_lists</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lists</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListManager.l"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.l">[docs]</a>    <span class="k">def</span> <span class="nf">l</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Alias for get_list&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListManager.get_all_lists"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.get_all_lists">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all the lists on a webservice&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lists</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh_lists</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lists</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ListManager.get_all_list_names"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.get_all_list_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_list_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all the names of the lists in a particular webservice&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lists</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh_lists</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lists</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ListManager.get_list_count"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.get_list_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_list_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the number of lists accessible at the given webservice.</span>
+<span class="sd">        This number will vary depending on who you are authenticated as.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_all_list_names</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="ListManager.get_unused_list_name"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.get_unused_list_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_unused_list_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get an unused list name</span>
+<span class="sd">        =======================</span>
+
+<span class="sd">        This method returns a new name that does not conflict</span>
+<span class="sd">        with any currently existing list name.</span>
+
+<span class="sd">        The list name is only guaranteed to be unused at the time</span>
+<span class="sd">        of allocation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_lists</span><span class="p">()</span>
+        <span class="n">list_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_list_names</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;CURRENT LIST NAMES: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">list_names</span><span class="p">))</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">get_name</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_LIST_NAME</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">get_name</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">list_names</span><span class="p">:</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">get_name</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp_lists</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">name</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_listable_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queryable</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">queryable</span><span class="o">.</span><span class="n">to_query</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">q</span><span class="o">.</span><span class="n">views</span><span class="p">:</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.id&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Check to see if the class of the selected items is unambiguous</span>
+            <span class="n">up_to_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">v</span><span class="o">.</span><span class="n">rindex</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">q</span><span class="o">.</span><span class="n">views</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">up_to_attrs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">up_to_attrs</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.id&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">q</span>
+
+    <span class="k">def</span> <span class="nf">_create_list_from_queryable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queryable</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_listable_query</span><span class="p">(</span><span class="n">queryable</span><span class="p">)</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get_list_upload_uri</span><span class="p">()</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">to_query_params</span><span class="p">()</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;listName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">form</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_list_upload_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ListManager.create_list"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.create_list">[docs]</a>    <span class="k">def</span> <span class="nf">create_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">list_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span> <span class="n">add</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new list in the webservice</span>
+<span class="sd">        ===================================</span>
+
+<span class="sd">        If no name is given, the list will be considered to be a temporary</span>
+<span class="sd">        list, and will be automatically deleted when the program ends. To prevent</span>
+<span class="sd">        this happening, give the list a name, either on creation, or by renaming it.</span>
+
+<span class="sd">        This method is not thread safe for anonymous lists - it will need synchronisation</span>
+<span class="sd">        with locks if you intend to create lists with multiple threads in parallel.</span>
+
+<span class="sd">        @param content: The source of the identifiers for this list. This can be:</span>
+<span class="sd">                          * A string with white-space separated terms.</span>
+<span class="sd">                          * The name of a file that contains the terms.</span>
+<span class="sd">                          * A file-handle like thing (something with a &#39;read&#39; method)</span>
+<span class="sd">                          * An iterable of identifiers</span>
+<span class="sd">                          * A query with a single column.</span>
+<span class="sd">                          * Another list.</span>
+<span class="sd">        @param list_type: The type of objects to include in the list. This parameter is not</span>
+<span class="sd">                          required if the content parameter implicitly includes the type</span>
+<span class="sd">                          (as queries and lists do).</span>
+<span class="sd">        @param name: The name for the new list. If none is provided one will be generated, and the</span>
+<span class="sd">                     list will be deleted when the list manager exits context.</span>
+<span class="sd">        @param description: A description for the list (free text, default = None)</span>
+<span class="sd">        @param tags: A set of strings to use as tags (default = [])</span>
+<span class="sd">        @param add: The issues groups that can be treated as matches. This should be a</span>
+<span class="sd">                    collection of strings naming issue groups that would otherwise be ignored, but</span>
+<span class="sd">                    in this case will be added to the list. The available groups are:</span>
+<span class="sd">                      * DUPLICATE - More than one match was found.</span>
+<span class="sd">                      * WILDCARD - A wildcard match was made.</span>
+<span class="sd">                      * TYPE_CONVERTED - A match was found, but in another type (eg. found a protein</span>
+<span class="sd">                                         and we could convert it to a gene).</span>
+<span class="sd">                      * OTHER - other issue types</span>
+<span class="sd">                      * :all - All issues should be considered acceptable.</span>
+<span class="sd">                    This only makes sense with text uploads - it is not required (or used) when</span>
+<span class="sd">                    the content is a list or a query.</span>
+
+<span class="sd">        @rtype: intermine.lists.List</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_DESCRIPTION</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unused_list_name</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ids</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="c1"># File like thing</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;UTF-8&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span> <span class="c1"># File name</span>
+                    <span class="n">ids</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ids</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="c1"># Stringy thing</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span> <span class="c1"># Queryable</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_list_from_queryable</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span> <span class="c1"># Array of idents</span>
+                            <span class="n">idents</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                            <span class="n">ids</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{0}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">idents</span><span class="p">))</span>
+                        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot create list from &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">content</span><span class="p">))</span>
+
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">LIST_CREATION_PATH</span>
+        <span class="n">query_form</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">list_type</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">add</span><span class="p">):</span> <span class="n">query_form</span><span class="p">[</span><span class="s1">&#39;add&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">add</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+
+        <span class="n">uri</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_form</span><span class="p">,</span> <span class="n">doseq</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">post_plain_text</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_list_upload_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListManager.parse_list_upload_response"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.parse_list_upload_response">[docs]</a>    <span class="k">def</span> <span class="nf">parse_list_upload_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Intepret the response from the webserver to a list request, and return the List it describes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ListServiceError</span><span class="p">(</span><span class="s2">&quot;Error parsing response: &quot;</span> <span class="o">+</span> <span class="n">response</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wasSuccessful&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ListServiceError</span><span class="p">(</span><span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;response data: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response_data</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_lists</span><span class="p">()</span>
+        <span class="n">new_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list</span><span class="p">(</span><span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;listName&quot;</span><span class="p">])</span>
+        <span class="n">failed_matches</span> <span class="o">=</span> <span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unmatchedIdentifiers&quot;</span><span class="p">)</span>
+        <span class="n">new_list</span><span class="o">.</span><span class="n">_add_failed_matches</span><span class="p">(</span><span class="n">failed_matches</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_list</span></div>
+
+<div class="viewcode-block" id="ListManager.delete_lists"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.delete_lists">[docs]</a>    <span class="k">def</span> <span class="nf">delete_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lists</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete the given lists from the webserver&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_lists</span><span class="p">()</span>
+        <span class="n">all_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_list_names</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lists</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_names</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> does not exist - skipping&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;deleting </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">LIST_PATH</span>
+            <span class="n">query_form</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+            <span class="n">uri</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_form</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+            <span class="n">response_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wasSuccessful&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ListServiceError</span><span class="p">(</span><span class="n">response_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_lists</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ListManager.remove_tags"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.remove_tags">[docs]</a>    <span class="k">def</span> <span class="nf">remove_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_remove_from</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the tags to the given list</span>
+<span class="sd">        ==============================</span>
+
+<span class="sd">        Returns the current tags of this list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">LIST_TAG_PATH</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">to_remove_from</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)}</span>
+        <span class="n">uri</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_to_json</span><span class="p">(</span><span class="n">body</span><span class="p">)[</span><span class="s2">&quot;tags&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ListManager.add_tags"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.add_tags">[docs]</a>    <span class="k">def</span> <span class="nf">add_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_tag</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the tags to the given list</span>
+<span class="sd">        ==============================</span>
+
+<span class="sd">        Returns the current tags of this list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">LIST_TAG_PATH</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">to_tag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">form</span><span class="p">))</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_to_json</span><span class="p">(</span><span class="n">body</span><span class="p">)[</span><span class="s2">&quot;tags&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ListManager.get_tags"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.get_tags">[docs]</a>    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the up-to-date set of tags for a given list</span>
+<span class="sd">        ===============================================</span>
+
+<span class="sd">        Returns the current tags of this list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">LIST_TAG_PATH</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">im_list</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+        <span class="n">uri</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_to_json</span><span class="p">(</span><span class="n">body</span><span class="p">)[</span><span class="s2">&quot;tags&quot;</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_body_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ListServiceError</span><span class="p">(</span><span class="s2">&quot;Error parsing response: &quot;</span> <span class="o">+</span> <span class="n">body</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wasSuccessful&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ListServiceError</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exiting context - deleting </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_temp_lists</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_temporary_lists</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ListManager.delete_temporary_lists"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.delete_temporary_lists">[docs]</a>    <span class="k">def</span> <span class="nf">delete_temporary_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete all the lists considered temporary (those created without names)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_lists</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delete_lists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_temp_lists</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_temp_lists</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ListManager.intersect"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.intersect">[docs]</a>    <span class="k">def</span> <span class="nf">intersect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lists</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the intersection of a given set of lists, and return the list representing the result&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_operation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">INTERSECTION_PATH</span><span class="p">,</span> <span class="s2">&quot;Intersection&quot;</span><span class="p">,</span> <span class="n">lists</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListManager.union"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.union">[docs]</a>    <span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lists</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the union of a given set of lists, and return the list representing the result&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_operation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">UNION_PATH</span><span class="p">,</span> <span class="s2">&quot;Union&quot;</span><span class="p">,</span> <span class="n">lists</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListManager.xor"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.xor">[docs]</a>    <span class="k">def</span> <span class="nf">xor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lists</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the symmetric difference of a given set of lists, and return the list representing the result&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_operation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DIFFERENCE_PATH</span><span class="p">,</span> <span class="s2">&quot;Difference&quot;</span><span class="p">,</span> <span class="n">lists</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListManager.subtract"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.subtract">[docs]</a>    <span class="k">def</span> <span class="nf">subtract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lefts</span><span class="p">,</span> <span class="n">rights</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the subtraction of rights from lefts, and return the list representing the result&quot;&quot;&quot;</span>
+        <span class="n">left_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_list_names</span><span class="p">(</span><span class="n">lefts</span><span class="p">)</span>
+        <span class="n">right_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_list_names</span><span class="p">(</span><span class="n">rights</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Subtraction of &quot;</span> <span class="o">+</span> <span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">right_names</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; from &quot;</span> <span class="o">+</span> <span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">left_names</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unused_list_name</span><span class="p">()</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">SUBTRACTION_PATH</span>
+        <span class="n">uri</span> <span class="o">+=</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">({</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;references&quot;</span><span class="p">:</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">left_names</span><span class="p">),</span>
+            <span class="s2">&quot;subtract&quot;</span><span class="p">:</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">right_names</span><span class="p">),</span>
+            <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+            <span class="p">})</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_list_upload_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_do_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">lists</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="n">list_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_list_names</span><span class="p">(</span><span class="n">lists</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">operation</span> <span class="o">+</span> <span class="s2">&quot; of &quot;</span> <span class="o">+</span> <span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">list_names</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unused_list_name</span><span class="p">()</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="n">path</span>
+        <span class="n">uri</span> <span class="o">+=</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">({</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;lists&quot;</span><span class="p">:</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">list_names</span><span class="p">),</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+            <span class="p">})</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_list_upload_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ListManager.make_list_names"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListManager.make_list_names">[docs]</a>    <span class="k">def</span> <span class="nf">make_list_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lists</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Turn a list of things into a list of list names&quot;&quot;&quot;</span>
+        <span class="n">list_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lists</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">list_type</span>
+                <span class="n">list_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">model</span>
+                    <span class="n">list_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_list</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                    <span class="n">list_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">list_names</span></div></div>
+
+<div class="viewcode-block" id="ListServiceError"><a class="viewcode-back" href="../../../intermine.lists.html#intermine.lists.listmanager.ListServiceError">[docs]</a><span class="k">class</span> <span class="nc">ListServiceError</span><span class="p">(</span><span class="n">WebserviceError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Errors thrown when something goes wrong with list requests&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../query.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alex Kalderimis, Julie Sullivan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

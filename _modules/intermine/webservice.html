@@ -1,0 +1,776 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="python">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>intermine.webservice &#8212; Intermine 1.10.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for intermine.webservice</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">from</span> <span class="nn">xml.dom</span> <span class="k">import</span> <span class="n">minidom</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">closing</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">urlparse</span> <span class="k">import</span> <span class="n">urlparse</span>
+    <span class="kn">from</span> <span class="nn">UserDict</span> <span class="k">import</span> <span class="n">DictMixin</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">urlopen</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">urlencode</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlparse</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlencode</span>
+    <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">MutableMapping</span> <span class="k">as</span> <span class="n">DictMixin</span>
+    <span class="kn">from</span> <span class="nn">urllib.request</span> <span class="k">import</span> <span class="n">urlopen</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">simplejson</span> <span class="k">as</span> <span class="nn">json</span> <span class="c1"># Prefer this as it is faster</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c1"># pragma: no cover</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Could not find any JSON module to import - &quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;please install simplejson or jsonlib to continue&quot;</span><span class="p">)</span>
+
+<span class="c1"># Local intermine imports</span>
+<span class="kn">from</span> <span class="nn">intermine.query</span> <span class="k">import</span> <span class="n">Query</span><span class="p">,</span> <span class="n">Template</span>
+<span class="kn">from</span> <span class="nn">intermine.model</span> <span class="k">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Attribute</span><span class="p">,</span> <span class="n">Reference</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Column</span>
+<span class="kn">from</span> <span class="nn">intermine.lists.listmanager</span> <span class="k">import</span> <span class="n">ListManager</span>
+<span class="kn">from</span> <span class="nn">intermine.errors</span> <span class="k">import</span> <span class="n">ServiceError</span><span class="p">,</span> <span class="n">WebserviceError</span>
+<span class="kn">from</span> <span class="nn">intermine.results</span> <span class="k">import</span> <span class="n">InterMineURLOpener</span><span class="p">,</span> <span class="n">ResultIterator</span>
+<span class="kn">from</span> <span class="nn">intermine</span> <span class="k">import</span> <span class="n">idresolution</span>
+<span class="kn">from</span> <span class="nn">intermine.decorators</span> <span class="k">import</span> <span class="n">requires_version</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Webservice Interaction Routines for InterMine Webservices</span>
+<span class="sd">=========================================================</span>
+
+<span class="sd">Classes for dealing with communication with an InterMine</span>
+<span class="sd">RESTful webservice.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Alex Kalderimis&quot;</span>
+<span class="n">__organization__</span> <span class="o">=</span> <span class="s2">&quot;InterMine&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;LGPL&quot;</span>
+<span class="n">__contact__</span> <span class="o">=</span> <span class="s2">&quot;dev@intermine.org&quot;</span>
+
+<div class="viewcode-block" id="Registry"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Registry">[docs]</a><span class="k">class</span> <span class="nc">Registry</span><span class="p">(</span><span class="n">DictMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Class representing an InterMine registry.</span>
+<span class="sd">    ===========================================</span>
+
+<span class="sd">    Registries are web-services that mines can automatically register</span>
+<span class="sd">    themselves with, and thus enable service discovery by clients.</span>
+
+<span class="sd">    SYNOPSIS</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    example::</span>
+
+<span class="sd">        from intermine.webservice import Registry</span>
+
+<span class="sd">        # Connect to the default registry service</span>
+<span class="sd">        # at www.intermine.org/registry</span>
+<span class="sd">        registry = Registry()</span>
+
+<span class="sd">        # Find all the available mines:</span>
+<span class="sd">        for name, mine in registry.items():</span>
+<span class="sd">            print name, mine.version</span>
+
+<span class="sd">        # Dict-like interface for accessing mines.</span>
+<span class="sd">        flymine = registry[&quot;flymine&quot;]</span>
+
+<span class="sd">        # The mine object is a Service</span>
+<span class="sd">        for gene in flymine.select(&quot;Gene.*&quot;).results():</span>
+<span class="sd">            process(gene)</span>
+
+<span class="sd">    This class is meant to aid with interoperation between</span>
+<span class="sd">    mines by allowing them to discover one-another, and</span>
+<span class="sd">    allow users to always have correct connection information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">MINES_PATH</span> <span class="o">=</span> <span class="s2">&quot;/mines.json&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registry_url</span><span class="o">=</span><span class="s2">&quot;http://www.intermine.org/registry&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">registry_url</span> <span class="o">=</span> <span class="n">registry_url</span>
+        <span class="n">opener</span> <span class="o">=</span> <span class="n">InterMineURLOpener</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">registry_url</span> <span class="o">+</span> <span class="n">Registry</span><span class="o">.</span><span class="n">MINES_PATH</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">mine_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mine_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span> <span class="p">(</span><span class="n">mine</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">mine</span><span class="p">)</span> <span class="k">for</span> <span class="n">mine</span> <span class="ow">in</span> <span class="n">mine_data</span><span class="p">[</span><span class="s2">&quot;mines&quot;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__synonyms</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mine_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mine_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__synonyms</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">lc</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">lc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__synonyms</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">lc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mine_cache</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__mine_cache</span><span class="p">[</span><span class="n">lc</span><span class="p">]</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mine_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__synonyms</span><span class="p">[</span><span class="n">lc</span><span class="p">]][</span><span class="s2">&quot;webServiceRoot&quot;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mine_cache</span><span class="p">[</span><span class="n">lc</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Unknown mine: &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;You cannot add items to a registry&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;You cannot remove items from a registry&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mine_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mine_dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Registry.keys"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Registry.keys">[docs]</a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mine_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div></div>
+
+<div class="viewcode-block" id="ensure_str"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.ensure_str">[docs]</a><span class="k">def</span> <span class="nf">ensure_str</span><span class="p">(</span><span class="n">stringlike</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">stringlike</span><span class="p">,</span> <span class="s1">&#39;decode&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">stringlike</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">stringlike</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Service"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service">[docs]</a><span class="k">class</span> <span class="nc">Service</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing connections to different InterMine WebServices</span>
+<span class="sd">    ===================================================================</span>
+
+<span class="sd">    The intermine.webservice.Service class is the main interface for the user.</span>
+<span class="sd">    It will provide access to queries and templates, as well as doing the</span>
+<span class="sd">    background task of fetching the data model, and actually requesting</span>
+<span class="sd">    the query results.</span>
+
+<span class="sd">    SYNOPSIS</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    example::</span>
+
+<span class="sd">      from intermine.webservice import Service</span>
+<span class="sd">      service = Service(&quot;http://www.flymine.org/query/service&quot;)</span>
+
+<span class="sd">      template = service.get_template(&quot;Gene_Pathways&quot;)</span>
+<span class="sd">      for row in template.results(A={&quot;value&quot;:&quot;zen&quot;}):</span>
+<span class="sd">        do_something_with(row)</span>
+<span class="sd">        ...</span>
+
+<span class="sd">      query = service.new_query()</span>
+<span class="sd">      query.add_view(&quot;Gene.symbol&quot;, &quot;Gene.pathway.name&quot;)</span>
+<span class="sd">      query.add_constraint(&quot;Gene&quot;, &quot;LOOKUP&quot;, &quot;zen&quot;)</span>
+<span class="sd">      for row in query.results():</span>
+<span class="sd">        do_something_with(row)</span>
+<span class="sd">        ...</span>
+
+<span class="sd">      new_list = service.create_list(&quot;some/file/with.ids&quot;, &quot;Gene&quot;)</span>
+<span class="sd">      list_on_server = service.get_list(&quot;On server&quot;)</span>
+<span class="sd">      in_both = new_list &amp; list_on_server</span>
+<span class="sd">      in_both.name = &quot;Intersection of these lists&quot;</span>
+<span class="sd">      for row in in_both:</span>
+<span class="sd">        do_something_with(row)</span>
+<span class="sd">        ...</span>
+
+<span class="sd">    OVERVIEW</span>
+<span class="sd">    --------</span>
+<span class="sd">    The two methods the user will be most concerned with are:</span>
+<span class="sd">      - L{Service.new_query}: constructs a new query to query a service with</span>
+<span class="sd">      - L{Service.get_template}: gets a template from the service</span>
+<span class="sd">      - L{ListManager.create_list}: creates a new list on the service</span>
+
+<span class="sd">    For list management information, see L{ListManager}.</span>
+
+<span class="sd">    TERMINOLOGY</span>
+<span class="sd">    -----------</span>
+<span class="sd">    X{Query} is the term for an arbitrarily complex structured request for</span>
+<span class="sd">    data from the webservice. The user is responsible for specifying the</span>
+<span class="sd">    structure that determines what records are returned, and what information</span>
+<span class="sd">    about each record is provided.</span>
+
+<span class="sd">    X{Template} is the term for a predefined &quot;Query&quot;, ie: one that has been</span>
+<span class="sd">    written and saved on the webservice you will access. The definition</span>
+<span class="sd">    of the query is already done, but the user may want to specify the</span>
+<span class="sd">    values of the constraints that exist on the template. Templates are accessed</span>
+<span class="sd">    by name, and while you can easily introspect templates, it is assumed</span>
+<span class="sd">    you know what they do when you use them</span>
+
+<span class="sd">    X{List} is a saved result set containing a set of objects previously identified</span>
+<span class="sd">    in the database. Lists can be created and managed using this client library.</span>
+
+<span class="sd">    @see: L{intermine.query}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">QUERY_PATH</span>             <span class="o">=</span> <span class="s1">&#39;/query/results&#39;</span>
+    <span class="n">LIST_ENRICHMENT_PATH</span>   <span class="o">=</span> <span class="s1">&#39;/list/enrichment&#39;</span>
+    <span class="n">WIDGETS_PATH</span>           <span class="o">=</span> <span class="s1">&#39;/widgets&#39;</span>
+    <span class="n">SEARCH_PATH</span>            <span class="o">=</span> <span class="s1">&#39;/search&#39;</span>
+    <span class="n">QUERY_LIST_UPLOAD_PATH</span> <span class="o">=</span> <span class="s1">&#39;/query/tolist&#39;</span>
+    <span class="n">QUERY_LIST_APPEND_PATH</span> <span class="o">=</span> <span class="s1">&#39;/query/append/tolist&#39;</span>
+    <span class="n">MODEL_PATH</span>             <span class="o">=</span> <span class="s1">&#39;/model&#39;</span>
+    <span class="n">TEMPLATES_PATH</span>         <span class="o">=</span> <span class="s1">&#39;/templates&#39;</span>
+    <span class="n">TEMPLATEQUERY_PATH</span>     <span class="o">=</span> <span class="s1">&#39;/template/results&#39;</span>
+    <span class="n">LIST_PATH</span>              <span class="o">=</span> <span class="s1">&#39;/lists&#39;</span>
+    <span class="n">LIST_CREATION_PATH</span>     <span class="o">=</span> <span class="s1">&#39;/lists&#39;</span>
+    <span class="n">LIST_RENAME_PATH</span>       <span class="o">=</span> <span class="s1">&#39;/lists/rename&#39;</span>
+    <span class="n">LIST_APPENDING_PATH</span>    <span class="o">=</span> <span class="s1">&#39;/lists/append&#39;</span>
+    <span class="n">LIST_TAG_PATH</span>          <span class="o">=</span> <span class="s1">&#39;/list/tags&#39;</span>
+    <span class="n">SAVEDQUERY_PATH</span>        <span class="o">=</span> <span class="s1">&#39;/savedqueries/xml&#39;</span>
+    <span class="n">VERSION_PATH</span>           <span class="o">=</span> <span class="s1">&#39;/version/ws&#39;</span>
+    <span class="n">RELEASE_PATH</span>           <span class="o">=</span> <span class="s1">&#39;/version/release&#39;</span>
+    <span class="n">SCHEME</span>                 <span class="o">=</span> <span class="s1">&#39;http://&#39;</span>
+    <span class="n">SERVICE_RESOLUTION_PATH</span> <span class="o">=</span> <span class="s2">&quot;/check/&quot;</span>
+    <span class="n">IDS_PATH</span>               <span class="o">=</span> <span class="s2">&quot;/ids&quot;</span>
+    <span class="n">USERS_PATH</span>             <span class="o">=</span> <span class="s2">&quot;/users&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span>
+            <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">prefetch_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prefetch_id_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        Construct a connection to a webservice::</span>
+
+<span class="sd">            url = &quot;http://www.flymine.org/query/service&quot;</span>
+
+<span class="sd">            # An unauthenticated connection - access to all public data</span>
+<span class="sd">            service = Service(url)</span>
+
+<span class="sd">            # An authenticated connection - access to private and public data</span>
+<span class="sd">            service = Service(url, token=&quot;ABC123456&quot;)</span>
+
+
+<span class="sd">        @param root: the root url of the webservice (required)</span>
+<span class="sd">        @param username: your login name (optional)</span>
+<span class="sd">        @param password: your password (required if a username is given)</span>
+<span class="sd">        @param token: your API access token(optional - used in preference to username and password)</span>
+
+<span class="sd">        @raise ServiceError: if the version cannot be fetched and parsed</span>
+<span class="sd">        @raise ValueError:   if a username is supplied, but no password</span>
+
+<span class="sd">        There are two alternative authentication systems supported by InterMine</span>
+<span class="sd">        webservices. The first is username and password authentication, which</span>
+<span class="sd">        is supported by all webservices. Newer webservices (version 6+)</span>
+<span class="sd">        also support API access token authentication, which is the recommended</span>
+<span class="sd">        system to use. Token access is more secure as you will never have</span>
+<span class="sd">        to transmit your username or password, and the token can be easily changed</span>
+<span class="sd">        or disabled without changing your webapp login details.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">scheme</span><span class="p">:</span> <span class="n">root</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">root</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/service&quot;</span><span class="p">):</span> <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="o">+</span> <span class="s2">&quot;/service&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefetch_depth</span> <span class="o">=</span> <span class="n">prefetch_depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefetch_id_only</span> <span class="o">=</span> <span class="n">prefetch_id_only</span>
+        <span class="c1"># Initialize empty cached data.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_release</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_manager</span> <span class="o">=</span> <span class="n">ListManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__missing_method_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opener</span> <span class="o">=</span> <span class="n">InterMineURLOpener</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">username</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Both username and token credentials supplied&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Username given, but no password supplied&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">opener</span> <span class="o">=</span> <span class="n">InterMineURLOpener</span><span class="p">((</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opener</span> <span class="o">=</span> <span class="n">InterMineURLOpener</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
+        <span class="k">except</span> <span class="n">WebserviceError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="s2">&quot;Could not validate service - is the root url (</span><span class="si">%s</span><span class="s2">) correct? </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">token</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="s2">&quot;This service does not support API access token authentication&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Set up sugary aliases</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_query</span>
+
+    <span class="c1"># Delegated list methods</span>
+
+    <span class="n">LIST_MANAGER_METHODS</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">([</span><span class="s2">&quot;get_list&quot;</span><span class="p">,</span> <span class="s2">&quot;get_all_lists&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;get_all_list_names&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;create_list&quot;</span><span class="p">,</span> <span class="s2">&quot;get_list_count&quot;</span><span class="p">,</span> <span class="s2">&quot;delete_lists&quot;</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Service.list_manager"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.list_manager">[docs]</a>    <span class="k">def</span> <span class="nf">list_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a new ListManager to use with this service.</span>
+<span class="sd">        ===============================================</span>
+
+<span class="sd">        This method is primarily useful as a context manager</span>
+<span class="sd">        when creating temporary lists, since on context exit all</span>
+<span class="sd">        temporary lists will be cleaned up::</span>
+
+<span class="sd">            with service.list_manager() as manager:</span>
+<span class="sd">                temp_a = manager.create_list(file_a, &quot;Gene&quot;)</span>
+<span class="sd">                temp_b = manager.create_list(file_b, &quot;Gene&quot;)</span>
+<span class="sd">                for gene in (temp_a &amp; temp_b):</span>
+<span class="sd">                    print gene.primaryIdentifier, &quot;is in both&quot;</span>
+
+<span class="sd">        @rtype: ListManager</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ListManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">LIST_MANAGER_METHODS</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_list_manager</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">method</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Could not find &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># On going out of scope, try and clean up.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_list_manager</span><span class="o">.</span><span class="n">delete_temporary_lists</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ReferenceError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the webservice version</span>
+<span class="sd">        ==============================</span>
+
+<span class="sd">        The version specifies what capabilities a</span>
+<span class="sd">        specific webservice provides. The most current</span>
+<span class="sd">        version is 3</span>
+
+<span class="sd">        may raise ServiceError: if the version cannot be fetched</span>
+
+<span class="sd">        @rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">VERSION_PATH</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="s2">&quot;Could not parse a valid webservice version: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
+
+<div class="viewcode-block" id="Service.resolve_service_path"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.resolve_service_path">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_service_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variant</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resolve the path to optional services&quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">SERVICE_RESOLUTION_PATH</span> <span class="o">+</span> <span class="n">variant</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the datawarehouse release</span>
+<span class="sd">        =================================</span>
+
+<span class="sd">        Service.release S{-&gt;} string</span>
+
+<span class="sd">        The release is an arbitrary string used to distinguish</span>
+<span class="sd">        releases of the datawarehouse. This usually coincides</span>
+<span class="sd">        with updates to the data contained within. While a string,</span>
+<span class="sd">        releases usually sort in ascending order of recentness</span>
+<span class="sd">        (eg: &quot;release-26&quot;, &quot;release-27&quot;, &quot;release-28&quot;). They can also</span>
+<span class="sd">        have less machine readable meanings (eg: &quot;beta&quot;)</span>
+
+<span class="sd">        @rtype: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_release</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_release</span> <span class="o">=</span> <span class="n">ensure_str</span><span class="p">(</span><span class="n">urlopen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">RELEASE_PATH</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_release</span>
+
+<div class="viewcode-block" id="Service.load_query"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.load_query">[docs]</a>    <span class="k">def</span> <span class="nf">load_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new Query object for the given webservice</span>
+<span class="sd">        =====================================================</span>
+
+<span class="sd">        This is the standard method for instantiating new Query</span>
+<span class="sd">        objects. Queries require access to the data model, as well</span>
+<span class="sd">        as the service itself, so it is easiest to access them through</span>
+<span class="sd">        this factory method.</span>
+
+<span class="sd">        @return: L{intermine.query.Query}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Query</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Service.select"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.select">[docs]</a>    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">columns</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new Query object with the given columns selected.</span>
+<span class="sd">        =============================================================</span>
+
+<span class="sd">        As new_query, except that instead of a root class, a list of</span>
+<span class="sd">        output column expressions are passed instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;xml&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_query</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;xml&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">view</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">Attribute</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">Query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">view</span><span class="o">.</span><span class="n">declared_in</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">view</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">Reference</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">Query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">.*&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">view</span><span class="o">.</span><span class="n">declared_in</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">view</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">Column</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">view</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">make_path</span><span class="p">(</span><span class="n">view</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_attribute</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="n">Query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">view</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.*&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="n">columns</span><span class="p">)</span></div>
+
+    <span class="n">new_query</span> <span class="o">=</span> <span class="n">select</span>
+
+<div class="viewcode-block" id="Service.get_template"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.get_template">[docs]</a>    <span class="k">def</span> <span class="nf">get_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a template of the given name</span>
+<span class="sd">        ====================================</span>
+
+<span class="sd">        Tries to retrieve a template of the given name</span>
+<span class="sd">        from the webservice. If you are trying to fetch</span>
+<span class="sd">        a private template (ie. one you made yourself</span>
+<span class="sd">        and is not available to others) then you may need to authenticate</span>
+
+<span class="sd">        @see: L{intermine.webservice.Service.__init__}</span>
+
+<span class="sd">        @param name: the template&#39;s name</span>
+<span class="sd">        @type name: string</span>
+
+<span class="sd">        @raise ServiceError: if the template does not exist</span>
+<span class="sd">        @raise QueryParseError: if the template cannot be parsed</span>
+
+<span class="sd">        @return: L{intermine.query.Template}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="s2">&quot;There is no template called &#39;&quot;</span>
+                <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;&#39; at this service&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Template</span><span class="p">):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">Template</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="k">return</span> <span class="n">t</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">payload</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">}</span>
+        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">))</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">ensure_str</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">_get_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/xml&#39;</span><span class="p">}</span>
+        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">))</span> <span class="k">as</span> <span class="n">sock</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Service.search"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="o">**</span><span class="n">facets</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform an unstructured search by term</span>
+<span class="sd">        =======================================</span>
+
+<span class="sd">        This seach method performs a search of all objects</span>
+<span class="sd">        indexed by the service endpoint, returning results</span>
+<span class="sd">        and facets for those results.</span>
+
+<span class="sd">        @param term The search term</span>
+<span class="sd">        @param facets The facets to search by (eg: Organism = &#39;H. sapiens&#39;)</span>
+
+<span class="sd">        @return (list, dict) The results, and a dictionary of facetting informtation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s1">&#39;encode&#39;</span><span class="p">):</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">term</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">facet</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">facets</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;encode&#39;</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;facet_</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">facet</span><span class="p">),</span> <span class="n">value</span><span class="p">))</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">doseq</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SEARCH_PATH</span><span class="p">,</span> <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">],</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;facets&#39;</span><span class="p">])</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The dictionary of widgets from the webservice</span>
+<span class="sd">        ==============================================</span>
+
+<span class="sd">        The set of widgets available to a service does not</span>
+<span class="sd">        change between releases, so they are cached.</span>
+<span class="sd">        If you are running a long running process, you may</span>
+<span class="sd">        wish to periodically dump the cache by calling</span>
+<span class="sd">        L{Service.flush}, or simply get a new Service object.</span>
+
+<span class="sd">        @return dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ws</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">WIDGETS_PATH</span><span class="p">)[</span><span class="s1">&#39;widgets&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(([</span><span class="n">w</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">w</span><span class="p">]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span>
+
+<div class="viewcode-block" id="Service.resolve_ids"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.resolve_ids">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">identifiers</span><span class="p">,</span> <span class="n">extra</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">case_sensitive</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">wildcards</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submit an Identifier Resolution Job</span>
+<span class="sd">        ===================================</span>
+
+<span class="sd">        Request that a set of identifiers be resolved to objects in</span>
+<span class="sd">        the data store.</span>
+
+<span class="sd">        @param data_type: The type of these identifiers (eg. &#39;Gene&#39;)</span>
+<span class="sd">        @type data_type: String</span>
+
+<span class="sd">        @param identifiers: The ids to resolve (eg. [&#39;eve&#39;, &#39;zen&#39;, &#39;pparg&#39;])</span>
+<span class="sd">        @type identifiers: iterable of string</span>
+
+<span class="sd">        @param extra: A disambiguating value (eg. &quot;Drosophila melanogaster&quot;)</span>
+<span class="sd">        @type extra: String</span>
+
+<span class="sd">        @param case_sensitive: Whether to treat IDs case sensitively.</span>
+<span class="sd">        @type case_sensitive: Boolean</span>
+
+<span class="sd">        @param wildcards: Whether or not to interpret wildcards (eg: &quot;eve*&quot;)</span>
+<span class="sd">        @type wildcards: Boolean</span>
+
+<span class="sd">        @return: {idresolution.Job} The job.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="s2">&quot;This feature requires API version 10+&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data_type</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="s2">&quot;No data-type supplied&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">identifiers</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="s2">&quot;No identifiers supplied&quot;</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">data_type</span><span class="p">,</span>
+            <span class="s2">&quot;identifiers&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">identifiers</span><span class="p">),</span>
+            <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="n">extra</span><span class="p">,</span>
+            <span class="s2">&quot;caseSensitive&quot;</span><span class="p">:</span> <span class="n">case_sensitive</span><span class="p">,</span>
+            <span class="s2">&quot;wildCards&quot;</span><span class="p">:</span> <span class="n">wildcards</span>
+        <span class="p">})</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">post_content</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">IDS_PATH</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">InterMineURLOpener</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No uid found in &quot;</span> <span class="o">+</span> <span class="n">ret</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">idresolution</span><span class="o">.</span><span class="n">Job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Service.flush"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Flushes any cached data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_manager</span><span class="o">.</span><span class="n">delete_temporary_lists</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_manager</span> <span class="o">=</span> <span class="n">ListManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_release</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">templates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The dictionary of templates from the webservice</span>
+<span class="sd">        ===============================================</span>
+
+<span class="sd">        Service.templates S{-&gt;} dict(intermine.query.Template|string)</span>
+
+<span class="sd">        For efficiency&#39;s sake, Templates are not parsed until</span>
+<span class="sd">        they are required, and until then they are stored as XML</span>
+<span class="sd">        strings. It is recommended that in most cases you would want</span>
+<span class="sd">        to use L{Service.get_template}.</span>
+
+<span class="sd">        You can use this property however to test for template existence though::</span>
+
+<span class="sd">         if name in service.templates:</span>
+<span class="sd">            template = service.get_template(name)</span>
+
+<span class="sd">        @rtype: dict</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">templates</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">dom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_xml</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES_PATH</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">dom</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;template&#39;</span><span class="p">):</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">templates</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ServiceError</span><span class="p">(</span><span class="s2">&quot;Two templates with same name: &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">templates</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span> <span class="o">=</span> <span class="n">templates</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The data model for the webservice you are querying</span>
+<span class="sd">        ==================================================</span>
+
+<span class="sd">        Service.model S{-&gt;} L{intermine.model.Model}</span>
+
+<span class="sd">        This is used when constructing queries to provide them</span>
+<span class="sd">        with information on the structure of the data model</span>
+<span class="sd">        they are accessing. You are very unlikely to want to</span>
+<span class="sd">        access this object directly.</span>
+
+<span class="sd">        raises ModelParseError: if the model cannot be read</span>
+
+<span class="sd">        @rtype: L{intermine.model.Model}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODEL_PATH</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">model_url</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+
+<div class="viewcode-block" id="Service.get_results"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.get_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">rowformat</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">cld</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return an Iterator over the rows of the results</span>
+<span class="sd">        ===============================================</span>
+
+<span class="sd">        This method is called internally by the query objects</span>
+<span class="sd">        when they are called to get results. You will not</span>
+<span class="sd">        normally need to call it directly</span>
+
+<span class="sd">        @param path: The resource path (eg: &quot;/query/results&quot;)</span>
+<span class="sd">        @type path: string</span>
+<span class="sd">        @param params: The query parameters for this request as a dictionary</span>
+<span class="sd">        @type params: dict</span>
+<span class="sd">        @param rowformat: One of &quot;rr&quot;, &quot;object&quot;, &quot;count&quot;, &quot;dict&quot;, &quot;list&quot;, &quot;tsv&quot;, &quot;csv&quot;, &quot;jsonrows&quot;, &quot;jsonobjects&quot;</span>
+<span class="sd">        @type rowformat: string</span>
+<span class="sd">        @param view: The output columns</span>
+<span class="sd">        @type view: list</span>
+
+<span class="sd">        @raise WebserviceError: for failed requests</span>
+
+<span class="sd">        @return: L{intermine.webservice.ResultIterator}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ResultIterator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">rowformat</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">cld</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Service.register"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.register">[docs]</a>    <span class="nd">@requires_version</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Register a new user with this service.</span>
+<span class="sd">        =======================================</span>
+
+<span class="sd">        @return {Service} an authenticated service.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">})</span>
+        <span class="n">registrar</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">registrar</span><span class="o">.</span><span class="n">_get_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">USERS_PATH</span><span class="p">,</span> <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;temporaryToken&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Service</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="n">token</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Service.get_deregistration_token"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.get_deregistration_token">[docs]</a>    <span class="nd">@requires_version</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_deregistration_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validity</span> <span class="o">=</span> <span class="mi">300</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">validity</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">validity</span> <span class="o">&gt;</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Validity not a reasonable value: 1ms - 2hrs&quot;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">({</span><span class="s1">&#39;validity&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">validity</span><span class="p">)})</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_json</span><span class="p">(</span><span class="s1">&#39;/user/deregistration&#39;</span><span class="p">,</span> <span class="n">payload</span> <span class="o">=</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Service.deregister"><a class="viewcode-back" href="../../intermine.html#intermine.webservice.Service.deregister">[docs]</a>    <span class="nd">@requires_version</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">deregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deregistration_token</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove a User from the service</span>
+<span class="sd">        ==============================</span>
+
+<span class="sd">        @param deregistration_token A token to prove you really want to do this</span>
+
+<span class="sd">        @return string All the user&#39;s data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;uuid&#39;</span> <span class="ow">in</span> <span class="n">deregistration_token</span><span class="p">:</span>
+            <span class="n">deregistration_token</span> <span class="o">=</span> <span class="n">deregistration_token</span><span class="p">[</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="s1">&#39;/user&#39;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;deregistrationToken&#39;</span><span class="p">:</span> <span class="n">deregistration_token</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="s1">&#39;xml&#39;</span><span class="p">}</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">userdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opener</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">userdata</span></div></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../query.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alex Kalderimis, Julie Sullivan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

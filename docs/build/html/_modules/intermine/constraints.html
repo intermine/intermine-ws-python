@@ -1,0 +1,1245 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="python">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>intermine.constraints &#8212; Intermine 1.10.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.10.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for intermine.constraints</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">from</span> <span class="nn">intermine.pathfeatures</span> <span class="k">import</span> <span class="n">PathFeature</span><span class="p">,</span> <span class="n">PATH_PATTERN</span>
+<span class="kn">from</span> <span class="nn">intermine.util</span> <span class="k">import</span> <span class="n">ReadableException</span>
+
+<div class="viewcode-block" id="Constraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.Constraint">[docs]</a><span class="k">class</span> <span class="nc">Constraint</span><span class="p">(</span><span class="n">PathFeature</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing constraints on a query</span>
+<span class="sd">    ===========================================</span>
+
+<span class="sd">    All constraints inherit from this class, which</span>
+<span class="sd">    simply defines the type of element for the</span>
+<span class="sd">    purposes of serialisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">child_type</span> <span class="o">=</span> <span class="s2">&quot;constraint&quot;</span></div>
+
+<div class="viewcode-block" id="LogicNode"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicNode">[docs]</a><span class="k">class</span> <span class="nc">LogicNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing nodes in a logic graph</span>
+<span class="sd">    ===========================================</span>
+
+<span class="sd">    Objects which can be represented as nodes</span>
+<span class="sd">    in the AST of a constraint logic graph should</span>
+<span class="sd">    inherit from this class, which defines</span>
+<span class="sd">    methods for overloading built-in operations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overloads +</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        Logic may be defined by using addition to sum</span>
+<span class="sd">        logic nodes::</span>
+
+<span class="sd">            &gt; query.set_logic(con_a + con_b + con_c)</span>
+<span class="sd">            &gt; str(query.logic)</span>
+<span class="sd">            ... A and B and C</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LogicNode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LogicGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;AND&#39;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overloads &amp;</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        Logic may be defined by using the &amp; operator::</span>
+
+<span class="sd">            &gt; query.set_logic(con_a &amp; con_b)</span>
+<span class="sd">            &gt; sr(query.logic)</span>
+<span class="sd">            ... A and B</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LogicNode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LogicGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;AND&#39;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overloads |</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        Logic may be defined by using the | operator::</span>
+
+<span class="sd">            &gt; query.set_logic(con_a | con_b)</span>
+<span class="sd">            &gt; str(query.logic)</span>
+<span class="sd">            ... A or B</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LogicNode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LogicGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;OR&#39;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LogicGroup"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicGroup">[docs]</a><span class="k">class</span> <span class="nc">LogicGroup</span><span class="p">(</span><span class="n">LogicNode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A logic node that represents two sub-nodes joined in some way</span>
+<span class="sd">    =============================================================</span>
+
+<span class="sd">    A logic group is a logic node with two child nodes, which are</span>
+<span class="sd">    either connected by AND or by OR logic.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">LEGAL_OPS</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">([</span><span class="s1">&#39;AND&#39;</span><span class="p">,</span> <span class="s1">&#39;OR&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        Makes a new node composes of two nodes (left and right),</span>
+<span class="sd">        and some operator.</span>
+
+<span class="sd">        Groups may have a reference to their parent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">LEGAL_OPS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">op</span> <span class="o">+</span> <span class="s2">&quot; is not a legal logical operation&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">LogicGroup</span><span class="p">):</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a sensible representation of a node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a human readable version of the group. The</span>
+<span class="sd">        string version should be able to be parsed back into the</span>
+<span class="sd">        original logic group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">core</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">op</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">core</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">core</span>
+
+<div class="viewcode-block" id="LogicGroup.get_codes"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicGroup.get_codes">[docs]</a>    <span class="k">def</span> <span class="nf">get_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a list of all constraint codes used in this group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">codes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">LogicGroup</span><span class="p">):</span>
+                <span class="n">codes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">get_codes</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">codes</span></div></div>
+
+<div class="viewcode-block" id="LogicParseError"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicParseError">[docs]</a><span class="k">class</span> <span class="nc">LogicParseError</span><span class="p">(</span><span class="n">ReadableException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An error representing problems in parsing constraint logic.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="EmptyLogicError"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.EmptyLogicError">[docs]</a><span class="k">class</span> <span class="nc">EmptyLogicError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An error representing the fact that an the logic string to be parsed was empty</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="LogicParser"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicParser">[docs]</a><span class="k">class</span> <span class="nc">LogicParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses logic strings into logic groups</span>
+<span class="sd">    ======================================</span>
+
+<span class="sd">    Instances of this class are used to parse logic strings into</span>
+<span class="sd">    abstract syntax trees, and then logic groups. This aims to provide</span>
+<span class="sd">    robust parsing of logic strings, with the ability to identify syntax</span>
+<span class="sd">    errors in such strings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        Parsers need access to the query they are parsing for, in</span>
+<span class="sd">        order to reference the constraints on the query.</span>
+
+<span class="sd">        @param query: The parent query object</span>
+<span class="sd">        @type query: intermine.query.Query</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query</span> <span class="o">=</span> <span class="n">query</span>
+
+<div class="viewcode-block" id="LogicParser.get_constraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicParser.get_constraint">[docs]</a>    <span class="k">def</span> <span class="nf">get_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the constraint with the given code</span>
+<span class="sd">        ======================================</span>
+
+<span class="sd">        This method fetches the constraint from the</span>
+<span class="sd">        parent query with the matching code.</span>
+
+<span class="sd">        @see: intermine.query.Query.get_constraint</span>
+<span class="sd">        @rtype: intermine.constraints.CodedConstraint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="o">.</span><span class="n">get_constraint</span><span class="p">(</span><span class="n">code</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LogicParser.get_priority"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicParser.get_priority">[docs]</a>    <span class="k">def</span> <span class="nf">get_priority</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the priority for a given operator</span>
+<span class="sd">        =====================================</span>
+
+<span class="sd">        Operators have a specific precedence, from highest</span>
+<span class="sd">        to lowest:</span>
+<span class="sd">          - ()</span>
+<span class="sd">          - AND</span>
+<span class="sd">          - OR</span>
+
+<span class="sd">        This method returns an integer which can be</span>
+<span class="sd">        used to compare operator priorities.</span>
+
+<span class="sd">        @rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;AND&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;OR&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;(&quot;</span>  <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;)&quot;</span>  <span class="p">:</span> <span class="mi">3</span>
+        <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">op</span><span class="p">)</span></div>
+
+    <span class="n">ops</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;AND&quot;</span> <span class="p">:</span> <span class="s2">&quot;AND&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&amp;&quot;</span>   <span class="p">:</span> <span class="s2">&quot;AND&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&amp;&amp;&quot;</span>  <span class="p">:</span> <span class="s2">&quot;AND&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;OR&quot;</span>  <span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;|&quot;</span>   <span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;||&quot;</span>  <span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(&quot;</span>   <span class="p">:</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;)&quot;</span>   <span class="p">:</span> <span class="s2">&quot;)&quot;</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="LogicParser.parse"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logic_str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse a logic string into an abstract syntax tree</span>
+<span class="sd">        =================================================</span>
+
+<span class="sd">        Takes a string such as &quot;A and B or C and D&quot;, and parses it</span>
+<span class="sd">        into a structure which represents this logic as a binary</span>
+<span class="sd">        abstract syntax tree. The above string would parse to</span>
+<span class="sd">        &quot;(A and B) or (C and D)&quot;, as AND binds more tightly than OR.</span>
+
+<span class="sd">        Note that only singly rooted trees are parsed.</span>
+
+<span class="sd">        @param logic_str: The logic defininition as a string</span>
+<span class="sd">        @type logic_str: string</span>
+
+<span class="sd">        @rtype: LogicGroup</span>
+
+<span class="sd">        @raise LogicParseError: if there is a syntax error in the logic</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Flatten out a list which contains both values and sublists&quot;&quot;&quot;</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">ret</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ret</span>
+        <span class="k">def</span> <span class="nf">canonical</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">d</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\b</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">dedouble</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;[()]&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span>
+
+        <span class="n">logic_str</span> <span class="o">=</span> <span class="n">logic_str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="n">logic_str</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">EmptyLogicError</span><span class="p">()</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">([</span><span class="n">canonical</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">])</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">([</span><span class="n">dedouble</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_syntax</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="n">postfix_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infix_to_postfix</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="n">abstract_syntax_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postfix_to_tree</span><span class="p">(</span><span class="n">postfix_tokens</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">abstract_syntax_tree</span></div>
+
+<div class="viewcode-block" id="LogicParser.check_syntax"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicParser.check_syntax">[docs]</a>    <span class="k">def</span> <span class="nf">check_syntax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infix_tokens</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check the syntax for errors before parsing</span>
+<span class="sd">        ==========================================</span>
+
+<span class="sd">        Syntax is checked before parsing to provide better errors,</span>
+<span class="sd">        which should hopefully lead to more informative error messages.</span>
+
+<span class="sd">        This checks for:</span>
+<span class="sd">         - correct operator positions (cannot put two codes next to each other without intervening operators)</span>
+<span class="sd">         - correct grouping (all brackets are matched, and contain valid expressions)</span>
+
+<span class="sd">        @param infix_tokens: The input parsed into a list of tokens.</span>
+<span class="sd">        @type infix_tokens: iterable</span>
+
+<span class="sd">        @raise LogicParseError: if there is a problem.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">need_an_op</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">need_binary_op_or_closing_bracket</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">processed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">open_brackets</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">infix_tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">need_an_op</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">LogicParseError</span><span class="p">(</span><span class="s2">&quot;Expected an operator after: &#39;&quot;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processed</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+                                          <span class="o">+</span> <span class="s2">&quot; - but got: &#39;&quot;</span> <span class="o">+</span> <span class="n">token</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">need_binary_op_or_closing_bracket</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">LogicParseError</span><span class="p">(</span><span class="s2">&quot;Logic grouping error after: &#39;&quot;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processed</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+                                          <span class="o">+</span> <span class="s2">&quot; - expected an operator or a closing bracket&quot;</span><span class="p">)</span>
+
+                <span class="n">need_an_op</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">need_an_op</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">token</span> <span class="o">==</span> <span class="s2">&quot;(&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">processed</span> <span class="ow">and</span> <span class="n">processed</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">LogicParseError</span><span class="p">(</span><span class="s2">&quot;Logic grouping error after: &#39;&quot;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processed</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+                                          <span class="o">+</span> <span class="s2">&quot; - got an unexpeced opening bracket&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">need_binary_op_or_closing_bracket</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">LogicParseError</span><span class="p">(</span><span class="s2">&quot;Logic grouping error after: &#39;&quot;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processed</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+                                          <span class="o">+</span> <span class="s2">&quot; - expected an operator or a closing bracket&quot;</span><span class="p">)</span>
+
+                    <span class="n">open_brackets</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">token</span> <span class="o">==</span> <span class="s2">&quot;)&quot;</span><span class="p">:</span>
+                    <span class="n">need_binary_op_or_closing_bracket</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">open_brackets</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">need_binary_op_or_closing_bracket</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">open_brackets</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">open_brackets</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Unmatched closing bracket in: &quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Unmatched opening bracket in: &quot;</span>
+            <span class="k">raise</span> <span class="n">LogicParseError</span><span class="p">(</span><span class="n">message</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infix_tokens</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LogicParser.infix_to_postfix"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicParser.infix_to_postfix">[docs]</a>    <span class="k">def</span> <span class="nf">infix_to_postfix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infix_tokens</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a list of infix tokens to postfix notation</span>
+<span class="sd">        ==================================================</span>
+
+<span class="sd">        Take in a set of infix tokens and return the set parsed</span>
+<span class="sd">        to a postfix sequence.</span>
+
+<span class="sd">        @param infix_tokens: The list of tokens</span>
+<span class="sd">        @type infix_tokens: iterable</span>
+
+<span class="sd">        @rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">postfix_tokens</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">infix_tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+                <span class="n">postfix_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">op</span> <span class="o">=</span> <span class="n">token</span>
+                <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;(&quot;</span><span class="p">:</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;)&quot;</span><span class="p">:</span>
+                    <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
+                        <span class="n">last_op</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">last_op</span> <span class="o">==</span> <span class="s2">&quot;(&quot;</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">stack</span><span class="p">:</span>
+                                <span class="n">previous_op</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                                <span class="k">if</span> <span class="n">previous_op</span> <span class="o">!=</span> <span class="s2">&quot;(&quot;</span><span class="p">:</span> <span class="n">postfix_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">previous_op</span><span class="p">)</span>
+                                <span class="k">break</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">postfix_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_op</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">while</span> <span class="n">stack</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_priority</span><span class="p">(</span><span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_priority</span><span class="p">(</span><span class="n">op</span><span class="p">):</span>
+                        <span class="n">prev_op</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">prev_op</span> <span class="o">!=</span> <span class="s2">&quot;(&quot;</span><span class="p">:</span> <span class="n">postfix_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prev_op</span><span class="p">)</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">stack</span><span class="p">:</span> <span class="n">postfix_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">postfix_tokens</span></div>
+
+<div class="viewcode-block" id="LogicParser.postfix_to_tree"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LogicParser.postfix_to_tree">[docs]</a>    <span class="k">def</span> <span class="nf">postfix_to_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">postfix_tokens</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a set of structured tokens to a single LogicGroup</span>
+<span class="sd">        =========================================================</span>
+
+<span class="sd">        Convert a set of tokens in postfix notation to a single</span>
+<span class="sd">        LogicGroup object.</span>
+
+<span class="sd">        @param postfix_tokens: A list of tokens in postfix notation.</span>
+<span class="sd">        @type postfix_tokens: list</span>
+
+<span class="sd">        @rtype: LogicGroup</span>
+
+<span class="sd">        @raise AssertionError: is the tree doesn&#39;t have a unique root.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">postfix_tokens</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_constraint</span><span class="p">(</span><span class="n">token</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">op</span> <span class="o">=</span> <span class="n">token</span>
+                    <span class="n">right</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="n">left</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LogicGroup</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Tree doesn&#39;t have a unique root&quot;</span>
+            <span class="k">return</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">EmptyLogicError</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="CodedConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.CodedConstraint">[docs]</a><span class="k">class</span> <span class="nc">CodedConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">,</span> <span class="n">LogicNode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A parent class for all constraints that have codes</span>
+<span class="sd">    ==================================================</span>
+
+<span class="sd">    Constraints that have codes are the principal logical</span>
+<span class="sd">    filters on queries, and need to be refered to individually</span>
+<span class="sd">    (hence the codes). They will all have a logical operation they</span>
+<span class="sd">    embody, and so have a reference to an operator.</span>
+
+<span class="sd">    This class is not meant to be instantiated directly, but instead</span>
+<span class="sd">    inherited from to supply default behaviour.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        @param path: The path to constrain</span>
+<span class="sd">        @type path: string</span>
+
+<span class="sd">        @param op: The operation to apply - must be in the OPS set</span>
+<span class="sd">        @type op: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">OPS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">op</span> <span class="o">+</span> <span class="s2">&quot; not in &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OPS</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">code</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CodedConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CodedConstraint.get_codes"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.CodedConstraint.get_codes">[docs]</a>    <span class="k">def</span> <span class="nf">get_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stringify to the code they are refered to by.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span>
+<div class="viewcode-block" id="CodedConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.CodedConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a human readable representation of the logic.</span>
+<span class="sd">        This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CodedConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="CodedConstraint.to_dict"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.CodedConstraint.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dict object which can be used to construct a</span>
+<span class="sd">        DOM element with the appropriate attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CodedConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">op</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span></div></div>
+
+<div class="viewcode-block" id="UnaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.UnaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">UnaryConstraint</span><span class="p">(</span><span class="n">CodedConstraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints which have just a path and an operator</span>
+<span class="sd">    ==================================================</span>
+
+<span class="sd">    These constraints are simple assertions about the</span>
+<span class="sd">    object/value refered to by the path. The set of valid</span>
+<span class="sd">    operators is:</span>
+<span class="sd">     - IS NULL</span>
+<span class="sd">     - IS NOT NULL</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;IS NULL&#39;</span><span class="p">,</span> <span class="s1">&#39;IS NOT NULL&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="BinaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.BinaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">BinaryConstraint</span><span class="p">(</span><span class="n">CodedConstraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints which have an operator and a value</span>
+<span class="sd">    ==============================================</span>
+
+<span class="sd">    These constraints assert a relationship between the</span>
+<span class="sd">    value represented by the path (it must be a representation</span>
+<span class="sd">    of a value, ie an Attribute) and another value - ie. the</span>
+<span class="sd">    operator takes two parameters.</span>
+
+<span class="sd">    In all case the &#39;left&#39; side of the relationship is the path,</span>
+<span class="sd">    and the &#39;right&#39; side is the supplied value.</span>
+
+<span class="sd">    Valid operators are:</span>
+<span class="sd">     - =        (equal to)</span>
+<span class="sd">     - !=       (not equal to)</span>
+<span class="sd">     - &lt;        (less than)</span>
+<span class="sd">     - &gt;        (greater than)</span>
+<span class="sd">     - &lt;=       (less than or equal to)</span>
+<span class="sd">     - &gt;=       (greater than or equal to)</span>
+<span class="sd">     - LIKE     (same as equal to, but with implied wildcards)</span>
+<span class="sd">     - CONTAINS (same as equal to, but with implied wildcards)</span>
+<span class="sd">     - NOT LIKE (same as not equal to, but with implied wildcards)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span> <span class="s1">&#39;NOT LIKE&#39;</span><span class="p">,</span> <span class="s1">&#39;CONTAINS&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        @param path: The path to constrain</span>
+<span class="sd">        @type path: string</span>
+
+<span class="sd">        @param op: The relationship between the value represented by the path and the value provided (must be a valid operator)</span>
+<span class="sd">        @type op: string</span>
+
+<span class="sd">        @param value: The value to compare the stored value to</span>
+<span class="sd">        @type value: string or number</span>
+
+<span class="sd">        @param code: The code for this constraint (default = &quot;A&quot;)</span>
+<span class="sd">        @type code: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BinaryConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BinaryConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.BinaryConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a human readable representation of the logic.</span>
+<span class="sd">        This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BinaryConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)])</span></div>
+<div class="viewcode-block" id="BinaryConstraint.to_dict"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.BinaryConstraint.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dict object which can be used to construct a</span>
+<span class="sd">        DOM element with the appropriate attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BinaryConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">d</span></div></div>
+
+<div class="viewcode-block" id="ListConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.ListConstraint">[docs]</a><span class="k">class</span> <span class="nc">ListConstraint</span><span class="p">(</span><span class="n">CodedConstraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints which refer to an objects membership of lists</span>
+<span class="sd">    =========================================================</span>
+
+<span class="sd">    These constraints assert a membership relationship between the</span>
+<span class="sd">    object represented by the path (it must always be an object, ie.</span>
+<span class="sd">    a Reference or a Class) and a List. Lists are collections of</span>
+<span class="sd">    objects in the database which are stored in InterMine</span>
+<span class="sd">    datawarehouses. These lists must be set up before the query is run, either</span>
+<span class="sd">    manually in the webapp or by using the webservice API list</span>
+<span class="sd">    upload feature.</span>
+
+<span class="sd">    Valid operators are:</span>
+<span class="sd">     - IN</span>
+<span class="sd">     - NOT IN</span>
+
+<span class="sd">     &quot;&quot;&quot;</span>
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;IN&#39;</span><span class="p">,</span> <span class="s1">&#39;NOT IN&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">list_name</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">list_name</span><span class="p">,</span> <span class="s1">&#39;to_query&#39;</span><span class="p">):</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">list_name</span><span class="o">.</span><span class="n">to_query</span><span class="p">()</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">create_list</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">list_name</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">list_name</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">list_name</span> <span class="o">=</span> <span class="n">list_name</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">list_name</span> <span class="o">=</span> <span class="n">list_name</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ListConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ListConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.ListConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a human readable representation of the logic.</span>
+<span class="sd">        This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_name</span><span class="p">)])</span></div>
+<div class="viewcode-block" id="ListConstraint.to_dict"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.ListConstraint.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dict object which can be used to construct a</span>
+<span class="sd">        DOM element with the appropriate attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">d</span></div></div>
+
+<div class="viewcode-block" id="LoopConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LoopConstraint">[docs]</a><span class="k">class</span> <span class="nc">LoopConstraint</span><span class="p">(</span><span class="n">CodedConstraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints with refer to object identity</span>
+<span class="sd">    =========================================</span>
+
+<span class="sd">    These constraints assert that two paths refer to the same</span>
+<span class="sd">    object.</span>
+
+<span class="sd">    Valid operators:</span>
+<span class="sd">     - IS</span>
+<span class="sd">     - IS NOT</span>
+
+<span class="sd">    The operators IS and IS NOT map to the ops &quot;=&quot; and &quot;!=&quot; when they</span>
+<span class="sd">    are used in XML serialisation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;IS&#39;</span><span class="p">,</span> <span class="s1">&#39;IS NOT&#39;</span><span class="p">])</span>
+    <span class="n">SERIALISED_OPS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;IS&#39;</span><span class="p">:</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;IS NOT&#39;</span><span class="p">:</span><span class="s1">&#39;!=&#39;</span><span class="p">}</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">loopPath</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        @param path: The path to constrain</span>
+<span class="sd">        @type path: string</span>
+
+<span class="sd">        @param op: The relationship between the path and the path provided (must be a valid operator)</span>
+<span class="sd">        @type op: string</span>
+
+<span class="sd">        @param loopPath: The path to check for identity against</span>
+<span class="sd">        @type loopPath: string</span>
+
+<span class="sd">        @param code: The code for this constraint (default = &quot;A&quot;)</span>
+<span class="sd">        @type code: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loopPath</span> <span class="o">=</span> <span class="n">loopPath</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LoopConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LoopConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LoopConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a human readable representation of the logic.</span>
+<span class="sd">        This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">LoopConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loopPath</span><span class="p">])</span></div>
+<div class="viewcode-block" id="LoopConstraint.to_dict"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.LoopConstraint.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dict object which can be used to construct a</span>
+<span class="sd">        DOM element with the appropriate attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">LoopConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loopPath</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loopPath</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">SERIALISED_OPS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">d</span></div></div>
+
+<div class="viewcode-block" id="TernaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TernaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">TernaryConstraint</span><span class="p">(</span><span class="n">BinaryConstraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints for broad, general searching over all fields</span>
+<span class="sd">    ========================================================</span>
+
+<span class="sd">    These constraints request a wide-ranging search for matching</span>
+<span class="sd">    fields over all aspects of an object, including up to coercion</span>
+<span class="sd">    from related classes.</span>
+
+<span class="sd">    Valid operators:</span>
+<span class="sd">     - LOOKUP</span>
+
+<span class="sd">    To aid disambiguation, Ternary constaints accept an extra_value as</span>
+<span class="sd">    well as the main value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;LOOKUP&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">extra_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        @param path: The path to constrain. Here is must be a class, or a reference to a class.</span>
+<span class="sd">        @type path: string</span>
+
+<span class="sd">        @param op: The relationship between the path and the path provided (must be a valid operator)</span>
+<span class="sd">        @type op: string</span>
+
+<span class="sd">        @param value: The value to check other fields against.</span>
+<span class="sd">        @type value: string</span>
+
+<span class="sd">        @param extra_value: A further value for disambiguation. The meaning of this value varies by class</span>
+<span class="sd">                            and configuration. For example, if the class of the object is Gene, then</span>
+<span class="sd">                            extra_value will refer to the Organism.</span>
+<span class="sd">        @type extra_value: string</span>
+
+<span class="sd">        @param code: The code for this constraint (default = &quot;A&quot;)</span>
+<span class="sd">        @type code: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_value</span> <span class="o">=</span> <span class="n">extra_value</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TernaryConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TernaryConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TernaryConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a human readable representation of the logic.</span>
+<span class="sd">        This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TernaryConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;IN&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_value</span><span class="p">])</span></div>
+<div class="viewcode-block" id="TernaryConstraint.to_dict"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TernaryConstraint.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dict object which can be used to construct a</span>
+<span class="sd">        DOM element with the appropriate attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TernaryConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extraValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span></div></div>
+
+<div class="viewcode-block" id="MultiConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.MultiConstraint">[docs]</a><span class="k">class</span> <span class="nc">MultiConstraint</span><span class="p">(</span><span class="n">CodedConstraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints for checking membership of a set of values</span>
+<span class="sd">    ======================================================</span>
+
+<span class="sd">    These constraints require the value they constrain to be</span>
+<span class="sd">    either a member of a set of values, or not a member.</span>
+
+<span class="sd">    Valid operators:</span>
+<span class="sd">     - ONE OF</span>
+<span class="sd">     - NONE OF</span>
+
+<span class="sd">    These constraints are similar in use to List constraints, with</span>
+<span class="sd">    the following differences:</span>
+<span class="sd">      - The list in this case is a defined set of values that is passed</span>
+<span class="sd">        along with the query itself, rather than anything stored</span>
+<span class="sd">        independently on a server.</span>
+<span class="sd">      - The object of the constaint is the value of an attribute, rather</span>
+<span class="sd">        than an object&#39;s identity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;ONE OF&#39;</span><span class="p">,</span> <span class="s1">&#39;NONE OF&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        @param path: The path to constrain. Here it must be an attribute of some object.</span>
+<span class="sd">        @type path: string</span>
+
+<span class="sd">        @param op: The relationship between the path and the path provided (must be a valid operator)</span>
+<span class="sd">        @type op: string</span>
+
+<span class="sd">        @param values: The set of values which the object of the constraint either must or must not belong to.</span>
+<span class="sd">        @type values: set or list</span>
+
+<span class="sd">        @param code: The code for this constraint (default = &quot;A&quot;)</span>
+<span class="sd">        @type code: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="nb">set</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;values must be a set or a list, not &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">values</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MultiConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.MultiConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a human readable representation of the logic.</span>
+<span class="sd">        This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MultiConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)])</span></div>
+<div class="viewcode-block" id="MultiConstraint.to_dict"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.MultiConstraint.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dict object which can be used to construct a</span>
+<span class="sd">        DOM element with the appropriate attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MultiConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span></div></div>
+
+<div class="viewcode-block" id="RangeConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.RangeConstraint">[docs]</a><span class="k">class</span> <span class="nc">RangeConstraint</span><span class="p">(</span><span class="n">MultiConstraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints for testing where a value lies relative to a set of ranges</span>
+<span class="sd">    ======================================================================</span>
+
+<span class="sd">    These constraints require that the value of the path they constrain</span>
+<span class="sd">    should lie in relationship to the set of values passed according to</span>
+<span class="sd">    the specific operator.</span>
+
+<span class="sd">    Valid operators:</span>
+<span class="sd">     - OVERLAPS : The value overlaps at least one of the given ranges</span>
+<span class="sd">     - WITHIN : The value is wholly outside the given set of ranges</span>
+<span class="sd">     - CONTAINS : The value contains all the given ranges</span>
+<span class="sd">     - DOES NOT CONTAIN : The value does not contain all the given ranges</span>
+<span class="sd">     - OUTSIDE : Some part is outside the given set of ranges</span>
+<span class="sd">     - DOES NOT OVERLAP : The value does not overlap with any of the ranges</span>
+
+<span class="sd">    For example:</span>
+
+<span class="sd">        4 WITHIN [1..5, 20..25] =&gt; True</span>
+
+<span class="sd">    The format of the ranges depends on the value being constrained and what range</span>
+<span class="sd">    parsers have been configured on the target server. A common range parser for</span>
+<span class="sd">    biological mines is the one for Locations:</span>
+
+<span class="sd">        Gene.chromosomeLocation OVERLAPS [2X:54321..67890, 3R:12345..456789]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;OVERLAPS&#39;</span><span class="p">,</span> <span class="s1">&#39;DOES NOT OVERLAP&#39;</span><span class="p">,</span> <span class="s1">&#39;WITHIN&#39;</span><span class="p">,</span> <span class="s1">&#39;OUTSIDE&#39;</span><span class="p">,</span> <span class="s1">&#39;CONTAINS&#39;</span><span class="p">,</span> <span class="s1">&#39;DOES NOT CONTAIN&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="IsaConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.IsaConstraint">[docs]</a><span class="k">class</span> <span class="nc">IsaConstraint</span><span class="p">(</span><span class="n">MultiConstraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints for testing the class of a value, as a disjoint union</span>
+<span class="sd">    ======================================================================</span>
+
+<span class="sd">    These constraints require that the value of the path they constrain</span>
+<span class="sd">    should be an instance of one of the classes provided.</span>
+
+<span class="sd">    Valid operators:</span>
+<span class="sd">     - ISA : The value is an instance of one of the provided classes.</span>
+
+<span class="sd">    For example:</span>
+
+<span class="sd">        SequenceFeature ISA [Exon, Intron]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;ISA&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="SubClassConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.SubClassConstraint">[docs]</a><span class="k">class</span> <span class="nc">SubClassConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constraints on the class of a reference</span>
+<span class="sd">    =======================================</span>
+
+<span class="sd">    If an object has a reference X to another object of type A,</span>
+<span class="sd">    and type B extends type A, then any object of type B may be</span>
+<span class="sd">    the value of the reference X. If you only want to see X&#39;s</span>
+<span class="sd">    which are B&#39;s, this may be achieved with subclass constraints,</span>
+<span class="sd">    which allow the type of an object to be limited to one of the</span>
+<span class="sd">    subclasses (at any depth) of the class type required</span>
+<span class="sd">    by the attribute.</span>
+
+<span class="sd">    These constraints do not use operators. Since they cannot be</span>
+<span class="sd">    conditional (eg. &quot;A is a B or A is a C&quot; would not be possible</span>
+<span class="sd">    in an InterMine query), they do not have codes</span>
+<span class="sd">    and cannot be referenced in logic expressions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">subclass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        @param path: The path to constrain. This must refer to a class or a reference to a class.</span>
+<span class="sd">        @type path: str</span>
+
+<span class="sd">        @param subclass: The class to subclass the path to. This must be a simple class name (not a dotted name)</span>
+<span class="sd">        @type subclass: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">PATH_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">subclass</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subclass</span> <span class="o">=</span> <span class="n">subclass</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SubClassConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<div class="viewcode-block" id="SubClassConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.SubClassConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Provide a human readable representation of the logic.</span>
+<span class="sd">       This method is called by repr.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+       <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SubClassConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+       <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39; ISA &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">subclass</span></div>
+<div class="viewcode-block" id="SubClassConstraint.to_dict"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.SubClassConstraint.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Return a dict object which can be used to construct a</span>
+<span class="sd">       DOM element with the appropriate attributes.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+       <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SubClassConstraint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+       <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subclass</span><span class="p">)</span>
+       <span class="k">return</span> <span class="n">d</span></div></div>
+
+
+<div class="viewcode-block" id="TemplateConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateConstraint</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mixin to supply the behaviour and state of constraints on templates</span>
+<span class="sd">    =====================================================================</span>
+
+<span class="sd">    Constraints on templates can also be designated as &quot;on&quot;, &quot;off&quot; or &quot;locked&quot;, which refers</span>
+<span class="sd">    to whether they are active or not. Inactive constraints are still configured, but behave</span>
+<span class="sd">    as if absent for the purpose of results. In addition, template constraints can be</span>
+<span class="sd">    editable or not. Only values for editable constraints can be provided when requesting results,</span>
+<span class="sd">    and only constraints that can participate in logic expressions can be editable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">REQUIRED</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span>
+    <span class="n">OPTIONAL_ON</span> <span class="o">=</span> <span class="s2">&quot;on&quot;</span>
+    <span class="n">OPTIONAL_OFF</span> <span class="o">=</span> <span class="s2">&quot;off&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="s2">&quot;locked&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        @param editable: Whether or not this constraint should accept new values.</span>
+<span class="sd">        @type editable: bool</span>
+
+<span class="sd">        @param optional: Whether a value for this constraint must be provided when running.</span>
+<span class="sd">        @type optional: &quot;locked&quot;, &quot;on&quot; or &quot;off&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">editable</span> <span class="o">=</span> <span class="n">editable</span>
+        <span class="k">if</span> <span class="n">optional</span> <span class="o">==</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">REQUIRED</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optional</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">switched_on</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optional</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">optional</span> <span class="o">==</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">OPTIONAL_ON</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">switched_on</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">optional</span> <span class="o">==</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">OPTIONAL_OFF</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">switched_on</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bad value for optional&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">required</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if a value must be provided for this constraint.</span>
+
+<span class="sd">        @rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">optional</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">switched_off</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if this constraint is currently inactive.</span>
+
+<span class="sd">        @rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">switched_on</span>
+
+<div class="viewcode-block" id="TemplateConstraint.get_switchable_status"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateConstraint.get_switchable_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_switchable_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns either &quot;locked&quot;, &quot;on&quot; or &quot;off&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">optional</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;locked&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">switched_on</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;on&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;off&quot;</span></div>
+
+<div class="viewcode-block" id="TemplateConstraint.switch_on"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateConstraint.switch_on">[docs]</a>    <span class="k">def</span> <span class="nf">switch_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make sure this constraint is active</span>
+<span class="sd">        ===================================</span>
+
+<span class="sd">        @raise ValueError: if the constraint is not editable and optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">editable</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">optional</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">switched_on</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This constraint is not switchable&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TemplateConstraint.switch_off"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateConstraint.switch_off">[docs]</a>    <span class="k">def</span> <span class="nf">switch_off</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make sure this constraint is inactive</span>
+<span class="sd">        =====================================</span>
+
+<span class="sd">        @raise ValueError: if the constraint is not editable and optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">editable</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">optional</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">switched_on</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This constraint is not switchable&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TemplateConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">editable</span><span class="p">:</span>
+            <span class="n">editable</span> <span class="o">=</span> <span class="s2">&quot;editable&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">editable</span> <span class="o">=</span> <span class="s2">&quot;non-editable&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">editable</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_switchable_status</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span></div>
+<div class="viewcode-block" id="TemplateConstraint.separate_arg_sets"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateConstraint.separate_arg_sets">[docs]</a>    <span class="k">def</span> <span class="nf">separate_arg_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A static function to use when building template constraints.</span>
+<span class="sd">        ============================================================</span>
+
+<span class="sd">        dict -&gt; (dict, dict)</span>
+
+<span class="sd">        Splits a dictionary of arguments into two separate dictionaries, one with</span>
+<span class="sd">        arguments for the main constraint, and one with arguments for the template</span>
+<span class="sd">        portion of the behaviour</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c_args</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">t_args</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;editable&quot;</span><span class="p">:</span>
+                <span class="n">t_args</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+            <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;optional&quot;</span><span class="p">:</span>
+                <span class="n">t_args</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">c_args</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="TemplateUnaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateUnaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateUnaryConstraint</span><span class="p">(</span><span class="n">UnaryConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">UnaryConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateUnaryConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateUnaryConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">UnaryConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateBinaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateBinaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateBinaryConstraint</span><span class="p">(</span><span class="n">BinaryConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">BinaryConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateBinaryConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateBinaryConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">BinaryConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateListConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateListConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateListConstraint</span><span class="p">(</span><span class="n">ListConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">ListConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateListConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateListConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">ListConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateLoopConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateLoopConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateLoopConstraint</span><span class="p">(</span><span class="n">LoopConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">LoopConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateLoopConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateLoopConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">LoopConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateTernaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateTernaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateTernaryConstraint</span><span class="p">(</span><span class="n">TernaryConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">TernaryConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateTernaryConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateTernaryConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">TernaryConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateMultiConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateMultiConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateMultiConstraint</span><span class="p">(</span><span class="n">MultiConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">MultiConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateMultiConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateMultiConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">MultiConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateRangeConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateRangeConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateRangeConstraint</span><span class="p">(</span><span class="n">RangeConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">RangeConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateRangeConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateRangeConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">RangeConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateIsaConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateIsaConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateIsaConstraint</span><span class="p">(</span><span class="n">IsaConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">IsaConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateIsaConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateIsaConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">IsaConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateSubClassConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateSubClassConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateSubClassConstraint</span><span class="p">(</span><span class="n">SubClassConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">SubClassConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
+        <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
+<div class="viewcode-block" id="TemplateSubClassConstraint.to_string"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateSubClassConstraint.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a template specific human readable representation of the</span>
+<span class="sd">        constraint. This method is called by repr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">SubClassConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="ConstraintFactory"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.ConstraintFactory">[docs]</a><span class="k">class</span> <span class="nc">ConstraintFactory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A factory for creating constraints from a set of arguments.</span>
+<span class="sd">    ===========================================================</span>
+
+<span class="sd">    A constraint factory is responsible for finding an appropriate</span>
+<span class="sd">    constraint class for the given arguments and instantiating the</span>
+<span class="sd">    constraint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CONSTRAINT_CLASSES</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
+        <span class="n">UnaryConstraint</span><span class="p">,</span> <span class="n">BinaryConstraint</span><span class="p">,</span> <span class="n">TernaryConstraint</span><span class="p">,</span>
+        <span class="n">MultiConstraint</span><span class="p">,</span> <span class="n">SubClassConstraint</span><span class="p">,</span> <span class="n">LoopConstraint</span><span class="p">,</span>
+        <span class="n">ListConstraint</span><span class="p">,</span> <span class="n">RangeConstraint</span><span class="p">,</span> <span class="n">IsaConstraint</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        ===========</span>
+
+<span class="sd">        Creates a new ConstraintFactory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_codes</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_ops</span> <span class="o">=</span> <span class="n">TernaryConstraint</span><span class="o">.</span><span class="n">OPS</span> <span class="o">|</span> <span class="n">RangeConstraint</span><span class="o">.</span><span class="n">OPS</span> <span class="o">|</span> <span class="n">ListConstraint</span><span class="o">.</span><span class="n">OPS</span> <span class="o">|</span> <span class="n">IsaConstraint</span><span class="o">.</span><span class="n">OPS</span>
+
+<div class="viewcode-block" id="ConstraintFactory.get_next_code"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.ConstraintFactory.get_next_code">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the available constraint code.</span>
+
+<span class="sd">        @return: A single uppercase character</span>
+<span class="sd">        @rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_codes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConstraintFactory.make_constraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.ConstraintFactory.make_constraint">[docs]</a>    <span class="k">def</span> <span class="nf">make_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a constraint from a set of arguments.</span>
+<span class="sd">        ============================================</span>
+
+<span class="sd">        Finds a suitable constraint class, and instantiates it.</span>
+
+<span class="sd">        @rtype: Constraint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">CC</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONSTRAINT_CLASSES</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">CC</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_code</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">c</span>
+            <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;No matching constraint class found for &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TemplateConstraintFactory"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateConstraintFactory">[docs]</a><span class="k">class</span> <span class="nc">TemplateConstraintFactory</span><span class="p">(</span><span class="n">ConstraintFactory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A factory for creating constraints with template specific characteristics.</span>
+<span class="sd">    ==========================================================================</span>
+
+<span class="sd">    A constraint factory is responsible for finding an appropriate</span>
+<span class="sd">    constraint class for the given arguments and instantiating the</span>
+<span class="sd">    constraint. TemplateConstraintFactories make constraints with the</span>
+<span class="sd">    extra set of TemplateConstraint qualities.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CONSTRAINT_CLASSES</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
+        <span class="n">TemplateUnaryConstraint</span><span class="p">,</span> <span class="n">TemplateBinaryConstraint</span><span class="p">,</span>
+        <span class="n">TemplateTernaryConstraint</span><span class="p">,</span> <span class="n">TemplateMultiConstraint</span><span class="p">,</span>
+        <span class="n">TemplateSubClassConstraint</span><span class="p">,</span> <span class="n">TemplateLoopConstraint</span><span class="p">,</span>
+        <span class="n">TemplateListConstraint</span><span class="p">,</span> <span class="n">TemplateRangeConstraint</span><span class="p">,</span> <span class="n">TemplateIsaConstraint</span>
+    <span class="p">])</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../query.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alex Kalderimis, Julie Sullivan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
