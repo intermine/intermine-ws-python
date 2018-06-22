@@ -1,1 +1,1 @@
-This branch is not used to deploy docs but is left here for historical reasons to preserve the old doc history. 
+This branch is a manual copy of the generated docs from `/docs/build/html` in the main branch. Update manually as/when needed. 
