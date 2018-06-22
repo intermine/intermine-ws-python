@@ -1,3 +1,15 @@
-InterMine python docs
+Welcome to Intermine's documentation!
+=====================================
 
-trying to get rtd working
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
