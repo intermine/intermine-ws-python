@@ -141,9 +141,9 @@ def delete_query(name):
             return name + " is deleted"
 
 
-def post_query(xml):
+def post_query(value):
     """
-    A function to post a query(in the form of string containing xml)
+    A function to post a query(in the form of string containing xml or json)
     to a user account
     ================================================
     example:
@@ -153,8 +153,10 @@ def post_query(xml):
             </query>')
     Note that the name should be defined first
     """
-    # xml parsing
-    root = etree.fromstring(xml)
+    # default parameter name to xml
+    paramName = "xml"
+    # parsing
+    root = etree.fromstring(value)
     # mock raw for testing
     if mine == 'mock':
         raw = {'queries': {'query1': 1, 'query2': 2}}
@@ -163,6 +165,14 @@ def post_query(xml):
         x = "http://registry.intermine.org/service/instances/" + mine
         r = requests.get(x)
         dict = json.loads(r.text)
+        # finding the version
+        v_link = dict["instance"]["url"]+ "/service/version?token=" + token
+        r = requests.get(v_link)
+        VERSION = json.loads(r.text)
+        # change parameter name to query if newer version is used
+        if VERSION >=27:
+            paramName = "query"
+
         link = dict["instance"]["url"] + "/service/user/queries?token=" + token
         r = requests.get(link)
         raw = json.loads(r.text)
@@ -183,8 +193,9 @@ def post_query(xml):
         if mine == 'mock':
             raw = {'queries': {'query1': 1, 'query2': 2, 'query3': 3}}
         else:
-            link = dict["instance"]["url"] + "/service/user/queries?xml=" + \
-                req.pathname2url(xml) + "&token=" + token
+            link = dict["instance"]["url"] + "/service/user/queries?" + \
+                paramName + "=" + \
+                req.pathname2url(value) + "&token=" + token
             requests.put(link)
             r = requests.get(link)
             raw = json.loads(r.text)
@@ -195,7 +206,7 @@ def post_query(xml):
         if flag == 0:
             print("Note: name should contain no special symbol\
             and should be defined first")
-            return "Incorrect xml"
+            return "Incorrect format"
         else:
             return root.attrib['name'] + " is posted"
 

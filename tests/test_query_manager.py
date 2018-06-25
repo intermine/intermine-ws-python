@@ -28,7 +28,7 @@ class QueryManagerTest(unittest.TestCase):
                                        "query3 is posted")
         # can't post if xml is wrong and returns a message
         self.assertEqual(qm.post_query('<query name="query4"></query>'),
-                                       "Incorrect xml")
+                                       "Incorrect format")
 
 
 if __name__ == '__main__':
