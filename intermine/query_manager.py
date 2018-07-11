@@ -12,9 +12,50 @@ Prompts the user to enter the API token and mine corresponding to the account
 example:
 
     >>>from intermine import query_manager as qm
-    Enter the api token: <enter api token from account>
-    Enter the mine name: <enter mine name>
+    
 """
+
+
+def save_mine_and_token(m, t):
+    """
+    A function to access an account from a particular mine
+    ================================================
+    example:
+
+        >>>from intermine import query_manager as qm
+        >>>qm.save_mine_and_token("flymine","<enter token>")
+        <now you can access account linked to the token>
+
+    """
+    global mine
+    global token
+    mine = m
+    token = t
+    # if no tests are taking place
+    if mine != 'mock':
+        # source of the request
+        src = "http://registry.intermine.org/service/instances/" + mine
+        try:
+            # tests if mine is valid by checking if object 'obj' exists
+            m = requests.get(src)
+            data = json.loads(m.text)
+            obj = data["instance"]["url"]
+            obj = data["instance"]["url"] + "/service/user/queries?token=" + \
+                token
+            try:
+                # tests if token is valid by checking if object 'obj' exists
+                o = requests.get(obj)
+                data = json.loads(o.text)
+                obj = data['queries'].keys()
+                # checks the type fo exception
+            except Exception as ex:
+                template = "An exception of type {0} occurred."
+                message = template.format(type(ex).__name__, ex.args)
+                return message + " Check token"
+        except Exception as ex:
+            template = "An exception of type {0} occurred."
+            message = template.format(type(ex).__name__, ex.args)
+            return message + " Check mine"
 
 
 def get_all_query_names():
@@ -24,6 +65,7 @@ def get_all_query_names():
     example:
 
         >>>from intermine import query_manager as qm
+        >>>qm.save_mine_and_token("flymine","<enter token>")
         >>>qm.get_all_query_names()
         <returns the names of all the saved queries in user account>
 
@@ -65,6 +107,7 @@ def get_query(name):
     example:
 
         >>>from intermine import query_manager as qm
+        >>>qm.save_mine_and_token("flymine","<enter token>")
         >>>qm.get_query('queryName')
         <returns information about the query whose name is 'queryName'>
 
@@ -105,6 +148,7 @@ def delete_query(name):
     example:
 
         >>>from intermine import query_manager as qm
+        >>>qm.save_mine_and_token("flymine","<enter token>")
         >>>qm.delete_query('queryName')
         <deletes the query whose name is 'queryName' from user's account>
 
@@ -147,7 +191,8 @@ def post_query(value):
     to a user account
     ================================================
     example:
-
+        >>>from intermine import query_manager as qm
+        >>>qm.save_mine_and_token("flymine","<enter token>")
         >>>qm.post_query('<query name="" model="genomic" view="Gene.length\
             Gene.symbol" longDescription="" sortOrder="Gene.length asc">\
             </query>')
@@ -214,33 +259,3 @@ def post_query(value):
         print("Use a query name other than " + root.attrib['name'])
 
 
-def save_mine_and_token(m, t):
-    global mine
-    global token
-    mine = m
-    token = t
-    # if no tests are taking place
-    if mine != 'mock':
-        # source of the request
-        src = "http://registry.intermine.org/service/instances/" + mine
-        try:
-            # tests if mine is valid by checking if object 'obj' exists
-            m = requests.get(src)
-            data = json.loads(m.text)
-            obj = data["instance"]["url"]
-            obj = data["instance"]["url"] + "/service/user/queries?token=" + \
-                token
-            try:
-                # tests if token is valid by checking if object 'obj' exists
-                o = requests.get(obj)
-                data = json.loads(o.text)
-                obj = data['queries'].keys()
-                # checks the type fo exception
-            except Exception as ex:
-                template = "An exception of type {0} occurred."
-                message = template.format(type(ex).__name__, ex.args)
-                return message + " Check token"
-        except Exception as ex:
-            template = "An exception of type {0} occurred."
-            message = template.format(type(ex).__name__, ex.args)
-            return message + " Check mine"
