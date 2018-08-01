@@ -27,11 +27,17 @@ def getInfo(mine):
         MODs
 
     """
-    link = "http://registry.intermine.org/service/instances/" + mine
-    try:
+    if mine == 'mock':
+        dict = {'instance': {'organisms': ['xxx'], 'url': 'xxx', 'release_version': 'xxx', 'api_version': 'xxx', 'description': 'xxx', 'neighbours': ['xxx'], 'intermine_version': 'xxx'}}
+    else:
+
+        link = "http://registry.intermine.org/service/instances/" + mine
+
         r = requests.get(link)
 
         dict = json.loads(r.text)
+
+    try:
         print("Description: " + dict["instance"]["description"])
         print("URL: " + dict["instance"]["url"])
         print("API Version: " + dict["instance"]["api_version"])
@@ -46,6 +52,7 @@ def getInfo(mine):
         return None
     except KeyError:
         return "No such mine available"
+
 
 
 def getData(mine):
@@ -102,11 +109,15 @@ def getMines(organism):
         XenMine
 
     """
-    link = "http://registry.intermine.org/service/instances"
+    if organism == 'mock':
+        dict = {'instances':[{"organisms":["mock"],"name":"mock"}]}
+    else:
+        link = "http://registry.intermine.org/service/instances"
 
-    r = requests.get(link)
+        r = requests.get(link)
+
+        dict = json.loads(r.text)
     count = 0
-    dict = json.loads(r.text)
     for i in range(len(dict["instances"])):
         for j in range(len(dict["instances"][i]["organisms"])):
             if dict["instances"][i]["organisms"][j] == organism:
