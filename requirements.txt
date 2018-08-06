@@ -2,3 +2,6 @@
 Requests==2.18.4
 Lxml==4.2.1
 Unittest2==1.1.0
+Numpy==1.14.5
+Pandas==0.23.2
+matplotlib==2.2.2
