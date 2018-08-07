@@ -1,6 +1,9 @@
 from lxml import etree
 import json
-import urllib.request as req
+try:
+    import urllib.request as req
+except ImportError:
+    import urllib as req
 from lxml import etree
 
 from intermine.webservice import Service
