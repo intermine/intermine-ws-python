@@ -114,31 +114,23 @@ def get_query(name):
     """
     # mock dict for testing
     if mine == 'mock':
-        dict = {'queries': {'query1': {'select': ['c1', 'c2']}, 'query2': 2}}
+        if name == 'query1':
+            ans = 'c1, c2'
+        else:
+            ans = '<saved-queries></saved-queries>'
     else:
         # source of the initial request
         x = "http://registry.intermine.org/service/instances/" + mine
         r = requests.get(x)
         dict = json.loads(r.text)
-        link = dict["instance"]["url"] + "/service/user/queries?token=" + token
+        link = dict["instance"]["url"] + "/service/user/queries?filter=" + name + "&format=xml&token=" + token
 
         r = requests.get(link)
-        dict = json.loads(r.text)
-    count = 0
-    # list where output is stored
-    result = []
-    for key in dict['queries'].keys():
-        if name == key:
-            count = count + 1
-            # appends the columns a query is made of in result
-            for i in range(len(dict['queries'][name]['select'])):
-                result.append(dict['queries'][name]['select'][i])
-
-    if count == 0:
+        ans = r.text
+    if ans == '<saved-queries></saved-queries>':
         return "No such query available"
     else:
-        print("Columns:")
-        return ", ".join(result)
+        return ans
 
 
 def delete_query(name):
