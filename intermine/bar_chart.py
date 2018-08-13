@@ -71,8 +71,8 @@ def plot_go_vs_p(list_name):
     service = Service(url)
 
     lm = service.list_manager()
-    l = lm.get_list(name=list_name)
-    r = l.calculate_enrichment(widget="go_enrichment_for_gene")
+    store = lm.get_list(name=list_name)
+    r = store.calculate_enrichment(widget="go_enrichment_for_gene")
 
     gene_count = []
     identifier = []
@@ -104,7 +104,7 @@ def plot_go_vs_p(list_name):
         for rect in rects:
             x = rect.get_x() + rect.get_width()/2.
             y = rect.get_height()
-            ax.annotate(gene_count[i], (x, y), xytext=(0,5), 
+            ax.annotate(gene_count[i], (x, y), xytext=(0, 5),
                         textcoords="offset points",
                         ha='center', va='bottom')
             i = i+1
@@ -134,8 +134,8 @@ def plot_go_vs_count(list_name):
     service = Service(url)
 
     lm = service.list_manager()
-    l = lm.get_list(name=list_name)
-    r = l.calculate_enrichment(widget="go_enrichment_for_gene")
+    store = lm.get_list(name=list_name)
+    r = store.calculate_enrichment(widget="go_enrichment_for_gene")
 
     gene_count = []
     identifier = []
@@ -171,10 +171,10 @@ def plot_go_vs_count(list_name):
         for rect in rects:
             x = rect.get_x() + rect.get_width()/2.
             y = rect.get_height()
-            ax.annotate(annotation_count[i], (x, y), xytext=(0,5),
+            ax.annotate(annotation_count[i], (x, y), xytext=(0, 5),
                         textcoords="offset points",
                         ha='center', va='bottom')
-            i=i+1
+            i = i+1
 
     autolabel(ax.patches, ax)
     ax.margins(y=0.1)
@@ -219,8 +219,8 @@ def query_to_barchart_log(xml, resp):
     """
     list = get_query(xml)
     root = etree.fromstring(xml)
-    l = root.attrib['view']
-    l = l.split(' ')
+    store = root.attrib['view']
+    store = store.split(' ')
     x_val = []
     y_val = []
     for i in range(0, len(list)-1):
@@ -250,7 +250,7 @@ def query_to_barchart_log(xml, resp):
         for rect in rects:
             x = rect.get_x() + rect.get_width()/2.
             y = rect.get_height()
-            ax.annotate(y_val[i], (x, y), xytext=(0,5),
+            ax.annotate(y_val[i], (x, y), xytext=(0, 5),
                         textcoords="offset points",
                         ha='center', va='bottom')
             i = i+1

@@ -12,7 +12,6 @@ Prompts the user to enter the API token and mine corresponding to the account
 example:
 
     >>>from intermine import query_manager as qm
-    
 """
 
 
@@ -123,8 +122,8 @@ def get_query(name):
         x = "http://registry.intermine.org/service/instances/" + mine
         r = requests.get(x)
         dict = json.loads(r.text)
-        link = dict["instance"]["url"] + "/service/user/queries?filter=" + name + "&format=xml&token=" + token
-
+        link = dict["instance"]["url"] + "/service/user/queries?filter=" + \
+            name + "&format=xml&token=" + token
         r = requests.get(link)
         ans = r.text
     if ans == '<saved-queries></saved-queries>':
@@ -203,11 +202,11 @@ def post_query(value):
         r = requests.get(x)
         dict = json.loads(r.text)
         # finding the version
-        v_link = dict["instance"]["url"]+ "/service/version?token=" + token
+        v_link = dict["instance"]["url"] + "/service/version?token=" + token
         r = requests.get(v_link)
         VERSION = json.loads(r.text)
         # change parameter name to query if newer version is used
-        if VERSION >=27:
+        if VERSION >= 27:
             paramName = "query"
 
         link = dict["instance"]["url"] + "/service/user/queries?token=" + token
@@ -249,5 +248,3 @@ def post_query(value):
 
     else:
         print("Use a query name other than " + root.attrib['name'])
-
-
