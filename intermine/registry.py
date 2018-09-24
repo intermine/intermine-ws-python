@@ -43,8 +43,9 @@ def getInfo(mine):
         print("Neighbours: "),
         for neighbour in dict["instance"]["neighbours"]:
             print(neighbour),
-    except:
-        print("No such mine available")
+        return None
+    except KeyError:
+        return "No such mine available"
 
 
 def getData(mine):
@@ -78,13 +79,14 @@ def getData(mine):
             try:
                 list.append(row["name"])
 
-            except:
+            except KeyError:
                 print("No info available")
         list.sort()
         for i in range(len(list)):
             print("Name: " + list[i])
-    except:
-        print("No such mine available")
+        return None
+    except KeyError:
+        return "No such mine available"
 
 
 def getMines(organism):
@@ -114,4 +116,6 @@ def getMines(organism):
                 print(dict["instances"][i]["name"])
                 count = count+1
     if(count == 0):
-        print("No such mine available")
+        return "No such mine available"
+    else:
+        return None

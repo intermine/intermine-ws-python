@@ -10,7 +10,7 @@ else
 fi
 
 # Pull in the server code.
-git clone --single-branch --branch 'jwt-task' --depth 1 https://github.com/alexkalderimis/intermine.git server
+git clone --single-branch --depth 1 https://github.com/intermine/intermine.git server
 
 # We need a running demo webapp
 source server/config/download_and_configure_tomcat.sh
