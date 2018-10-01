@@ -12,7 +12,6 @@ Prompts the user to enter the API token and mine corresponding to the account
 example:
 
     >>>from intermine import query_manager as qm
-    
 """
 
 
@@ -114,31 +113,23 @@ def get_query(name):
     """
     # mock dict for testing
     if mine == 'mock':
-        dict = {'queries': {'query1': {'select': ['c1', 'c2']}, 'query2': 2}}
+        if name == 'query1':
+            ans = 'c1, c2'
+        else:
+            ans = '<saved-queries></saved-queries>'
     else:
         # source of the initial request
         x = "http://registry.intermine.org/service/instances/" + mine
         r = requests.get(x)
         dict = json.loads(r.text)
-        link = dict["instance"]["url"] + "/service/user/queries?token=" + token
-
+        link = dict["instance"]["url"] + "/service/user/queries?filter=" + \
+            name + "&format=xml&token=" + token
         r = requests.get(link)
-        dict = json.loads(r.text)
-    count = 0
-    # list where output is stored
-    result = []
-    for key in dict['queries'].keys():
-        if name == key:
-            count = count + 1
-            # appends the columns a query is made of in result
-            for i in range(len(dict['queries'][name]['select'])):
-                result.append(dict['queries'][name]['select'][i])
-
-    if count == 0:
+        ans = r.text
+    if ans == '<saved-queries></saved-queries>':
         return "No such query available"
     else:
-        print("Columns:")
-        return ", ".join(result)
+        return ans
 
 
 def delete_query(name):
@@ -211,11 +202,11 @@ def post_query(value):
         r = requests.get(x)
         dict = json.loads(r.text)
         # finding the version
-        v_link = dict["instance"]["url"]+ "/service/version?token=" + token
+        v_link = dict["instance"]["url"] + "/service/version?token=" + token
         r = requests.get(v_link)
         VERSION = json.loads(r.text)
         # change parameter name to query if newer version is used
-        if VERSION >=27:
+        if VERSION >= 27:
             paramName = "query"
 
         link = dict["instance"]["url"] + "/service/user/queries?token=" + token
@@ -257,5 +248,3 @@ def post_query(value):
 
     else:
         print("Use a query name other than " + root.attrib['name'])
-
-
