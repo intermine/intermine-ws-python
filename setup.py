@@ -28,7 +28,6 @@ OPTIONS = {
     'url': "http://www.intermine.org",
     'keywords': ["webservice", "genomic", "bioinformatics"],
     'classifiers': [
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Development Status :: 5 - Production/Stable",

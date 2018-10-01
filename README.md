@@ -108,6 +108,7 @@ Also see:
 Changes:
 --------
 
+    1.11.00   Added Query Manager
     1.10.00   Added registry features
     1.09.09   Add Python 3 support
     1.09.06   Dual license under BSD as well as LGPL
