@@ -14,6 +14,8 @@ from distutils.fancy_getopt import fancy_getopt
 from unittest import TextTestRunner, TestLoader
 from glob import glob
 from os.path import splitext, basename, join as pjoin
+import setuptools
+from distutils.core import setup
 
 from intermine import VERSION
 
