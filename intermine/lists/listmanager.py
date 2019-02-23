@@ -165,7 +165,7 @@ class ListManager(object):
         resp.close()
         return self.parse_list_upload_response(data)
 
-    def create_list(self, content, list_type="", name=None, description=None, tags=[], add=[]):
+    def create_list(self, content, list_type="", name=None, description=None, tags=[], add=[], organism=None):
         """
         Create a new list in the webservice
         ===================================
@@ -211,24 +211,35 @@ class ListManager(object):
         if name is None:
             name = self.get_unused_list_name()
 
+        list_content = None
+        self.LOG.debug("fsdfsdfsdfd")
+
+        if organism:
+            # If an organism name is given, create a query
+            query = service.new_query(list_type)
+            query.add_constraint("organism", "LOOKUP", organism)
+            # If one wants to create a list while
+            # specifying an organism, then a content should not be passed.
+            list_content = query
+
         try:
-            ids = content.read() # File like thing
+            ids = list_content.read() # File like thing
         except AttributeError:
             try:
-                with closing(codecs.open(content, 'r', 'UTF-8')) as c: # File name
+                with closing(codecs.open(list_content, 'r', 'UTF-8')) as c: # File name
                     ids = c.read()
             except (TypeError, IOError):
                 try:
-                    ids = content.strip() # Stringy thing
+                    ids = list_content.strip() # Stringy thing
                 except AttributeError:
                     try: # Queryable
-                        return self._create_list_from_queryable(content, name, description, tags)
+                        return self._create_list_from_queryable(list_content, name, description, tags)
                     except AttributeError:
                         try: # Array of idents
-                            idents = iter(content)
+                            idents = iter(list_content)
                             ids = "\n".join(map('"{0}"'.format, idents))
                         except AttributeError:
-                            raise TypeError("Cannot create list from " + repr(content))
+                            raise TypeError("Cannot create list from " + repr(list_content))
 
         uri = self.service.root + self.service.LIST_CREATION_PATH
         query_form = {
