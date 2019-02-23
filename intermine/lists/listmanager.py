@@ -212,7 +212,6 @@ class ListManager(object):
             name = self.get_unused_list_name()
 
         list_content = None
-        self.LOG.debug("fsdfsdfsdfd")
 
         if organism:
             # If an organism name is given, create a query
