@@ -26,15 +26,17 @@ import codecs
 from intermine.errors import WebserviceError
 from intermine.lists.list import List
 
-P3K = sys.version_info >= (3,0)
+P3K = sys.version_info >= (3, 0)
 
 logging.basicConfig()
 
+
 def safe_key(maybe_unicode):
     if P3K:
-        return maybe_unicode # that is fine
+        return maybe_unicode  # that is fine
 
     return maybe_unicode.decode('utf8')
+
 
 class ListManager(object):
     """
@@ -78,8 +80,10 @@ class ListManager(object):
         if not list_info.get("wasSuccessful"):
             raise ListServiceError(list_info.get("error"))
         for l in list_info["lists"]:
-            l = ListManager.safe_dict(l) # Workaround for python 2.6 unicode key issues
-            self.lists[l["name"]] = List(service=self.service, manager=self, **l)
+            # Workaround for python 2.6 unicode key issues
+            l = ListManager.safe_dict(l)
+            self.lists[l["name"]] = List(
+                service=self.service, manager=self, **l)
 
     @staticmethod
     def safe_dict(d):
@@ -165,7 +169,15 @@ class ListManager(object):
         resp.close()
         return self.parse_list_upload_response(data)
 
-    def create_list(self, content, list_type="", name=None, description=None, tags=[], add=[]):
+    def create_list(
+            self,
+            content,
+            list_type="",
+            name=None,
+            description=None,
+            tags=[],
+            add=[],
+            organism=None):
         """
         Create a new list in the webservice
         ===================================
@@ -211,24 +223,46 @@ class ListManager(object):
         if name is None:
             name = self.get_unused_list_name()
 
+        item_content = content
+
+        if organism:
+            # If an organism name is given, create a query
+            from intermine.webservice import Service
+            service = Service(self.service.root)
+            query = service.new_query(list_type)
+            # add organism constraint to the query
+            if isinstance(organism, list):
+                query.add_constraint(
+                    "{0}.organism.name".format(list_type), "ONE OF", organism)
+            else:
+                query.add_constraint("organism", "LOOKUP", organism)
+            if isinstance(item_content, list):
+                # If symbols are given
+                query.add_constraint("symbol", "ONE OF", item_content)
+            # If one wants to create a list while
+            # specifying an organism, then a content should not be passed.
+            item_content = query
+
         try:
-            ids = content.read() # File like thing
+            ids = item_content.read()  # File like thing
         except AttributeError:
             try:
-                with closing(codecs.open(content, 'r', 'UTF-8')) as c: # File name
+                with closing(codecs.open(item_content, 'r', 'UTF-8')) as c:  # File name
                     ids = c.read()
             except (TypeError, IOError):
                 try:
-                    ids = content.strip() # Stringy thing
+                    ids = item_content.strip()  # Stringy thing
                 except AttributeError:
-                    try: # Queryable
-                        return self._create_list_from_queryable(content, name, description, tags)
+                    try:  # Queryable
+                        return self._create_list_from_queryable(
+                            item_content, name, description, tags)
                     except AttributeError:
-                        try: # Array of idents
-                            idents = iter(content)
+                        try:  # Array of idents
+                            idents = iter(item_content)
                             ids = "\n".join(map('"{0}"'.format, idents))
                         except AttributeError:
-                            raise TypeError("Cannot create list from " + repr(content))
+                            raise TypeError(
+                                "Cannot create list from " + repr(item_content))
 
         uri = self.service.root + self.service.LIST_CREATION_PATH
         query_form = {
@@ -237,9 +271,10 @@ class ListManager(object):
             'description': description,
             'tags': ";".join(tags)
         }
-        if len(add): query_form['add'] = [x.lower() for x in add if x]
+        if len(add):
+            query_form['add'] = [x.lower() for x in add if x]
 
-        uri += "?" + urlencode(query_form, doseq = True)
+        uri += "?" + urlencode(query_form, doseq=True)
         data = self.service.opener.post_plain_text(uri, ids)
         return self.parse_list_upload_response(data)
 
@@ -339,7 +374,8 @@ class ListManager(object):
         return self
 
     def __exit__(self, exc_type, exc_val, traceback):
-        self.LOG.debug("Exiting context - deleting {0}".format(self._temp_lists))
+        self.LOG.debug(
+            "Exiting context - deleting {0}".format(self._temp_lists))
         self.delete_temporary_lists()
 
     def delete_temporary_lists(self):
@@ -350,22 +386,41 @@ class ListManager(object):
 
     def intersect(self, lists, name=None, description=None, tags=[]):
         """Calculate the intersection of a given set of lists, and return the list representing the result"""
-        return self._do_operation(self.INTERSECTION_PATH, "Intersection", lists, name, description, tags)
+        return self._do_operation(
+            self.INTERSECTION_PATH,
+            "Intersection",
+            lists,
+            name,
+            description,
+            tags)
 
     def union(self, lists, name=None, description=None, tags=[]):
         """Calculate the union of a given set of lists, and return the list representing the result"""
-        return self._do_operation(self.UNION_PATH, "Union", lists, name, description, tags)
+        return self._do_operation(
+            self.UNION_PATH,
+            "Union",
+            lists,
+            name,
+            description,
+            tags)
 
     def xor(self, lists, name=None, description=None, tags=[]):
         """Calculate the symmetric difference of a given set of lists, and return the list representing the result"""
-        return self._do_operation(self.DIFFERENCE_PATH, "Difference", lists, name, description, tags)
+        return self._do_operation(
+            self.DIFFERENCE_PATH,
+            "Difference",
+            lists,
+            name,
+            description,
+            tags)
 
     def subtract(self, lefts, rights, name=None, description=None, tags=[]):
         """Calculate the subtraction of rights from lefts, and return the list representing the result"""
         left_names = self.make_list_names(lefts)
         right_names = self.make_list_names(rights)
         if description is None:
-            description = "Subtraction of " + ' and '.join(right_names) + " from " + ' and '.join(left_names)
+            description = "Subtraction of " + \
+                ' and '.join(right_names) + " from " + ' and '.join(left_names)
         if name is None:
             name = self.get_unused_list_name()
         uri = self.service.root + self.SUBTRACTION_PATH
@@ -375,7 +430,7 @@ class ListManager(object):
             "references": ';'.join(left_names),
             "subtract": ';'.join(right_names),
             "tags": ";".join(tags)
-            })
+        })
         resp = self.service.opener.open(uri)
         data = resp.read()
         resp.close()
@@ -393,12 +448,11 @@ class ListManager(object):
             "lists": ';'.join(list_names),
             "description": description,
             "tags": ";".join(tags)
-            })
+        })
         resp = self.service.opener.open(uri)
         data = resp.read()
         resp.close()
         return self.parse_list_upload_response(data)
-
 
     def make_list_names(self, lists):
         """Turn a list of things into a list of list names"""
@@ -415,6 +469,7 @@ class ListManager(object):
                     list_names.append(str(l))
 
         return list_names
+
 
 class ListServiceError(WebserviceError):
     """Errors thrown when something goes wrong with list requests"""
