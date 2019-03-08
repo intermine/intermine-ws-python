@@ -143,7 +143,7 @@ Changes:
     0.98.13   Added query column summary support
 
 [badge]: https://travis-ci.org/intermine/intermine-ws-client.py.svg?branch=dev
-[ci]: https://travis-ci.org/intermine/intermine-ws-client.py
+[ci]: https://travis-ci.org/intermine/intermine-ws-client
 
 Copyright and Licence
 ------------------------
