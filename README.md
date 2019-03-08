@@ -142,8 +142,8 @@ Changes:
     0.98.14   Added status property to list objects
     0.98.13   Added query column summary support
 
-[badge]: https://travis-ci.org/intermine/intermine-ws-client.py.svg?branch=dev
-[ci]: https://travis-ci.org/intermine/intermine-ws-client
+[badge]: https://travis-ci.org/intermine/intermine-ws-python.svg?branch=dev
+[ci]: https://travis-ci.org/intermine/intermine-ws-python
 
 Copyright and Licence
 ------------------------
