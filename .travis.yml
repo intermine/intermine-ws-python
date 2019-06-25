@@ -4,8 +4,9 @@ env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
-before_install:
-    - ./config/travis/init.sh
+before_script:
+- "./config/travis/init-solr.sh"
+- "./config/travis/init.sh"
 script:
     - python setup.py test
     - python setup.py livetest
@@ -14,6 +15,6 @@ python:
     - "3.4"
     - "3.5"
     - "3.6"
-    - "3.7" 
+    - "3.7"
     - "pypy"
     - "pypy3"
