@@ -261,8 +261,8 @@ class Query(object):
 
         >>> for row in query.result("<format name>", size = <size>)
         ...     print(row)
-    
-    
+
+
     Result Processing: Results
     --------------------------
 
@@ -475,7 +475,10 @@ class Query(object):
         def group(iterator, count):
             itr = iter(iterator)
             while True:
-                yield tuple([next(itr) for i in range(count)])
+                try:
+                    yield tuple([next(itr) for i in range(count)])
+                except StopIteration:
+                    return
 
         if q.getAttribute('sortOrder') is not None:
             sos = Query.SO_SPLIT_PATTERN.split(q.getAttribute('sortOrder'))
@@ -1882,4 +1885,3 @@ class QueryParseError(QueryError):
 
 class ResultError(ReadableException):
     pass
-
