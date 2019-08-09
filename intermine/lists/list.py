@@ -245,15 +245,15 @@ class List(object):
         .
         .
         """
-        c=1
+        c = 1
         for i in self:
             s = str(i)
             print("Row {}:".format(c))
-            c+=1
-            k=0
-            while s[k]!='(':
-                k+=1
-            s=s[k+1:]
+            c += 1
+            k = 0
+            while s[k] != '(':
+                k += 1
+            s = s[k+1:]
             s = s.split(",")
             for j in s:
                 print(j.strip())
