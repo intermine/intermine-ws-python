@@ -233,6 +233,32 @@ class List(object):
         """
         return ConstraintNode(path, op, self.name)
 
+    def display(self):
+        """
+        Display the contents present in the list
+        ========================================
+
+        Format of the output
+        Row #:
+        key1 = value1
+        key2 = value2
+        .
+        .
+        """
+        c=1
+        for i in self:
+            s = str(i)
+            print("Row {}:".format(c))
+            c+=1
+            k=0
+            while s[k]!='(':
+                k+=1
+            s=s[k+1:]
+            s = s.split(",")
+            for j in s:
+                print(j.strip())
+            print()
+
     def __iter__(self):
         """Return an iterator over the objects in this list, with all attributes selected for output"""
         return iter(self.to_query())
@@ -408,4 +434,3 @@ class List(object):
         Calls the server to remove these tags, and updates this lists tags.
         """
         self._tags = frozenset(self._manager.get_tags(self))
-
