@@ -1,5 +1,6 @@
 language: python
 sudo: false # use container based infrastructure
+dist: trusty
 jdk:
   - openjdk8
 env:
