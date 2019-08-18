@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from xml.dom import minidom
 from contextlib import closing
 
+import requests
+
 try:
     from urlparse import urlparse
     from UserDict import DictMixin
@@ -264,6 +266,8 @@ class Service(object):
         self._list_manager = ListManager(self)
         self.__missing_method_name = None
         if token:
+            if token=="random":
+                token = get_random_token()
             self.opener = InterMineURLOpener(token=token)
         elif username:
             if token:
@@ -292,6 +296,12 @@ class Service(object):
     LIST_MANAGER_METHODS = frozenset(["get_list", "get_all_lists",
         "get_all_list_names",
         "create_list", "get_list_count", "delete_lists", "l"])
+
+    def get_random_token(self):
+        url =  "http://iodocs.apps.intermine.org/flymine/docs#/ws-session/GET/session"
+        token = requests.get(url=url)
+        token = token.json()["token"]
+        return token
 
     def list_manager(self):
         """
@@ -688,4 +698,3 @@ class Service(object):
         self.flush()
         userdata = self.opener.delete(uri)
         return userdata
-
