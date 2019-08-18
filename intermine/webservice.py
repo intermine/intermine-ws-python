@@ -298,7 +298,7 @@ class Service(object):
         "create_list", "get_list_count", "delete_lists", "l"])
 
     def get_random_token(self):
-        url =  "www.flymine.org/query/service/session?200?"
+        url =  "www.flymine.org/query/service/session/200/"
         token = requests.get(url=url)
         print(token)
         token = token.json()["token"]
