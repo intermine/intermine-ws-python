@@ -267,7 +267,7 @@ class Service(object):
         self.__missing_method_name = None
         if token:
             if token=="random":
-                token = self.get_random_token()
+                token = self.get_random_token(url=root)
             self.opener = InterMineURLOpener(token=token)
         elif username:
             if token:
@@ -297,10 +297,9 @@ class Service(object):
         "get_all_list_names",
         "create_list", "get_list_count", "delete_lists", "l"])
 
-    def get_random_token(self):
-        url =  "http://www.flymine.org/query/service/session"
+    def get_random_token(self,url):
+
         token = requests.get(url=url)
-        print(token)
         token = token.json()["token"]
         return token
 
