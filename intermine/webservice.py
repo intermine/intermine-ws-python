@@ -298,7 +298,9 @@ class Service(object):
         "create_list", "get_list_count", "delete_lists", "l"])
 
     def get_random_token(self,url):
-
+        """
+        Requests for an anonymous session token valid for 24 hours
+        """
         url += "/session"
         token = requests.get(url=url)
         token = token.json()["token"]
