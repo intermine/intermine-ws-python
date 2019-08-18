@@ -267,7 +267,7 @@ class Service(object):
         self.__missing_method_name = None
         if token:
             if token=="random":
-                token = get_random_token()
+                token = self.get_random_token()
             self.opener = InterMineURLOpener(token=token)
         elif username:
             if token:
