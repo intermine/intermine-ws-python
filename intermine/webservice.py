@@ -299,7 +299,8 @@ class Service(object):
 
     def get_random_token(self,url):
         """
-        Requests for an anonymous session token valid for 24 hours
+        Generates an anonymous session token valid for 24 hours
+        =======================================================
         """
         url += "/session"
         token = requests.get(url=url)
