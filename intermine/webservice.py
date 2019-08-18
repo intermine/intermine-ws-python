@@ -299,6 +299,7 @@ class Service(object):
 
     def get_random_token(self,url):
 
+        url += "/session"
         token = requests.get(url=url)
         token = token.json()["token"]
         return token
