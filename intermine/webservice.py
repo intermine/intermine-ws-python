@@ -298,8 +298,9 @@ class Service(object):
         "create_list", "get_list_count", "delete_lists", "l"])
 
     def get_random_token(self):
-        url =  "http://iodocs.apps.intermine.org/flymine/docs#/ws-session/GET/session"
+        url =  "www.flymine.org/query/service/session"
         token = requests.get(url=url)
+        print(token)
         token = token.json()["token"]
         return token
 
