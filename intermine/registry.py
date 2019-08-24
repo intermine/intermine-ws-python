@@ -108,11 +108,11 @@ def getMines(organism=None):
     count = 0
     dict = json.loads(r.text)
     for i in range(len(dict["instances"])):
+        if organism == None:
+            print(dict["instances"][i]["name"])
+            count = count+1
         for j in range(len(dict["instances"][i]["organisms"])):
-            if organism==None:
-                print(dict["instances"][i]["name"])
-                count = count+1
-            elif dict["instances"][i]["organisms"][j] == organism:
+            if dict["instances"][i]["organisms"][j] == organism:
                 print(dict["instances"][i]["name"])
                 count = count+1
             elif dict["instances"][i]["organisms"][j] == " " + organism:
