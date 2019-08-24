@@ -89,7 +89,7 @@ def getData(mine):
         return "No such mine available"
 
 
-def getMines(organism):
+def getMines(organism=None):
     """
     A function to get mines containing the organism
     ================================================
@@ -109,7 +109,10 @@ def getMines(organism):
     dict = json.loads(r.text)
     for i in range(len(dict["instances"])):
         for j in range(len(dict["instances"][i]["organisms"])):
-            if dict["instances"][i]["organisms"][j] == organism:
+            if organism==None:
+                print(dict["instances"][i]["name"])
+                count = count+1
+            elif dict["instances"][i]["organisms"][j] == organism:
                 print(dict["instances"][i]["name"])
                 count = count+1
             elif dict["instances"][i]["organisms"][j] == " " + organism:
