@@ -19,7 +19,7 @@ def getVersion(mine):
         >>> registry.getVersion('flymine')
         >>> {'API Version:': '30', 'Release Version:': '48 2019 October',
         'InterMine Version:': '4.1.0'}
-        
+
     """
     link = "http://registry.intermine.org/service/instances/" + mine
     try:
