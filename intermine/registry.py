@@ -10,13 +10,13 @@ Functions for making use of registry data
 
 def getVersion(mine):
     """
-	A function to return the API version, release version and InterMine version numbers
-	================================================
-	example:
+    A function to return the API version, release version and InterMine version numbers
+    ================================================
+    example:
 
-	    >>> from intermine import registry
-	    >>> registry.getVersion('flymine')
-	    >>> {'API Version:': '30', 'Release Version:': '48 2019 October', 'InterMine Version:': '4.1.0'}
+        >>> from intermine import registry
+        >>> registry.getVersion('flymine')
+        >>> {'API Version:': '30', 'Release Version:': '48 2019 October', 'InterMine Version:': '4.1.0'}
     
     """
     link = "http://registry.intermine.org/service/instances/" + mine
