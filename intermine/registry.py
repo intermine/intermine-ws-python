@@ -16,7 +16,7 @@ def getVersion(mine):
         return {
         "API Version: ": dict["instance"]["api_version"],
         "Release Version: ": dict["instance"]["release_version"],
-        "InterMine Version: ": dict["instance"]["intermine_version"]  
+        "InterMine Version: ": dict["instance"]["intermine_version"]
         }
     except KeyError:
         return "No such mine available"
