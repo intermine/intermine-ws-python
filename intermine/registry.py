@@ -7,16 +7,16 @@ Functions for making use of registry data
 
 """
 
+
 def getVersion(mine):
     link = "http://registry.intermine.org/service/instances/" + mine
     try:
         r = requests.get(link)
         dict = json.loads(r.text)
-        
         return {
-        "API Version: " : dict["instance"]["api_version"],
-        "Release Version: " : dict["instance"]["release_version"],
-        "InterMine Version: " : dict["instance"]["intermine_version"]  
+        "API Version: ":dict["instance"]["api_version"],
+        "Release Version: ":dict["instance"]["release_version"],
+        "InterMine Version: ":dict["instance"]["intermine_version"]  
         }
     except KeyError:
         return "No such mine available"
