@@ -103,7 +103,7 @@ class SortOrderList(object):
                         "Sort orders must be either SortOrder instances,"
                         + " or tuples of arguments: I got:" + so + sos)
     def __repr__(self):
-        return '<' + self.class__.__name__ + ': [' + str(self) + ']>'
+        return '<' + self.__class__.__name__ + ': [' + str(self) + ']>'
     def __str__(self):
         return " ".join(map(str, self.sort_orders))
     def clear(self):
