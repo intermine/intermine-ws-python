@@ -337,6 +337,7 @@ class Query(object):
             self.root = model.make_path(root).root
 
         self.name = ''
+        self.title = ''
         self.description = ''
         self.service = service
         self.prefetch_depth = service.prefetch_depth if service is not None  else 1
@@ -423,13 +424,20 @@ class Query(object):
         doc = minidom.parse(f)
         f.close()
 
+        templates = doc.getElementsByTagName('template')
+        if len(templates) != 1:
+            raise QueryParseError("wrong number of templates in xml. "
+                + "Only one <template> element is allowed. Found %d" % len(templates))
+        t = templates[0]
+        obj.title = t.getAttribute('title')
+
         queries = doc.getElementsByTagName('query')
         if len(queries) != 1:
             raise QueryParseError("wrong number of queries in xml. "
                 + "Only one <query> element is allowed. Found %d" % len(queries))
         q = queries[0]
         obj.name = q.getAttribute('name')
-        obj.description = q.getAttribute('description')
+        obj.description = q.getAttribute('longDescription')
         obj.add_view(q.getAttribute('view'))
         for p in q.getElementsByTagName('pathDescription'):
             path = p.getAttribute('pathString')
