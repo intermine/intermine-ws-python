@@ -267,7 +267,7 @@ class Service(object):
         self.__missing_method_name = None
         if token:
             if token=="random":
-                token = self.get_random_token(url=root)
+                token = self.get_anonymous_token(url=root)
             self.opener = InterMineURLOpener(token=token)
         elif username:
             if token:
@@ -297,7 +297,7 @@ class Service(object):
         "get_all_list_names",
         "create_list", "get_list_count", "delete_lists", "l"])
 
-    def get_random_token(self,url):
+    def get_anonymous_token(self,url):
         """
         Generates an anonymous session token valid for 24 hours
         =======================================================
