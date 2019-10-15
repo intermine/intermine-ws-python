@@ -426,8 +426,10 @@ class Query(object):
 
         templates = doc.getElementsByTagName('template')
         if len(templates) != 1:
-            raise QueryParseError("wrong number of templates in xml. "
-                + "Only one <template> element is allowed. Found %d" % len(templates))
+            raise QueryParseError(
+                "wrong number of templates in xml. "
+                + "Only one <template> element is allowed. "
+                + "Found %d" % len(templates))
         t = templates[0]
         obj.title = t.getAttribute('title')
 
