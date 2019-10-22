@@ -173,7 +173,8 @@ class ListManager(object):
             q.add_view(q.root.name + '.id')
         else:
 
-            # Check to see if the class of the selected items is unambiguous
+            # Check to see if the class of the selected items is
+            # unambiguous
 
             up_to_attrs = set(v[0:v.rindex('.')] for v in q.views)
             if len(up_to_attrs) == 1:
@@ -289,7 +290,8 @@ class ListManager(object):
                 query.add_constraint('symbol', 'ONE OF', item_content)
 
             # If one wants to create a list while
-            # specifying an organism, then a content should not be passed.
+            # specifying an organism, then a content should not be
+            # passed.
 
             item_content = query
 
@@ -310,7 +312,8 @@ class ListManager(object):
                     except AttributeError:
                         try:  # Array of idents
                             idents = iter(item_content)
-                            ids = '\n'.join(map('"{0}"'.format, idents))
+                            ids = '\n'.join(
+                                map('"{0}"'.format, idents))
                         except AttributeError:
                             raise TypeError('Cannot create list from '
                                             + repr(item_content))
@@ -362,7 +365,8 @@ class ListManager(object):
             else:
                 name = str(l)
             if name not in all_names:
-                self.LOG.debug('{0} does not exist - skipping'.format(name))
+                self.LOG.debug(
+                    '{0} does not exist - skipping'.format(name))
                 continue
             self.LOG.debug('deleting {0}'.format(name))
             uri = self.service.root + self.service.LIST_PATH
@@ -559,7 +563,8 @@ class ListManager(object):
 
         list_names = self.make_list_names(lists)
         if description is None:
-            description = operation + ' of ' + ' and '.join(list_names)
+            description = operation + ' of ' + \
+                ' and '.join(list_names)
         if name is None:
             name = self.get_unused_list_name()
         uri = self.service.root + path

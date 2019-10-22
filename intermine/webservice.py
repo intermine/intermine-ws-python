@@ -86,7 +86,8 @@ class Registry(DictMixin):
 
     MINES_PATH = "/mines.json"
 
-    def __init__(self, registry_url="http://www.intermine.org/registry"):
+    def __init__(
+            self, registry_url="http://www.intermine.org/registry"):
         self.registry_url = registry_url
         opener = InterMineURLOpener()
         data = opener.open(registry_url + Registry.MINES_PATH).read()
@@ -111,10 +112,12 @@ class Registry(DictMixin):
             raise KeyError("Unknown mine: " + name)
 
     def __setitem__(self, name, item):
-        raise NotImplementedError("You cannot add items to a registry")
+        raise NotImplementedError(
+            "You cannot add items to a registry")
 
     def __delitem__(self, name):
-        raise NotImplementedError("You cannot remove items from a registry")
+        raise NotImplementedError(
+            "You cannot remove items from a registry")
 
     def __len__(self):
         return len(self.__mine_dict)
@@ -283,7 +286,8 @@ class Service(object):
                     "Both username and token credentials supplied")
 
             if not password:
-                raise ValueError("Username given, but no password supplied")
+                raise ValueError(
+                    "Username given, but no password supplied")
 
             self.opener = InterMineURLOpener((username, password))
         else:
@@ -441,7 +445,8 @@ class Service(object):
             elif not isinstance(view, Column) and not str(view).endswith("*"):
                 path = self.model.make_path(view)
                 if not path.is_attribute():
-                    return Query(self.model, self).select(str(view) + ".*")
+                    return Query(self.model, self).select(
+                        str(view) + ".*")
 
         return Query(self.model, self).select(*columns)
 
@@ -561,7 +566,8 @@ class Service(object):
         @return: {idresolution.Job} The job.
         """
         if self.version < 10:
-            raise ServiceError("This feature requires API version 10+")
+            raise ServiceError(
+                "This feature requires API version 10+")
         if not data_type:
             raise ServiceError("No data-type supplied")
         if not identifiers:
@@ -675,7 +681,8 @@ class Service(object):
 
         @return: L{intermine.webservice.ResultIterator}
         """
-        return ResultIterator(self, path, params, rowformat, view, cld)
+        return ResultIterator(
+            self, path, params, rowformat, view, cld)
 
     @requires_version(9)
     def register(self, username, password):
@@ -696,7 +703,8 @@ class Service(object):
     @requires_version(16)
     def get_deregistration_token(self, validity=300):
         if validity < 1 or validity > 24 * 60 * 60:
-            raise ValueError("Validity not a reasonable value: 1ms - 2hrs")
+            raise ValueError(
+                "Validity not a reasonable value: 1ms - 2hrs")
         params = urlencode({'validity': str(validity)})
         resp = self._get_json('/user/deregistration', payload=params)
         return resp['token']
