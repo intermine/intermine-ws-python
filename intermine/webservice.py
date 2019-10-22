@@ -432,10 +432,12 @@ class Service(object):
         if len(columns) == 1:
             view = columns[0]
             if isinstance(view, Attribute):
-                return Query(self.model, self).select("%s.%s" % (view.declared_in.name, view))
+                return Query(self.model, self).select("%s.%s" %
+                                                      (view.declared_in.name, view))
 
             if isinstance(view, Reference):
-                return Query(self.model, self).select("%s.%s.*" % (view.declared_in.name, view))
+                return Query(self.model, self).select("%s.%s.*" %
+                                                      (view.declared_in.name, view))
             elif not isinstance(view, Column) and not str(view).endswith("*"):
                 path = self.model.make_path(view)
                 if not path.is_attribute():
@@ -532,7 +534,8 @@ class Service(object):
             self._widgets = dict(([w['name'], w] for w in ws))
         return self._widgets
 
-    def resolve_ids(self, data_type, identifiers, extra='', case_sensitive=False, wildcards=False):
+    def resolve_ids(self, data_type, identifiers, extra='',
+                    case_sensitive=False, wildcards=False):
         """
         Submit an Identifier Resolution Job
         ===================================
@@ -620,7 +623,8 @@ class Service(object):
             for e in dom.getElementsByTagName('template'):
                 name = e.getAttribute('name')
                 if name in templates:
-                    raise ServiceError("Two templates with same name: " + name)
+                    raise ServiceError(
+                        "Two templates with same name: " + name)
                 else:
                     templates[name] = e.toxml()
             self._templates = templates
@@ -711,7 +715,9 @@ class Service(object):
             deregistration_token = deregistration_token['uuid']
 
         path = self.root + '/user'
-        params = {'deregistrationToken': deregistration_token, 'format': 'xml'}
+        params = {
+            'deregistrationToken': deregistration_token,
+            'format': 'xml'}
         uri = path + '?' + urlencode(params)
         self.flush()
         userdata = self.opener.delete(uri)
