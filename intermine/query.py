@@ -337,7 +337,6 @@ class Query(object):
             self.root = model.make_path(root).root
 
         self.name = ''
-        self.title = ''
         self.description = ''
         self.service = service
         self.prefetch_depth = service.prefetch_depth if service is not None  else 1
@@ -423,15 +422,6 @@ class Query(object):
         f = openAnything(xml)
         doc = minidom.parse(f)
         f.close()
-
-        templates = doc.getElementsByTagName('template')
-        if len(templates) != 1:
-            raise QueryParseError(
-                "wrong number of templates in xml. "
-                + "Only one <template> element is allowed. "
-                + "Found %d" % len(templates))
-        t = templates[0]
-        obj.title = t.getAttribute('title')
 
         queries = doc.getElementsByTagName('query')
         if len(queries) != 1:
@@ -1713,6 +1703,47 @@ class Template(Query):
         """
         super(Template, self).__init__(*args, **kwargs)
         self.constraint_factory = constraints.TemplateConstraintFactory()
+        self.title = ''
+
+    @classmethod
+    def from_xml(cls, xml, *args, **kwargs):
+        """
+        Deserialise a template query serialised to XML
+        ==============================================
+
+        This method is used to instantiate serialised templates.
+        It is used by intermine.webservice.Service objects
+        to instantiate Template objects and it can be used
+        to read in templates you have saved to a file.
+
+        @param xml: The xml as a file name, url, or string
+
+        @raise QueryParseError: if the query cannot be parsed
+
+        @rtype: L{Template}
+        """
+        # Extract all Query (superclass) fields
+        obj = super(Template, cls).from_xml(xml, *args, **kwargs)
+
+        # Extract fields specific to Template, like title
+        obj.do_verification = False
+        f = openAnything(xml)
+        doc = minidom.parse(f)
+        f.close()
+
+        templates = doc.getElementsByTagName('template')
+        if len(templates) != 1:
+            raise QueryParseError(
+                "wrong number of templates in xml. "
+                + "Only one <template> element is allowed. "
+                + "Found %d" % len(templates))
+        t = templates[0]
+        obj.title = t.getAttribute('title')
+
+        obj.verify()
+
+        return obj
+
     @property
     def editable_constraints(self):
         """
