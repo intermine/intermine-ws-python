@@ -108,13 +108,13 @@ Before Making PRs:
 Please run autopep8 on your files so your code will follow the pep8 conventions. Do it as follows:
 
 ```
-  autopep8 <filenames>
+  autopep8 <filenames> --in-place
 ```
 
 For example:
 
 ```
-  autopep8 file1.py file2.py
+  autopep8 file1.py file2.py  --in-place
 ```
 
 
