@@ -49,10 +49,10 @@ This package is compatible with both Python 2.7 and 3.x. We plan to drop 2.7 sup
 Downloading:
 ------------
 
-The easiest way to install is to use easy_install:
+The easiest way to install is to use pip:
 
 ```
-  sudo easy_install intermine
+  pip install intermine
 ```
 
 The client is also available via [bioconda](https://anaconda.org/bioconda/intermine).
