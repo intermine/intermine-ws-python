@@ -26,7 +26,6 @@ class LogicNode(object):
     inherit from this class, which defines
     methods for overloading built-in operations.
     """
-
     def __add__(self, other):
         """
         Overloads +
@@ -167,7 +166,6 @@ class LogicParser(object):
     robust parsing of logic strings, with the ability to identify syntax
     errors in such strings.
     """
-
     def __init__(self, query):
         """
         Constructor
@@ -265,7 +263,7 @@ class LogicParser(object):
                 return x
 
         logic_str = logic_str.upper()
-        tokens = [t for t in re.split("\s+", logic_str) if t]
+        tokens = [t for t in re.split(r'\s+', logic_str) if t]
         if not tokens:
             raise EmptyLogicError()
         tokens = flatten([canonical(x, self.ops) for x in tokens])
@@ -578,8 +576,8 @@ class ListConstraint(CodedConstraint):
     def __init__(self, path, op, list_name, code="A"):
         if hasattr(list_name, 'to_query'):
             q = list_name.to_query()
-            l = q.service.create_list(q)
-            self.list_name = l.name
+            ls = q.service.create_list(q)
+            self.list_name = ls.name
         elif hasattr(list_name, "name"):
             self.list_name = list_name.name
         else:
@@ -867,7 +865,6 @@ class SubClassConstraint(Constraint):
     in an InterMine query), they do not have codes
     and cannot be referenced in logic expressions.
     """
-
     def __init__(self, path, subclass):
         """
         Constructor
@@ -1192,7 +1189,8 @@ class ConstraintFactory(object):
         Creates a new ConstraintFactory
         """
         self._codes = iter(string.ascii_uppercase)
-        self.reference_ops = TernaryConstraint.OPS | RangeConstraint.OPS | ListConstraint.OPS | IsaConstraint.OPS
+        self.reference_ops = TernaryConstraint.OPS | \
+            RangeConstraint.OPS | ListConstraint.OPS | IsaConstraint.OPS
 
     def get_next_code(self):
         """
@@ -1218,7 +1216,7 @@ class ConstraintFactory(object):
                 if hasattr(c, "code") and c.code == "A":
                     c.code = self.get_next_code()
                 return c
-            except TypeError as e:
+            except TypeError:
                 pass
         raise TypeError("No matching constraint class found for " + str(args) +
                         ", " + str(kwargs))

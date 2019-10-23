@@ -76,7 +76,6 @@ class Field(object):
     @see: L{Reference}
     @see: L{Collection}
     """
-
     def __init__(self, name, type_name, class_origin):
         """
         Constructor - DO NOT USE
@@ -131,7 +130,6 @@ class Reference(Field):
     back to this one as well. And all references will have their
     type upgraded to a type_class during parsing
     """
-
     def __init__(self, name, type_name, class_origin, reverse_ref=None):
         """
         Constructor
@@ -161,7 +159,8 @@ class Reference(Field):
         if self.reverse_reference is None:
             return s
         else:
-            return s + ", which links back to this as " + self.reverse_reference.name
+            return s + ", which links back to this as " + \
+                        self.reverse_reference.name
 
     @property
     def fieldtype(self):
@@ -175,7 +174,6 @@ class Collection(Reference):
 
     Collections have all the same behaviour and properties as References
     """
-
     def __repr__(self):
         """Return a string representation"""
         ret = super(Collection,
@@ -221,7 +219,6 @@ class Class(object):
     as part of the model they belong to.
 
     """
-
     def __init__(self, name, parents, model, interface=True):
         """
         Constructor - Creates a new Class descriptor
@@ -362,7 +359,6 @@ class ComposedClass(Class):
 
     These objects are structural unions of two or more different data-types.
     """
-
     def __init__(self, parts, model):
         self.is_interface = True
         self.parts = parts
@@ -391,11 +387,12 @@ class ComposedClass(Class):
             fields.update(p.field_dict)
         return fields
 
-    @property
-    def parent_classes(self):
-        """The flattened list of parent classes, with the parts"""
-        all_parents = [pc for pc in p.parent_classes for p in self.parts]
-        return all_parents + self.parts
+
+#    @property
+#    def parent_classes(self):
+#        """The flattened list of parent classes, with the parts"""
+#        all_parents = [pc for pc in p.parent_classes for p in self.parts]
+#        return all_parents + self.parts
 
 
 class Path(object):
@@ -429,7 +426,6 @@ class Path(object):
     to some extent, but there are additional methods for verifying certain
     relationships as well
     """
-
     def __init__(self, path, model, subclasses={}):
         """
         Constructor
@@ -461,7 +457,8 @@ class Path(object):
         return self._string
 
     def __repr__(self):
-        return '<' + self.__module__ + "." + self.__class__.__name__ + ": " + self._string + '>'
+        return '<' + self.__module__ + "." + self.__class__.__name__ + ": " + \
+                self._string + '>'
 
     def prefix(self):
         """
@@ -499,7 +496,8 @@ class Path(object):
     @property
     def root(self):
         """
-        The descriptor for the first part of the string. This should always a class descriptor.
+        The descriptor for the first part of the string. This should always a
+        class descriptor.
 
         @rtype: L{intermine.model.Class}
         """
@@ -534,7 +532,8 @@ class Path(object):
 
     def is_reference(self):
         """
-        Return true if the path is a reference, eg: Gene.organism or Gene.proteins
+        Return true if the path is a reference, eg: Gene.organism or
+        Gene.proteins
         Note: Collections are ALSO references
 
         @rtype: boolean
@@ -618,7 +617,6 @@ class Column(object):
     Column objects allow constraints to be constructed in something
     close to a declarative style
     """
-
     def __init__(self, path, model, subclasses={}, query=None, parent=None):
         self._model = model
         self._query = query
@@ -633,7 +631,8 @@ class Column(object):
 
     def select(self, *cols):
         """
-        Create a new query with this column as the base class, selecting the given fields.
+        Create a new query with this column as the base class,
+        selecting the given fields.
 
         If no fields are given, then just this column will be selected.
         """
@@ -646,7 +645,8 @@ class Column(object):
 
     def where(self, *args, **kwargs):
         """
-        Create a new query based on this column, filtered with the given constraint.
+        Create a new query based on this column, filtered with the given
+        constraint.
 
         also available as "filter"
         """
@@ -663,8 +663,9 @@ class Column(object):
         """
         Iterate over the things this column represents.
 
-        In the case of an attribute column, that is the values it may have. In the case
-        of a reference or class column, it is the objects that this path may refer to.
+        In the case of an attribute column, that is the values it may have.
+        In the case of a reference or class column, it is the objects that this
+        path may refer to.
         """
         q = self.select()
         if self._path.is_attribute():
@@ -680,7 +681,6 @@ class Column(object):
         cld = self._path.get_class()
         if cld is not None:
             try:
-                fld = cld.get_field(name)
                 branch = Column(
                     str(self) + "." + name, self._model, self._subclasses,
                     self._query, self)
@@ -828,8 +828,9 @@ class Model(object):
 
     def parse_model(self, source):
         """
-        Create classes, attributes, references and collections from the model.xml
-        =========================================================================
+        Create classes, attributes, references and collections from the
+        model.xml
+        =======================================================================
 
         The xml can be provided as a file, url or string. This method
         is called during instantiation - it does not need to be called
@@ -850,7 +851,8 @@ class Model(object):
                 self.name = node.getAttribute('name')
                 self.package_name = node.getAttribute('package')
                 assert node.nextSibling is None, "More than one model element"
-                assert self.name and self.package_name, "No model name or package name"
+                assert self.name and self.package_name, "No model name or" + \
+                    " package name"
 
             for c in doc.getElementsByTagName('class'):
                 class_name = c.getAttribute('name')
@@ -953,7 +955,8 @@ class Model(object):
         This simply maps from a list of strings to a list of
         classes in the calling model.
 
-        @raise ModelError: if the list of class names includes ones that don't exist
+        @raise ModelError: if the list of class names includes ones that don't
+        exist
 
         @rtype: list(L{intermine.model.Class})
         """

@@ -115,6 +115,11 @@ class ListManager(object):
             self.refresh_lists()
         return self.lists.get(name)
 
+    def ls(self, name):
+        """Alias for get_list"""
+
+        return self.get_list(name)
+
     def get_all_lists(self):
         """Get all the lists on a webservice"""
 

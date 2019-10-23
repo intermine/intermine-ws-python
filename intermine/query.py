@@ -3,7 +3,8 @@ from copy import deepcopy
 from xml.dom import minidom, getDOMImplementation
 
 from intermine.util import openAnything, ReadableException
-from intermine.pathfeatures import PathDescription, Join, SortOrder, SortOrderList
+from intermine.pathfeatures import PathDescription, Join, SortOrder, \
+                                    SortOrderList
 from intermine.model import Column, Class, Model, Reference, ConstraintNode
 
 import intermine.constraints as constraints
@@ -328,12 +329,12 @@ class Query(object):
 
     """
 
-    SO_SPLIT_PATTERN = re.compile("\s*(asc|desc)\s*", re.I)
-    LOGIC_SPLIT_PATTERN = re.compile("\s*(?:and|or|\(|\))\s*", re.I)
-    TRAILING_OP_PATTERN = re.compile("\s*(and|or)\s*$", re.I)
-    LEADING_OP_PATTERN = re.compile("^\s*(and|or)\s*", re.I)
+    SO_SPLIT_PATTERN = re.compile(r'\s*(asc|desc)\s*', re.I)
+    LOGIC_SPLIT_PATTERN = re.compile(r'\s*(?:and|or|\(|\))\s*', re.I)
+    TRAILING_OP_PATTERN = re.compile(r'\s*(and|or)\s*$', re.I)
+    LEADING_OP_PATTERN = re.compile(r'^\s*(and|or)\s*', re.I)
     ORPHANED_OP_PATTERN = re.compile(
-        "(?:\(\s*(?:and|or)\s*|\s*(?:and|or)\s*\))", re.I)
+        r'(?:\(\s*(?:and|or)\s*|\s*(?:and|or)\s*\))', re.I)
 
     def __init__(self, model, service=None, validate=True, root=None):
         """
@@ -365,8 +366,10 @@ class Query(object):
         self.name = ''
         self.description = ''
         self.service = service
-        self.prefetch_depth = service.prefetch_depth if service is not None else 1
-        self.prefetch_id_only = service.prefetch_id_only if service is not None else False
+        self.prefetch_depth = service.prefetch_depth \
+            if service is not None else 1
+        self.prefetch_id_only = service.prefetch_id_only \
+            if service is not None else False
         self.do_verification = validate
         self.path_descriptions = []
         self.joins = []
@@ -399,7 +402,8 @@ class Query(object):
         return self.count()
 
     def __sub__(self, other):
-        """Construct a new list from the symmetric difference of these things"""
+        """Construct a new list from the symmetric difference of these things
+        """
         return self.service._list_manager.subtract([self], [other])
 
     def __xor__(self, other):
@@ -511,7 +515,8 @@ class Query(object):
         if q.getAttribute('sortOrder') is not None:
             sos = Query.SO_SPLIT_PATTERN.split(q.getAttribute('sortOrder'))
             if len(sos) == 1:
-                if sos[0] in obj.views:  # Be tolerant of irrelevant sort-orders
+                if sos[0] in obj.views:  # Be tolerant of irrelevant
+                    # sort-orders
                     obj.add_sort_order(sos[0])
             else:
                 sos.pop()  # Get rid of empty string at end
@@ -538,7 +543,7 @@ class Query(object):
             pattern = re.compile("\\b" + c + "\\b", re.I)
             logic = pattern.sub("", logic)
         # Remove empty groups
-        logic = re.sub("\((:?and|or|\s)*\)", "", logic)
+        logic = re.sub(r'\((:?and|or|\s)*\)', "", logic)
         # Remove trailing and leading operators
         logic = Query.LEADING_OP_PATTERN.sub("", logic)
         logic = Query.TRAILING_OP_PATTERN.sub("", logic)
@@ -548,7 +553,7 @@ class Query(object):
                     repl = left
                 else:
                     repl = "and"
-                pattern = re.compile(left + "\s*" + right, re.I)
+                pattern = re.compile(left + r'\s*' + right, re.I)
                 logic = pattern.sub(repl, logic)
         logic = Query.ORPHANED_OP_PATTERN.sub(
             lambda x: "(" if "(" in x.group(0) else ")", logic)
@@ -667,14 +672,14 @@ class Query(object):
             elif isinstance(p, Reference):
                 views.append(p.name + ".*")
             else:
-                views.extend(re.split("(?:,?\s+|,)", str(p)))
+                views.extend(re.split(r'(?:,?\s+|,)', str(p)))
 
         views = list(map(self.prefix_path, views))
 
         views_to_add = []
         for view in views:
             if view.endswith(".*"):
-                view = re.sub("\.\*$", "", view)
+                view = re.sub(r'\.\*$', "", view)
                 scd = self.get_subclass_dict()
 
                 def expand(p, level, id_only=False):
@@ -716,7 +721,7 @@ class Query(object):
         if self.root is None:
             if self.do_verification:  # eg. not when building from XML
                 if path.endswith(".*"):
-                    trimmed = re.sub("\.\*$", "", path)
+                    trimmed = re.sub(r'\.\*$', "", path)
                 else:
                     trimmed = path
                 self.root = self.model.make_path(trimmed,
@@ -897,8 +902,8 @@ class Query(object):
                 if pathA.get_class() is None:
                     raise ConstraintError(
                         "'" + str(pathA) +
-                        "' does not represent a class, or a reference to a class"
-                    )
+                        "' does not represent a class, or a reference to a \
+                             class")
                 for c in con.values:
                     if c not in self.model.classes:
                         raise ConstraintError("Illegal constraint: " +
@@ -908,8 +913,8 @@ class Query(object):
                 if pathA.get_class() is None:
                     raise ConstraintError(
                         "'" + str(pathA) +
-                        "' does not represent a class, or a reference to a class"
-                    )
+                        "' does not represent a class, or a reference to a \
+                        class")
             elif isinstance(con, constraints.BinaryConstraint) or isinstance(
                     con, constraints.MultiConstraint):
                 if not pathA.is_attribute():
@@ -1354,12 +1359,12 @@ class Query(object):
         This is the general method that allows access to any of the available
         result formats. The example above shows the ways these differ in terms
         of accessing fields of the rows, as well as dealing with different
-        data types. Results can either be retrieved as typed values (jsonobjects,
-        rr ['ResultRows'], dict, list), or as lists of strings (csv, tsv) which
-        then require further parsing. The default format for this method is
-        "objects", where information is grouped by its relationships.
-        The other main format is "rr", which stands for 'ResultRows', and can
-        be accessed directly through the L{rows} method.
+        data types. Results can either be retrieved as typed values
+        (jsonobjects, rr ['ResultRows'], dict, list), or as lists of strings
+        (csv, tsv) which then require further parsing. The default format for
+        this method is "objects", where information is grouped by its
+        relationships. The other main format is "rr", which stands for
+        'ResultRows', and can be accessed directly through the L{rows} method.
 
         Note that when requesting object based results (the default), if your
         query contains any kind of collection, it is highly likely that start
@@ -1636,8 +1641,8 @@ class Query(object):
         Implementation of trait that allows use of these objects in list
         constraints
         """
-        l = self.service.create_list(self)
-        return ConstraintNode(path, op, l.name)
+        temp = self.service.create_list(self)
+        return ConstraintNode(path, op, temp.name)
 
     def to_query_params(self):
         """

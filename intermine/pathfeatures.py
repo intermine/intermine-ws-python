@@ -1,6 +1,6 @@
 import re
 
-PATTERN_STR = "^(?:\w+\.)*\w+$"
+PATTERN_STR = r'^(?:\w+\.)*\w+$'
 PATH_PATTERN = re.compile(PATTERN_STR)
 
 
@@ -8,13 +8,10 @@ class PathFeature(object):
     def __init__(self, path):
         if path is None:
             raise ValueError("path must not be None")
-        try:
-            path = path.name
-        except:
-            pass
+        path = path.name
         if not PATH_PATTERN.match(path):
-            raise TypeError(
-                "Path '" + path + "' does not match expected pattern" + PATTERN_STR)
+            raise TypeError("Path '" + path +
+                            "' does not match expected pattern" + PATTERN_STR)
         self.path = path
 
     def __repr__(self):
@@ -49,8 +46,8 @@ class Join(PathFeature):
         return d
 
     def __repr__(self):
-        return('<' + self.__class__.__name__
-               + ' '.join([':', self.path, self.style]) + '>')
+        return ('<' + self.__class__.__name__ +
+                ' '.join([':', self.path, self.style]) + '>')
 
 
 class PathDescription(PathFeature):
@@ -72,14 +69,11 @@ class SortOrder(PathFeature):
     DIRECTIONS = frozenset(["asc", "desc"])
 
     def __init__(self, path, order):
-        try:
-            order = order.lower()
-        except:
-            pass
+        order = order.lower()
 
-        if not order in self.DIRECTIONS:
-            raise TypeError("Order must be one of " + str(self.DIRECTIONS)
-                            + " - not " + order)
+        if order not in self.DIRECTIONS:
+            raise TypeError("Order must be one of " + str(self.DIRECTIONS) +
+                            " - not " + order)
         self.order = order
         super(SortOrder, self).__init__(path)
 
@@ -99,7 +93,6 @@ class SortOrderList(object):
     query. It handles appending elements, and the stringification
     of the sort order.
     """
-
     def __init__(self, *sos):
         self.sort_orders = []
         self.append(*sos)
@@ -119,8 +112,8 @@ class SortOrderList(object):
                 self.sort_orders.append(SortOrder(*so))
             else:
                 raise TypeError(
-                    "Sort orders must be either SortOrder instances,"
-                    + " or tuples of arguments: I got:" + so + sos)
+                    "Sort orders must be either SortOrder instances," +
+                    " or tuples of arguments: I got:" + so + sos)
 
     def __repr__(self):
         return '<' + self.__class__.__name__ + ': [' + str(self) + ']>'
