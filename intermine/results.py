@@ -420,21 +420,19 @@ class ResultIterator(object):
         Returns the internal iterator object.
         """
         con = self.opener.open(self.url, self.data)
-        flat_file_parser = self.flatFileParser(con)
-        simple_json_parser = self.JSONIterator(con)
 
         try:
             reader = {
                 "tsv":
-                flat_file_parser,
+                lambda: FlatFileIterator(con, self.identity),
                 "csv":
-                flat_file_parser,
+                lambda: FlatFileIterator(con, self.identity),
                 "count":
-                flat_file_parser,
+                lambda: FlatFileIterator(con, self.identity),
                 "json":
-                simple_json_parser,
+                lambda: JSONIterator(con, self.identity),
                 "jsonrows":
-                simple_json_parser,
+                lambda: JSONIterator(con, self.identity),
                 "list":
                 lambda: JSONIterator(con, lambda x: self.row(x, self.view).
                                      to_l()),
