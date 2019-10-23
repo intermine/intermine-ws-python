@@ -11,7 +11,6 @@ except ImportError:
     pass
 
 logging.basicConfig()
-
 """
 Classes representing the data model
 ===================================
@@ -25,6 +24,7 @@ __author__ = "Alex Kalderimis"
 __organization__ = "InterMine"
 __license__ = "LGPL"
 __contact__ = "dev@intermine.org"
+
 
 class Field(object):
     """
@@ -47,20 +47,28 @@ class Field(object):
             -  CDSs is a group of CDS objects, which link back to this as gene
             -  GLEANRsymbol is a String
             -  UTRs is a group of UTR objects, which link back to this as gene
-            -  alleles is a group of Allele objects, which link back to this as gene
+            -  alleles is a group of Allele objects,
+                    which link back to this as gene
             -  chromosome is a Chromosome
             -  chromosomeLocation is a Location
-            -  clones is a group of CDNAClone objects, which link back to this as gene
-            -  crossReferences is a group of CrossReference objects, which link back to this as subject
+            -  clones is a group of CDNAClone objects,
+                    which link back to this as gene
+            -  crossReferences is a group of CrossReference objects,
+                    which link back to this as subject
             -  cytoLocation is a String
-            -  dataSets is a group of DataSet objects, which link back to this as bioEntities
+            -  dataSets is a group of DataSet objects,
+                    which link back to this as bioEntities
             -  downstreamIntergenicRegion is a IntergenicRegion
-            -  exons is a group of Exon objects, which link back to this as gene
-            -  flankingRegions is a group of GeneFlankingRegion objects, which link back to this as gene
+            -  exons is a group of Exon objects,
+                    which link back to this as gene
+            -  flankingRegions is a group of GeneFlankingRegion objects,
+                    which link back to this as gene
             -  goAnnotation is a group of GOAnnotation objects
-            -  homologues is a group of Homologue objects, which link back to this as gene
+            -  homologues is a group of Homologue objects,
+                    which link back to this as gene
             -  id is a Integer
-            -  interactions is a group of Interaction objects, which link back to this as gene
+            -  interactions is a group of Interaction objects,
+                    which link back to this as gene
             -  length is a Integer
             ...
 
@@ -68,6 +76,7 @@ class Field(object):
     @see: L{Reference}
     @see: L{Collection}
     """
+
     def __init__(self, name, type_name, class_origin):
         """
         Constructor - DO NOT USE
@@ -99,6 +108,7 @@ class Field(object):
     def fieldtype(self):
         raise Exception("Fields should never be directly instantiated")
 
+
 class Attribute(Field):
     """
     Attributes represent columns that contain actual data
@@ -106,10 +116,10 @@ class Attribute(Field):
 
     The Attribute class inherits all the behaviour of L{intermine.model.Field}
     """
-
     @property
     def fieldtype(self):
         return "attribute"
+
 
 class Reference(Field):
     """
@@ -121,6 +131,7 @@ class Reference(Field):
     back to this one as well. And all references will have their
     type upgraded to a type_class during parsing
     """
+
     def __init__(self, name, type_name, class_origin, reverse_ref=None):
         """
         Constructor
@@ -138,6 +149,7 @@ class Reference(Field):
         self.reverse_reference_name = reverse_ref
         super(Reference, self).__init__(name, type_name, class_origin)
         self.reverse_reference = None
+
     def __repr__(self):
         """
         Return a string representation
@@ -155,6 +167,7 @@ class Reference(Field):
     def fieldtype(self):
         return "reference"
 
+
 class Collection(Reference):
     """
     Collections are references which refer to groups of objects
@@ -162,9 +175,11 @@ class Collection(Reference):
 
     Collections have all the same behaviour and properties as References
     """
+
     def __repr__(self):
         """Return a string representation"""
-        ret = super(Collection, self).__repr__().replace(" is a ", " is a group of ")
+        ret = super(Collection,
+                    self).__repr__().replace(" is a ", " is a group of ")
         if self.reverse_reference is None:
             return ret + " objects"
         else:
@@ -173,6 +188,7 @@ class Collection(Reference):
     @property
     def fieldtype(self):
         return "collection"
+
 
 class Class(object):
     """
@@ -206,8 +222,7 @@ class Class(object):
 
     """
 
-
-    def __init__(self, name, parents, model, interface = True):
+    def __init__(self, name, parents, model, interface=True):
         """
         Constructor - Creates a new Class descriptor
         ============================================
@@ -235,8 +250,9 @@ class Class(object):
             self.field_dict["id"] = id_field
 
     def __repr__(self):
-        return "<%s.%s %s.%s>" % (self.__module__, self.__class__.__name__,
-            self.model.package_name if hasattr(self.model, 'package_name') else "__test__", self.name)
+        return "<%s.%s %s.%s>" % (
+            self.__module__, self.__class__.__name__, self.model.package_name
+            if hasattr(self.model, 'package_name') else "__test__", self.name)
 
     @property
     def fields(self):
@@ -249,7 +265,8 @@ class Class(object):
 
         @rtype: list(L{Field})
         """
-        return sorted(list(self.field_dict.values()), key=lambda field: field.name)
+        return sorted(list(self.field_dict.values()),
+                      key=lambda field: field.name)
 
     def __iter__(self):
         for f in list(self.field_dict.values()):
@@ -279,7 +296,9 @@ class Class(object):
 
         @rtype: list(L{Reference})
         """
-        def isRef(x): return isinstance(x, Reference) and not isinstance(x, Collection)
+        def isRef(x):
+            return isinstance(x, Reference) and not isinstance(x, Collection)
+
         return list(filter(isRef, self.fields))
 
     @property
@@ -306,7 +325,8 @@ class Class(object):
         if name in self.field_dict:
             return self.field_dict[name]
         else:
-            raise ModelError("There is no field called %s in %s" % (name, self.name))
+            raise ModelError("There is no field called %s in %s" %
+                             (name, self.name))
 
     def isa(self, other):
         """
@@ -333,6 +353,7 @@ class Class(object):
             if p.isa(other):
                 return True
         return False
+
 
 class ComposedClass(Class):
     """
@@ -408,6 +429,7 @@ class Path(object):
     to some extent, but there are additional methods for verifying certain
     relationships as well
     """
+
     def __init__(self, path, model, subclasses={}):
         """
         Constructor
@@ -422,7 +444,8 @@ class Path(object):
         @type path: str
         @param model: the model to validate the path against
         @type model: L{Model}
-        @param subclasses: a dict which maps subclasses (defaults to an empty dict)
+        @param subclasses: a dict which maps subclasses
+            (defaults to an empty dict)
         @type subclasses: dict
         """
         self.model = weakref.proxy(model)
@@ -539,10 +562,12 @@ class Path(object):
 
     def __hash__(self):
         i = hash(str(self))
-        return reduce(lambda a, b: a ^ b, [hash(k) ^ hash(v) for k, v in list(self.subclasses.items())], i)
+        return reduce(
+            lambda a, b: a ^ b,
+            [hash(k) ^ hash(v) for k, v in list(self.subclasses.items())], i)
+
 
 class ConstraintTree(object):
-
     def __init__(self, op, left, right):
         self.op = op
         self.left = left
@@ -559,13 +584,14 @@ class ConstraintTree(object):
             for subn in n:
                 yield subn
 
-    def as_logic(self, codes = None, start = 'A'):
+    def as_logic(self, codes=None, start='A'):
         if codes is None:
             codes = (chr(c) for c in range(ord(start), ord('Z')))
-        return "(%s %s %s)" % (self.left.as_logic(codes), self.op, self.right.as_logic(codes))
+        return "(%s %s %s)" % (self.left.as_logic(codes), self.op,
+                               self.right.as_logic(codes))
+
 
 class ConstraintNode(ConstraintTree):
-
     def __init__(self, *args, **kwargs):
         self.vargs = args
         self.kwargs = kwargs
@@ -573,15 +599,16 @@ class ConstraintNode(ConstraintTree):
     def __iter__(self):
         yield self
 
-    def as_logic(self, codes = None, start = 'A'):
+    def as_logic(self, codes=None, start='A'):
         if codes is None:
             codes = (chr(c) for c in range(ord(start), ord('Z')))
         return next(codes)
 
-class CodelessNode(ConstraintNode):
 
-    def as_logic(self, code = None, start = 'A'):
+class CodelessNode(ConstraintNode):
+    def as_logic(self, code=None, start='A'):
         return ''
+
 
 class Column(object):
     """
@@ -592,12 +619,12 @@ class Column(object):
     close to a declarative style
     """
 
-    def __init__(self, path, model, subclasses={}, query=None, parent = None):
+    def __init__(self, path, model, subclasses={}, query=None, parent=None):
         self._model = model
         self._query = query
         self._subclasses = subclasses
         self._parent = parent
-        self.filter = self.where # alias
+        self.filter = self.where  # alias
         if isinstance(path, Path):
             self._path = path
         else:
@@ -654,7 +681,9 @@ class Column(object):
         if cld is not None:
             try:
                 fld = cld.get_field(name)
-                branch = Column(str(self) + "." + name, self._model, self._subclasses, self._query, self)
+                branch = Column(
+                    str(self) + "." + name, self._model, self._subclasses,
+                    self._query, self)
                 self._branches[name] = branch
                 return branch
             except ModelError as e:
@@ -737,6 +766,7 @@ class Column(object):
     def __ge__(self, other):
         return ConstraintNode(str(self), ">=", other)
 
+
 class Model(object):
     """
     A class for representing the data model of an InterMine datawarehouse
@@ -760,7 +790,10 @@ class Model(object):
     data is available and how it is inter-related
     """
 
-    NUMERIC_TYPES = frozenset(["int", "Integer", "float", "Float", "double", "Double", "long", "Long", "short", "Short"])
+    NUMERIC_TYPES = frozenset([
+        "int", "Integer", "float", "Float", "double", "Double", "long", "Long",
+        "short", "Short"
+    ])
 
     LOG = logging.getLogger('Model')
 
@@ -786,7 +819,7 @@ class Model(object):
         else:
             self.service = None
 
-        self.classes= {}
+        self.classes = {}
         self.parse_model(source)
         self.vivify()
 
@@ -808,7 +841,8 @@ class Model(object):
         try:
             io = openAnything(source)
             src = io.read()
-            if hasattr(src, 'decode'): # Handle binary and text streams equally.
+            # Handle binary and text streams equally.
+            if hasattr(src, 'decode'):
                 src = src.decode('utf8')
             self.LOG.debug("model = [{0}]".format(src))
             doc = minidom.parseString(src)
@@ -821,9 +855,14 @@ class Model(object):
             for c in doc.getElementsByTagName('class'):
                 class_name = c.getAttribute('name')
                 assert class_name, "Name not defined in" + c.toxml()
+
                 def strip_java_prefix(x):
                     return re.sub(r'.*\.', '', x)
-                parents = [strip_java_prefix(p) for p in c.getAttribute('extends').split(' ') if len(p)]
+
+                parents = [
+                    strip_java_prefix(p)
+                    for p in c.getAttribute('extends').split(' ') if len(p)
+                ]
                 interface = c.getAttribute('is-interface') == 'true'
                 cl = Class(class_name, parents, self, interface)
                 self.LOG.debug('Created {0}'.format(cl.name))
@@ -873,7 +912,8 @@ class Model(object):
                 c.field_dict.update(pc.field_dict)
             for f in c.fields:
                 f.type_class = self.classes.get(f.type_name)
-                if hasattr(f, 'reverse_reference_name') and f.reverse_reference_name != '':
+                if hasattr(f, 'reverse_reference_name'
+                           ) and f.reverse_reference_name != '':
                     rrn = f.reverse_reference_name
                     f.reverse_reference = f.type_class.field_dict[rrn]
 
@@ -890,8 +930,13 @@ class Model(object):
         """
         parents = cd.parents
         self.LOG.debug('{0} < {1}'.format(cd.name, cd.parents))
-        def defined(x): return x is not None # weeds out the java classes
-        def to_class(x): return self.classes.get(x)
+
+        def defined(x):
+            return x is not None  # weeds out the java classes
+
+        def to_class(x):
+            return self.classes.get(x)
+
         ancestry = list(filter(defined, list(map(to_class, parents))))
         for ancestor in ancestry:
             self.LOG.debug('{0} is ancestor of {1}'.format(ancestor, cd.name))
@@ -951,9 +996,9 @@ class Model(object):
             else:
                 return path.get_class()
         elif name in self.classes:
-          return self.classes[name]
+            return self.classes[name]
         else:
-          raise ModelError("'" + name + "' is not a class in this model")
+            raise ModelError("'" + name + "' is not a class in this model")
 
     def make_path(self, path, subclasses={}):
         """
@@ -998,8 +1043,9 @@ class Model(object):
             self.parse_path_string(path_string, subclasses)
             return True
         except PathParseError as e:
-            raise PathParseError("Error parsing '%s' (subclasses: %s)"
-                            % ( path_string, str(subclasses) ), e )
+            raise PathParseError(
+                "Error parsing '%s' (subclasses: %s)" %
+                (path_string, str(subclasses)), e)
 
     def parse_path_string(self, path_string, subclasses={}):
         """
@@ -1046,14 +1092,16 @@ class Model(object):
     def _unproxied(self):
         return self
 
+
 class ModelError(ReadableException):
     pass
+
 
 class PathParseError(ModelError):
     pass
 
-class ModelParseError(ModelError):
 
+class ModelParseError(ModelError):
     def __init__(self, message, source, cause=None):
         self.source = source
         super(ModelParseError, self).__init__(message, cause)
@@ -1064,4 +1112,3 @@ class ModelParseError(ModelError):
             return base
         else:
             return base + repr(self.cause)
-

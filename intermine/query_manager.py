@@ -171,7 +171,7 @@ def delete_query(name):
             return name + " is deleted"
         else:
             link = dict["instance"]["url"] + "/service/user/queries/" + name +\
-             "?token=" + token
+                "?token=" + token
             requests.delete(link)
             return name + " is deleted"
 

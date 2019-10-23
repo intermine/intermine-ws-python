@@ -53,6 +53,7 @@ A Python API to access bioinformatics data warehouses powered by the InterMine p
 """
 }
 
+
 class TestCommand(Command):
     description = "Run unit tests"
     user_options = [
@@ -79,30 +80,34 @@ class TestCommand(Command):
 
         log.set_verbosity(self.verbose)
         if self.verbose >= 2:
-            self.announce('Setting log level to DEBUG ({0})'.format(logging.DEBUG), level = 2)
-            logging.basicConfig(level = logging.DEBUG)
+            self.announce('Setting log level to DEBUG ({0})'.format(
+                logging.DEBUG), level=2)
+            logging.basicConfig(level=logging.DEBUG)
 
-        testfiles = [ ]
+        testfiles = []
         if self.testmodule is None:
             for t in glob(pjoin(self._dir, 'tests', self.test_prefix + '*.py')):
                 if not t.endswith('__init__.py'):
-                    testfiles.append('.'.join(['tests', splitext(basename(t))[0]]))
+                    testfiles.append(
+                        '.'.join(['tests', splitext(basename(t))[0]]))
         else:
             testfiles.append(self.testmodule)
 
-        server = TestServer(daemonise = True, silent = (self.verbose < 3))
+        server = TestServer(daemonise=True, silent=(self.verbose < 3))
         server.start()
         WebserviceTest.TEST_PORT = server.port
 
-        self.announce("Waiting for test server to start on port " + str(server.port), level=2)
+        self.announce("Waiting for test server to start on port " +
+                      str(server.port), level=2)
         time.sleep(1)
 
         self.announce("Test files:" + str(testfiles), level=2)
         tests = TestLoader().loadTestsFromNames(testfiles)
-        t = TextTestRunner(verbosity = self.verbose)
+        t = TextTestRunner(verbosity=self.verbose)
         result = t.run(tests)
         failed, errored = map(len, (result.failures, result.errors))
         exit(failed + errored)
+
 
 class PrintVersion(Command):
     user_options = []
@@ -116,11 +121,13 @@ class PrintVersion(Command):
     def run(self):
         print(self.version)
 
+
 class LiveTestCommand(TestCommand):
 
     def initialize_options(self):
         TestCommand.initialize_options(self)
         self.test_prefix = 'live'
+
 
 class CleanCommand(Command):
     """
@@ -133,8 +140,8 @@ class CleanCommand(Command):
     user_options = [('verbose', 'v', "produce verbose output")]
 
     def initialize_options(self):
-        self._files_to_delete = [ ]
-        self._dirs_to_delete = [ ]
+        self._files_to_delete = []
+        self._dirs_to_delete = []
 
         for root, dirs, files in os.walk('.'):
             for f in files:
@@ -178,6 +185,7 @@ class CleanCommand(Command):
                         log.warn(message)
                 elif clean_me != "build":
                     log.warn(clean_me + " does not exist")
+
 
 extra = {
     'cmdclass': {
