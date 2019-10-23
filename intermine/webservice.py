@@ -297,11 +297,13 @@ class Service(object):
             self.version
         except WebserviceError as e:
             raise ServiceError(
-                "Could not validate service - is the root url (%s) correct? %s" % (root, e))
+                "Could not validate service - is the root url (%s) correct? %s"
+                % (root, e))
 
         if token and self.version < 6:
             raise ServiceError(
-                "This service does not support API access token authentication")
+                "This service does not support API access token authentication"
+            )
 
         # Set up sugary aliases
         self.query = self.new_query
@@ -310,7 +312,8 @@ class Service(object):
 
     LIST_MANAGER_METHODS = frozenset(["get_list", "get_all_lists",
                                       "get_all_list_names",
-                                      "create_list", "get_list_count", "delete_lists", "l"])
+                                      "create_list", "get_list_count",
+                                      "delete_lists", "l"])
 
     def get_anonymous_token(self, url):
         """
@@ -377,7 +380,8 @@ class Service(object):
                     self._version = int(self.opener.open(url).read())
                 except ValueError as e:
                     raise ServiceError(
-                        "Could not parse a valid webservice version: " + str(e))
+                        "Could not parse a valid webservice version: "
+                        + str(e))
         except AttributeError as e:
             raise Exception(e)
         return self._version
@@ -437,11 +441,13 @@ class Service(object):
             view = columns[0]
             if isinstance(view, Attribute):
                 return Query(self.model, self).select("%s.%s" %
-                                                      (view.declared_in.name, view))
+                                                      (view.declared_in.name,
+                                                       view))
 
             if isinstance(view, Reference):
                 return Query(self.model, self).select("%s.%s.*" %
-                                                      (view.declared_in.name, view))
+                                                      (view.declared_in.name,
+                                                       view))
             elif not isinstance(view, Column) and not str(view).endswith("*"):
                 path = self.model.make_path(view)
                 if not path.is_attribute():
@@ -484,7 +490,8 @@ class Service(object):
 
     def _get_json(self, path, payload=None):
         headers = {'Accept': 'application/json'}
-        with closing(self.opener.open(self.root + path, payload, headers=headers)) as resp:
+        with closing(self.opener.open(self.root + path, payload,
+                                      headers=headers)) as resp:
             data = json.loads(ensure_str(resp.read()))
             if data['error'] is not None:
                 raise ServiceError(data['error'])
@@ -492,7 +499,8 @@ class Service(object):
 
     def _get_xml(self, path):
         headers = {'Accept': 'application/xml'}
-        with closing(self.opener.open(self.root + path, headers=headers)) as sock:
+        with closing(self.opener.open(self.root + path,
+                                      headers=headers)) as sock:
             return minidom.parse(sock)
 
     def search(self, term, **facets):
