@@ -307,8 +307,9 @@ class ListManager(object):
                     ids = item_content.strip()  # Stringy thing
                 except AttributeError:
                     try:  # Queryable
-                        return self._create_list_from_queryable(item_content,
-                                                                name, description, tags)
+                        return self._create_list_from_queryable(
+                            item_content, name,
+                            description, tags)
                     except AttributeError:
                         try:  # Array of idents
                             idents = iter(item_content)
