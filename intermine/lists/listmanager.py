@@ -98,7 +98,7 @@ class ListManager(object):
 
             l = ListManager.safe_dict(l)
             self.lists[l['name']] = List(service=self.service,
-                    manager=self, **l)
+                                         manager=self, **l)
 
     @staticmethod
     def safe_dict(d):
@@ -173,7 +173,8 @@ class ListManager(object):
             q.add_view(q.root.name + '.id')
         else:
 
-            # Check to see if the class of the selected items is unambiguous
+            # Check to see if the class of the selected items is
+            # unambiguous
 
             up_to_attrs = set(v[0:v.rindex('.')] for v in q.views)
             if len(up_to_attrs) == 1:
@@ -186,7 +187,7 @@ class ListManager(object):
         name,
         description,
         tags,
-        ):
+    ):
 
         q = self._get_listable_query(queryable)
         uri = q.get_list_upload_uri()
@@ -209,7 +210,7 @@ class ListManager(object):
         tags=[],
         add=[],
         organism=None,
-        ):
+    ):
         """
         Create a new list in the webservice
         ===================================
@@ -279,7 +280,7 @@ class ListManager(object):
 
             if isinstance(organism, list):
                 query.add_constraint('{0}.organism.name'.format(list_type),
-                        'ONE OF', organism)
+                                     'ONE OF', organism)
             else:
                 query.add_constraint('organism', 'LOOKUP', organism)
             if isinstance(item_content, list):
@@ -289,7 +290,8 @@ class ListManager(object):
                 query.add_constraint('symbol', 'ONE OF', item_content)
 
             # If one wants to create a list while
-            # specifying an organism, then a content should not be passed.
+            # specifying an organism, then a content should not be
+            # passed.
 
             item_content = query
 
@@ -298,22 +300,24 @@ class ListManager(object):
         except AttributeError:
             try:
                 with closing(codecs.open(item_content, 'r', 'UTF-8'
-                             )) as c:  # File name
+                                         )) as c:  # File name
                     ids = c.read()
             except (TypeError, IOError):
                 try:
                     ids = item_content.strip()  # Stringy thing
                 except AttributeError:
                     try:  # Queryable
-                        return self._create_list_from_queryable(item_content,
-                                name, description, tags)
+                        return self._create_list_from_queryable(
+                            item_content, name,
+                            description, tags)
                     except AttributeError:
                         try:  # Array of idents
                             idents = iter(item_content)
-                            ids = '\n'.join(map('"{0}"'.format, idents))
+                            ids = '\n'.join(
+                                map('"{0}"'.format, idents))
                         except AttributeError:
                             raise TypeError('Cannot create list from '
-                                    + repr(item_content))
+                                            + repr(item_content))
 
         uri = self.service.root + self.service.LIST_CREATION_PATH
         query_form = {
@@ -321,7 +325,7 @@ class ListManager(object):
             'type': list_type,
             'description': description,
             'tags': ';'.join(tags),
-            }
+        }
         if len(add):
             query_form['add'] = [x.lower() for x in add if x]
 
@@ -362,7 +366,8 @@ class ListManager(object):
             else:
                 name = str(l)
             if name not in all_names:
-                self.LOG.debug('{0} does not exist - skipping'.format(name))
+                self.LOG.debug(
+                    '{0} does not exist - skipping'.format(name))
                 continue
             self.LOG.debug('deleting {0}'.format(name))
             uri = self.service.root + self.service.LIST_PATH
@@ -436,10 +441,10 @@ class ListManager(object):
         exc_type,
         exc_val,
         traceback,
-        ):
+    ):
 
         self.LOG.debug('Exiting context - deleting {0}'.format(
-                                                        self._temp_lists))
+            self._temp_lists))
         self.delete_temporary_lists()
 
     def delete_temporary_lists(self):
@@ -457,7 +462,7 @@ class ListManager(object):
         name=None,
         description=None,
         tags=[],
-        ):
+    ):
         """
         Calculate the intersection of a given set of lists, and return the
         list representing the result
@@ -470,7 +475,7 @@ class ListManager(object):
             name,
             description,
             tags,
-            )
+        )
 
     def union(
         self,
@@ -478,7 +483,7 @@ class ListManager(object):
         name=None,
         description=None,
         tags=[],
-        ):
+    ):
         """
         Calculate the union of a given set of lists,
         and return the list representing the result
@@ -491,7 +496,7 @@ class ListManager(object):
             name,
             description,
             tags,
-            )
+        )
 
     def xor(
         self,
@@ -499,7 +504,7 @@ class ListManager(object):
         name=None,
         description=None,
         tags=[],
-        ):
+    ):
         """
         Calculate the symmetric difference of a given set of lists,
         and return the list representing the result
@@ -512,7 +517,7 @@ class ListManager(object):
             name,
             description,
             tags,
-            )
+        )
 
     def subtract(
         self,
@@ -521,7 +526,7 @@ class ListManager(object):
         name=None,
         description=None,
         tags=[],
-        ):
+    ):
         """
         Calculate the subtraction of rights from lefts,
         and return the list representing the result
@@ -541,7 +546,7 @@ class ListManager(object):
             'references': ';'.join(left_names),
             'subtract': ';'.join(right_names),
             'tags': ';'.join(tags),
-            })
+        })
         resp = self.service.opener.open(uri)
         data = resp.read()
         resp.close()
@@ -555,11 +560,12 @@ class ListManager(object):
         name,
         description,
         tags,
-        ):
+    ):
 
         list_names = self.make_list_names(lists)
         if description is None:
-            description = operation + ' of ' + ' and '.join(list_names)
+            description = operation + ' of ' + \
+                ' and '.join(list_names)
         if name is None:
             name = self.get_unused_list_name()
         uri = self.service.root + path
@@ -568,7 +574,7 @@ class ListManager(object):
             'lists': ';'.join(list_names),
             'description': description,
             'tags': ';'.join(tags),
-            })
+        })
         resp = self.service.opener.open(uri)
         data = resp.read()
         resp.close()
