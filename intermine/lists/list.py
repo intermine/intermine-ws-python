@@ -171,7 +171,9 @@ class List(object):
         params = {"oldname": self._name, "newname": new_name}
         uri += "?" + urlencode(params)
         resp = self._service.opener.open(uri)
+        data = resp.read()
         resp.close()
+        self._manager.parse_list_upload_response(data)
         self._name = new_name
 
     def del_name(self):

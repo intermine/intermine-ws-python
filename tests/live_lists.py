@@ -265,12 +265,12 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
-        l = s.create_list(q,
-                          description="test_from_other_list",
-                          tags=["test", "query"])
+        ls = s.create_list(q,
+                           description="test_from_other_list",
+                           tags=["test", "query"])
 
-        from_other = s.create_list(l)
-        self.assertEqual(from_other.size, l.size)
+        from_other = s.create_list(ls)
+        self.assertEqual(from_other.size, ls.size)
 
     # @unittest.skip("disabled")
     def test_delete(self):
@@ -278,10 +278,12 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
-        l = s.create_list(q, description="test_delete", tags=["test", "query"])
+        ls = s.create_list(q,
+                           description="test_delete",
+                           tags=["test", "query"])
 
-        name = l.name
-        l.delete()
+        name = ls.name
+        ls.delete()
         self.assertTrue(s.get_list(name) is None)
 
     # @unittest.skip("disabled")
@@ -289,16 +291,16 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE
         s = self.SERVICE
 
-        l = s.create_list(self.EMPLOYEE_FILE,
-                          t,
-                          description='test_to_query',
-                          tags=['test'])
+        ls = s.create_list(self.EMPLOYEE_FILE,
+                           t,
+                           description='test_to_query',
+                           tags=['test'])
         expected = [
             LiveListTest.KARIM, LiveListTest.DAVID, LiveListTest.FRANK,
             LiveListTest.JEAN_MARC, LiveListTest.JENNIFER_SCHIRRMANN
         ]
 
-        got = [row[:3] + row[4:] for row in l.to_query().rows()]
+        got = [row[:3] + row[4:] for row in ls.to_query().rows()]
         self.assertEqual(got, expected)
 
     # @unittest.skip("disabled")
@@ -306,22 +308,22 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE
         s = self.SERVICE
 
-        l = s.create_list(self.EMPLOYEE_FILE,
-                          t,
-                          description='test_iteration',
-                          tags=['test'])
+        ls = s.create_list(self.EMPLOYEE_FILE,
+                           t,
+                           description='test_iteration',
+                           tags=['test'])
 
         # Test iteration:
         got = set([x.age for x in l])
         expected_ages = set([37, 41, 44, 53, 55])
         self.assertEqual(expected_ages, got)
 
-        self.assertTrue(l[0].age in expected_ages)
-        self.assertTrue(l[-1].age in expected_ages)
-        self.assertTrue(l[2].age in expected_ages)
-        self.assertRaises(IndexError, lambda: l[5])
-        self.assertRaises(IndexError, lambda: l[-6])
-        self.assertRaises(IndexError, lambda: l["foo"])
+        self.assertTrue(ls[0].age in expected_ages)
+        self.assertTrue(ls[-1].age in expected_ages)
+        self.assertTrue(ls[2].age in expected_ages)
+        self.assertRaises(IndexError, lambda: ls[5])
+        self.assertRaises(IndexError, lambda: ls[-6])
+        self.assertRaises(IndexError, lambda: ls["foo"])
 
     # @unittest.skip("disabled")
     def test_intersections(self):
