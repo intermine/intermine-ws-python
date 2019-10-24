@@ -424,15 +424,15 @@ class ResultIterator(object):
         try:
             reader = {
                 "tsv":
-                lambda: FlatFileIterator(con, self.identity),
+                lambda: FlatFileIterator(con, lambda x: x),
                 "csv":
-                lambda: FlatFileIterator(con, self.identity),
+                lambda: FlatFileIterator(con, lambda x: x),
                 "count":
-                lambda: FlatFileIterator(con, self.identity),
+                lambda: FlatFileIterator(con, lambda x: x),
                 "json":
-                lambda: JSONIterator(con, self.identity),
+                lambda: JSONIterator(con, lambda x: x),
                 "jsonrows":
-                lambda: JSONIterator(con, self.identity),
+                lambda: JSONIterator(con, lambda x: x),
                 "list":
                 lambda: JSONIterator(con, lambda x: self.row(x, self.view).
                                      to_l()),
