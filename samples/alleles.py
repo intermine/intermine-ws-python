@@ -19,13 +19,18 @@ def chunker(i, x):
     return func
 
 
+def fit_to_cell(a):
+    if (len(a) <= col_width):
+        return a.ljust(col_width)
+    else:
+        return a[:col_width - len(ellipsis)] + ellipsis
+
+
 col_width = 15
 cols = 8
 sep = '| '
 ellipsis = '...'
 line_width = col_width * cols + (cols - 1) * len(sep)
-fit_to_cell = lambda a: a.ljust(col_width) if len(
-    a) <= col_width else a[:col_width - len(ellipsis)] + ellipsis
 hrule = "-" * line_width
 summary = "\n%s: %d Alleles"
 
