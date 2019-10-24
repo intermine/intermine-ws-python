@@ -72,7 +72,10 @@ class SortOrder(PathFeature):
     DIRECTIONS = frozenset(["asc", "desc"])
 
     def __init__(self, path, order):
-        order = order.lower()
+        try:
+            order = order.lower()
+        except AttributeError:
+            pass
 
         if order not in self.DIRECTIONS:
             raise TypeError("Order must be one of " + str(self.DIRECTIONS) +
