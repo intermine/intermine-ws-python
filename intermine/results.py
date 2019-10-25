@@ -394,24 +394,6 @@ class ResultIterator(object):
             c += 1
         return c
 
-    def identity(x):
-        """
-        An Identity function, used in __iter__
-        """
-        return x
-
-    def flatFileParser(self, x):
-        """
-        Return identity flat file iteratori, used in __iter__
-        """
-        return FlatFileIterator(x, self.identity)
-
-    def simpleJSONParser(self, x):
-        """
-        Return identity json iterator, used in __iter__
-        """
-        return JSONIterator(x, self.identity)
-
     def __iter__(self):
         """
         Return an iterator over the results
