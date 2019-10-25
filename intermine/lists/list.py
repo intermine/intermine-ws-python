@@ -2,6 +2,7 @@ import weakref
 import logging
 
 import codecs
+import urllib
 
 try:
     # Python 2.x imports
@@ -365,7 +366,7 @@ class List(object):
         """Append the arguments to this list"""
         try:
             return self._do_append(self._manager.union(appendix))
-        except (error.URLError, error.HTTPError):
+        except (urllib.error.URLError, urllib.error.HTTPError):
             return self._do_append(appendix)
 
     def calculate_enrichment(self,
