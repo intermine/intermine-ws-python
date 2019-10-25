@@ -167,24 +167,6 @@ class LiveListTest(unittest.TestCase):
             self.assertEqual(before + 5, m.get_list_count())
         self.assertEqual(before, self.SERVICE.get_list_count())
 
-    # @unittest.skip("disabled")
-    def testListTagUpdating(self):
-        s = self.SERVICE
-        t = self.TYPE
-        ls = s.create_list(self.GUYS_NAMES,
-                           t,
-                           description="tag updating",
-                           tags=['test'])
-        self.assertEqual(set(['test']), ls.tags)
-        self.assertEqual(
-            set(['test', "a-tag", "b-tag"]),
-            set(map(str, s._list_manager.add_tags(ls, ["a-tag", "b-tag"]))))
-        self.assertEqual(set(['test']), ls.tags)
-        ls.update_tags()
-        self.assertEqual(set(['test', "a-tag", "b-tag"]),
-                         set(map(str, ls.tags)))
-
-    # @unittest.skip("disabled")
     def test_ladies_names(self):
         t = self.TYPE
         s = self.SERVICE
@@ -245,7 +227,6 @@ class LiveListTest(unittest.TestCase):
 
     # @unittest.skip("disabled")
     def test_renaming(self):
-        t = self.TYPE
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
@@ -261,7 +242,6 @@ class LiveListTest(unittest.TestCase):
 
     # @unittest.skip("disabled")
     def test_from_other_list(self):
-        t = self.TYPE
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
@@ -274,7 +254,6 @@ class LiveListTest(unittest.TestCase):
 
     # @unittest.skip("disabled")
     def test_delete(self):
-        t = self.TYPE
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
@@ -314,7 +293,7 @@ class LiveListTest(unittest.TestCase):
                            tags=['test'])
 
         # Test iteration:
-        got = set([x.age for x in l])
+        got = set([x.age for x in ls])
         expected_ages = set([37, 41, 44, 53, 55])
         self.assertEqual(expected_ages, got)
 
@@ -605,7 +584,6 @@ class LiveListTest(unittest.TestCase):
     # @unittest.skip("disabled")
     def test_subqueries(self):
         s = self.SERVICE
-        t = self.TYPE
 
         with_cc_q = s.model.Bank.where("corporateCustomers.id", "IS NOT NULL")
         with_cc_l = s.create_list(with_cc_q, description='test_subqueries')
@@ -631,7 +609,6 @@ class LiveListTest(unittest.TestCase):
     # @unittest.skip("disabled")
     def test_query_overloading(self):
         s = self.SERVICE
-        t = self.TYPE
 
         with_cc_q = s.model.Bank.where('corporateCustomers.id', 'IS NOT NULL')
         with_cc_l = s.create_list(with_cc_q,
@@ -652,9 +629,8 @@ class LiveListTest(unittest.TestCase):
     # @unittest.skip("disabled")
     def test_enrichment(self):
         s = self.SERVICE
-        t = self.TYPE
 
-        favs = s.ls('My-Favourite-Employees')
+        favs = s.get_list('My-Favourite-Employees')
         enriched_contractors = [
             x.identifier
             for x in favs.calculate_enrichment('contractor_enrichment',
