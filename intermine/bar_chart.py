@@ -4,11 +4,8 @@ try:
     import urllib.request as req
 except ImportError:
     import urllib as req
-from lxml import etree
 
 from intermine.webservice import Service
-from math import log
-import json
 import requests
 import numpy as np
 import pandas as pd
@@ -97,17 +94,17 @@ def plot_go_vs_p(list_name):
     ax.set_ylabel('p_value')
     ax.set_xticklabels(x, rotation='horizontal')
 
-    rects = ax.patches
-
     def autolabel(rects, ax):
         i = 0
         for rect in rects:
-            x = rect.get_x() + rect.get_width()/2.
+            x = rect.get_x() + rect.get_width() / 2.
             y = rect.get_height()
-            ax.annotate(gene_count[i], (x, y), xytext=(0, 5),
+            ax.annotate(gene_count[i], (x, y),
+                        xytext=(0, 5),
                         textcoords="offset points",
-                        ha='center', va='bottom')
-            i = i+1
+                        ha='center',
+                        va='bottom')
+            i = i + 1
 
     autolabel(ax.patches, ax)
 
@@ -164,17 +161,17 @@ def plot_go_vs_count(list_name):
     ax.set_ylabel('Number of Genes')
     ax.set_xticklabels(x, rotation='horizontal')
 
-    rects = ax.patches
-
     def autolabel(rects, ax):
         i = 0
         for rect in rects:
-            x = rect.get_x() + rect.get_width()/2.
+            x = rect.get_x() + rect.get_width() / 2.
             y = rect.get_height()
-            ax.annotate(annotation_count[i], (x, y), xytext=(0, 5),
+            ax.annotate(annotation_count[i], (x, y),
+                        xytext=(0, 5),
                         textcoords="offset points",
-                        ha='center', va='bottom')
-            i = i+1
+                        ha='center',
+                        va='bottom')
+            i = i + 1
 
     autolabel(ax.patches, ax)
     ax.margins(y=0.1)
@@ -194,7 +191,7 @@ def get_query(xml):
         req.pathname2url(xml)
     r = requests.get(link)
     list = (r.text).split('\n')
-    for i in range(0, len(list)-1):
+    for i in range(0, len(list) - 1):
         list[i] = list[i].split('\t')
     return (list)
 
@@ -223,7 +220,7 @@ def query_to_barchart_log(xml, resp):
     store = store.split(' ')
     x_val = []
     y_val = []
-    for i in range(0, len(list)-1):
+    for i in range(0, len(list) - 1):
         x_val.append(list[i][1])
         y_val.append(float(list[i][2]))
 
@@ -243,17 +240,17 @@ def query_to_barchart_log(xml, resp):
         ax.set_ylabel(l[2])
     ax.set_xticklabels(x, rotation='vertical')
 
-    rects = ax.patches
-
     def autolabel(rects, ax):
         i = 0
         for rect in rects:
-            x = rect.get_x() + rect.get_width()/2.
+            x = rect.get_x() + rect.get_width() / 2.
             y = rect.get_height()
-            ax.annotate(y_val[i], (x, y), xytext=(0, 5),
+            ax.annotate(y_val[i], (x, y),
+                        xytext=(0, 5),
                         textcoords="offset points",
-                        ha='center', va='bottom')
-            i = i+1
+                        ha='center',
+                        va='bottom')
+            i = i + 1
 
     autolabel(ax.patches, ax)
 
