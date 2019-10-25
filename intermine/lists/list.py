@@ -6,13 +6,16 @@ import codecs
 try:
     # Python 2.x imports
     from urllib import urlencode
+    from urllib import error
 except ImportError:
     # Python 3.x imports
     from urllib.parse import urlencode
+    from urllib import error
 
 from intermine.results import JSONIterator, EnrichmentLine
 from intermine.model import ConstraintNode
 from intermine.errors import ServiceError
+
 
 class List(object):
     """
@@ -32,14 +35,17 @@ class List(object):
         >>> from intermine.webservice import Service
         >>>
         >>> flymine = Service("www.flymine.org/query", "SOMETOKEN")
-        >>> new_list = flymine.create_list(["h", "zen", "eve", "bib"], "Gene", name="My New List")
+        >>> new_list = flymine.create_list(["h", "zen", "eve", "bib"],
+            "Gene", name="My New List")
         >>>
         >>> another_list = flymine.get_list("Some other list")
         >>> combined_list = new_list | another_list # Same syntax as for sets
         >>> combined_list.name = "Union of the other lists"
         >>>
-        >>> print "The combination of the two lists has %d elements" % combined_list.size
-        >>> print "The combination of the two lists has %d elements" % len(combined_list)
+        >>> print "The combination of the two lists has %d elements"
+            % combined_list.size
+        >>> print "The combination of the two lists has %d elements"
+            % len(combined_list)
         >>>
         >>> for row in combined_list:
         ...     print row
@@ -47,7 +53,7 @@ class List(object):
     OVERVIEW
     --------
 
-    Lists are created from a webservice, and can be manipulated in various ways.
+    Lists are created from a webservice, and can be manipulated in various ways
     The operations are::
         * Union: this | that
         * Intersection: this & that
@@ -61,7 +67,8 @@ class List(object):
         * contained in a string
     In all these cases the syntax is the same:
 
-        >>> new_list = service.create_list(content, type, name="Some name", description="Some description", tags=["some", "tags"])
+        >>> new_list = service.create_list(content, type, name="Some name",
+            description="Some description", tags=["some", "tags"])
 
     Lists can also be created from a query's result with the exact
     same syntax. In the case of queries, the type is not required,
@@ -98,7 +105,8 @@ class List(object):
             self._is_authorized = args.get("authorized")
             self._status = args.get("status")
 
-            if self._is_authorized is None: self._is_authorized = True
+            if self._is_authorized is None:
+                self._is_authorized = True
 
             if "tags" in args:
                 tags = args["tags"]
@@ -137,7 +145,10 @@ class List(object):
 
     @property
     def is_authorized(self):
-        """Whether or not the current user is authorised to make changes to this list"""
+        """
+        Whether or not the current user is authorised to make
+        changes to this list
+        """
         return self._is_authorized
 
     @property
@@ -154,20 +165,18 @@ class List(object):
         Set the name of the list
         ========================
 
-        Setting the list's name causes the list's name to be updated on the server.
+        Setting the list's name causes the list's name to be updated on the
+        server.
         """
         if self._name == new_name:
             return
         uri = self._service.root + self._service.LIST_RENAME_PATH
-        params = {
-            "oldname": self._name,
-            "newname": new_name
-        }
+        params = {"oldname": self._name, "newname": new_name}
         uri += "?" + urlencode(params)
         resp = self._service.opener.open(uri)
         data = resp.read()
         resp.close()
-        new_list = self._manager.parse_list_upload_response(data)
+        self._manager.parse_list_upload_response(data)
         self._name = new_name
 
     def del_name(self):
@@ -176,7 +185,9 @@ class List(object):
 
     @property
     def size(self):
-        """Return the number of elements in the list. Also available as len(obj)"""
+        """
+        Return the number of elements in the list. Also available as len(obj)
+        """
         return self._size
 
     @property
@@ -229,7 +240,8 @@ class List(object):
 
     def make_list_constraint(self, path, op):
         """
-        Implementation of trait that allows use of these objects in list constraints
+        Implementation of trait that allows use of these objects in list
+        constraints
         """
         return ConstraintNode(path, op, self.name)
 
@@ -253,27 +265,31 @@ class List(object):
             k = 0
             while s[k] != '(':
                 k += 1
-            s = s[k+1:]
+            s = s[k + 1:]
             s = s.split(",")
             for j in s:
                 print(j.strip())
             print()
 
     def __iter__(self):
-        """Return an iterator over the objects in this list, with all attributes selected for output"""
+        """
+        Return an iterator over the objects in this list, with all
+        attributes selected for output
+        """
         return iter(self.to_query())
 
     def __getitem__(self, index):
         """Get a member of this list by index"""
         if not isinstance(index, int):
             raise IndexError("Expected an integer key - got %s" % (index))
-        if index < 0: # handle negative indices.
+        if index < 0:  # handle negative indices.
             i = self.size + index
         else:
             i = index
 
         if i not in range(self.size):
-            raise IndexError("%d is not a valid index for a list of size %d" % (index, self.size))
+            raise IndexError("%d is not a valid index for a list of size %d" %
+                             (index, self.size))
 
         return self.to_query().first(start=i, row="jsonobjects")
 
@@ -285,10 +301,12 @@ class List(object):
 
     def __iand__(self, other):
         """
-        Intersect this list and another, and replace this list with the result of the
-        intersection
+        Intersect this list and another, and replace this list with the result
+        of the intersection
         """
-        intersection = self._manager.intersect([self, other], description=self.description, tags=self.tags)
+        intersection = self._manager.intersect([self, other],
+                                               description=self.description,
+                                               tags=self.tags)
         self.delete()
         intersection.name = self.name
         return intersection
@@ -319,10 +337,11 @@ class List(object):
             ids = codecs.open(content, 'r', 'UTF-8').read()
         except (TypeError, IOError):
             if hasattr(content, 'strip') and hasattr(content, 'encode'):
-                ids = content # probably a string.
+                ids = content  # probably a string.
             else:
                 try:
-                    ids = "\n".join(map(lambda x: '"' + x + '"', iter(content)))
+                    ids = "\n".join(map(lambda x: '"' + x + '"',
+                                        iter(content)))
                 except TypeError:
                     content = self._manager._get_listable_query(content)
                     uri = content.get_list_append_uri()
@@ -348,38 +367,50 @@ class List(object):
         """Append the arguments to this list"""
         try:
             return self._do_append(self._manager.union(appendix))
-        except:
+        except (error.URLError, error.HTTPError):
             return self._do_append(appendix)
 
-    def calculate_enrichment(self, widget, background = None, correction = "Holm-Bonferroni", maxp = 0.05, filter = ''):
+    def calculate_enrichment(self,
+                             widget,
+                             background=None,
+                             correction="Holm-Bonferroni",
+                             maxp=0.05,
+                             filter=''):
         """
         Perform an enrichment calculation on this list
         ==============================================
 
         example::
 
-            >>> for item in service.get_list("some list").calculate_enrichment("thingy_enrichment"):
+            >>> for item in service.get_list("some list")
+                .calculate_enrichment("thingy_enrichment"):
             ...     print item.identifier, item.p_value
 
-        Gets an iterator over the rows for an enrichment calculation. Each row represents
-        a record with the following properties:
+        Gets an iterator over the rows for an enrichment calculation.
+        Each row represents a record with the following properties:
             * identifier {str}
             * p-value {float}
             * matches {int}
             * description {str}
 
-        The enrichment row object may be treated as an object with property access, or as
-        a dictionary, supporting key lookup with the [] operator:
+        The enrichment row object may be treated as an object with property
+        access, or as a dictionary, supporting key lookup with the [] operator:
 
             >>> p_value = row['p-value']
 
         """
         if self._service.version < 8:
-            raise ServiceError("This service does not support enrichment requests")
-        params = dict(list = self.name, widget = widget, correction = correction, maxp = maxp, filter = filter)
+            raise ServiceError(
+                "This service does not support enrichment requests")
+        params = dict(list=self.name,
+                      widget=widget,
+                      correction=correction,
+                      maxp=maxp,
+                      filter=filter)
         if background is not None:
             if self._service.version < 11:
-                raise ServiceError("This service does not support custom background populations")
+                raise ServiceError("This service does not support custom" +
+                                   " background populations")
             params["population"] = background
         form = urlencode(params)
         uri = self._service.root + self._service.LIST_ENRICHMENT_PATH
@@ -391,8 +422,13 @@ class List(object):
         return self._manager.xor([self, other])
 
     def __ixor__(self, other):
-        """Calculate the symmetric difference of this list and another and replace this list with the result"""
-        diff = self._manager.xor([self, other], description=self.description, tags=self.tags)
+        """
+        Calculate the symmetric difference of this list and another and replace
+        this list with the result
+        """
+        diff = self._manager.xor([self, other],
+                                 description=self.description,
+                                 tags=self.tags)
         self.delete()
         diff.name = self.name
         return diff
@@ -402,8 +438,12 @@ class List(object):
         return self._manager.subtract([self], [other])
 
     def __isub__(self, other):
-        """Replace this list with the subtraction of the other from this list"""
-        subtr = self._manager.subtract([self], [other], description=self.description, tags=self.tags)
+        """
+        Replace this list with the subtraction of the other from this list
+        """
+        subtr = self._manager.subtract([self], [other],
+                                       description=self.description,
+                                       tags=self.tags)
         self.delete()
         subtr.name = self.name
         return subtr
