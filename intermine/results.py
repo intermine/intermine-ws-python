@@ -1,13 +1,12 @@
 try:
-    import simplejson as json # Prefer this as it is faster
-except ImportError: # pragma: no cover
+    import simplejson as json  # Prefer this as it is faster
+except ImportError:  # pragma: no cover
     try:
         import json
     except ImportError:
-        raise ImportError("Could not find any JSON module to import - "
-            + "please install simplejson or jsonlib to continue")
+        raise ImportError("Could not find any JSON module to import - " +
+                          "please install simplejson or jsonlib to continue")
 
-import urllib
 import re
 import copy
 import base64
@@ -16,7 +15,12 @@ import logging
 from itertools import groupby
 from contextlib import closing
 
-P3K = sys.version_info >= (3,0)
+from intermine.errors import WebserviceError
+from intermine.model import Attribute, Reference, Collection
+
+from intermine import VERSION
+
+P3K = sys.version_info >= (3, 0)
 
 logging.basicConfig()
 
@@ -28,7 +32,6 @@ try:
     from urllib2 import HTTPError
     from urllib2 import Request
     from urlparse import urlparse
-    import httplib
 except ImportError:
     # Python 3.x imports
     from urllib.parse import urlencode
@@ -37,12 +40,7 @@ except ImportError:
     from urllib.request import Request
     from urllib.error import HTTPError
     from collections import UserDict
-    import http.client as httplib
 
-from intermine.errors import WebserviceError
-from intermine.model import Attribute, Reference, Collection
-
-from intermine import VERSION
 
 class EnrichmentLine(UserDict):
     """
@@ -52,7 +50,6 @@ class EnrichmentLine(UserDict):
     These objects operate as dictionaries as well as objects with predefined
     properties.
     """
-
     def __str__(self):
         return str(self.data)
 
@@ -66,10 +63,12 @@ class EnrichmentLine(UserDict):
                 return self.data[key_name]
         raise AttributeError(name)
 
+
 class ResultObject(object):
     """
-    An object used to represent result records as returned in jsonobjects format
-    ============================================================================
+    An object used to represent result records as returned in jsonobjects
+    format
+    ===========================================================================
 
     These objects are backed by a row of data and the class descriptor that
     describes the object. They allow access in standard object style:
@@ -84,30 +83,34 @@ class ResultObject(object):
     of the object, and is a guarantor of object identity.
 
     """
-
     def __init__(self, data, cld, view=[]):
         stripped = [v[v.find(".") + 1:] for v in view]
         self.selected_attributes = [v for v in stripped if "." not in v]
-        self.reference_paths = dict(((k, list(i)) for k, i in groupby(stripped, lambda x: x[:x.find(".") + 1])))
+        self.reference_paths = dict(
+            ((k, list(i))
+             for k, i in groupby(stripped, lambda x: x[:x.find(".") + 1])))
         self._data = data
         # Make sure this object has the most specific class desc. possible
         class_name = data['class']
         if "class" not in data or cld.name == class_name:
             self._cld = cld
-        else: # this could be a composed class - behave accordingly.
+        else:  # this could be a composed class - behave accordingly.
             self._cld = cld.model.get_class(class_name)
 
         self._attr_cache = {}
 
     def __str__(self):
         dont_show = set(["objectId", "class"])
-        return "%s(%s)" % (self._cld.name, ",  ".join("%s = %r" % (k, v) for k, v in list(self._data.items())
-            if not isinstance(v, dict) and not isinstance(v, list) and k not in dont_show))
+        return "%s(%s)" % (self._cld.name, ",  ".join(
+            "%s = %r" % (k, v)
+            for k, v in list(self._data.items()) if not isinstance(v, dict)
+            and not isinstance(v, list) and k not in dont_show))
 
     def __repr__(self):
         dont_show = set(["objectId", "class"])
-        return "%s(%s)" % (self._cld.name, ", ".join("%s = %r" % (k, getattr(self, k)) for k in list(self._data.keys())
-            if k not in dont_show))
+        return "%s(%s)" % (self._cld.name, ", ".join(
+            "%s = %r" % (k, getattr(self, k))
+            for k in list(self._data.keys()) if k not in dont_show))
 
     def __getattr__(self, name):
         if name in self._attr_cache:
@@ -133,14 +136,18 @@ class ResultObject(object):
                 if data is None:
                     attr = []
                 else:
-                    attr = [ResultObject(x, fld.type_class, ref_paths) for x in data]
+                    attr = [
+                        ResultObject(x, fld.type_class, ref_paths)
+                        for x in data
+                    ]
             else:
                 if data is None:
                     attr = None
                 else:
                     attr = ResultObject(data, fld.type_class, ref_paths)
         else:
-            raise WebserviceError("Inconsistent model - This should never happen")
+            raise WebserviceError(
+                "Inconsistent model - This should never happen")
         self._attr_cache[name] = attr
         return attr
 
@@ -152,44 +159,50 @@ class ResultObject(object):
 
     @property
     def id(self):
-        """Return the internal DB identifier of this object. Or None if this is not an InterMine object"""
+        """
+        Return the internal DB identifier of this object. Or None if this is
+        not an InterMine object
+        """
         return self._data.get('objectId')
 
     def _fetch_attr(self, fld):
         if fld.name in self.selected_attributes:
-            return None # Was originally selected - no point asking twice
+            return None  # Was originally selected - no point asking twice
         c = self._cld
         if "id" not in c:
-            return None # Cannot reliably fetch anything without access to the objectId.
-        q = c.model.service.query(c, fld).where(id = self.id)
+            return None  # Cannot reliably fetch anything without access to the
+            # objectId.
+        q = c.model.service.query(c, fld).where(id=self.id)
         r = q.first()
         return r._data[fld.name] if fld.name in r._data else None
 
     def _fetch_reference(self, ref):
         if ref.name + "." in self.reference_paths:
-            return None # Was originally selected - no point asking twice.
+            return None  # Was originally selected - no point asking twice.
         c = self._cld
         if "id" not in c:
-            return None # Cannot reliably fetch anything without access to the objectId.
-        q = c.model.service.query(ref).outerjoin(ref).where(id = self.id)
+            return None  # Cannot reliably fetch anything without access to the
+            # objectId.
+        q = c.model.service.query(ref).outerjoin(ref).where(id=self.id)
         r = q.first()
         return r._data[ref.name] if ref.name in r._data else None
+
 
 class ResultRow(object):
     """
     An object for representing a row of data received back from the server.
     =======================================================================
 
-    ResultRows provide access to the fields of the row through index lookup. However,
-    for convenience both list indexes and dictionary keys can be used. So the
-    following all work:
+    ResultRows provide access to the fields of the row through index lookup.
+    However, for convenience both list indexes and dictionary keys can be used.
+    So the following all work:
 
         >>> # Assuming the view is "Gene.symbol", "Gene.organism.name":
-        >>> row[0] == row["symbol"] == row["Gene.symbol"] == row(0) == row("symbol")
+        >>> row[0] == row["symbol"] == row["Gene.symbol"] == row(0) ==
+            row("symbol")
         ... True
 
     """
-
     def __init__(self, data, views):
         self.data = data
         self.views = views
@@ -215,12 +228,12 @@ class ResultRow(object):
         return self.index_map[key]
 
     def __str__(self):
-        root = re.sub("\..*$", "", self.views[0])
+        root = re.sub(r"\..*$", "", self.views[0])
         parts = [root + ":"]
         for view in self.views:
-           short_form = re.sub("^[^.]+.", "", view)
-           value = self[view]
-           parts.append(short_form + "=" + repr(value))
+            short_form = re.sub("^[^.]+.", "", view)
+            value = self[view]
+            parts.append(short_form + "=" + repr(value))
         return " ".join(parts)
 
     def __call__(self, name):
@@ -267,13 +280,13 @@ class ResultRow(object):
             self._get_index_for(key)
             return True
         except KeyError:
-           return False
+            return False
+
 
 class TableResultRow(ResultRow):
     """
     A class for parsing results from the jsonrows data format.
     """
-
     def __getitem__(self, key):
         if isinstance(key, int):
             return self.data[key]["value"]
@@ -287,14 +300,19 @@ class TableResultRow(ResultRow):
         """Return a list view of this row"""
         return [x["value"] for x in self.data]
 
+
 def encode_str(s):
     return s.encode('utf8') if hasattr(s, 'encode') else s
+
 
 def decode_binary(b):
     return b.decode('utf8') if hasattr(b, 'decode') else b
 
+
 def encode_dict(input_d):
-    return dict((encode_str(k), encode_str(v)) for k, v in list(input_d.items()))
+    return dict(
+        (encode_str(k), encode_str(v)) for k, v in list(input_d.items()))
+
 
 class ResultIterator(object):
     """
@@ -327,7 +345,8 @@ class ResultIterator(object):
         @type path: string
         @param params: The query parameters for this request
         @type params: dict
-        @param rowformat: One of "rr", "object", "count", "dict", "list", "tsv", "csv", "jsonrows", "jsonobjects", "json"
+        @param rowformat: One of "rr", "object", "count", "dict", "list",
+        "tsv", "csv", "jsonrows", "jsonobjects", "json"
         @type rowformat: string
         @param view: The output columns
         @type view: list
@@ -337,11 +356,13 @@ class ResultIterator(object):
         @raise ValueError: if the row format is incorrect
         @raise WebserviceError: if the request is unsuccessful
         """
-        if rowformat.startswith("object"): # Accept "object", "objects", "objectformat", etc...
-            rowformat = "jsonobjects" # these are synonymous
+        if rowformat.startswith(
+                "object"
+        ):  # Accept "object", "objects", "objectformat", etc...
+            rowformat = "jsonobjects"  # these are synonymous
         if rowformat not in self.ROW_FORMATS:
-            raise ValueError("'%s' is not one of the valid row formats (%s)"
-                    % (rowformat, repr(list(self.ROW_FORMATS))))
+            raise ValueError("'%s' is not one of the valid row formats (%s)" %
+                             (rowformat, repr(list(self.ROW_FORMATS))))
 
         self.row = ResultRow if service.version >= 8 else TableResultRow
 
@@ -349,13 +370,13 @@ class ResultIterator(object):
             if service.version >= 8:
                 params.update({"format": "json"})
             else:
-                params.update({"format" : "jsonrows"})
+                params.update({"format": "jsonrows"})
         elif rowformat == 'tsv':
             params.update({"format": "tab"})
         else:
-            params.update({"format" : rowformat})
+            params.update({"format": rowformat})
 
-        self.url  = service.root + path
+        self.url = service.root + path
         self.data = urlencode(encode_dict(params), True)
         self.view = view
         self.opener = service.opener
@@ -384,24 +405,32 @@ class ResultIterator(object):
         Returns the internal iterator object.
         """
         con = self.opener.open(self.url, self.data)
-        identity = lambda x: x
-        flat_file_parser = lambda: FlatFileIterator(con, identity)
-        simple_json_parser = lambda: JSONIterator(con, identity)
-
         try:
             reader = {
-                "tsv"         : flat_file_parser,
-                "csv"         : flat_file_parser,
-                "count"       : flat_file_parser,
-                "json"        : simple_json_parser,
-                "jsonrows"    : simple_json_parser,
-                "list"        : lambda: JSONIterator(con, lambda x: self.row(x, self.view).to_l()),
-                "rr"          : lambda: JSONIterator(con, lambda x: self.row(x, self.view)),
-                "dict"        : lambda: JSONIterator(con, lambda x: self.row(x, self.view).to_d()),
-                "jsonobjects" : lambda: JSONIterator(con, lambda x: ResultObject(x, self.cld, self.view))
+                "tsv":
+                lambda: FlatFileIterator(con, lambda x: x),
+                "csv":
+                lambda: FlatFileIterator(con, lambda x: x),
+                "count":
+                lambda: FlatFileIterator(con, lambda x: x),
+                "json":
+                lambda: JSONIterator(con, lambda x: x),
+                "jsonrows":
+                lambda: JSONIterator(con, lambda x: x),
+                "list":
+                lambda: JSONIterator(con, lambda x: self.row(x, self.view).
+                                     to_l()),
+                "rr":
+                lambda: JSONIterator(con, lambda x: self.row(x, self.view)),
+                "dict":
+                lambda: JSONIterator(con, lambda x: self.row(x, self.view).
+                                     to_d()),
+                "jsonobjects":
+                lambda: JSONIterator(
+                    con, lambda x: ResultObject(x, self.cld, self.view))
             }.get(self.rowformat)()
-        except Exception as e:
-            raise Exception("Couldn't get iterator for "  + self.rowformat)
+        except Exception:
+            raise Exception("Couldn't get iterator for " + self.rowformat)
         return reader
 
     def __next__(self):
@@ -422,6 +451,7 @@ class ResultIterator(object):
             self._it = None
             raise StopIteration
 
+
 class FlatFileIterator(object):
     """
     An iterator for handling results returned as a flat file (TSV/CSV).
@@ -429,7 +459,6 @@ class FlatFileIterator(object):
 
     This iterator can be used as the sub iterator in a ResultIterator
     """
-
     def __init__(self, connection, parser):
         """
         Constructor
@@ -456,6 +485,7 @@ class FlatFileIterator(object):
         if line.startswith("[ERROR]"):
             raise WebserviceError(line)
         return self.parser(line)
+
 
 class JSONIterator(object):
     """
@@ -506,7 +536,8 @@ class JSONIterator(object):
             if not line.endswith('"results":['):
                 self.parse_header()
         except StopIteration:
-            raise WebserviceError("The connection returned a bad header" + self.header)
+            raise WebserviceError("The connection returned a bad header" +
+                                  self.header)
 
     def check_return_status(self):
         """
@@ -524,7 +555,7 @@ class JSONIterator(object):
         info = None
         try:
             info = json.loads(container)
-        except:
+        except json.JSONError:
             raise WebserviceError("Error parsing JSON container: " + container)
 
         if not info["wasSuccessful"]:
@@ -540,7 +571,7 @@ class JSONIterator(object):
         try:
             line = decode_binary(next(self.connection))
             if line.startswith("]"):
-                self.footer += line;
+                self.footer += line
                 for otherline in self.connection:
                     self.footer += line
                 self.check_return_status()
@@ -550,8 +581,9 @@ class JSONIterator(object):
                     try:
                         row = json.loads(line)
                     except json.decoder.JSONDecodeError as e:
-                        raise WebserviceError("Error parsing line from results: '"
-                                + line + "' - " + str(e))
+                        raise WebserviceError(
+                            "Error parsing line from results: '" + line +
+                            "' - " + str(e))
                     next_row = self.parser(row)
         except StopIteration:
             raise WebserviceError("Connection interrupted")
@@ -562,10 +594,12 @@ class JSONIterator(object):
         else:
             return next_row
 
+
 def encode_headers(headers):
-    return dict((k.encode('ascii') if isinstance(k, unicode) else k, \
-                 v.encode('ascii') if isinstance(v, unicode) else v) \
-                 for k, v in list(headers.items()))
+    return dict((k.encode('ascii') if isinstance(k, unicode) else k,
+                 v.encode('ascii') if isinstance(v, unicode) else v)
+                for k, v in list(headers.items()))
+
 
 class InterMineURLOpener(object):
     """
@@ -574,7 +608,8 @@ class InterMineURLOpener(object):
 
     Provides user agent and authentication headers, and handling of errors
     """
-    USER_AGENT = "InterMine-Client-{0}/python-{1}".format(VERSION, sys.version_info)
+    USER_AGENT = "InterMine-Client-{0}/python-{1}".format(
+        VERSION, sys.version_info)
     PLAIN_TEXT = "text/plain"
     JSON = "application/json"
 
@@ -590,7 +625,8 @@ class InterMineURLOpener(object):
         self.token = token
         if credentials and len(credentials) == 2:
             encoded = '{0}:{1}'.format(*credentials).encode('utf8')
-            base64string = 'Basic {0}'.format(base64.encodestring(encoded)[:-1].decode('ascii'))
+            base64string = 'Basic {0}'.format(
+                base64.encodestring(encoded)[:-1].decode('ascii'))
             self.auth_header = base64string
             self.using_authentication = True
         elif self.token is not None:
@@ -608,7 +644,7 @@ class InterMineURLOpener(object):
             clone.auth_header = self.auth_header
         return clone
 
-    def headers(self, content_type = None, accept = None):
+    def headers(self, content_type=None, accept=None):
         h = {'UserAgent': self.USER_AGENT}
         if self.using_authentication:
             h['Authorization'] = self.auth_header
@@ -621,45 +657,50 @@ class InterMineURLOpener(object):
     def post_plain_text(self, url, body):
         return self.post_content(url, body, InterMineURLOpener.PLAIN_TEXT)
 
-    def post_content(self, url, body, mimetype, charset = "utf-8"):
+    def post_content(self, url, body, mimetype, charset="utf-8"):
         content_type = "{0}; charset={1}".format(mimetype, charset)
 
-        with closing(self.open(url, body, {'Content-Type': content_type})) as f:
+        with closing(self.open(url, body,
+                               {'Content-Type': content_type})) as f:
             return f.read()
 
-    def open(self, url, data=None, headers = None, method = None):
+    def open(self, url, data=None, headers=None, method=None):
         url = self.prepare_url(url)
         buff = data if data is None else bytearray(data, 'utf8')
         hs = self.headers()
         if headers is not None:
             hs.update(headers)
-        req = Request(url, buff, headers = hs)
+        req = Request(url, buff, headers=hs)
         if method is not None:
             req.get_method = lambda: method
         try:
             return urlopen(req)
         except HTTPError as e:
-            args = (url, e, e.code, # The next two lines are python2.6 workarounds
-                    e.reason if hasattr(e, 'reason') else None,
-                    e.headers if hasattr(e, 'headers') else None)
+            args = (
+                url,
+                e,
+                e.code,  # The next two lines are python2.6 workarounds
+                e.reason if hasattr(e, 'reason') else None,
+                e.headers if hasattr(e, 'headers') else None)
             handler = {
-                    400: self.http_error_400,
-                    401: self.http_error_401,
-                    403: self.http_error_403,
-                    404: self.http_error_404,
-                    500: self.http_error_500
-                    }.get(e.code, self.http_error_default)
+                400: self.http_error_400,
+                401: self.http_error_401,
+                403: self.http_error_403,
+                404: self.http_error_404,
+                500: self.http_error_500
+            }.get(e.code, self.http_error_default)
             handler(*args)
 
-    def read(self, url, data = None):
+    def read(self, url, data=None):
         with closing(self.open(url, data)) as conn:
             content = conn.read()
             return decode_binary(content)
 
     def prepare_url(self, url):
-        # Generally unnecessary these days - will be deprecated one of these days.
+        # Generally unnecessary these days - will be deprecated one of these
+        # days.
         if self.token:
-            token_param = urlencode(encode_dict(dict(token = self.token)))
+            token_param = urlencode(encode_dict(dict(token=self.token)))
             o = urlparse(url)
             if o.query:
                 url += "&" + token_param
@@ -669,11 +710,14 @@ class InterMineURLOpener(object):
         return url
 
     def delete(self, url):
-        with closing(self.open(url, method = 'DELETE')) as f:
+        with closing(self.open(url, method='DELETE')) as f:
             return f.read()
 
     def http_error_default(self, url, fp, errcode, errmsg, headers):
-        """Re-implementation of http_error_default, with content now supplied by default"""
+        """
+        Re-implementation of http_error_default, with content now supplied
+        by default
+        """
         content = fp.read()
         fp.close()
         raise WebserviceError(errcode, errmsg, content)
@@ -692,17 +736,18 @@ class InterMineURLOpener(object):
         fp.close()
         try:
             message = json.loads(content)["error"]
-        except:
+        except json.JSONError:
             message = content
-        raise WebserviceError("There was a problem with our request", errcode, errmsg, message)
+        raise WebserviceError("There was a problem with our request", errcode,
+                              errmsg, message)
 
     def http_error_401(self, url, fp, errcode, errmsg, headers, data=None):
         """
         Handle 401 HTTP errors, attempting to return informative error messages
         =======================================================================
 
-        401 errors indicate we don't have sufficient permission for the resource
-        we requested - usually a list or a tempate
+        401 errors indicate we don't have sufficient permission for the
+        resource we requested - usually a list or a tempate
 
         @raise WebserviceError: in all circumstances
 
@@ -711,17 +756,20 @@ class InterMineURLOpener(object):
         fp.close()
         if self.using_authentication:
             auth = self.auth_header
-            raise WebserviceError("Insufficient permissions - {0}".format(auth), errcode, errmsg, content)
+            raise WebserviceError(
+                "Insufficient permissions - {0}".format(auth), errcode, errmsg,
+                content)
         else:
-            raise WebserviceError("No permissions - not logged in", errcode, errmsg, content)
+            raise WebserviceError("No permissions - not logged in", errcode,
+                                  errmsg, content)
 
     def http_error_403(self, url, fp, errcode, errmsg, headers, data=None):
         """
         Handle 403 HTTP errors, attempting to return informative error messages
         =======================================================================
 
-        401 errors indicate we don't have sufficient permission for the resource
-        we requested - usually a list or a tempate
+        401 errors indicate we don't have sufficient permission for the
+        resource we requested - usually a list or a tempate
 
         @raise WebserviceError: in all circumstances
 
@@ -730,20 +778,22 @@ class InterMineURLOpener(object):
         fp.close()
         try:
             message = json.loads(content)["error"]
-        except:
+        except json.JSONError:
             message = content
         if self.using_authentication:
-            raise WebserviceError("Insufficient permissions", errcode, errmsg, message)
+            raise WebserviceError("Insufficient permissions", errcode, errmsg,
+                                  message)
         else:
-            raise WebserviceError("No permissions - not logged in", errcode, errmsg, message)
+            raise WebserviceError("No permissions - not logged in", errcode,
+                                  errmsg, message)
 
     def http_error_404(self, url, fp, errcode, errmsg, headers, data=None):
         """
         Handle 404 HTTP errors, attempting to return informative error messages
         =======================================================================
 
-        404 errors indicate that the requested resource does not exist - usually
-        a template that is not longer available.
+        404 errors indicate that the requested resource does not exist,
+        usually a template that is not longer available.
 
         @raise WebserviceError: in all circumstances
 
@@ -752,7 +802,7 @@ class InterMineURLOpener(object):
         fp.close()
         try:
             message = json.loads(content)["error"]
-        except:
+        except json.JSONError:
             message = content
         raise WebserviceError("Missing resource", errcode, errmsg, message)
 
@@ -761,8 +811,8 @@ class InterMineURLOpener(object):
         Handle 500 HTTP errors, attempting to return informative error messages
         =======================================================================
 
-        500 errors indicate that the server borked during the request - ie: it wasn't
-        our fault.
+        500 errors indicate that the server borked during the request - ie: it
+        wasn't our fault.
 
         @raise WebserviceError: in all circumstances
 
@@ -771,7 +821,7 @@ class InterMineURLOpener(object):
         fp.close()
         try:
             message = json.loads(content)["error"]
-        except:
+        except json.JSONError:
             message = content
-        raise WebserviceError("Internal server error", errcode, errmsg, message)
-
+        raise WebserviceError("Internal server error", errcode, errmsg,
+                              message)
