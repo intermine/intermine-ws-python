@@ -33,6 +33,7 @@ def getVersion(mine):
     except KeyError:
         return "No such mine available"
 
+
 def getInfo(mine):
     """
     A function to get information about a mine
@@ -135,16 +136,16 @@ def getMines(organism=None):
     for i in range(len(dict["instances"])):
         if organism is None:
             print(dict["instances"][i]["name"])
-            count = count+1
+            count = count + 1
         else:
             for j in range(len(dict["instances"][i]["organisms"])):
                 if dict["instances"][i]["organisms"][j] == organism:
                     print(dict["instances"][i]["name"])
-                    count = count+1
+                    count = count + 1
                 elif dict["instances"][i]["organisms"][j] == " " + organism:
                     print(dict["instances"][i]["name"])
-                    count = count+1
-    if(count == 0):
+                    count = count + 1
+    if (count == 0):
         return "No such mine available"
     else:
         return None
