@@ -22,18 +22,17 @@ except ImportError:  # pragma: no cover
     try:
         import json
     except ImportError:
-        raise ImportError("Could not find any JSON module to import - "
-                          + "please install simplejson or jsonlib to continue")
+        raise ImportError("Could not find any JSON module to import - " +
+                          "please install simplejson or jsonlib to continue")
 
 # Local intermine imports
 from intermine.query import Query, Template
-from intermine.model import Model, Attribute, Reference, Collection, Column
+from intermine.model import Model, Attribute, Reference, Column
 from intermine.lists.listmanager import ListManager
 from intermine.errors import ServiceError, WebserviceError
 from intermine.results import InterMineURLOpener, ResultIterator
 from intermine import idresolution
 from intermine.decorators import requires_version
-
 """
 Webservice Interaction Routines for InterMine Webservices
 =========================================================
@@ -86,16 +85,15 @@ class Registry(DictMixin):
 
     MINES_PATH = "/mines.json"
 
-    def __init__(
-            self, registry_url="http://www.intermine.org/registry"):
+    def __init__(self, registry_url="http://www.intermine.org/registry"):
         self.registry_url = registry_url
         opener = InterMineURLOpener()
         data = opener.open(registry_url + Registry.MINES_PATH).read()
         mine_data = json.loads(data)
-        self.__mine_dict = dict(((mine["name"], mine)
-                                 for mine in mine_data["mines"]))
-        self.__synonyms = dict(((name.lower(), name)
-                                for name in list(self.__mine_dict.keys())))
+        self.__mine_dict = dict(
+            ((mine["name"], mine) for mine in mine_data["mines"]))
+        self.__synonyms = dict(
+            ((name.lower(), name) for name in list(self.__mine_dict.keys())))
         self.__mine_cache = {}
 
     def __contains__(self, name):
@@ -112,12 +110,10 @@ class Registry(DictMixin):
             raise KeyError("Unknown mine: " + name)
 
     def __setitem__(self, name, item):
-        raise NotImplementedError(
-            "You cannot add items to a registry")
+        raise NotImplementedError("You cannot add items to a registry")
 
     def __delitem__(self, name):
-        raise NotImplementedError(
-            "You cannot remove items from a registry")
+        raise NotImplementedError("You cannot remove items from a registry")
 
     def __len__(self):
         return len(self.__mine_dict)
@@ -193,12 +189,13 @@ class Service(object):
     X{Template} is the term for a predefined "Query", ie: one that has been
     written and saved on the webservice you will access. The definition
     of the query is already done, but the user may want to specify the
-    values of the constraints that exist on the template. Templates are accessed
-    by name, and while you can easily introspect templates, it is assumed
-    you know what they do when you use them
+    values of the constraints that exist on the template. Templates are
+    accessed by name, and while you can easily introspect templates, it is
+    assumed you know what they do when you use them
 
-    X{List} is a saved result set containing a set of objects previously identified
-    in the database. Lists can be created and managed using this client library.
+    X{List} is a saved result set containing a set of objects previously
+    identified in the database. Lists can be created and managed using this
+    client library.
 
     @see: L{intermine.query}
     """
@@ -224,9 +221,13 @@ class Service(object):
     IDS_PATH = "/ids"
     USERS_PATH = "/users"
 
-    def __init__(self, root,
-                 username=None, password=None, token=None,
-                 prefetch_depth=1, prefetch_id_only=False):
+    def __init__(self,
+                 root,
+                 username=None,
+                 password=None,
+                 token=None,
+                 prefetch_depth=1,
+                 prefetch_id_only=False):
         """
         Constructor
         ===========
@@ -245,7 +246,8 @@ class Service(object):
         @param root: the root url of the webservice (required)
         @param username: your login name (optional)
         @param password: your password (required if a username is given)
-        @param token: your API access token(optional - used in preference to username and password)
+        @param token: your API access token(optional - used in preference to
+        username and password)
 
         @raise ServiceError: if the version cannot be fetched and parsed
         @raise ValueError:   if a username is supplied, but no password
@@ -255,8 +257,8 @@ class Service(object):
         is supported by all webservices. Newer webservices (version 6+)
         also support API access token authentication, which is the recommended
         system to use. Token access is more secure as you will never have
-        to transmit your username or password, and the token can be easily changed
-        or disabled without changing your webapp login details.
+        to transmit your username or password, and the token can be easily
+        changed or disabled without changing your webapp login details.
 
         """
         o = urlparse(root)
@@ -286,8 +288,7 @@ class Service(object):
                     "Both username and token credentials supplied")
 
             if not password:
-                raise ValueError(
-                    "Username given, but no password supplied")
+                raise ValueError("Username given, but no password supplied")
 
             self.opener = InterMineURLOpener((username, password))
         else:
@@ -310,10 +311,10 @@ class Service(object):
 
     # Delegated list methods
 
-    LIST_MANAGER_METHODS = frozenset(["get_list", "get_all_lists",
-                                      "get_all_list_names",
-                                      "create_list", "get_list_count",
-                                      "delete_lists", "l"])
+    LIST_MANAGER_METHODS = frozenset([
+        "get_list", "get_all_lists", "get_all_list_names", "create_list",
+        "get_list_count", "delete_lists", "l"
+    ])
 
     def get_anonymous_token(self, url):
         """
@@ -380,8 +381,8 @@ class Service(object):
                     self._version = int(self.opener.open(url).read())
                 except ValueError as e:
                     raise ServiceError(
-                        "Could not parse a valid webservice version: "
-                        + str(e))
+                        "Could not parse a valid webservice version: " +
+                        str(e))
         except AttributeError as e:
             raise Exception(e)
         return self._version
@@ -440,19 +441,16 @@ class Service(object):
         if len(columns) == 1:
             view = columns[0]
             if isinstance(view, Attribute):
-                return Query(self.model, self).select("%s.%s" %
-                                                      (view.declared_in.name,
-                                                       view))
+                return Query(self.model, self).select(
+                    "%s.%s" % (view.declared_in.name, view))
 
             if isinstance(view, Reference):
-                return Query(self.model, self).select("%s.%s.*" %
-                                                      (view.declared_in.name,
-                                                       view))
+                return Query(self.model, self).select(
+                    "%s.%s.*" % (view.declared_in.name, view))
             elif not isinstance(view, Column) and not str(view).endswith("*"):
                 path = self.model.make_path(view)
                 if not path.is_attribute():
-                    return Query(self.model, self).select(
-                        str(view) + ".*")
+                    return Query(self.model, self).select(str(view) + ".*")
 
         return Query(self.model, self).select(*columns)
 
@@ -481,8 +479,8 @@ class Service(object):
         try:
             t = self.templates[name]
         except KeyError:
-            raise ServiceError("There is no template called '"
-                               + name + "' at this service")
+            raise ServiceError("There is no template called '" + name +
+                               "' at this service")
         if not isinstance(t, Template):
             t = Template.from_xml(t, self.model, self)
             self.templates[name] = t
@@ -490,8 +488,9 @@ class Service(object):
 
     def _get_json(self, path, payload=None):
         headers = {'Accept': 'application/json'}
-        with closing(self.opener.open(self.root + path, payload,
-                                      headers=headers)) as resp:
+        with closing(
+                self.opener.open(self.root + path, payload,
+                                 headers=headers)) as resp:
             data = json.loads(ensure_str(resp.read()))
             if data['error'] is not None:
                 raise ServiceError(data['error'])
@@ -515,7 +514,8 @@ class Service(object):
         @param term The search term
         @param facets The facets to search by (eg: Organism = 'H. sapiens')
 
-        @return (list, dict) The results, and a dictionary of facetting informtation.
+        @return (list, dict) The results, and a dictionary of facetting
+        informtation.
         """
         if hasattr(term, 'encode'):
             term = term.encode('utf8')
@@ -547,8 +547,12 @@ class Service(object):
             self._widgets = dict(([w['name'], w] for w in ws))
         return self._widgets
 
-    def resolve_ids(self, data_type, identifiers, extra='',
-                    case_sensitive=False, wildcards=False):
+    def resolve_ids(self,
+                    data_type,
+                    identifiers,
+                    extra='',
+                    case_sensitive=False,
+                    wildcards=False):
         """
         Submit an Identifier Resolution Job
         ===================================
@@ -574,8 +578,7 @@ class Service(object):
         @return: {idresolution.Job} The job.
         """
         if self.version < 10:
-            raise ServiceError(
-                "This feature requires API version 10+")
+            raise ServiceError("This feature requires API version 10+")
         if not data_type:
             raise ServiceError("No data-type supplied")
         if not identifiers:
@@ -588,8 +591,8 @@ class Service(object):
             "caseSensitive": case_sensitive,
             "wildCards": wildcards
         })
-        text = self.opener.post_content(
-            self.root + self.IDS_PATH, data, InterMineURLOpener.JSON)
+        text = self.opener.post_content(self.root + self.IDS_PATH, data,
+                                        InterMineURLOpener.JSON)
         ret = json.loads(text)
         if ret['error'] is not None:
             raise ServiceError(ret['error'])
@@ -623,7 +626,8 @@ class Service(object):
         strings. It is recommended that in most cases you would want
         to use L{Service.get_template}.
 
-        You can use this property however to test for template existence though::
+        You can use this property however to test for template existence
+        though::
 
          if name in service.templates:
             template = service.get_template(name)
@@ -637,8 +641,7 @@ class Service(object):
             for e in dom.getElementsByTagName('template'):
                 name = e.getAttribute('name')
                 if name in templates:
-                    raise ServiceError(
-                        "Two templates with same name: " + name)
+                    raise ServiceError("Two templates with same name: " + name)
                 else:
                     templates[name] = e.toxml()
             self._templates = templates
@@ -680,7 +683,8 @@ class Service(object):
         @type path: string
         @param params: The query parameters for this request as a dictionary
         @type params: dict
-        @param rowformat: One of "rr", "object", "count", "dict", "list", "tsv", "csv", "jsonrows", "jsonobjects"
+        @param rowformat: One of "rr", "object", "count", "dict", "list",
+        "tsv", "csv", "jsonrows", "jsonobjects"
         @type rowformat: string
         @param view: The output columns
         @type view: list
@@ -689,8 +693,7 @@ class Service(object):
 
         @return: L{intermine.webservice.ResultIterator}
         """
-        return ResultIterator(
-            self, path, params, rowformat, view, cld)
+        return ResultIterator(self, path, params, rowformat, view, cld)
 
     @requires_version(9)
     def register(self, username, password):
@@ -711,8 +714,7 @@ class Service(object):
     @requires_version(16)
     def get_deregistration_token(self, validity=300):
         if validity < 1 or validity > 24 * 60 * 60:
-            raise ValueError(
-                "Validity not a reasonable value: 1ms - 2hrs")
+            raise ValueError("Validity not a reasonable value: 1ms - 2hrs")
         params = urlencode({'validity': str(validity)})
         resp = self._get_json('/user/deregistration', payload=params)
         return resp['token']
@@ -731,9 +733,7 @@ class Service(object):
             deregistration_token = deregistration_token['uuid']
 
         path = self.root + '/user'
-        params = {
-            'deregistrationToken': deregistration_token,
-            'format': 'xml'}
+        params = {'deregistrationToken': deregistration_token, 'format': 'xml'}
         uri = path + '?' + urlencode(params)
         self.flush()
         userdata = self.opener.delete(uri)
