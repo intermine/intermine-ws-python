@@ -6,11 +6,9 @@ import codecs
 try:
     # Python 2.x imports
     from urllib import urlencode
-    from urllib import error
 except ImportError:
     # Python 3.x imports
     from urllib.parse import urlencode
-    from urllib import error
 
 from intermine.results import JSONIterator, EnrichmentLine
 from intermine.model import ConstraintNode
