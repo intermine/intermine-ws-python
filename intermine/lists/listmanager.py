@@ -28,7 +28,6 @@ except ImportError:
 
     from urllib.parse import urlencode
 
-import urllib
 import codecs
 
 from intermine.errors import WebserviceError
@@ -47,7 +46,6 @@ def safe_key(maybe_unicode):
 
 
 class ListManager(object):
-
     """
     A Class for Managing List Content and Operations
     ================================================
@@ -96,9 +94,10 @@ class ListManager(object):
 
             # Workaround for python 2.6 unicode key issues
 
-            l = ListManager.safe_dict(l)
+            temp = ListManager.safe_dict(l)
             self.lists[l['name']] = List(service=self.service,
-                                         manager=self, **l)
+                                         manager=self,
+                                         **temp)
 
     @staticmethod
     def safe_dict(d):
@@ -116,7 +115,7 @@ class ListManager(object):
             self.refresh_lists()
         return self.lists.get(name)
 
-    def l(self, name):
+    def ls(self, name):
         """Alias for get_list"""
 
         return self.get_list(name)
@@ -182,11 +181,11 @@ class ListManager(object):
         return q
 
     def _create_list_from_queryable(
-        self,
-        queryable,
-        name,
-        description,
-        tags,
+            self,
+            queryable,
+            name,
+            description,
+            tags,
     ):
 
         q = self._get_listable_query(queryable)
@@ -202,14 +201,14 @@ class ListManager(object):
         return self.parse_list_upload_response(data)
 
     def create_list(
-        self,
-        content,
-        list_type='',
-        name=None,
-        description=None,
-        tags=[],
-        add=[],
-        organism=None,
+            self,
+            content,
+            list_type='',
+            name=None,
+            description=None,
+            tags=[],
+            add=[],
+            organism=None,
     ):
         """
         Create a new list in the webservice
@@ -299,8 +298,8 @@ class ListManager(object):
             ids = item_content.read()  # File like thing
         except AttributeError:
             try:
-                with closing(codecs.open(item_content, 'r', 'UTF-8'
-                                         )) as c:  # File name
+                with closing(codecs.open(item_content, 'r',
+                                         'UTF-8')) as c:  # File name
                     ids = c.read()
             except (TypeError, IOError):
                 try:
@@ -308,16 +307,14 @@ class ListManager(object):
                 except AttributeError:
                     try:  # Queryable
                         return self._create_list_from_queryable(
-                            item_content, name,
-                            description, tags)
+                            item_content, name, description, tags)
                     except AttributeError:
                         try:  # Array of idents
                             idents = iter(item_content)
-                            ids = '\n'.join(
-                                map('"{0}"'.format, idents))
+                            ids = '\n'.join(map('"{0}"'.format, idents))
                         except AttributeError:
-                            raise TypeError('Cannot create list from '
-                                            + repr(item_content))
+                            raise TypeError('Cannot create list from ' +
+                                            repr(item_content))
 
         uri = self.service.root + self.service.LIST_CREATION_PATH
         query_form = {
@@ -342,8 +339,7 @@ class ListManager(object):
         try:
             response_data = json.loads(response.decode('utf8'))
         except ValueError:
-            raise ListServiceError('Error parsing response: '
-                                   + response)
+            raise ListServiceError('Error parsing response: ' + response)
 
         if not response_data.get('wasSuccessful'):
             raise ListServiceError(response_data.get('error'))
@@ -366,8 +362,7 @@ class ListManager(object):
             else:
                 name = str(l)
             if name not in all_names:
-                self.LOG.debug(
-                    '{0} does not exist - skipping'.format(name))
+                self.LOG.debug('{0} does not exist - skipping'.format(name))
                 continue
             self.LOG.debug('deleting {0}'.format(name))
             uri = self.service.root + self.service.LIST_PATH
@@ -437,10 +432,10 @@ class ListManager(object):
         return self
 
     def __exit__(
-        self,
-        exc_type,
-        exc_val,
-        traceback,
+            self,
+            exc_type,
+            exc_val,
+            traceback,
     ):
 
         self.LOG.debug('Exiting context - deleting {0}'.format(
@@ -457,11 +452,11 @@ class ListManager(object):
             self._temp_lists = set()
 
     def intersect(
-        self,
-        lists,
-        name=None,
-        description=None,
-        tags=[],
+            self,
+            lists,
+            name=None,
+            description=None,
+            tags=[],
     ):
         """
         Calculate the intersection of a given set of lists, and return the
@@ -478,11 +473,11 @@ class ListManager(object):
         )
 
     def union(
-        self,
-        lists,
-        name=None,
-        description=None,
-        tags=[],
+            self,
+            lists,
+            name=None,
+            description=None,
+            tags=[],
     ):
         """
         Calculate the union of a given set of lists,
@@ -499,11 +494,11 @@ class ListManager(object):
         )
 
     def xor(
-        self,
-        lists,
-        name=None,
-        description=None,
-        tags=[],
+            self,
+            lists,
+            name=None,
+            description=None,
+            tags=[],
     ):
         """
         Calculate the symmetric difference of a given set of lists,
@@ -520,12 +515,12 @@ class ListManager(object):
         )
 
     def subtract(
-        self,
-        lefts,
-        rights,
-        name=None,
-        description=None,
-        tags=[],
+            self,
+            lefts,
+            rights,
+            name=None,
+            description=None,
+            tags=[],
     ):
         """
         Calculate the subtraction of rights from lefts,
@@ -553,13 +548,13 @@ class ListManager(object):
         return self.parse_list_upload_response(data)
 
     def _do_operation(
-        self,
-        path,
-        operation,
-        lists,
-        name,
-        description,
-        tags,
+            self,
+            path,
+            operation,
+            lists,
+            name,
+            description,
+            tags,
     ):
 
         list_names = self.make_list_names(lists)
@@ -586,11 +581,9 @@ class ListManager(object):
         list_names = []
         for l in lists:
             try:
-                t = l.list_type
                 list_names.append(l.name)
             except AttributeError:
                 try:
-                    m = l.model
                     list_names.append(self.create_list(l).name)
                 except AttributeError:
                     list_names.append(str(l))
@@ -599,7 +592,6 @@ class ListManager(object):
 
 
 class ListServiceError(WebserviceError):
-
     """Errors thrown when something goes wrong with list requests"""
 
     pass
