@@ -267,9 +267,10 @@ class ListManager(object):
             name = self.get_unused_list_name()
         if len(content) <= 0:
             print("Lists must have one or more elements - the current list has 0")
-            print("Please create a valid list with at least one element and create the list again")
+            print(
+                "Please create a valid list with at least one element and create the list again")
             return
-            
+
         item_content = content
 
         if organism:

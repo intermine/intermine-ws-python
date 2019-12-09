@@ -14,6 +14,7 @@ from intermine.results import JSONIterator, EnrichmentLine
 from intermine.model import ConstraintNode
 from intermine.errors import ServiceError
 
+
 class List(object):
     """
     Class for representing a List on an InterMine Webservice
@@ -98,7 +99,8 @@ class List(object):
             self._is_authorized = args.get("authorized")
             self._status = args.get("status")
 
-            if self._is_authorized is None: self._is_authorized = True
+            if self._is_authorized is None:
+                self._is_authorized = True
 
             if "tags" in args:
                 tags = args["tags"]
@@ -267,13 +269,14 @@ class List(object):
         """Get a member of this list by index"""
         if not isinstance(index, int):
             raise IndexError("Expected an integer key - got %s" % (index))
-        if index < 0: # handle negative indices.
+        if index < 0:  # handle negative indices.
             i = self.size + index
         else:
             i = index
 
         if i not in range(self.size):
-            raise IndexError("%d is not a valid index for a list of size %d" % (index, self.size))
+            raise IndexError(
+                "%d is not a valid index for a list of size %d" % (index, self.size))
 
         return self.to_query().first(start=i, row="jsonobjects")
 
@@ -288,7 +291,8 @@ class List(object):
         Intersect this list and another, and replace this list with the result of the
         intersection
         """
-        intersection = self._manager.intersect([self, other], description=self.description, tags=self.tags)
+        intersection = self._manager.intersect(
+            [self, other], description=self.description, tags=self.tags)
         self.delete()
         intersection.name = self.name
         return intersection
@@ -319,10 +323,11 @@ class List(object):
             ids = codecs.open(content, 'r', 'UTF-8').read()
         except (TypeError, IOError):
             if hasattr(content, 'strip') and hasattr(content, 'encode'):
-                ids = content # probably a string.
+                ids = content  # probably a string.
             else:
                 try:
-                    ids = "\n".join(map(lambda x: '"' + x + '"', iter(content)))
+                    ids = "\n".join(
+                        map(lambda x: '"' + x + '"', iter(content)))
                 except TypeError:
                     content = self._manager._get_listable_query(content)
                     uri = content.get_list_append_uri()
@@ -351,7 +356,7 @@ class List(object):
         except:
             return self._do_append(appendix)
 
-    def calculate_enrichment(self, widget, background = None, correction = "Holm-Bonferroni", maxp = 0.05, filter = ''):
+    def calculate_enrichment(self, widget, background=None, correction="Holm-Bonferroni", maxp=0.05, filter=''):
         """
         Perform an enrichment calculation on this list
         ==============================================
@@ -375,11 +380,14 @@ class List(object):
 
         """
         if self._service.version < 8:
-            raise ServiceError("This service does not support enrichment requests")
-        params = dict(list = self.name, widget = widget, correction = correction, maxp = maxp, filter = filter)
+            raise ServiceError(
+                "This service does not support enrichment requests")
+        params = dict(list=self.name, widget=widget,
+                      correction=correction, maxp=maxp, filter=filter)
         if background is not None:
             if self._service.version < 11:
-                raise ServiceError("This service does not support custom background populations")
+                raise ServiceError(
+                    "This service does not support custom background populations")
             params["population"] = background
         form = urlencode(params)
         uri = self._service.root + self._service.LIST_ENRICHMENT_PATH
@@ -392,7 +400,8 @@ class List(object):
 
     def __ixor__(self, other):
         """Calculate the symmetric difference of this list and another and replace this list with the result"""
-        diff = self._manager.xor([self, other], description=self.description, tags=self.tags)
+        diff = self._manager.xor(
+            [self, other], description=self.description, tags=self.tags)
         self.delete()
         diff.name = self.name
         return diff
@@ -403,7 +412,8 @@ class List(object):
 
     def __isub__(self, other):
         """Replace this list with the subtraction of the other from this list"""
-        subtr = self._manager.subtract([self], [other], description=self.description, tags=self.tags)
+        subtr = self._manager.subtract(
+            [self], [other], description=self.description, tags=self.tags)
         self.delete()
         subtr.name = self.name
         return subtr
