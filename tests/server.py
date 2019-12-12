@@ -14,7 +14,8 @@ except ImportError:
     from http.server import HTTPServer
     from urllib.parse import unquote
 
-class SilentRequestHandler(SimpleHTTPRequestHandler): # pragma: no cover
+
+class SilentRequestHandler(SimpleHTTPRequestHandler):  # pragma: no cover
 
     silent = True
 
@@ -22,8 +23,8 @@ class SilentRequestHandler(SimpleHTTPRequestHandler): # pragma: no cover
         """Use the file's location instead of cwd"""
         # abandon query parameters
         self.silent = SilentRequestHandler.silent
-        path = path.split('?',1)[0]
-        path = path.split('#',1)[0]
+        path = path.split('?', 1)[0]
+        path = path.split('#', 1)[0]
         path = posixpath.normpath(unquote(path))
         words = path.split('/')
         words = filter(None, words)
@@ -31,7 +32,8 @@ class SilentRequestHandler(SimpleHTTPRequestHandler): # pragma: no cover
         for word in words:
             drive, word = os.path.splitdrive(word)
             head, word = os.path.split(word)
-            if word in (os.curdir, os.pardir): continue
+            if word in (os.curdir, os.pardir):
+                continue
             path = os.path.join(path, word)
         return path
 
@@ -43,7 +45,8 @@ class SilentRequestHandler(SimpleHTTPRequestHandler): # pragma: no cover
     def do_POST(self):
         self.do_GET()
 
-class TestServer( threading.Thread ): # pragma: no cover
+
+class TestServer(threading.Thread):  # pragma: no cover
     def __init__(self, daemonise=True, silent=True):
         super(TestServer, self).__init__()
         self.daemon = daemonise
@@ -54,13 +57,14 @@ class TestServer( threading.Thread ): # pragma: no cover
         sock.bind(('', 0))
         self.port = sock.getsockname()[1]
         sock.close()
+
     def run(self):
-        protocol="HTTP/1.0"
+        protocol = "HTTP/1.0"
         server_address = ('', self.port)
 
         SilentRequestHandler.protocol_version = protocol
         SilentRequestHandler.silent = self.silent
-        #if not self.silent:
+        # if not self.silent:
         #    print "Starting", protocol, "server on port", self.port
         self.http = HTTPServer(server_address, SilentRequestHandler)
         self.http.serve_forever()
@@ -68,7 +72,8 @@ class TestServer( threading.Thread ): # pragma: no cover
     def shutdown(self):
         self.join()
 
-if __name__ == '__main__': # pragma: no cover
+
+if __name__ == '__main__':  # pragma: no cover
     server = TestServer(silent=False)
     server.start()
     for number in range(1, 20):
