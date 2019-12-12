@@ -5,6 +5,7 @@ except ImportError:
     from urllib.request import urlopen
     from io import StringIO
 
+
 def openAnything(source):
     # Try to open with urllib (http, ftp, file url)
     try:
@@ -18,6 +19,7 @@ def openAnything(source):
         pass
 
     return StringIO(str(source))
+
 
 class ReadableException(Exception):
     def __init__(self, message, cause=None):

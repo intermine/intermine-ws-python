@@ -1,6 +1,7 @@
 from functools import wraps
 from intermine.errors import ServiceError
 
+
 def requires_version(required):
 
     error_fmt = "Service must be at version %s, but is at %s"
@@ -16,4 +17,3 @@ def requires_version(required):
         return wrapper
 
     return decorator
-

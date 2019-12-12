@@ -29,6 +29,7 @@ __contact__ = "dev@intermine.org"
 LOGIC_OPS = ["and", "or"]
 LOGIC_PRODUCT = [(x, y) for x in LOGIC_OPS for y in LOGIC_OPS]
 
+
 class Query(object):
     """
     A Class representing a structured database query
@@ -308,7 +309,8 @@ class Query(object):
     LOGIC_SPLIT_PATTERN = re.compile("\s*(?:and|or|\(|\))\s*", re.I)
     TRAILING_OP_PATTERN = re.compile("\s*(and|or)\s*$", re.I)
     LEADING_OP_PATTERN = re.compile("^\s*(and|or)\s*", re.I)
-    ORPHANED_OP_PATTERN = re.compile("(?:\(\s*(?:and|or)\s*|\s*(?:and|or)\s*\))", re.I)
+    ORPHANED_OP_PATTERN = re.compile(
+        "(?:\(\s*(?:and|or)\s*|\s*(?:and|or)\s*\))", re.I)
 
     def __init__(self, model, service=None, validate=True, root=None):
         """
@@ -339,7 +341,7 @@ class Query(object):
         self.name = ''
         self.description = ''
         self.service = service
-        self.prefetch_depth = service.prefetch_depth if service is not None  else 1
+        self.prefetch_depth = service.prefetch_depth if service is not None else 1
         self.prefetch_id_only = service.prefetch_id_only if service is not None else False
         self.do_verification = validate
         self.path_descriptions = []
@@ -426,7 +428,7 @@ class Query(object):
         queries = doc.getElementsByTagName('query')
         if len(queries) != 1:
             raise QueryParseError("wrong number of queries in xml. "
-                + "Only one <query> element is allowed. Found %d" % len(queries))
+                                  + "Only one <query> element is allowed. Found %d" % len(queries))
         q = queries[0]
         obj.name = q.getAttribute('name')
         obj.description = q.getAttribute('longDescription')
@@ -459,18 +461,22 @@ class Query(object):
             for val_e in c.getElementsByTagName('value'):
                 texts = []
                 for node in val_e.childNodes:
-                    if node.nodeType == node.TEXT_NODE: texts.append(node.data)
+                    if node.nodeType == node.TEXT_NODE:
+                        texts.append(node.data)
                 values.append(' '.join(texts))
-            if len(values) > 0: args["values"] = values
-            args = dict((k, v) for k, v in list(args.items()) if v is not None and v != '')
+            if len(values) > 0:
+                args["values"] = values
+            args = dict((k, v) for k, v in list(args.items())
+                        if v is not None and v != '')
             if "loopPath" in args:
                 args["op"] = {
-                    "=" : "IS",
+                    "=": "IS",
                     "!=": "IS NOT"
                 }.get(args["op"])
             con = obj.add_constraint(**args)
             if not con:
-                raise ConstraintError("error adding constraint with args: " + args)
+                raise ConstraintError(
+                    "error adding constraint with args: " + args)
 
         def group(iterator, count):
             itr = iter(iterator)
@@ -483,12 +489,12 @@ class Query(object):
         if q.getAttribute('sortOrder') is not None:
             sos = Query.SO_SPLIT_PATTERN.split(q.getAttribute('sortOrder'))
             if len(sos) == 1:
-                if sos[0] in obj.views: # Be tolerant of irrelevant sort-orders
+                if sos[0] in obj.views:  # Be tolerant of irrelevant sort-orders
                     obj.add_sort_order(sos[0])
             else:
-                sos.pop() # Get rid of empty string at end
+                sos.pop()  # Get rid of empty string at end
                 for path, direction in group(sos, 2):
-                    if path in obj.views: # Be tolerant of irrelevant so.
+                    if path in obj.views:  # Be tolerant of irrelevant so.
                         obj.add_sort_order(path, direction)
 
         if q.getAttribute('constraintLogic') is not None:
@@ -514,7 +520,7 @@ class Query(object):
         # Remove trailing and leading operators
         logic = Query.LEADING_OP_PATTERN.sub("", logic)
         logic = Query.TRAILING_OP_PATTERN.sub("", logic)
-        for x in range(2): # repeat, as this process can leave doubles
+        for x in range(2):  # repeat, as this process can leave doubles
             for left, right in LOGIC_PRODUCT:
                 if left == right:
                     repl = left
@@ -522,7 +528,8 @@ class Query(object):
                     repl = "and"
                 pattern = re.compile(left + "\s*" + right, re.I)
                 logic = pattern.sub(repl, logic)
-        logic = Query.ORPHANED_OP_PATTERN.sub(lambda x: "(" if "(" in x.group(0) else ")", logic)
+        logic = Query.ORPHANED_OP_PATTERN.sub(
+            lambda x: "(" if "(" in x.group(0) else ")", logic)
         logic = logic.strip().lstrip()
         logic = Query.LEADING_OP_PATTERN.sub("", logic)
         logic = Query.TRAILING_OP_PATTERN.sub("", logic)
@@ -531,10 +538,12 @@ class Query(object):
                 self.set_logic(logic)
         except Exception as e:
             raise Exception("Error parsing logic string "
-                + repr(questionable_logic)
-                + " (which is " + repr(logic) + " after irrelevant codes have been removed)"
-                + " with available codes: " + repr(list(used_codes))
-                + " because: " + e.message)
+                            + repr(questionable_logic)
+                            + " (which is " + repr(logic) +
+                            " after irrelevant codes have been removed)"
+                            + " with available codes: " +
+                            repr(list(used_codes))
+                            + " because: " + e.message)
 
     def __str__(self):
         """Return the XML serialisation of this query"""
@@ -646,19 +655,22 @@ class Query(object):
             if view.endswith(".*"):
                 view = re.sub("\.\*$", "", view)
                 scd = self.get_subclass_dict()
+
                 def expand(p, level, id_only=False):
                     if level > 0:
                         path = self.model.make_path(p, scd)
                         cd = path.end_class
-                        add_f = lambda x: p + "." + x.name
-                        vs = [p + ".id"] if id_only and cd.has_id else [add_f(a) for a in cd.attributes]
+                        def add_f(x): return p + "." + x.name
+                        vs = [
+                            p + ".id"] if id_only and cd.has_id else [add_f(a) for a in cd.attributes]
                         next_level = level - 1
                         rs_and_cs = list(cd.references) + list(cd.collections)
                         for r in rs_and_cs:
                             rp = add_f(r)
                             if next_level:
                                 self.outerjoin(rp)
-                            vs.extend(expand(rp, next_level, self.prefetch_id_only))
+                            vs.extend(
+                                expand(rp, next_level, self.prefetch_id_only))
                         return vs
                     else:
                         return []
@@ -676,12 +688,13 @@ class Query(object):
 
     def prefix_path(self, path):
         if self.root is None:
-            if self.do_verification: # eg. not when building from XML
+            if self.do_verification:  # eg. not when building from XML
                 if path.endswith(".*"):
                     trimmed = re.sub("\.\*$", "", path)
                 else:
                     trimmed = path
-                self.root = self.model.make_path(trimmed, self.get_subclass_dict()).root
+                self.root = self.model.make_path(
+                    trimmed, self.get_subclass_dict()).root
             return path
         else:
             if path.startswith(self.root.name):
@@ -712,12 +725,13 @@ class Query(object):
         @raise intermine.model.ModelError: if the paths are invalid
         @raise ConstraintError: if the paths are not attributes
         """
-        if views is None: views = self.views
+        if views is None:
+            views = self.views
         for path in views:
             path = self.model.make_path(path, self.get_subclass_dict())
             if not path.is_attribute():
                 raise ConstraintError("'" + str(path)
-                        + "' does not represent an attribute")
+                                      + "' does not represent an attribute")
 
     def add_constraint(self, *args, **kwargs):
         """
@@ -749,7 +763,8 @@ class Query(object):
                 con = self.constraint_factory.make_constraint(*args[0])
             else:
                 try:
-                    con = self.constraint_factory.make_constraint(*args[0].vargs, **args[0].kwargs)
+                    con = self.constraint_factory.make_constraint(
+                        *args[0].vargs, **args[0].kwargs)
                 except AttributeError:
                     con = args[0]
         else:
@@ -769,7 +784,8 @@ class Query(object):
             con = self.constraint_factory.make_constraint(*args, **kwargs)
 
         con.path = self.prefix_path(con.path)
-        if self.do_verification: self.verify_constraint_paths([con])
+        if self.do_verification:
+            self.verify_constraint_paths([con])
         if hasattr(con, "code"):
             self.constraint_dict[con.code] = con
         else:
@@ -797,7 +813,7 @@ class Query(object):
                 for con in conset:
                     c.add_constraint(*con.vargs, **con.kwargs)
                 try:
-                    c.set_logic(lstr + conset.as_logic(start = start_c))
+                    c.set_logic(lstr + conset.as_logic(start=start_c))
                 except constraints.EmptyLogicError:
                     pass
             for path, value in list(kwargs.items()):
@@ -837,38 +853,50 @@ class Query(object):
         @raise ConstraintError: if the constraints do not satisfy the above rules
 
         """
-        if cons is None: cons = self.constraints
+        if cons is None:
+            cons = self.constraints
         for con in cons:
             pathA = self.model.make_path(con.path, self.get_subclass_dict())
             if isinstance(con, constraints.RangeConstraint):
-                pass # No verification done on these, beyond checking its path, of course.
+                # No verification done on these, beyond checking its path, of course.
+                pass
             elif isinstance(con, constraints.IsaConstraint):
                 if pathA.get_class() is None:
-                    raise ConstraintError("'" + str(pathA) + "' does not represent a class, or a reference to a class")
+                    raise ConstraintError(
+                        "'" + str(pathA) + "' does not represent a class, or a reference to a class")
                 for c in con.values:
                     if c not in self.model.classes:
-                        raise ConstraintError("Illegal constraint: " + repr(con) + " '" + str(c) + "' is not a class in this model")
+                        raise ConstraintError(
+                            "Illegal constraint: " + repr(con) + " '" + str(c) + "' is not a class in this model")
             elif isinstance(con, constraints.TernaryConstraint):
                 if pathA.get_class() is None:
-                    raise ConstraintError("'" + str(pathA) + "' does not represent a class, or a reference to a class")
+                    raise ConstraintError(
+                        "'" + str(pathA) + "' does not represent a class, or a reference to a class")
             elif isinstance(con, constraints.BinaryConstraint) or isinstance(con, constraints.MultiConstraint):
                 if not pathA.is_attribute():
-                    raise ConstraintError("'" + str(pathA) + "' does not represent an attribute")
+                    raise ConstraintError(
+                        "'" + str(pathA) + "' does not represent an attribute")
             elif isinstance(con, constraints.SubClassConstraint):
-                pathB = self.model.make_path(con.subclass, self.get_subclass_dict())
+                pathB = self.model.make_path(
+                    con.subclass, self.get_subclass_dict())
                 if not pathB.get_class().isa(pathA.get_class()):
-                    raise ConstraintError("'" + con.subclass + "' is not a subclass of '" + con.path + "'")
+                    raise ConstraintError(
+                        "'" + con.subclass + "' is not a subclass of '" + con.path + "'")
             elif isinstance(con, constraints.LoopConstraint):
-                pathB = self.model.make_path(con.loopPath, self.get_subclass_dict())
+                pathB = self.model.make_path(
+                    con.loopPath, self.get_subclass_dict())
                 for path in [pathA, pathB]:
                     if not path.get_class():
-                        raise ConstraintError("'" + str(path) + "' does not refer to an object")
+                        raise ConstraintError(
+                            "'" + str(path) + "' does not refer to an object")
                 (classA, classB) = (pathA.get_class(), pathB.get_class())
                 if not classA.isa(classB) and not classB.isa(classA):
-                    raise ConstraintError("the classes are of incompatible types: " + str(classA) + "," + str(classB))
+                    raise ConstraintError(
+                        "the classes are of incompatible types: " + str(classA) + "," + str(classB))
             elif isinstance(con, constraints.ListConstraint):
                 if not pathA.get_class():
-                    raise ConstraintError("'" + str(pathA) + "' does not refer to an object")
+                    raise ConstraintError(
+                        "'" + str(pathA) + "' does not refer to an object")
 
     @property
     def constraints(self):
@@ -884,7 +912,8 @@ class Query(object):
 
         @rtype: list(Constraint)
         """
-        ret = sorted(list(self.constraint_dict.values()), key=lambda con: con.code)
+        ret = sorted(list(self.constraint_dict.values()),
+                     key=lambda con: con.code)
         ret.extend(self.uncoded_constraints)
         return ret
 
@@ -903,9 +932,9 @@ class Query(object):
             return self.constraint_dict[code]
         else:
             raise ConstraintError("There is no constraint with the code '"
-                                    + code + "' on this query")
+                                  + code + "' on this query")
 
-    def add_join(self, *args ,**kwargs):
+    def add_join(self, *args, **kwargs):
         """
         Add a join statement to the query
         =================================
@@ -949,7 +978,8 @@ class Query(object):
         """
         join = Join(*args, **kwargs)
         join.path = self.prefix_path(join.path)
-        if self.do_verification: self.verify_join_paths([join])
+        if self.do_verification:
+            self.verify_join_paths([join])
         self.joins.append(join)
         return self
 
@@ -967,13 +997,14 @@ class Query(object):
         @raise ModelError: if the paths are invalid
         @raise QueryError: if the paths are not references
         """
-        if joins is None: joins = self.joins
+        if joins is None:
+            joins = self.joins
         for join in joins:
             path = self.model.make_path(join.path, self.get_subclass_dict())
             if not path.is_reference():
                 raise QueryError("'" + join.path + "' is not a reference")
 
-    def add_path_description(self, *args ,**kwargs):
+    def add_path_description(self, *args, **kwargs):
         """
         Add a path description to the query
         ===================================
@@ -996,7 +1027,8 @@ class Query(object):
         """
         path_description = PathDescription(*args, **kwargs)
         path_description.path = self.prefix_path(path_description.path)
-        if self.do_verification: self.verify_pd_paths([path_description])
+        if self.do_verification:
+            self.verify_pd_paths([path_description])
         self.path_descriptions.append(path_description)
         return path_description
 
@@ -1009,7 +1041,8 @@ class Query(object):
 
         @raise ModelError: if the paths are invalid
         """
-        if pds is None: pds = self.path_descriptions
+        if pds is None:
+            pds = self.path_descriptions
         for pd in pds:
             self.model.validate_path(pd.path, self.get_subclass_dict())
 
@@ -1080,7 +1113,8 @@ class Query(object):
                     raise
                 else:
                     return self
-        if self.do_verification: self.validate_logic(logic)
+        if self.do_verification:
+            self.validate_logic(logic)
         self._logic = logic
         return self
 
@@ -1095,12 +1129,13 @@ class Query(object):
 
         @raise QueryError: if not every coded constraint is represented
         """
-        if logic is None: logic = self._logic
+        if logic is None:
+            logic = self._logic
         logic_codes = set(logic.get_codes())
         for con in self.coded_constraints:
             if con.code not in logic_codes:
                 raise QueryError("Constraint " + con.code + repr(con)
-                        + " is not mentioned in the logic: " + str(logic))
+                                 + " is not mentioned in the logic: " + str(logic))
 
     def get_default_sort_order(self):
         """
@@ -1168,7 +1203,8 @@ class Query(object):
         """
         so = SortOrder(str(path), direction)
         so.path = self.prefix_path(so.path)
-        if self.do_verification: self.validate_sort_order(so)
+        if self.do_verification:
+            self.validate_sort_order(so)
         self._sort_order_list.append(so)
         return self
 
@@ -1191,11 +1227,13 @@ class Query(object):
         for so in so_elems:
             p = self.model.make_path(so.path, self.get_subclass_dict())
             if p.prefix() not in from_paths:
-                raise QueryError("Sort order element %s is not in the query" % so.path)
+                raise QueryError(
+                    "Sort order element %s is not in the query" % so.path)
 
     def _from_paths(self):
         scd = self.get_subclass_dict()
-        froms = set([self.model.make_path(x, scd).prefix() for x in self.views])
+        froms = set([self.model.make_path(x, scd).prefix()
+                     for x in self.views])
         for c in self.constraints:
             p = self.model.make_path(c.path, scd)
             if p.is_attribute():
@@ -1379,8 +1417,9 @@ class Query(object):
         @rtype: dict
         This method is sugar for particular combinations of calls to L{results}.
         """
-        p = self.model.make_path(self.prefix_path(summary_path), self.get_subclass_dict())
-        results = self.results(summary_path = summary_path, **kwargs)
+        p = self.model.make_path(self.prefix_path(
+            summary_path), self.get_subclass_dict())
+        results = self.results(summary_path=summary_path, **kwargs)
         if p.end.type_name in Model.NUMERIC_TYPES:
             return dict((k, float(v)) for k, v in list(next(results).items()))
         else:
@@ -1405,7 +1444,8 @@ class Query(object):
         else:
             c = self.count()
             if (c != 1):
-                raise QueryError("Result size is not one: got %d results" % (c))
+                raise QueryError(
+                    "Result size is not one: got %d results" % (c))
             else:
                 return self.first(row)
 
@@ -1463,12 +1503,13 @@ class Query(object):
         @raise WebserviceError: if the request is unsuccessful.
         """
         count_str = ""
-        for row in self.results(row = "count"):
+        for row in self.results(row="count"):
             count_str += row
         try:
             return int(count_str)
         except ValueError:
-            raise ResultError("Server returned a non-integer count: " + count_str)
+            raise ResultError(
+                "Server returned a non-integer count: " + count_str)
 
     def get_list_upload_uri(self):
         """
@@ -1498,7 +1539,6 @@ class Query(object):
         """
         return self.service.root + self.service.QUERY_LIST_APPEND_PATH
 
-
     def get_results_path(self):
         """
         Returns the path section pointing to the REST resource
@@ -1512,7 +1552,6 @@ class Query(object):
         @rtype: str
         """
         return self.service.QUERY_PATH
-
 
     def children(self):
         """
@@ -1558,7 +1597,7 @@ class Query(object):
 
         """
         xml = self.to_xml()
-        params = {'query' : xml }
+        params = {'query': xml}
         return params
 
     def to_Node(self):
@@ -1572,8 +1611,8 @@ class Query(object):
 
         @rtype: xml.minidom.Node
         """
-        impl  = getDOMImplementation()
-        doc   = impl.createDocument(None, "query", None)
+        impl = getDOMImplementation()
+        doc = impl.createDocument(None, "query", None)
         query = doc.documentElement
 
         query.setAttribute('name', self.name)
@@ -1651,6 +1690,7 @@ class Query(object):
             setattr(newobj, attr, getattr(self, attr))
         return newobj
 
+
 class Template(Query):
     """
     A Class representing a predefined query
@@ -1690,6 +1730,7 @@ class Template(Query):
     @see: L{Template.results}
 
     """
+
     def __init__(self, *args, **kwargs):
         """
         Constructor
@@ -1781,13 +1822,16 @@ class Template(Query):
 
         @rtype: dict
         """
-        p = {'name' : self.name}
+        p = {'name': self.name}
         i = 1
         for c in self.editable_constraints:
-            if not c.switched_on: next
+            if not c.switched_on:
+                next
             for k, v in list(c.to_dict().items()):
-                if k == "extraValue": k = "extra"
-                if k == "path": k = "constraint"
+                if k == "extraValue":
+                    k = "extra"
+                if k == "path":
+                    k = "constraint"
                 p[k + str(i)] = v
             i += 1
         return p
@@ -1831,7 +1875,7 @@ class Template(Query):
             con = clone.get_constraint(code)
             if not con.editable:
                 raise ConstraintError("There is a constraint '" + code
-                                       + "' on this query, but it is not editable")
+                                      + "' on this query, but it is not editable")
             try:
                 for key, value in list(options.items()):
                     setattr(con, key, value)
@@ -1918,11 +1962,14 @@ class Template(Query):
 class QueryError(ReadableException):
     pass
 
+
 class ConstraintError(QueryError):
     pass
 
+
 class QueryParseError(QueryError):
     pass
+
 
 class ResultError(ReadableException):
     pass
