@@ -1,6 +1,6 @@
 import re
 
-PATTERN_STR = r"^(?:\w+\.)*\w+$"
+PATTERN_STR = "^(?:\\w+\\.)*\\w+$"
 PATH_PATTERN = re.compile(PATTERN_STR)
 
 
