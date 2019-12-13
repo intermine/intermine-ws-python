@@ -1,6 +1,7 @@
 import re
 from copy import deepcopy
 from xml.dom import minidom, getDOMImplementation
+from pandas import DataFrame
 
 from intermine.util import openAnything, ReadableException
 from intermine.pathfeatures import PathDescription, Join, SortOrder, SortOrderList
@@ -1386,6 +1387,31 @@ class Query(object):
         @rtype: iterable<intermine.webservice.ResultRow>
         """
         return self.results(row="rr", start=start, size=size)
+
+    def dataframe(self, start=0, size=None):
+        """
+        Returns a pandas.DataFrame
+        ==================================
+
+        Usage::
+          >>> query.dataframe()
+
+        @param start: the index of the first result to return (default = 0)
+        @type start: int
+        @param size: The maximum number of results to return (default = all)
+        @type size: int
+        @rtype: dataframe<pandas.core.frame.DataFrame> 
+
+        """
+        dict = {}
+        query = self.results(row="dict", start=start, size=size)
+        for i in query.view:
+            dict[i] = []
+        for row in query:
+            for i in dict:
+                dict[i].append(row[i])
+        df = DataFrame(data=dict)
+        return df
 
     def summarise(self, summary_path, **kwargs):
         """
