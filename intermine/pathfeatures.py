@@ -14,7 +14,7 @@ class PathFeature(object):
             pass
         if not PATH_PATTERN.match(path):
             raise TypeError(
-                "Path '" + path + 
+                "Path '" + path +
                 "' does not match expected pattern" + PATTERN_STR)
         self.path = path
 
@@ -75,7 +75,7 @@ class SortOrder(PathFeature):
     def __init__(self, path, order):
         try:
             order = order.lower()
-        except     Exception:
+        except Exception:
             pass
 
         if order not in self.DIRECTIONS:
