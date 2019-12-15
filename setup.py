@@ -35,7 +35,8 @@ OPTIONS = {
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+        "License :: OSI Approved :: GNU Library or"
+                                    "Lesser General Public License (LGPL)",
         "License :: OSI Approved :: BSD License",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: WWW/HTTP",
@@ -48,7 +49,8 @@ OPTIONS = {
 InterMine Webservice Client
 ----------------------------
 
-A Python API to access bioinformatics data warehouses powered by the InterMine platform.
+A Python API to access bioinformatics data warehouses 
+powered by the InterMine platform.
 
 """
 }
@@ -73,7 +75,8 @@ class TestCommand(Command):
 
     def run(self):
         '''
-        Finds all the tests modules in tests/, and runs them, exiting after they are all done
+        Finds all the tests modules in tests/, 
+        and runs them, exiting after they are all done
         '''
         from tests.server import TestServer
         from tests.test_core import WebserviceTest
@@ -86,7 +89,9 @@ class TestCommand(Command):
 
         testfiles = []
         if self.testmodule is None:
-            for t in glob(pjoin(self._dir, 'tests', self.test_prefix + '*.py')):
+        	dire=self._dir
+        	test=self.test_prefix
+            for t in glob(pjoin(dire, 'tests', test + '*.py')):
                 if not t.endswith('__init__.py'):
                     testfiles.append(
                         '.'.join(['tests', splitext(basename(t))[0]]))
@@ -169,7 +174,7 @@ class CleanCommand(Command):
                 try:
                     self.announce("Deleting " + clean_me, level=2)
                     os.unlink(clean_me)
-                except:
+                except Exception:
                     message = " ".join(["Failed to delete file", clean_me])
                     log.warn(message)
         for clean_me in self._dirs_to_delete:
@@ -180,7 +185,7 @@ class CleanCommand(Command):
                     try:
                         self.announce("Going to remove " + clean_me, level=2)
                         os.rmdir(clean_me)
-                    except:
+                    except Exception:
                         message = " ".join(["Failed to delete dir", clean_me])
                         log.warn(message)
                 elif clean_me != "build":
