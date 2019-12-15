@@ -35,7 +35,7 @@ OPTIONS = {
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Library or"
+        "License :: OSI Approved :: GNU Library or "
                                     "Lesser General Public License (LGPL)",
         "License :: OSI Approved :: BSD License",
         "Topic :: Software Development :: Libraries :: Python Modules",
