@@ -28,13 +28,12 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         self.assertTrue(isinstance(t, Template))
         if P3K:
             expected = "[<TemplateMultiConstraint: Employee.name ONE OF"
-                       " ['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd']"
-                       " (editable, locked)>]"
+            " ['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd']"
+            " (editable, locked)>]"
         else:
             expected = "[<TemplateMultiConstraint: Employee.name ONE OF "
-                       "[u'Dick', u'Jane', u'Timmy, "
-                       "the Loyal German-Shepherd']"
-                       " (editable, locked)>]"
+            "[u'Dick', u'Jane', u'Timmy, the Loyal German-Shepherd']"
+            " (editable, locked)>]"
         self.assertEqual(repr(list(t.editable_constraints)), expected)
 
     def testGetTemplateResults(self):
@@ -186,7 +185,7 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         self.assertEqual(len(t.constraints), 2)
         self.assertEqual(len(t.editable_constraints), 1)
         expected = '[<TemplateBinaryConstraint: '
-                   'Company.name = Woolies (editable, locked)>]'
+        'Company.name = Woolies (editable, locked)>]'
         self.assertEqual(expected, repr(t.editable_constraints))
         self.assertEqual(
             '<TemplateBinaryConstraint: '
