@@ -47,7 +47,7 @@ for row in q.rows():
     print row
 
 for gene in s.query(s.model.Gene).filter(s.model.Gene.symbol ==
-         ["zen", "eve", "bib", "h"]).add_columns(s.model.Gene.alleles):
+            ["zen", "eve", "bib", "h"]).add_columns(s.model.Gene.alleles):
 
     print summary % (gene.symbol, len(gene.alleles))
     print hrule
