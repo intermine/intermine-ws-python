@@ -51,3 +51,4 @@ for gene in s.query(s.model.Gene).filter(s.model.Gene.symbol == ["zen", "eve", "
         print "%s (%d)" % pair
 
     print hrule
+
