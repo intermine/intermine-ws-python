@@ -47,13 +47,13 @@ for row in q.rows():
     print row
 
 for gene in s.query(s.model.Gene).filter(s.model.Gene.symbol ==
-                                         ["zen", "eve", "bib", "h"]).add_columns(s.model.Gene.alleles):
+         ["zen", "eve", "bib", "h"]).add_columns(s.model.Gene.alleles):
 
     print summary % (gene.symbol, len(gene.alleles))
     print hrule
 
     for k, line_of_alleles in itertools.groupby(sorted(map(lambda a: a.symbol,
-                                                           gene.alleles)), lines_of(cols)):
+            gene.alleles)), lines_of(cols)):
         print sep.join(map(fit_to_cell, line_of_alleles))
 
     print "\nAllele Classes:"
