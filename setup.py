@@ -35,7 +35,8 @@ OPTIONS = {
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+        "License :: OSI Approved :: GNU Library or "
+        "Lesser General Public License (LGPL)",
         "License :: OSI Approved :: BSD License",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: WWW/HTTP",
@@ -48,7 +49,8 @@ OPTIONS = {
 InterMine Webservice Client
 ----------------------------
 
-A Python API to access bioinformatics data warehouses powered by the InterMine platform.
+A Python API to access bioinformatics 
+data warehouses powered by the InterMine platform.
 
 """
 }
@@ -73,7 +75,8 @@ class TestCommand(Command):
 
     def run(self):
         '''
-        Finds all the tests modules in tests/, and runs them, exiting after they are all done
+        Finds all the tests modules in tests/, and runs them, 
+        exiting after they are all done
         '''
         from tests.server import TestServer
         from tests.test_core import WebserviceTest
