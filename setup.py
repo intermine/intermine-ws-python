@@ -90,8 +90,8 @@ class TestCommand(Command):
         testfiles = []
         if self.testmodule is None:
 
-            for t in glob(pjoin(self._dir, 'tests', 
-                self.test_prefix + '*.py')):
+            for t in glob(pjoin(self._dir, 'tests',
+                                self.test_prefix + '*.py')):
                 if not t.endswith('__init__.py'):
                     testfiles.append(
                         '.'.join(['tests', splitext(basename(t))[0]]))
