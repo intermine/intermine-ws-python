@@ -19,7 +19,8 @@ class TestTemplates(WebserviceTest): # pragma: no cover
         self.assertEqual(len(self.service.templates), 12)
 
     def testGetTemplate(self):
-        """Should be able to get a template from the webservice, if it exists, and get its results"""
+        """Should be able to get a template from the webservice,
+        if it exists, and get its results"""
         t = self.service.get_template("MultiValueConstraints")
         self.assertTrue(isinstance(t, Template))
         if P3K:
@@ -29,7 +30,8 @@ class TestTemplates(WebserviceTest): # pragma: no cover
         self.assertEqual(repr(list(t.editable_constraints)), expected)
 
     def testGetTemplateResults(self):
-        """Should be able to get a template from the webservice, if it exists, and get its results"""
+        """Should be able to get a template from the webservice,
+        if it exists, and get its results"""
         t = self.service.get_template("MultiValueConstraints")
         expected = [['foo', 'bar', 'baz'], [123, 1.23, -1.23], [True, False, None]]
         def do_tests(error=None, attempts = 0):
@@ -166,4 +168,3 @@ class TestTemplates(WebserviceTest): # pragma: no cover
 
     def testBadTemplateConstraint(self):
         self.assertRaises(TypeError, lambda: TemplateConstraint(True, "BAD_VALUE"))
-
