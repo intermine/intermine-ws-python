@@ -79,49 +79,51 @@ class LiveListTest(unittest.TestCase):
     def testListTagAdding(self):
         s = self.SERVICE
         t = self.TYPE
-        l = s.create_list(self.GUYS_NAMES, t, description="Id string", tags=[
-                          'test', 'tag-adding'])
-        self.assertEqual(set(['test', 'tag-adding']), l.tags)
+        created_list = s.create_list(self.GUYS_NAMES, t,
+                          description="Id string",
+                          tags=['test', 'tag-adding'])
+        self.assertEqual(set(['test', 'tag-adding']), created_list.tags)
         l.add_tags("a-tag", "b-tag")
-        self.assertEqual(set(['test', 'tag-adding', "a-tag", "b-tag"]), l.tags)
+        self.assertEqual(set(['test', 'tag-adding', "a-tag", "b-tag"]),
+                         created_list.tags)
 
     # @unittest.skip("disabled")
     def testUnicode(self):
         s = self.SERVICE
         t = self.TYPE
-        l = s.create_list(self.UNICODE_NAMES, t,
+        created_list = s.create_list(self.UNICODE_NAMES, t,
                           description='unicode names', tags=['test'])
-        self.assertEqual(len(self.UNICODE_NAMES), l.size)
+        self.assertEqual(len(self.UNICODE_NAMES), created_list.size)
 
     # @unittest.skip("disabled")
     def testListTagRemoval(self):
         s = self.SERVICE
         t = self.TYPE
         tags = ["a-tag", "b-tag", "c-tag", 'test']
-        l = s.create_list(self.GUYS_NAMES, t,
+        created_list = s.create_list(self.GUYS_NAMES, t,
                           description="tag removal", tags=tags)
-        self.assertEqual(set(tags), l.tags)
-        l.remove_tags("a-tag", "c-tag")
-        self.assertEqual(set(["b-tag", 'test']), l.tags)
-        l.remove_tags("b-tag", "d-tag")
-        self.assertEqual(set(['test']), l.tags)
+        self.assertEqual(set(tags), created_list.tags)
+        created_list.remove_tags("a-tag", "c-tag")
+        self.assertEqual(set(["b-tag", 'test']), created_list.tags)
+        created_list.remove_tags("b-tag", "d-tag")
+        self.assertEqual(set(['test']), created_list.tags)
 
     # @unittest.skip("disabled")
     def testListTagUpdating(self):
         s = self.SERVICE
         t = self.TYPE
-        l = s.create_list(self.GUYS_NAMES, t,
+        created_list = s.create_list(self.GUYS_NAMES, t,
                           description="tag updating", tags=['test'])
-        self.assertEqual(set(['test']), l.tags)
+        self.assertEqual(set(['test']), created_list.tags)
         listmanager = s._list_manager
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
                          set(map(str,
-                                 listmanager.add_tags(l,
+                                 listmanager.add_tags(created_list,
                                                       ["a-tag", "b-tag"]))))
-        self.assertEqual(set(['test']), l.tags)
-        l.update_tags()
+        self.assertEqual(set(['test']), created_list.tags)
+        created_list.update_tags()
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
-                         set(map(str, l.tags)))
+                         set(map(str, created_list.tags)))
 
     def test_context_manager(self):
         t = self.TYPE
@@ -157,58 +159,63 @@ class LiveListTest(unittest.TestCase):
     def testListTagUpdating(self):
         s = self.SERVICE
         t = self.TYPE
-        l = s.create_list(self.GUYS_NAMES, t,
+        created_list = s.create_list(self.GUYS_NAMES, t,
                           description="tag updating", tags=['test'])
-        self.assertEqual(set(['test']), l.tags)
+        self.assertEqual(set(['test']), created_list.tags)
         listmanager = s._list_manager
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
                          set(map(str,
                                  listmanager.add_tags(l,
                                                       ["a-tag", "b-tag"]))))
-        self.assertEqual(set(['test']), l.tags)
-        l.update_tags()
+        self.assertEqual(set(['test']), created_list.tags)
+        created_list.update_tags()
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
-                         set(map(str, l.tags)))
+                         set(map(str, created_list.tags)))
 
     # @unittest.skip("disabled")
     def test_ladies_names(self):
         t = self.TYPE
         s = self.SERVICE
 
-        l = s.create_list(self.LADIES_NAMES, t, description="Id list", tags=[
-                          "Foo", "Bar", "test"])
-        self.assertEqual(l.unmatched_identifiers, set(["Zop", "Quux"]))
-        self.assertEqual(l.size, 5)
-        self.assertEqual(l.list_type, t)
-        self.assertEqual(l.tags, set(["Foo", "Bar", "test"]))
+        created_list = s.create_list(self.LADIES_NAMES, t,
+                                     description="Id list",
+                                     tags=["Foo", "Bar", "test"])
+        self.assertEqual(created_list.unmatched_identifiers,
+                         set(["Zop", "Quux"]))
+        self.assertEqual(created_list.size, 5)
+        self.assertEqual(created_list.list_type, t)
+        self.assertEqual(created_list.tags, set(["Foo", "Bar", "test"]))
 
-        l = s.get_list(l.name)
-        self.assertEqual(l.size, 5)
-        self.assertEqual(l.list_type, t)
+        created_list = s.get_list(created_list.name)
+        self.assertEqual(created_list.size, 5)
+        self.assertEqual(created_list.list_type, t)
 
     # @unittest.skip("disabled")
     def test_guys_names(self):
         t = self.TYPE
         s = self.SERVICE
 
-        l = s.create_list(self.GUYS_NAMES, t, description="Id string", tags=[
-                          "Foo", "Bar", "test"])
-        self.assertEqual(l.unmatched_identifiers, set(["Foo", "Bar", "Baz"]))
-        self.assertEqual(l.size, 5)
-        self.assertEqual(l.list_type, "Employee")
-        self.assertEqual(l.tags, set(["Foo", "Bar", "test"]))
+        created_list = s.create_list(self.GUYS_NAMES, t,
+                                     description="Id string",
+                                     tags=["Foo", "Bar", "test"])
+        self.assertEqual(created_list.unmatched_identifiers,
+                         set(["Foo", "Bar", "Baz"]))
+        self.assertEqual(created_list.size, 5)
+        self.assertEqual(created_list.list_type, "Employee")
+        self.assertEqual(created_list.tags, set(["Foo", "Bar", "test"]))
 
     # @unittest.skip("disabled")
     def test_from_file(self):
         t = self.TYPE
         s = self.SERVICE
 
-        l = s.create_list(self.EMPLOYEE_FILE, t,
+        created_list = s.create_list(self.EMPLOYEE_FILE, t,
                           description="Id file", tags=["Foo", "Bar", "test"])
-        self.assertEqual(l.unmatched_identifiers, set(["Not a good id"]))
-        self.assertEqual(l.size, 5)
-        self.assertEqual(l.list_type, "Employee")
-        self.assertEqual(l.tags, set(["Foo", "Bar", "test"]))
+        self.assertEqual(created_list.unmatched_identifiers,
+                         set(["Not a good id"]))
+        self.assertEqual(created_list.size, 5)
+        self.assertEqual(created_list.list_type, "Employee")
+        self.assertEqual(created_list.tags, set(["Foo", "Bar", "test"]))
 
     # @unittest.skip("disabled")
     def test_from_query(self):
@@ -218,10 +225,10 @@ class LiveListTest(unittest.TestCase):
         q = s.new_query()
         q.add_view("Employee.id")
         q.add_constraint("Employee.department.name", '=', "Sales")
-        l = s.create_list(q, description="Id query", tags=['test'])
-        self.assertEqual(l.unmatched_identifiers, set())
-        self.assertEqual(l.size, 18)
-        self.assertEqual(l.list_type, t)
+        created_list = s.create_list(q, description="Id query", tags=['test'])
+        self.assertEqual(created_list.unmatched_identifiers, set())
+        self.assertEqual(created_list.size, 18)
+        self.assertEqual(created_list.list_type, t)
 
     # @unittest.skip("disabled")
     def test_renaming(self):
@@ -229,13 +236,13 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
-        l = s.create_list(q, description="test renaming",
+        created_list = s.create_list(q, description="test renaming",
                           tags=["test", "query"])
-        old_name = l.name
+        old_name = created_list.name
 
-        l.name = "the list previously known as {0}".format(old_name)
+        created_list.name = "the list previously known as {0}".format(old_name)
 
-        l2 = s.get_list(l.name)
+        l2 = s.get_list(created_list.name)
         self.assertEqual(str(l), str(l2))
 
     # @unittest.skip("disabled")
@@ -244,11 +251,11 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
-        l = s.create_list(q, description="test_from_other_list",
+        created_list = s.create_list(q, description="test_from_other_list",
                           tags=["test", "query"])
 
         from_other = s.create_list(l)
-        self.assertEqual(from_other.size, l.size)
+        self.assertEqual(from_other.size, created_list.size)
 
     # @unittest.skip("disabled")
     def test_delete(self):
@@ -256,11 +263,11 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
-        l = s.create_list(q, description="test_delete",
+        created_list = s.create_list(q, description="test_delete",
                           tags=["test", "query"])
 
-        name = l.name
-        l.delete()
+        name = created_list.name
+        created_list.delete()
         self.assertTrue(s.get_list(name) is None)
 
     # @unittest.skip("disabled")
@@ -268,7 +275,7 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE
         s = self.SERVICE
 
-        l = s.create_list(self.EMPLOYEE_FILE, t,
+        created_list = s.create_list(self.EMPLOYEE_FILE, t,
                           description='test_to_query', tags=['test'])
         expected = [
             LiveListTest.KARIM, LiveListTest.DAVID, LiveListTest.FRANK,
@@ -283,7 +290,7 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE
         s = self.SERVICE
 
-        l = s.create_list(self.EMPLOYEE_FILE, t,
+        created_list = s.create_list(self.EMPLOYEE_FILE, t,
                           description='test_iteration', tags=['test'])
 
         # Test iteration:
@@ -291,12 +298,12 @@ class LiveListTest(unittest.TestCase):
         expected_ages = set([37, 41, 44, 53, 55])
         self.assertEqual(expected_ages, got)
 
-        self.assertTrue(l[0].age in expected_ages)
-        self.assertTrue(l[-1].age in expected_ages)
-        self.assertTrue(l[2].age in expected_ages)
-        self.assertRaises(IndexError, lambda: l[5])
-        self.assertRaises(IndexError, lambda: l[-6])
-        self.assertRaises(IndexError, lambda: l["foo"])
+        self.assertTrue(created_list[0].age in expected_ages)
+        self.assertTrue(created_list[-1].age in expected_ages)
+        self.assertTrue(created_list[2].age in expected_ages)
+        self.assertRaises(IndexError, lambda: created_list[5])
+        self.assertRaises(IndexError, lambda: created_list[-6])
+        self.assertRaises(IndexError, lambda: created_list["foo"])
 
     # @unittest.skip("disabled")
     def test_intersections(self):
