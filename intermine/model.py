@@ -48,11 +48,11 @@ class Field(object):
             -  CDSs is a group of CDS objects, which link back to this as gene
             -  GLEANRsymbol is a String
             -  UTRs is a group of UTR objects, which link back to this as gene
-            -  alleles is a group of Allele objects, which link back 
+            -  alleles is a group of Allele objects, which link back
                to this as gene
             -  chromosome is a Chromosome
             -  chromosomeLocation is a Location
-            -  clones is a group of CDNAClone objects, which link 
+            -  clones is a group of CDNAClone objects, which link
                back to this as gene
             -  crossReferences is a group of CrossReference objects,
                 which link back to this as subject
@@ -63,7 +63,7 @@ class Field(object):
             -  exons is a group of Exon objects,
                 which link back to this as gene
             -  flankingRegions is a group of GeneFlankingRegion objects,
-                which link back to this as gene 
+                which link back to this as gene
             -  goAnnotation is a group of GOAnnotation objects
             -  homologues is a group of Homologue objects,
                 which link back to this as gene
@@ -164,7 +164,7 @@ class Reference(Field):
             return s
         else:
             return (s + ", which links back to this as " +
-                   self.reverse_reference.name)
+                    self.reverse_reference.name)
 
     @property
     def fieldtype(self):
@@ -464,7 +464,7 @@ class Path(object):
         return self._string
 
     def __repr__(self):
-        return ('<' + self.__module__ + "." + self.__class__.__name__ + 
+        return ('<' + self.__module__ + "." + self.__class__.__name__ +
                 ": " + self._string + '>')
 
     def prefix(self):
@@ -568,7 +568,7 @@ class Path(object):
 
     def __hash__(self):
         i = hash(str(self))
-        return (reduce(lambda a, b: a ^ b, [hash(k) ^ hash(v) 
+        return (reduce(lambda a, b: a ^ b, [hash(k) ^ hash(v)
                 for k, v in list(self.subclasses.items())], i))
 
 
@@ -837,7 +837,7 @@ class Model(object):
 
     def parse_model(self, source):
         """
-        Create classes, attributes, references and 
+        Create classes, attributes, references and
         collections from the model.xml
         =====================================================================
 
@@ -920,8 +920,8 @@ class Model(object):
                 c.field_dict.update(pc.field_dict)
             for f in c.fields:
                 f.type_class = self.classes.get(f.type_name)
-                if (hasattr(f, 'reverse_reference_name') and 
-                    f.reverse_reference_name != ''):
+                if (hasattr(f, 'reverse_reference_name') and
+                         f.reverse_reference_name != ''):
                     rrn = f.reverse_reference_name
                     f.reverse_reference = f.type_class.field_dict[rrn]
 
