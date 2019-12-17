@@ -80,8 +80,8 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
         t = self.TYPE
         created_list = s.create_list(self.GUYS_NAMES, t,
-                          description="Id string",
-                          tags=['test', 'tag-adding'])
+                                     description="Id string",
+                                     tags=['test', 'tag-adding'])
         self.assertEqual(set(['test', 'tag-adding']), created_list.tags)
         l.add_tags("a-tag", "b-tag")
         self.assertEqual(set(['test', 'tag-adding', "a-tag", "b-tag"]),
@@ -92,7 +92,8 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
         t = self.TYPE
         created_list = s.create_list(self.UNICODE_NAMES, t,
-                          description='unicode names', tags=['test'])
+                                     description='unicode names',
+                                     tags=['test'])
         self.assertEqual(len(self.UNICODE_NAMES), created_list.size)
 
     # @unittest.skip("disabled")
@@ -101,7 +102,7 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE
         tags = ["a-tag", "b-tag", "c-tag", 'test']
         created_list = s.create_list(self.GUYS_NAMES, t,
-                          description="tag removal", tags=tags)
+                                     description="tag removal", tags=tags)
         self.assertEqual(set(tags), created_list.tags)
         created_list.remove_tags("a-tag", "c-tag")
         self.assertEqual(set(["b-tag", 'test']), created_list.tags)
@@ -113,7 +114,8 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
         t = self.TYPE
         created_list = s.create_list(self.GUYS_NAMES, t,
-                          description="tag updating", tags=['test'])
+                                     description="tag updating",
+                                     tags=['test'])
         self.assertEqual(set(['test']), created_list.tags)
         listmanager = s._list_manager
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
@@ -160,7 +162,8 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
         t = self.TYPE
         created_list = s.create_list(self.GUYS_NAMES, t,
-                          description="tag updating", tags=['test'])
+                                     description="tag updating",
+                                     tags=['test'])
         self.assertEqual(set(['test']), created_list.tags)
         listmanager = s._list_manager
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
@@ -210,7 +213,8 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         created_list = s.create_list(self.EMPLOYEE_FILE, t,
-                          description="Id file", tags=["Foo", "Bar", "test"])
+                                     description="Id file",
+                                     tags=["Foo", "Bar", "test"])
         self.assertEqual(created_list.unmatched_identifiers,
                          set(["Not a good id"]))
         self.assertEqual(created_list.size, 5)
@@ -237,7 +241,7 @@ class LiveListTest(unittest.TestCase):
 
         q = s.select("Employee").where("department.name", "=", "Sales")
         created_list = s.create_list(q, description="test renaming",
-                          tags=["test", "query"])
+                                     tags=["test", "query"])
         old_name = created_list.name
 
         created_list.name = "the list previously known as {0}".format(old_name)
@@ -252,7 +256,7 @@ class LiveListTest(unittest.TestCase):
 
         q = s.select("Employee").where("department.name", "=", "Sales")
         created_list = s.create_list(q, description="test_from_other_list",
-                          tags=["test", "query"])
+                                     tags=["test", "query"])
 
         from_other = s.create_list(l)
         self.assertEqual(from_other.size, created_list.size)
@@ -264,7 +268,7 @@ class LiveListTest(unittest.TestCase):
 
         q = s.select("Employee").where("department.name", "=", "Sales")
         created_list = s.create_list(q, description="test_delete",
-                          tags=["test", "query"])
+                                     tags=["test", "query"])
 
         name = created_list.name
         created_list.delete()
@@ -276,7 +280,8 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         created_list = s.create_list(self.EMPLOYEE_FILE, t,
-                          description='test_to_query', tags=['test'])
+                                     description='test_to_query',
+                                     tags=['test'])
         expected = [
             LiveListTest.KARIM, LiveListTest.DAVID, LiveListTest.FRANK,
             LiveListTest.JEAN_MARC, LiveListTest.JENNIFER_SCHIRRMANN
@@ -291,7 +296,8 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         created_list = s.create_list(self.EMPLOYEE_FILE, t,
-                          description='test_iteration', tags=['test'])
+                                     description='test_iteration',
+                                     tags=['test'])
 
         # Test iteration:
         got = set([x.age for x in l])
