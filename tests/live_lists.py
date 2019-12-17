@@ -113,8 +113,11 @@ class LiveListTest(unittest.TestCase):
         l = s.create_list(self.GUYS_NAMES, t,
                           description="tag updating", tags=['test'])
         self.assertEqual(set(['test']), l.tags)
+        listmanager = s._list_manager
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
-                         set(map(str, s._list_manager.add_tags(l, ["a-tag", "b-tag"]))))
+                         set(map(str,
+                                 listmanager.add_tags(l,
+                                                      ["a-tag", "b-tag"]))))
         self.assertEqual(set(['test']), l.tags)
         l.update_tags()
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
@@ -157,8 +160,11 @@ class LiveListTest(unittest.TestCase):
         l = s.create_list(self.GUYS_NAMES, t,
                           description="tag updating", tags=['test'])
         self.assertEqual(set(['test']), l.tags)
+        listmanager = s._list_manager
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
-                         set(map(str, s._list_manager.add_tags(l, ["a-tag", "b-tag"]))))
+                         set(map(str,
+                                 listmanager.add_tags(l,
+                                                      ["a-tag", "b-tag"]))))
         self.assertEqual(set(['test']), l.tags)
         l.update_tags()
         self.assertEqual(set(['test', "a-tag", "b-tag"]),
@@ -250,7 +256,8 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         q = s.select("Employee").where("department.name", "=", "Sales")
-        l = s.create_list(q, description="test_delete", tags=["test", "query"])
+        l = s.create_list(q, description="test_delete",
+                          tags=["test", "query"])
 
         name = l.name
         l.delete()
@@ -296,10 +303,12 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE
         s = self.SERVICE
 
-        listA = s.create_list(
-            self.GUYS_NAMES, t, description='test_intersections a', tags=['test'])
+        listA = s.create_list(self.GUYS_NAMES, t,
+                              description='test_intersections a',
+                              tags=['test'])
         listB = s.create_list(self.EMPLOYEE_FILE, t,
-                              description='test_intersections b', tags=['test'])
+                              description='test_intersections b',
+                              tags=['test'])
 
         intersection = listA & listB
         self.assertEqual(intersection.size, 1)
@@ -327,8 +336,9 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE
         s = self.SERVICE
 
-        listA = s.create_list(self.GUYS_NAMES, t, description='test_unions a', tags=[
-                              'test', "tagA", "tagB"])
+        listA = s.create_list(self.GUYS_NAMES, t,
+                              description='test_unions a',
+                              tags=['test', "tagA", "tagB"])
         listB = s.create_list(self.LADIES_NAMES, t,
                               description='test_unions b', tags=['test'])
 
@@ -353,10 +363,12 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
 
         # Test appending
-        listA = s.create_list(self.GUYS_NAMES, t, description='test_appending_list a', tags=[
-                              'test', "tagA", "tagB"])
-        listB = s.create_list(
-            self.LADIES_NAMES, t, description='test_appending_list b', tags=['test'])
+        listA = s.create_list(self.GUYS_NAMES, t,
+                              description='test_appending_list a',
+                              tags=['test', "tagA", "tagB"])
+        listB = s.create_list(self.LADIES_NAMES, t,
+                              description='test_appending_list b',
+                              tags=['test'])
         expected = [
             LiveListTest.VINCENT, LiveListTest.KARIM, LiveListTest.INA,
             LiveListTest.ALEX, LiveListTest.JENNIFER, LiveListTest.DELPHINE,
@@ -402,8 +414,9 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
         t = self.TYPE
 
-        listA = s.create_list(
-            self.GUYS_NAMES, t, description="testing appending file", tags=['test'])
+        listA = s.create_list(self.GUYS_NAMES, t,
+                              description="testing appending file",
+                              tags=['test'])
         prev_name = listA.name
         prev_desc = listA.description
         listA += self.EMPLOYEE_FILE
@@ -442,7 +455,8 @@ class LiveListTest(unittest.TestCase):
             LiveListTest.VINCENT, LiveListTest.KARIM, LiveListTest.INA,
             LiveListTest.DAVID, LiveListTest.ALEX,
             LiveListTest.FRANK, LiveListTest.JENNIFER, LiveListTest.DELPHINE,
-            LiveListTest.JEAN_MARC, LiveListTest.BRENDA, LiveListTest.JENNIFER_SCHIRRMANN,
+            LiveListTest.JEAN_MARC, LiveListTest.BRENDA,
+            LiveListTest.JENNIFER_SCHIRRMANN,
             LiveListTest.KEITH, LiveListTest.GARETH, LiveListTest.CAROL
         ]
         self.assertEqual(emp_rows_without_ids(listA), expected)
@@ -453,12 +467,15 @@ class LiveListTest(unittest.TestCase):
     def test_appending_collection_of_lists_and_queries(self):
         s = self.SERVICE
         t = self.TYPE
-        listA = s.create_list(
-            self.GUYS_NAMES, t, description='appending_lists_and_qs a', tags=['test'])
-        listB = s.create_list(
-            self.EMPLOYEE_FILE, t, description='appending_lists_and_qs b', tags=['test'])
-        listC = s.create_list(
-            self.LADIES_NAMES, t, description='appending_lists_and_qs c', tags=['test'])
+        listA = s.create_list(self.GUYS_NAMES, t,
+                              description='appending_lists_and_qs a',
+                              tags=['test'])
+        listB = s.create_list(self.EMPLOYEE_FILE, t,
+                              description='appending_lists_and_qs b',
+                              tags=['test'])
+        listC = s.create_list(self.LADIES_NAMES, t,
+                              description='appending_lists_and_qs c',
+                              tags=['test'])
         q = s.new_query()
         q.add_view("Employee.id")
         q.add_constraint("Employee.age", '>', 65)
@@ -471,7 +488,8 @@ class LiveListTest(unittest.TestCase):
             LiveListTest.VINCENT, LiveListTest.KARIM, LiveListTest.INA,
             LiveListTest.DAVID, LiveListTest.ALEX,
             LiveListTest.FRANK, LiveListTest.JENNIFER, LiveListTest.DELPHINE,
-            LiveListTest.JEAN_MARC, LiveListTest.BRENDA, LiveListTest.JENNIFER_SCHIRRMANN,
+            LiveListTest.JEAN_MARC, LiveListTest.BRENDA,
+            LiveListTest.JENNIFER_SCHIRRMANN,
             LiveListTest.KEITH, LiveListTest.GARETH, LiveListTest.CAROL,
             LiveListTest.JULIETTE, LiveListTest.BWAH_HA
         ]
@@ -513,16 +531,17 @@ class LiveListTest(unittest.TestCase):
         s = self.SERVICE
         t = self.TYPE
 
-        listA = s.create_list(self.GUYS_NAMES, t, description='test_subtraction a', tags=[
-                              "subtr-a", "subtr-b"])
+        listA = s.create_list(self.GUYS_NAMES, t,
+                              description='test_subtraction a',
+                              tags=["subtr-a", "subtr-b"])
         listB = s.create_list(self.EMPLOYEE_FILE, t,
                               description='test_subtraction b', tags=['test'])
 
         subtr = listA - listB
         self.assertEqual(subtr.size, 4)
         expected = [
-             LiveListTest.VINCENT, LiveListTest.ALEX, LiveListTest.KEITH, LiveListTest.GARETH
-        ]
+                    LiveListTest.VINCENT, LiveListTest.ALEX,
+                    LiveListTest.KEITH, LiveListTest.GARETH]
         got = [row[:3] + row[4:] for row in subtr.to_query().rows()]
         self.assertEqual(got, expected)
 
@@ -588,8 +607,9 @@ class LiveListTest(unittest.TestCase):
         t = self.TYPE
 
         favs = s.l('My-Favourite-Employees')
-        enriched_contractors = [x.identifier for x in favs.calculate_enrichment(
-            'contractor_enrichment', maxp=1.0)]
+        enriched_contractors = [x.identifier for x
+                                in favs.calculate_enrichment(
+                                   'contractor_enrichment', maxp=1.0)]
         self.assertEqual(enriched_contractors, ['Vikram'])
 
     def tearDown(self):
