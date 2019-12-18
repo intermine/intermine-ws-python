@@ -77,9 +77,9 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         xml = '''
           <template name="codesNotInOrder">
               <query nampe="codesNotInOrder" model="testmodel" view="Employee.name Employee.age">
-                  <constraint path="Employee.name" op="=" value="foo" code="X"/>
-                  <constraint path="Employee.name" op="=" value="bar" code="Y"/>
-                  <constraint path="Employee.name" op="=" value="baz" code="Z"/>
+                <constraint path="Employee.name" op="=" value="foo" code="X"/>
+                <constraint path="Employee.name" op="=" value="bar" code="Y"/>
+                <constraint path="Employee.name" op="=" value="baz" code="Z"/>
               </query>
           </template>
           '''
@@ -87,7 +87,7 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         v = None
         try:
             v = t.get_constraint("X").value
-        except:
+        except Exception:
             pass
 
         self.assertIsNotNone(
