@@ -111,7 +111,9 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "")
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A or B or (D and E) and C">
+        xml = '''<template name="bad_cl"><query name="bad_cl" 
+              model="testmodel" view="Employee.name Employee.age" 
+              constraintLogic="A or B or (D and E) and C">
                 <constraint path="Employee.name" op="IS NULL"/><constraint path="Employee.age" op="IS NOT NULL"/>
                 </query>
             </template>'''
