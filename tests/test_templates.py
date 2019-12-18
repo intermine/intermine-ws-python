@@ -25,8 +25,7 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         t = self.service.get_template("MultiValueConstraints")
         self.assertTrue(isinstance(t, Template))
         if P3K:
-            expected = "[<TemplateMultiConstraint:"
-                       " Employee.name ONE OF ['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
+            expected = "[<TemplateMultiConstraint: Employee.name ONE OF ['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
         else:
             expected = "[<TemplateMultiConstraint: Employee.name ONE OF [u'Dick', u'Jane', u'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
         self.assertEqual(repr(list(t.editable_constraints)), expected)
@@ -56,7 +55,8 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
             self.fail("No ServiceError raised by non-existant template")
         except ServiceError as ex:
             self.assertEqual(
-                ex.message, "There is no template called 'Non_Existant' at this service")
+                ex.message,
+                "There is no template called 'Non_Existant' at this service")
 
     def testIrrelevantSO(self):
         """Should fix up bad sort orders and logic when parsing from xml"""
