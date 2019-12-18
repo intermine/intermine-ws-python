@@ -99,11 +99,15 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         """Should fix up bad logic"""
         model = self.service.model
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A and B and C"/></template>'''
+        xml = '''<template name="bad_cl"><query name="bad_cl" 
+              model="testmodel" view="Employee.name Employee.age" 
+              constraintLogic="A and B and C"/></template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "")
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A and B or (D and E) and C"/></template>'''
+        xml = '''<template name="bad_cl"><query name="bad_cl" 
+              model="testmodel" view="Employee.name Employee.age" 
+              constraintLogic="A and B or (D and E) and C"/></template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "")
 
