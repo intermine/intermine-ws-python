@@ -1,5 +1,6 @@
 import re
 from copy import deepcopy
+from pandas import DataFrame
 from xml.dom import minidom, getDOMImplementation
 
 from intermine.util import openAnything, ReadableException
@@ -1365,9 +1366,26 @@ class Query(object):
 
         view = to_run.views
         cld = to_run.root
-        return to_run.service.get_results(path, params, row, view, cld)
+        if (row=="dataframe"):
+            row="dict"
 
-    def rows(self, start=0, size=None):
+
+
+        return to_run.service.get_results(path, params, row, view, cld)
+    
+    def dataframe(self, start=0, size=None):
+        dict={}
+        query=self.results(row="dict", start=start, size=size)
+        for i in query.view:
+            dict[i]=[]
+        for row in query:
+            for i in dict:
+                dict[i].append(row[i])
+        df=DataFrame(data=dict)
+        return df
+
+
+    def rows(self, start=0, size=None, row="rr"):
         """
         Return the results as rows of data
         ==================================
@@ -1385,7 +1403,7 @@ class Query(object):
         @type size: int
         @rtype: iterable<intermine.webservice.ResultRow>
         """
-        return self.results(row="rr", start=start, size=size)
+        return self.results(row=row, start=start, size=size)
 
     def summarise(self, summary_path, **kwargs):
         """
@@ -1937,6 +1955,7 @@ class Template(Query):
         return super(Template, clone).get_row_list(start, size)
 
     def rows(self, start=0, size=None, **con_values):
+        print("basil2")
         """Get an iterator over the rows returned by this query"""
         clone = self.get_adjusted_template(con_values)
         return super(Template, clone).rows(start, size)
