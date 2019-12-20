@@ -7,6 +7,7 @@ try:
 except ImportError:
     import simplejson as json
 
+
 def get_json(service, path, key):
     text = service.opener.read(service.root + path)
     data = json.loads(text)
@@ -16,9 +17,11 @@ def get_json(service, path, key):
         raise Exception(key + " not returned from " + path)
     return data[key]
 
+
 ONE_MINUTE = 60
 
 COMPLETED = set(["SUCCESS", "ERROR"])
+
 
 class Job(object):
     """

@@ -33,6 +33,7 @@ def getVersion(mine):
     except KeyError:
         return "No such mine available"
 
+
 def getInfo(mine):
     """
     A function to get information about a mine
