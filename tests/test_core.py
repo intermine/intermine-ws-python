@@ -38,7 +38,7 @@ class WebserviceTest(unittest.TestCase):  # pragma: no cover
                 return
             except IOError as e:
                 self.do_unpredictable_test(test, attempts + 1, e)
-            except:
+            except Exception:
                 if not P3K:  # Handle connection reset errors
                     e, t = sys.exc_info()[:2]
                     if 104 in t:
@@ -336,7 +336,7 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         v = None
         try:
             v = q8.get_constraint("X").value
-        except:
+        except Exception:
             pass
 
         self.assertIsNotNone(v, "query should have a constraint with the code 'X', but it only has the codes: %s" % map(
@@ -566,9 +566,9 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         """Queries should be fine with NULL/NOT NULL constraints"""
         Employee = self.q.model.table("Employee")
 
-        self.q.add_constraint(Employee.age == None)
-        self.q.add_constraint(Employee.name != None)
-        self.q.add_constraint(Employee.address == None)
+        self.q.add_constraint(Employee.age is None)
+        self.q.add_constraint(Employee.name is not None)
+        self.q.add_constraint(Employee.address is None)
         self.assertEqual(self.q.constraints.__repr__(), self.expected_unary)
 
     def testAddBinaryConstraints(self):
@@ -849,7 +849,7 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         # SQL style
         q = Employee.\
             select("name", "age", "department.name").\
-            where(Employee.name != None).\
+            where(Employee.name is not None).\
             where(Employee.age > 10).\
             where(Employee.department % ("Sales", "Wernham-Hogg")).\
             where(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
@@ -865,7 +865,7 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         # SQLAlchemy style
         q = self.service.query(Employee).\
             select("name", "age", "department.name").\
-            filter(Employee.name != None).\
+            filter(Employee.name is not None).\
             filter(Employee.age > 10).\
             filter(Employee.department % ("Sales", "Wernham-Hogg")).\
             filter(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
@@ -909,7 +909,7 @@ class TestQuery(WebserviceTest):  # pragma: no cover
             filter(
                         e.department.manager < CEO,
                         (
-                            ((e.name != None) & (e.age > 10))
+                            ((e.name is not None) & (e.age > 10))
                             | (e.in_(self.l) & (e.department.manager % "David"))
                         )
                     ).\
