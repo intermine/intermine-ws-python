@@ -101,7 +101,7 @@ class LogicGroup(LogicNode):
 
         Groups may have a reference to their parent.
         """
-        if not op in self.LEGAL_OPS:
+        if op not in self.LEGAL_OPS:
             raise TypeError(op + " is not a legal logical operation")
         self.parent = parent
         self.left = left
@@ -151,7 +151,8 @@ class LogicParseError(ReadableException):
 
 class EmptyLogicError(ValueError):
     """
-    An error representing the fact that an the logic string to be parsed was empty
+    An error representing the fact that an the logic
+    string to be parsed was empty
     """
     pass
 
@@ -269,7 +270,7 @@ class LogicParser(object):
                 return x
 
         logic_str = logic_str.upper()
-        tokens = [t for t in re.split("\s+", logic_str) if t]
+        tokens = [t for t in re.split("\\s+", logic_str) if t]
         if not tokens:
             raise EmptyLogicError()
         tokens = flatten([canonical(x, self.ops) for x in tokens])
@@ -572,8 +573,8 @@ class ListConstraint(CodedConstraint):
     def __init__(self, path, op, list_name, code="A"):
         if hasattr(list_name, 'to_query'):
             q = list_name.to_query()
-            l = q.service.create_list(q)
-            self.list_name = l.name
+            list_name1 = q.service.create_list(q)
+            self.list_name = list_name1.name
         elif hasattr(list_name, "name"):
             self.list_name = list_name.name
         else:
