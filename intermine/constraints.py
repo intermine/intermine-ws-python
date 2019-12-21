@@ -289,7 +289,7 @@ class LogicParser(object):
         which should hopefully lead to more informative error messages.
 
         This checks for:
-         - correct operator positions (cannot put two codes next to each 
+         - correct operator positions (cannot put two codes next to each
            other without intervening operators)
          - correct grouping (all brackets are matched,
                              and contain valid expressions)
@@ -342,7 +342,7 @@ class LogicParser(object):
                 message = "Unmatched closing bracket in: "
             else:
                 message = "Unmatched opening bracket in: "
-            raise LogicParseError(message + '"' + ' '.join(infix_tokens) 
+            raise LogicParseError(message + '"' + ' '.join(infix_tokens)
                                   + '"')
 
     def infix_to_postfix(self, infix_tokens):
@@ -531,7 +531,8 @@ class BinaryConstraint(CodedConstraint):
         @param path: The path to constrain
         @type path: string
 
-        @param op: The relationship between the value represented by the path and the value provided (must be a valid operator)
+        @param op: The relationship between the value represented by the path
+                   and the value provided (must be a valid operator)
         @type op: string
 
         @param value: The value to compare the stored value to
@@ -637,7 +638,8 @@ class LoopConstraint(CodedConstraint):
         @param path: The path to constrain
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
         @param loopPath: The path to check for identity against
@@ -689,18 +691,21 @@ class TernaryConstraint(BinaryConstraint):
         Constructor
         ===========
 
-        @param path: The path to constrain. Here is must be a class, or a reference to a class.
+        @param path: The path to constrain. Here is must be a class,
+                     or a reference to a class.
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
         @param value: The value to check other fields against.
         @type value: string
 
-        @param extra_value: A further value for disambiguation. The meaning of this value varies by class
-                            and configuration. For example, if the class of the object is Gene, then
-                            extra_value will refer to the Organism.
+        @param extra_value: A further value for disambiguation. The meaning
+                            of this value varies by class and configuration.
+                            For example, if the class of the object is Gene,
+                            then extra_value will refer to the Organism.
         @type extra_value: string
 
         @param code: The code for this constraint (default = "A")
@@ -758,13 +763,16 @@ class MultiConstraint(CodedConstraint):
         Constructor
         ===========
 
-        @param path: The path to constrain. Here it must be an attribute of some object.
+        @param path: The path to constrain. Here it must be an attribute of
+                     some object.
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
-        @param values: The set of values which the object of the constraint either must or must not belong to.
+        @param values: The set of values which the object of the constraint 
+                       either must or must not belong to.
         @type values: set or list
 
         @param code: The code for this constraint (default = "A")
@@ -815,9 +823,9 @@ class RangeConstraint(MultiConstraint):
 
         4 WITHIN [1..5, 20..25] => True
 
-    The format of the ranges depends on the value being constrained and what range
-    parsers have been configured on the target server. A common range parser for
-    biological mines is the one for Locations:
+    The format of the ranges depends on the value being constrained and what
+    range parsers have been configured on the target server. A common range
+    parser for biological mines is the one for Locations:
 
         Gene.chromosomeLocation OVERLAPS [2X:54321..67890, 3R:12345..456789]
 
@@ -869,10 +877,12 @@ class SubClassConstraint(Constraint):
         Constructor
         ===========
 
-        @param path: The path to constrain. This must refer to a class or a reference to a class.
+        @param path: The path to constrain. This must refer to a class or a
+                     reference to a class.
         @type path: str
 
-        @param subclass: The class to subclass the path to. This must be a simple class name (not a dotted name)
+        @param subclass: The class to subclass the path to. This must be a
+                         simple class name (not a dotted name)
         @type subclass: str
         """
         if not PATH_PATTERN.match(subclass):
