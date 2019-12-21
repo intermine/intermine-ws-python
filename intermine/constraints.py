@@ -304,22 +304,29 @@ class LogicParser(object):
         for token in infix_tokens:
             if token not in self.ops:
                 if need_an_op:
-                    raise LogicParseError("Expected an operator after: '" + ' '.join(processed) + "'"
+                    raise LogicParseError("Expected an operator after: '"
+                                          + ' '.join(processed) + "'"
                                           + " - but got: '" + token + "'")
                 if need_binary_op_or_closing_bracket:
-                    raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                          + " - expected an operator or a closing bracket")
+                    raise LogicParseError("Logic grouping error after: '"
+                                          + ' '.join(processed) + "'"
+                                          + " - expected an operator "
+                                          "or a closing bracket")
 
                 need_an_op = True
             else:
                 need_an_op = False
                 if token == "(":
                     if processed and processed[-1] not in self.ops:
-                        raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                              + " - got an unexpeced opening bracket")
+                        raise LogicParseError("Logic grouping error after: '"
+                                              + ' '.join(processed) + "'"
+                                              + " - got an unexpeced "
+                                              "opening bracket")
                     if need_binary_op_or_closing_bracket:
-                        raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                              + " - expected an operator or a closing bracket")
+                        raise LogicParseError("Logic grouping error after: '"
+                                              + ' '.join(processed) + "'"
+                                              + " - expected an operator or "
+                                              "a closing bracket")
 
                     open_brackets += 1
                 elif token == ")":
@@ -333,7 +340,8 @@ class LogicParser(object):
                 message = "Unmatched closing bracket in: "
             else:
                 message = "Unmatched opening bracket in: "
-            raise LogicParseError(message + '"' + ' '.join(infix_tokens) + '"')
+            raise LogicParseError(message + '"' + ' '.join(infix_tokens) 
+                                  + '"')
 
     def infix_to_postfix(self, infix_tokens):
         """
@@ -369,7 +377,8 @@ class LogicParser(object):
                         else:
                             postfix_tokens.append(last_op)
                 else:
-                    while stack and self.get_priority(stack[-1]) <= self.get_priority(op):
+                    while stack and (self.get_priority(stack[-1])
+                                     <= self.get_priority(op)):
                         prev_op = stack.pop()
                         if prev_op != "(":
                             postfix_tokens.append(prev_op)
