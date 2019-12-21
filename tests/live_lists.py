@@ -79,11 +79,11 @@ class LiveListTest(unittest.TestCase):
     def testListTagAdding(self):
         s = self.SERVICE
         t = self.TYPE
-        l = s.create_list(self.GUYS_NAMES, t, description="Id string", tags=[
+        list = s.create_list(self.GUYS_NAMES, t, description="Id string", tags=[
                           'test', 'tag-adding'])
-        self.assertEqual(set(['test', 'tag-adding']), l.tags)
-        l.add_tags("a-tag", "b-tag")
-        self.assertEqual(set(['test', 'tag-adding', "a-tag", "b-tag"]), l.tags)
+        self.assertEqual(set(['test', 'tag-adding']), list.tags)
+        list.add_tags("a-tag", "b-tag")
+        self.assertEqual(set(['test', 'tag-adding', "a-tag", "b-tag"]), list.tags)
 
     # @unittest.skip("disabled")
     def testUnicode(self):
