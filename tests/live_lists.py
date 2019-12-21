@@ -215,7 +215,7 @@ class LiveListTest(unittest.TestCase):
         q.add_view("Employee.id")
         q.add_constraint("Employee.department.name", '=', "Sales")
         list = s.create_list(q, description="Id query", tags=['test'])
-        self.assertEquallist.unmatched_identifiers, set())
+        self.assertEqual(list.unmatched_identifiers, set())
         self.assertEqual(list.size, 18)
         self.assertEqual(list.list_type, t)
 
