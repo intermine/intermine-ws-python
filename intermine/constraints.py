@@ -771,7 +771,7 @@ class MultiConstraint(CodedConstraint):
                    (must be a valid operator)
         @type op: string
 
-        @param values: The set of values which the object of the constraint 
+        @param values: The set of values which the object of the constraint
                        either must or must not belong to.
         @type values: set or list
 
@@ -913,11 +913,13 @@ class TemplateConstraint(object):
     A mixin to supply the behaviour and state of constraints on templates
     =====================================================================
 
-    Constraints on templates can also be designated as "on", "off" or "locked", which refers
-    to whether they are active or not. Inactive constraints are still configured, but behave
-    as if absent for the purpose of results. In addition, template constraints can be
-    editable or not. Only values for editable constraints can be provided when requesting results,
-    and only constraints that can participate in logic expressions can be editable.
+    Constraints on templates can also be designated as "on", "off" or
+    "locked", which refers to whether they are active or not. Inactive
+    constraints are still configured, but behave as if absent for the purpose
+    of results. In addition, template constraints can be editable or not.
+    Only values for editable constraints can be provided when requesting
+    results, and only constraints that can participate in logic expressions
+    can be editable.
     """
     REQUIRED = "locked"
     OPTIONAL_ON = "on"
@@ -928,10 +930,12 @@ class TemplateConstraint(object):
         Constructor
         ===========
 
-        @param editable: Whether or not this constraint should accept new values.
+        @param editable: Whether or not this constraint should accept new 
+                         values.
         @type editable: bool
 
-        @param optional: Whether a value for this constraint must be provided when running.
+        @param optional: Whether a value for this constraint must be provided
+                         when running.
         @type optional: "locked", "on" or "off"
         """
         self.editable = editable
@@ -1019,9 +1023,9 @@ class TemplateConstraint(object):
 
         dict -> (dict, dict)
 
-        Splits a dictionary of arguments into two separate dictionaries, one with
-        arguments for the main constraint, and one with arguments for the template
-        portion of the behaviour
+        Splits a dictionary of arguments into two separate dictionaries, one
+        with arguments for the main constraint, and one with arguments for the
+        template portion of the behaviour
         """
         c_args = {}
         t_args = {}
