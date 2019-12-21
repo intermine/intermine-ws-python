@@ -1196,7 +1196,8 @@ class ConstraintFactory(object):
         Creates a new ConstraintFactory
         """
         self._codes = iter(string.ascii_uppercase)
-        self.reference_ops = TernaryConstraint.OPS | RangeConstraint.OPS | ListConstraint.OPS | IsaConstraint.OPS
+        self.reference_ops = TernaryConstraint.OPS | RangeConstraint.OPS |
+                             ListConstraint.OPS | IsaConstraint.OPS
 
     def get_next_code(self):
         """
