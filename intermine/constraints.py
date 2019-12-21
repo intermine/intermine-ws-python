@@ -289,8 +289,10 @@ class LogicParser(object):
         which should hopefully lead to more informative error messages.
 
         This checks for:
-         - correct operator positions (cannot put two codes next to each other without intervening operators)
-         - correct grouping (all brackets are matched, and contain valid expressions)
+         - correct operator positions (cannot put two codes next to each 
+           other without intervening operators)
+         - correct grouping (all brackets are matched,
+                             and contain valid expressions)
 
         @param infix_tokens: The input parsed into a list of tokens.
         @type infix_tokens: iterable
