@@ -21,7 +21,8 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         self.assertEqual(len(self.service.templates), 12)
 
     def testGetTemplate(self):
-        """Should be able to get a template from the webservice, if it exists, and get its results"""
+        """Should be able to get a template from the webservice, if it exists,
+        and get its results"""
         t = self.service.get_template("MultiValueConstraints")
         self.assertTrue(isinstance(t, Template))
         if P3K:
@@ -54,7 +55,8 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
             self.fail("No ServiceError raised by non-existant template")
         except ServiceError as ex:
             self.assertEqual(
-                ex.message, "There is no template called 'Non_Existant' at this service")
+                ex.message,
+                "There is no template called 'Non_Existant' at this service")
 
     def testIrrelevantSO(self):
         """Should fix up bad sort orders and logic when parsing from xml"""
@@ -85,11 +87,12 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         v = None
         try:
             v = t.get_constraint("X").value
-        except:
+        except Exception:
             pass
 
         self.assertIsNotNone(
-            v, msg="Query (%s) should have a constraint with the code 'X'" % t)
+            v,
+            msg="Query (%s) should have a constraint with the code 'X'" % t)
         self.assertEqual("foo", v, msg="should be the correct constraint")
 
     def testIrrelevantConstraintLogic(self):
