@@ -29,8 +29,7 @@ class WebserviceTest(unittest.TestCase):  # pragma: no cover
             return self.assertTrue(expr is not None, msg)
 
     def get_test_root(self):
-        return ("http://localhost:" + str(WebserviceTest.TEST_PORT) + 
-                "/testservice/service")
+        return "http://localhost:" + str(WebserviceTest.TEST_PORT) + "/testservice/service"
 
     def do_unpredictable_test(self, test, attempts=0, error=None):
         if attempts < WebserviceTest.MAX_ATTEMPTS:
@@ -39,7 +38,7 @@ class WebserviceTest(unittest.TestCase):  # pragma: no cover
                 return
             except IOError as e:
                 self.do_unpredictable_test(test, attempts + 1, e)
-            except Exception:
+            except:
                 if not P3K:  # Handle connection reset errors
                     e, t = sys.exc_info()[:2]
                     if 104 in t:
@@ -293,7 +292,7 @@ class TestQuery(WebserviceTest):  # pragma: no cover
 
         list_dict = {"service": None, "manager": DummyManager(
         ), "name": "my-list", "title": None, "type": "Employee", "size": 10}
-        self.employee_list = List(**list_dict)
+        self.l = List(**list_dict)
 
     def testFromXML(self):
         q1 = self.service.new_query(xml=TestQuery.XML_1)
@@ -337,13 +336,11 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         v = None
         try:
             v = q8.get_constraint("X").value
-        except Exception:
+        except:
             pass
 
-        self.assertIsNotNone(v,
-                             "query should have a constraint with the code "
-                             "'X', but it only has the codes: %s" % map(
-                             lambda x: x.code, q8.constraints))
+        self.assertIsNotNone(v, "query should have a constraint with the code 'X', but it only has the codes: %s" % map(
+            lambda x: x.code, q8.constraints))
         self.assertEqual("foo", v, "And it has the right value")
 
         q9 = self.service.new_query(xml=TestQuery.XML_9)
@@ -569,9 +566,9 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         """Queries should be fine with NULL/NOT NULL constraints"""
         Employee = self.q.model.table("Employee")
 
-        self.q.add_constraint(Employee.age is None)
-        self.q.add_constraint(Employee.name is not None)
-        self.q.add_constraint(Employee.address is None)
+        self.q.add_constraint(Employee.age == None)
+        self.q.add_constraint(Employee.name != None)
+        self.q.add_constraint(Employee.address == None)
         self.assertEqual(self.q.constraints.__repr__(), self.expected_unary)
 
     def testAddBinaryConstraints(self):
@@ -672,11 +669,11 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         """Queries should be ok with list constraints"""
         Employee = self.q.model.table("Employee")
 
-        self.q.add_constraint(Employee == self.employee_list)
-        self.q.add_constraint(Employee.department.manager != self.employee_list)
+        self.q.add_constraint(Employee == self.l)
+        self.q.add_constraint(Employee.department.manager != self.l)
         self.assertEqual(self.q.constraints.__repr__(), self.expected_list)
         self.assertRaises(
-            ConstraintError, self.q.add_constraint, Employee.name == self.employee_list)
+            ConstraintError, self.q.add_constraint, Employee.name == self.l)
 
     def testLoopConstraint(self):
         """Queries should be ok with loop constraints"""
@@ -852,12 +849,12 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         # SQL style
         q = Employee.\
             select("name", "age", "department.name").\
-            where(Employee.name is not None).\
+            where(Employee.name != None).\
             where(Employee.age > 10).\
             where(Employee.department % ("Sales", "Wernham-Hogg")).\
             where(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
             where(Employee.department.manager == Employee).\
-            where(Employee == self.employee_list).\
+            where(Employee == self.l).\
             where(Employee.department.employees >> Manager).\
             outerjoin(Employee.department).\
             order_by(Employee.age).\
@@ -868,12 +865,12 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         # SQLAlchemy style
         q = self.service.query(Employee).\
             select("name", "age", "department.name").\
-            filter(Employee.name is not None).\
+            filter(Employee.name != None).\
             filter(Employee.age > 10).\
             filter(Employee.department % ("Sales", "Wernham-Hogg")).\
             filter(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
             filter(Employee.department.manager == Employee).\
-            filter(Employee == self.employee_list).\
+            filter(Employee == self.l).\
             filter(Employee.department.employees >> Manager).\
             outerjoin(Employee.department).\
             order_by(Employee.age).\
@@ -912,8 +909,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
             filter(
                         e.department.manager < CEO,
                         (
-                            ((e.name is not None) & (e.age > 10))
-                            | (e.in_(self.employee_list) & (e.department.manager % "David"))
+                            ((e.name != None) & (e.age > 10))
+                            | (e.in_(self.l) & (e.department.manager % "David"))
                         )
                     ).\
             outerjoin(e.department).\
@@ -1241,9 +1238,9 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
                 self.assertEqual(r.values(), r.to_l())
                 self.assertEqual(list(zip(r.values(), r.keys())), list(
                     zip(r.itervalues(), r.iterkeys())))
-                self.assertTrue("age" in r)
-                self.assertTrue("Employee.age" in r)
-                self.assertTrue("Employee.foo" not in r)
+                self.assertTrue(r.has_key("age"))
+                self.assertTrue(r.has_key("Employee.age"))
+                self.assertTrue(not r.has_key("Employee.foo"))
 
         self.do_unpredictable_test(logic)
 
