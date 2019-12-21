@@ -306,12 +306,12 @@ class Query(object):
 
     """
 
-    SO_SPLIT_PATTERN = re.compile("\s*(asc|desc)\s*", re.I)
-    LOGIC_SPLIT_PATTERN = re.compile("\s*(?:and|or|\(|\))\s*", re.I)
-    TRAILING_OP_PATTERN = re.compile("\s*(and|or)\s*$", re.I)
-    LEADING_OP_PATTERN = re.compile("^\s*(and|or)\s*", re.I)
+    SO_SPLIT_PATTERN = re.compile("\\s*(asc|desc)\\s*", re.I)
+    LOGIC_SPLIT_PATTERN = re.compile("\\s*(?:and|or|\\(|\\))\\s*", re.I)
+    TRAILING_OP_PATTERN = re.compile("\\s*(and|or)\\s*$", re.I)
+    LEADING_OP_PATTERN = re.compile("^\\s*(and|or)\\s*", re.I)
     ORPHANED_OP_PATTERN = re.compile(
-        "(?:\(\s*(?:and|or)\s*|\s*(?:and|or)\s*\))", re.I)
+        "(?:\\(\\s*(?:and|or)\\s*|\\s*(?:and|or)\\s*\\))", re.I)
 
     def __init__(self, model, service=None, validate=True, root=None):
         """
@@ -517,7 +517,7 @@ class Query(object):
             pattern = re.compile("\\b" + c + "\\b", re.I)
             logic = pattern.sub("", logic)
         # Remove empty groups
-        logic = re.sub("\((:?and|or|\s)*\)", "", logic)
+        logic = re.sub("\\((:?and|or|\\s)*\\)", "", logic)
         # Remove trailing and leading operators
         logic = Query.LEADING_OP_PATTERN.sub("", logic)
         logic = Query.TRAILING_OP_PATTERN.sub("", logic)
@@ -527,7 +527,7 @@ class Query(object):
                     repl = left
                 else:
                     repl = "and"
-                pattern = re.compile(left + "\s*" + right, re.I)
+                pattern = re.compile(left + "\\s*" + right, re.I)
                 logic = pattern.sub(repl, logic)
         logic = Query.ORPHANED_OP_PATTERN.sub(
             lambda x: "(" if "(" in x.group(0) else ")", logic)
@@ -647,14 +647,14 @@ class Query(object):
             elif isinstance(p, Reference):
                 views.append(p.name + ".*")
             else:
-                views.extend(re.split("(?:,?\s+|,)", str(p)))
+                views.extend(re.split("(?:,?\\s+|,)", str(p)))
 
         views = list(map(self.prefix_path, views))
 
         views_to_add = []
         for view in views:
             if view.endswith(".*"):
-                view = re.sub("\.\*$", "", view)
+                view = re.sub("\\.\\*$", "", view)
                 scd = self.get_subclass_dict()
 
                 def expand(p, level, id_only=False):
@@ -691,7 +691,7 @@ class Query(object):
         if self.root is None:
             if self.do_verification:  # eg. not when building from XML
                 if path.endswith(".*"):
-                    trimmed = re.sub("\.\*$", "", path)
+                    trimmed = re.sub("\\.\\*$", "", path)
                 else:
                     trimmed = path
                 self.root = self.model.make_path(
@@ -1366,24 +1366,21 @@ class Query(object):
 
         view = to_run.views
         cld = to_run.root
-        if (row=="dataframe"):
-            row="dict"
-
-
+        if (row == "dataframe"):
+            row = "dict"
 
         return to_run.service.get_results(path, params, row, view, cld)
-    
+
     def dataframe(self, start=0, size=None):
-        dict={}
-        query=self.results(row="dict", start=start, size=size)
+        dict = {}
+        query = self.results(row="dict", start=start, size=size)
         for i in query.view:
-            dict[i]=[]
+            dict[i] = []
         for row in query:
             for i in dict:
                 dict[i].append(row[i])
-        df=DataFrame(data=dict)
+        df = DataFrame(data=dict)
         return df
-
 
     def rows(self, start=0, size=None, row="rr"):
         """
