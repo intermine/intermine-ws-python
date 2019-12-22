@@ -29,7 +29,8 @@ class WebserviceTest(unittest.TestCase):  # pragma: no cover
             return self.assertTrue(expr is not None, msg)
 
     def get_test_root(self):
-        return "http://localhost:" + str(WebserviceTest.TEST_PORT) + "/testservice/service"
+        return ("http://localhost:" +
+                str(WebserviceTest.TEST_PORT) + "/testservice/service")
 
     def do_unpredictable_test(self, test, attempts=0, error=None):
         if attempts < WebserviceTest.MAX_ATTEMPTS:
@@ -53,7 +54,8 @@ class WebserviceTest(unittest.TestCase):  # pragma: no cover
 class TestInstantiation(WebserviceTest):  # pragma: no cover
 
     def testMakeModel(self):
-        """Should be about to make a model, or fail with an appropriate message"""
+        """Should be about to make a model,
+        or fail with an appropriate message"""
         m = Model(self.get_test_root() + "/model")
         self.assertTrue(isinstance(m, Model), "Can make a model")
         try:
@@ -77,7 +79,8 @@ class TestModel(WebserviceTest):  # pragma: no cover
             self.__class__.model = Model(self.get_test_root() + "/model")
 
     def testModelClasses(self):
-        '''The model should have the correct number of classes, which behave correctly'''
+        '''The model should have the correct number of classes,
+        which behave correctly'''
         self.assertEqual(len(self.model.classes.items()), 19)
         for good_class in ["Employee", "Company", "Department"]:
             cd = self.model.get_class(good_class)
@@ -339,8 +342,10 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         except Exception:
             pass
 
-        self.assertIsNotNone(v, "query should have a constraint with the code 'X', but it only has the codes: %s" % map(
-            lambda x: x.code, q8.constraints))
+        self.assertIsNotNone(v,
+                             "query should have a constraint with the code 'X'"
+                             ", but it only has the codes: %s" % map(
+                             lambda x: x.code, q8.constraints))
         self.assertEqual("foo", v, "And it has the right value")
 
         q9 = self.service.new_query(xml=TestQuery.XML_9)
@@ -380,7 +385,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
                 ex.message, "'Employee.department' does not represent an attribute")
 
     def testIDOnlyExpansion(self):
-        """Should be able to expand to a given depth, selecting only the id attribute for IM Object classes"""
+        """Should be able to expand to a given depth,
+        selecting only the id attribute for IM Object classes"""
         self.q.prefetch_depth = 3
         self.q.prefetch_id_only = True
 
@@ -510,7 +516,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         expected = [
             "Employee.age", "Employee.name",
             "Employee.department.name",
-            "Employee.department.manager.name", "Employee.department.company.CEO.name"]
+            "Employee.department.manager.name",
+            "Employee.department.company.CEO.name"]
         self.assertEqual(self.q.views, expected)
         self.q.add_sort_order("name")
         self.q.add_sort_order("department.name")
@@ -520,7 +527,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         self.assertEqual(len(self.q._sort_order_list), 1)
 
     def testSortOrder(self):
-        """Queries should be able to add sort orders, and complain appropriately"""
+        """Queries should be able to add sort orders,
+        and complain appropriately"""
         self.q.add_view("Employee.name", "Employee.age", "Employee.fullTime")
         self.assertEqual(str(self.q.get_sort_order()), "Employee.name asc")
         self.q.add_sort_order("Employee.fullTime", "desc")
@@ -583,7 +591,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
                 "No ConstraintError thrown for non attribute BinaryConstraint")
         except ConstraintError as ex:
             self.assertEqual(
-                ex.message, "'Employee.department' does not represent an attribute")
+                ex.message,
+                "'Employee.department' does not represent an attribute")
 
     def testAddBinaryConstraintsSugar(self):
         """Queries should be able to handle constraints on attribute values"""
@@ -599,7 +608,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
                 "No ConstraintError thrown for non attribute BinaryConstraint")
         except ConstraintError as ex:
             self.assertEqual(
-                ex.message, "'Employee.department' does not represent an attribute")
+                ex.message,
+                "'Employee.department' does not represent an attribute")
 
     def testTernaryConstraint(self):
         """Queries should be able to add constraints for LOOKUPs"""
@@ -613,7 +623,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
                 "No ConstraintError thrown for non object TernaryConstraint")
         except ConstraintError as ex:
             self.assertEqual(
-                ex.message, "'Employee.department.name' does not represent a class, or a reference to a class")
+                ex.message,
+                "'Employee.department.name' does not represent a class, or a reference to a class")
 
     def testTernaryConstraintImpliedRoot(self):
         """Queries should be able to add constraints for LOOKUPs on the implied root"""
@@ -685,7 +696,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
                           "Employee", "IS", "Employee.department")
 
     def testLoopConstraintSugar(self):
-        """Queries should be ok with loop constraints made with alchemical sugar"""
+        """Queries should be ok with loop
+        constraints made with alchemical sugar"""
         Employee = self.q.model.table("Employee")
 
         self.q.add_constraint(Employee == Employee.department.manager)
@@ -709,7 +721,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
             self.fail("No ConstraintError raised by bad subclass relationship")
         except ConstraintError as ex:
             self.assertEqual(
-                ex.message, "'Manager' is not a subclass of 'Department.company.CEO'")
+                ex.message,
+                "'Manager' is not a subclass of 'Department.company.CEO'")
 
     def testStringLogic(self):
         """Queries should be able to parse good logic strings"""
@@ -718,8 +731,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         b = self.q.add_constraint("Employee.age", ">", 10)
         c = self.q.add_constraint(
             "Employee.department", "LOOKUP", "Sales", "Wernham-Hogg")
-        d = self.q.add_constraint("Employee.department.employees.name", "ONE OF",
-                                  ["John", "Paul", "Mary"])
+        d = self.q.add_constraint("Employee.department.employees.name",
+                                  "ONE OF", ["John", "Paul", "Mary"])
         self.q.add_constraint("Employee.department.employees", "Manager")
 
         self.assertEqual(str(self.q.get_logic()), "A and B and C and D")
@@ -732,14 +745,15 @@ class TestQuery(WebserviceTest):  # pragma: no cover
                          "(A and B) or (A and C and D)")
 
     def testIrrelevantCodeStripping(self):
-        """Should be able to recover from queries that have irrelevant codes in their logic"""
+        """Should be able to recover from queries that
+        have irrelevant codes in their logic"""
 
         a = self.q.add_constraint("Employee.name", "IS NOT NULL")
         b = self.q.add_constraint("Employee.age", ">", 10)
         c = self.q.add_constraint(
             "Employee.department", "LOOKUP", "Sales", "Wernham-Hogg")
-        d = self.q.add_constraint("Employee.department.employees.name", "ONE OF",
-                                  ["John", "Paul", "Mary"])
+        d = self.q.add_constraint("Employee.department.employees.name",
+                                  "ONE OF", ["John", "Paul", "Mary"])
         self.q.add_constraint("Employee.department.employees", "Manager")
 
         self.q._set_questionable_logic("A and B or C or D and E")
@@ -765,8 +779,8 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         b = self.q.add_constraint("Employee.age", ">", 10)
         c = self.q.add_constraint(
             "Employee.department", "LOOKUP", "Sales", "Wernham-Hogg")
-        d = self.q.add_constraint("Employee.department.employees.name", "ONE OF",
-                                  ["John", "Paul", "Mary"])
+        d = self.q.add_constraint("Employee.department.employees.name",
+                                  "ONE OF", ["John", "Paul", "Mary"])
         self.q.add_constraint("Employee.department.employees", "Manager")
 
         self.q.set_logic(a + b + c + d)
@@ -1146,7 +1160,8 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
             A="Foo",
             B="Bar"
             ))
-        # Check that these contraint values have not been applied to the actual template
+        '''Check that these contraint values have not 
+        been applied to the actual template'''
         self.assertEqual(expected1, t.rows())
         expected1 = (
             '/TEMPLATE-PATH',
@@ -1227,9 +1242,12 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
                     self.assertTrue(0 < count < 4)
                 count = 0
                 self.assertEqual(
-                    {'Employee.name': 'foo', 'Employee.age': 'bar', 'Employee.id': 'baz'}, r.to_d())
+                                 {'Employee.name': 'foo', 'Employee.age': 'bar'
+                                  , 'Employee.id': 'baz'},
+                                 r.to_d())
                 self.assertEqual(
-                    [("Employee.name", 'foo'), ("Employee.age", 'bar'), ("Employee.id", 'baz')], r.items())
+                    [("Employee.name", 'foo'), ("Employee.age", 'bar'),
+                     ("Employee.id", 'baz')], r.items())
                 for (k, v) in r.iteritems():
                     count += 1
                     self.assertTrue(0 < count < 4)
@@ -1313,7 +1331,8 @@ class TestResultObjects(WebserviceTest):  # pragma: no cover
     service = None
 
     def get_test_root(self):
-        return "http://localhost:" + str(self.TEST_PORT) + "/testservice/testresultobjs"
+        return ("http://localhost:" +
+                str(self.TEST_PORT) + "/testservice/testresultobjs")
 
     def setUp(self):
         if self.service is None:
