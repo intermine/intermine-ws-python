@@ -67,8 +67,9 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         """Should fix up bad sort orders and logic when parsing from xml"""
         model = self.service.model
 
-        xml = '''<template name="bad_so"><query name="bad_so" 
-              model="testmodel" view="Employee.name Employee.age" sortOrder="Employee.fullTime ASC"/></template>'''
+        xml = '''<template name="bad_so"><query name="bad_so"
+              model="testmodel" view="Employee.name Employee.age"
+              sortOrder="Employee.fullTime ASC"/></template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_sort_order()), "Employee.name asc")
 
