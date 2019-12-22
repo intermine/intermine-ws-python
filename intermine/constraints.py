@@ -1197,7 +1197,7 @@ class ConstraintFactory(object):
         """
         self._codes = iter(string.ascii_uppercase)
         self.reference_ops = (TernaryConstraint.OPS | RangeConstraint.OPS
-                              |ListConstraint.OPS | IsaConstraint.OPS)
+                              | ListConstraint.OPS | IsaConstraint.OPS)
 
     def get_next_code(self):
         """
