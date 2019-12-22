@@ -346,8 +346,9 @@ class Query(object):
         @param model: an instance of L{intermine.model.Model}. Required
         @param service: an instance of l{intermine.service.Service}. Optional,
             but you will not be able to make requests without one.
-        @param validate: a boolean - defaults to True. If set to false, the query
-            will not try and validate itself. You should not set this to false.
+        @param validate: a boolean - defaults to True. If set to false, the
+            query will not try and validate itself. You should not set this to
+            false.
 
         """
         self.model = model
@@ -393,7 +394,9 @@ class Query(object):
         return self.count()
 
     def __sub__(self, other):
-        """Construct a new list from the symmetric difference of these things"""
+        """
+        Construct a new list from the symmetric difference of these things
+        """
         return self.service._list_manager.subtract([self], [other])
 
     def __xor__(self, other):
@@ -860,17 +863,22 @@ class Query(object):
 
         This method will check the path attribute of each constraint.
         In addition it will:
-          - Check that BinaryConstraints and MultiConstraints have an Attribute as their path
+          - Check that BinaryConstraints and MultiConstraints have an
+            Attribute as their path
           - Check that TernaryConstraints have a Reference as theirs
           - Check that SubClassConstraints have a correct subclass relationship
-          - Check that LoopConstraints have a valid loopPath, of a compatible type
+          - Check that LoopConstraints have a valid loopPath, of a compatible
+            type
           - Check that ListConstraints refer to an object
-          - Don't even try to check RangeConstraints: these have variable semantics
+          - Don't even try to check RangeConstraints: these have variable
+            semantics
 
-        @param cons: The constraints to check (defaults to all constraints on the query)
+        @param cons: The constraints to check
+                     (defaults to all constraints on the query)
 
         @raise ModelError: if the paths are not valid
-        @raise ConstraintError: if the constraints do not satisfy the above rules
+        @raise ConstraintError: if the constraints do not satisfy the above
+                                rules
 
         """
         if cons is None:
@@ -1042,13 +1050,14 @@ class Query(object):
             query.add_path_description("Gene.proteins.proteinDomains", "Protein Domain")
 
         This allows you to alias the components of long paths to
-        improve the way they display column headers in a variety of circumstances.
-        In the above example, if the view included the unwieldy path
-        "Gene.proteins.proteinDomains.primaryIdentifier", it would (depending on the
-        mine) be displayed as "Protein Domain > DB Identifer". These
-        setting are taken into account by the webservice when generating
-        column headers for flat-file results with the columnheaders parameter given, and
-        always supplied when requesting jsontable results.
+        improve the way they display column headers in a variety of
+        circumstances. In the above example, if the view included the unwieldy
+        path "Gene.proteins.proteinDomains.primaryIdentifier", it would
+        (depending on the mine) be displayed as
+        "Protein Domain > DB Identifer". These setting are taken into account
+        by the webservice when generating column headers for flat-file results
+        with the columnheaders parameter given, and always supplied when
+        requesting jsontable results.
 
         @rtype: L{intermine.pathfeatures.PathDescription}
 
@@ -1334,17 +1343,17 @@ class Query(object):
         This is the general method that allows access to any of the available
         result formats. The example above shows the ways these differ in terms
         of accessing fields of the rows, as well as dealing with different
-        data types. Results can either be retrieved as typed values (jsonobjects,
-        rr ['ResultRows'], dict, list), or as lists of strings (csv, tsv) which then require
-        further parsing. The default format for this method is "objects", where
-        information is grouped by its relationships. The other main format is
-        "rr", which stands for 'ResultRows', and can be accessed directly through
-        the L{rows} method.
+        data types. Results can either be retrieved as typed values
+        (jsonobjects, rr ['ResultRows'], dict, list), or as lists of strings
+        (csv, tsv) which then require further parsing. The default format for
+        this method is "objects", where information is grouped by its
+        relationships. The other main format is "rr", which stands for
+        'ResultRows', and can be accessed directly through the L{rows} method.
 
-        Note that when requesting object based results (the default), if your query
-        contains any kind of collection, it is highly likely that start and size won't do what
-        you think, as they operate only on the underlying
-        rows used to build up the returned objects. If you want rows
+        Note that when requesting object based results (the default), if your
+        query contains any kind of collection, it is highly likely that start
+        and size won't do what you think, as they operate only on the
+        underlying rows used to build up the returned objects. If you want rows
         back, you are recommeded to use the simpler rows method.
 
         If no views have been specified, all attributes of the root class
@@ -1357,10 +1366,11 @@ class Query(object):
         @type start: int
         @param size: The maximum number of results to return (default = all)
         @type size: int
-        @param summary_path: A column name to optionally summarise. Specifying a path
-                             will force "jsonrows" format, and return an iterator over a list
-                             of dictionaries. Use this when you are interested in processing
-                             a summary in order of greatest count to smallest.
+        @param summary_path: A column name to optionally summarise. Specifying
+                             a path will force "jsonrows" format, and return
+                             an iterator over a list of dictionaries. Use this
+                             when you are interested in processing a summary
+                             in order of greatest count to smallest.
         @type summary_path: str or L{intermine.model.Path}
 
         @rtype: L{intermine.webservice.ResultIterator}
@@ -1443,22 +1453,25 @@ class Query(object):
             ... 98
 
         This method allows you to get statistics summarising the information
-        from just one column of a query. For numerical columns you get dictionary with
-        four keys ('average', 'stdev', 'max', 'min'), and for non-numerical
-        columns you get a dictionary where each item is a key and the values
-        are the number of occurrences of this value in the column.
+        from just one column of a query. For numerical columns you get
+        dictionary with four keys ('average', 'stdev', 'max', 'min'), and for
+        non-numerical columns you get a dictionary where each item is a key
+        and the values are the number of occurrences of this value in the
+        column.
 
         Any key word arguments will be passed to the underlying results call -
-        so you can limit the result size to the top 100 items by passing "size = 100"
-        as part of the call.
+        so you can limit the result size to the top 100 items by passing
+        "size = 100" as part of the call.
 
         @see: L{intermine.query.Query.results}
 
-        @param summary_path: The column to summarise (either in long or short form)
+        @param summary_path: The column to summarise (either in long or short
+                             form)
         @type summary_path: str or L{intermine.model.Path}
 
         @rtype: dict
-        This method is sugar for particular combinations of calls to L{results}.
+        This method is sugar for particular combinations of calls to
+        L{results}.
         """
         p = self.model.make_path(
             self.prefix_path(summary_path), self.get_subclass_dict())
@@ -1616,13 +1629,15 @@ class Query(object):
 
     def to_query(self):
         """
-        Implementation of trait that allows use of these objects as queries (casting).
+        Implementation of trait that allows use of these objects as queries
+        (casting).
         """
         return self
 
     def make_list_constraint(self, path, op):
         """
-        Implementation of trait that allows use of these objects in list constraints
+        Implementation of trait that allows use of these objects in list
+        constraints
         """
         l = self.service.create_list(self)
         return ConstraintNode(path, op, l.name)
@@ -1914,7 +1929,8 @@ class Template(Query):
         values. This method does the cloning and changing of constraint
         values
 
-        @raise ConstraintError: if the constraint values specify values for a non-editable constraint.
+        @raise ConstraintError: if the constraint values specify values for a
+                                non-editable constraint.
 
         @rtype: L{Template}
         """
@@ -1951,11 +1967,11 @@ class Template(Query):
             B = {"op": ">", "value": 5000}
           )
 
-        The keys should be codes for editable constraints (you can inspect these
-        with Template.editable_constraints) and the values should be a dictionary
-        of constraint properties to replace. You can replace the values for
-        "op" (operator), "value", and "extra_value" and "values" in the case of
-        ternary and multi constraints.
+        The keys should be codes for editable constraints (you can inspect
+        these with Template.editable_constraints) and the values should be a
+        dictionary of constraint properties to replace. You can replace the
+        values for "op" (operator), "value", and "extra_value" and "values"
+        in the case of ternary and multi constraints.
 
         @rtype: L{intermine.webservice.ResultIterator}
         """
