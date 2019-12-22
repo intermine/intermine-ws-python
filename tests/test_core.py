@@ -1220,9 +1220,9 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
                 self.assertEqual(
                     list(zip(r.values(), r.keys())),
                     list(zip(r.itervalues(), r.iterkeys())))
-                self.assertTrue(r.has_key("age"))
-                self.assertTrue(r.has_key("Employee.age"))
-                self.assertTrue(not r.has_key("Employee.foo"))
+                self.assertTrue("age" in r)
+                self.assertTrue("Employee.age" in r)
+                self.assertTrue("Employee.foo" not in r)
 
         self.do_unpredictable_test(logic)
 
