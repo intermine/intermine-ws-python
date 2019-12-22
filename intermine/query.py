@@ -6,8 +6,8 @@ from pandas import DataFrame
 from xml.dom import minidom, getDOMImplementation
 
 from intermine.util import openAnything, ReadableException
-from intermine.pathfeatures import PathDescription, Join, SortOrder,
-SortOrderList
+from intermine.pathfeatures import PathDescription, Join, SortOrder
+from intermine.pathfeatures import SortOrderList
 
 try:
     from functools import reduce
