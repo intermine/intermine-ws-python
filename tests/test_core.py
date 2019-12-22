@@ -566,9 +566,9 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         """Queries should be fine with NULL/NOT NULL constraints"""
         Employee = self.q.model.table("Employee")
 
-        self.q.add_constraint(Employee.age is None)
-        self.q.add_constraint(Employee.name is not None)
-        self.q.add_constraint(Employee.address is None)
+        self.q.add_constraint(Employee.age == None)
+        self.q.add_constraint(Employee.name != None)
+        self.q.add_constraint(Employee.address == None)
         self.assertEqual(self.q.constraints.__repr__(), self.expected_unary)
 
     def testAddBinaryConstraints(self):
@@ -849,7 +849,7 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         # SQL style
         q = Employee.\
             select("name", "age", "department.name").\
-            where(Employee.name is not None).\
+            where(Employee.name != None).\
             where(Employee.age > 10).\
             where(Employee.department % ("Sales", "Wernham-Hogg")).\
             where(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
@@ -865,7 +865,7 @@ class TestQuery(WebserviceTest):  # pragma: no cover
         # SQLAlchemy style
         q = self.service.query(Employee).\
             select("name", "age", "department.name").\
-            filter(Employee.name is not None).\
+            filter(Employee.name != None).\
             filter(Employee.age > 10).\
             filter(Employee.department % ("Sales", "Wernham-Hogg")).\
             filter(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
@@ -909,7 +909,7 @@ class TestQuery(WebserviceTest):  # pragma: no cover
             filter(
                         e.department.manager < CEO,
                         (
-                            ((e.name is not None) & (e.age > 10))
+                            ((e.name != None) & (e.age > 10))
                             | (e.in_(self.l) & (e.department.manager % "David"))
                         )
                     ).\
