@@ -1,3 +1,5 @@
+import intermine.constraints as constraints
+from intermine.model import Column, Class, Model, Reference, ConstraintNode
 import re
 from copy import deepcopy
 from pandas import DataFrame
@@ -5,10 +7,7 @@ from xml.dom import minidom, getDOMImplementation
 
 from intermine.util import openAnything, ReadableException
 from intermine.pathfeatures import PathDescription, Join, SortOrder,
-                                   SortOrderList
-from intermine.model import Column, Class, Model, Reference, ConstraintNode
-
-import intermine.constraints as constraints
+SortOrderList
 
 try:
     from functools import reduce
