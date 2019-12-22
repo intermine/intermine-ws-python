@@ -26,7 +26,7 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         t = self.service.get_template("MultiValueConstraints")
         self.assertTrue(isinstance(t, Template))
         if P3K:
-            expected = ("[<TemplateMultiConstraint: Employee.name ONE OF "+
+            expected = ("[<TemplateMultiConstraint: Employee.name ONE OF " +
                         "['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd']"
                         " (editable, locked)>]")
         else:
