@@ -921,7 +921,7 @@ class Model(object):
             for f in c.fields:
                 f.type_class = self.classes.get(f.type_name)
                 if (hasattr(f, 'reverse_reference_name') and
-                         f.reverse_reference_name != ''):
+                    f.reverse_reference_name != ''):
                     rrn = f.reverse_reference_name
                     f.reverse_reference = f.type_class.field_dict[rrn]
 
