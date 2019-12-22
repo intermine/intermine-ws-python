@@ -26,14 +26,15 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         t = self.service.get_template("MultiValueConstraints")
         self.assertTrue(isinstance(t, Template))
         if P3K:
-            expected = ("[<TemplateMultiConstraint: Employee.name ONE OF "+
-            "['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd'] (editable, locked)>]")
+            string = "[<TemplateMultiConstraint: Employee.name ONE OF ['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
+            expected = string
         else:
             expected = "[<TemplateMultiConstraint: Employee.name ONE OF [u'Dick', u'Jane', u'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
         self.assertEqual(repr(list(t.editable_constraints)), expected)
 
     def testGetTemplateResults(self):
-        """Should be able to get a template from the webservice, if it exists, and get its results"""
+        """Should be able to get a template from the webservice, if it exists,
+        and get its results"""
         t = self.service.get_template("MultiValueConstraints")
         expected = [['foo', 'bar', 'baz'], [
             123, 1.23, -1.23], [True, False, None]]
