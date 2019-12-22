@@ -860,8 +860,9 @@ class Model(object):
                 self.name = node.getAttribute('name')
                 self.package_name = node.getAttribute('package')
                 assert node.nextSibling is None, "More than one model element"
-                assert (self.name and self.package_name,
-                        "No model name or package name")
+                error = "No model name or package name"
+                assert self.name and self.package_name, error
+                        
 
             for c in doc.getElementsByTagName('class'):
                 class_name = c.getAttribute('name')
