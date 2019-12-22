@@ -4,7 +4,8 @@ from pandas import DataFrame
 from xml.dom import minidom, getDOMImplementation
 
 from intermine.util import openAnything, ReadableException
-from intermine.pathfeatures import PathDescription, Join, SortOrder, SortOrderList
+from intermine.pathfeatures import PathDescription, Join, SortOrder,
+                                   SortOrderList
 from intermine.model import Column, Class, Model, Reference, ConstraintNode
 
 import intermine.constraints as constraints
@@ -74,21 +75,22 @@ class Query(object):
         >>> for gene in s.query(s.model.Gene).filter(s.model.Gene.symbol == ["zen", "H", "eve"]).add_columns(s.model.Gene.alleles):
         ...    handle(gene)
 
-    Query objects represent structured requests for information over the database
-    housed at the datawarehouse whose webservice you are querying. They utilise
-    some of the concepts of relational databases, within an object-related
-    ORM context. If you don't know what that means, don't worry: you
-    don't need to write SQL, and the queries will be fast.
+    Query objects represent structured requests for information over the
+    database housed at the datawarehouse whose webservice you are querying.
+    They utilise some of the concepts of relational databases, within an 
+    object-related ORM context. If you don't know what that means, don't 
+    worry: you don't need to write SQL, and the queries will be fast.
 
-    To make things slightly more familiar to those with knowledge of SQL, some syntactical
-    sugar is provided to make constructing queries a bit more recognisable.
+    To make things slightly more familiar to those with knowledge of SQL, 
+    some syntactical sugar is provided to make constructing queries a bit 
+    more recognisable.
 
     PRINCIPLES
     ----------
 
     The data model represents tables in the databases as classes, with records
-    within tables as instances of that class. The columns of the database are the
-    fields of that object::
+    within tables as instances of that class. The columns of the database are 
+    the fields of that object::
 
       The Gene table - showing two records/objects
       +---------------------------------------------------+
@@ -107,13 +109,15 @@ class Query(object):
       | 01  | D. melanogaster | 7227     |
       +----------------------------------+
 
-    Columns that contain a meaningful value are known as 'attributes' (in the tables above, that is
-    everything except the id columns). The other columns (such as "organism" in the gene table)
-    are ones that reference records of other tables (ie. other objects), and are called
-    references. You can refer to any field in any class, that has a connection,
-    however tenuous, with a table, by using dotted path notation::
+    Columns that contain a meaningful value are known as 'attributes' (in the 
+    tables above, that is everything except the id columns). The other columns 
+    (such as "organism" in the gene table) are ones that reference records of 
+    other tables (ie. other objects), and are called references. You can refer
+    to any field in any class, that has a connection, however tenuous, with a
+    table, by using dotted path notation::
 
-      Gene.organism.name -> the name column in the organism table, referenced by a record in the gene table
+      Gene.organism.name -> the name column in the organism table, referenced 
+                            by a record in the gene table
 
     These paths, and the connections between records and tables they represent,
     are the basis for the structure of InterMine queries.
@@ -132,7 +136,8 @@ class Query(object):
     In addition, the query must be coherent: if you have information about
     an organism, and you want a list of genes, then the "Gene" table
     should be the basis for your query, and as such the Gene class, which
-    represents this table, should be the root of all the paths that appear in it:
+    represents this table, should be the root of all the paths that appear in 
+    it:
 
     So, to take a simple example::
 
@@ -144,8 +149,8 @@ class Query(object):
         >>> query.add_view("Gene.length")
         >>> query.add_view("Gene.proteins.sequence.length")
 
-    Note I can freely mix attributes and references, as long as every view ends in
-    an attribute (a meaningful value). As a short-cut I can also write:
+    Note I can freely mix attributes and references, as long as every view ends
+    in an attribute (a meaningful value). As a short-cut I can also write:
 
         >>> query.add_views("Gene.name", "Gene.length", "Gene.proteins.sequence.length")
 
@@ -153,14 +158,15 @@ class Query(object):
 
         >>> query.add_views("Gene.name Gene.length Gene.proteins.sequence.length")
 
-    They are all equivalent. You can also use common SQL style shortcuts such as "*" for all
-    attribute fields:
+    They are all equivalent. You can also use common SQL style shortcuts such 
+    as "*" for all attribute fields:
 
         >>> query.add_views("Gene.*")
 
     You can also use "select" as a synonymn for "add_view"
 
-    Now I can add my constraints. As, we mentioned, I have information about an organism, so:
+    Now I can add my constraints. As, we mentioned, I have information about an
+    organism, so:
 
         >>> query.add_constraint("Gene.organism.name", "=", "D. melanogaster")
 
@@ -177,29 +183,33 @@ class Query(object):
 
     Now I am guaranteed to get only information on genes I am interested in.
 
-    Note, though, that because I have included the link (or "join") from Gene -> Protein,
-    this, by default, means that I only want genes that have protein information associated
-    with them. If in fact I want information on all genes, and just want to know the
-    protein information if it is available, then I can specify that with:
+    Note, though, that because I have included the link (or "join") from 
+    Gene -> Protein, this, by default, means that I only want genes that have 
+    protein information associated with them. If in fact I want information on
+    all genes, and just want to know the protein information if it is 
+    available, then I can specify that with:
 
         >>> query.add_join("Gene.proteins", "OUTER")
 
-    And if perhaps my query is not as simple as a strict cumulative filter, but I want all
-    D. mel genes that EITHER have a short protein sequence OR come from one of my favourite genes
-    (as unlikely as that sounds), I can specify the logic for that too:
+    And if perhaps my query is not as simple as a strict cumulative filter, 
+    but I want all D. mel genes that EITHER have a short protein sequence OR 
+    come from one of my favourite genes (as unlikely as that sounds), I can 
+    specify the logic for that too:
 
         >>> query.set_logic("A and (B or C)")
 
-    Each letter refers to one of the constraints - the codes are assigned in the order you add
-    the constraints. If you want to be absolutely certain about the constraints you mean, you
-    can use the constraint objects themselves:
+    Each letter refers to one of the constraints - the codes are assigned in 
+    the order you add the constraints. If you want to be absolutely certain 
+    about the constraints you mean, you can use the constraint objects 
+    themselves:
 
       >>> gene_is_eve = query.add_constraint("Gene.symbol", "=", "eve")
       >>> gene_is_zen = query.add_constraint("Gene.symbol", "=", "zne")
       >>>
       >>> query.set_logic(gene_is_eve | gene_is_zen)
 
-    By default the logic is a straight cumulative filter (ie: A and B and C and D  and ...)
+    By default the logic is a straight cumulative filter 
+    (ie: A and B and C and D  and ...)
 
     Putting it all together:
 
@@ -225,8 +235,9 @@ class Query(object):
     Result Processing: Rows
     -----------------------
 
-    calling ".rows()" on a query will return an iterator of rows, where each row
-    is a ResultRow object, which can be treated as both a list and a dictionary.
+    calling ".rows()" on a query will return an iterator of rows, where each 
+    row is a ResultRow object, which can be treated as both a list and a 
+    dictionary.
 
     Which means you can refer to columns by name:
 
@@ -245,7 +256,8 @@ class Query(object):
         ...     for column in row:
         ...         do_something(column)
 
-    Here each row will have a gene name, a gene length, and a sequence length, eg:
+    Here each row will have a gene name, a gene length, and a sequence length
+    eg:
 
         >>> print row.to_l
         ["even skipped", "1359", "376"]
@@ -257,8 +269,10 @@ class Query(object):
         {"Gene.name":"even skipped","Gene.length":"1359","Gene.proteins.sequence.length":"376"}
 
 
-    If you just want the raw results, for printing to a file, or for piping to another program,
-    you can request the results in one of these formats: json', 'rr', 'tsv', 'jsonobjects', 'jsonrows', 'list', 'dict', 'csv'
+    If you just want the raw results, for printing to a file, or for piping to
+    another program, you can request the results in one of these 
+    formats: 'json', 'rr', 'tsv', 'jsonobjects', 'jsonrows', 'list', 'dict', 
+             'csv'
 
         >>> for row in query.result("<format name>", size = <size>)
         ...     print(row)
@@ -267,35 +281,40 @@ class Query(object):
     Result Processing: Results
     --------------------------
 
-    Results can also be processing on a record by record basis. If you have a query that
-    has output columns of "Gene.symbol", "Gene.pathways.name" and "Gene.proteins.proteinDomains.primaryIdentifier",
-    than processing it by records will return one object per gene, and that gene will have a property
-    named "pathways" which contains objects which have a name property. Likewise there will be a
-    proteins property which holds a list of proteinDomains which all have a primaryIdentifier property, and so on.
-    This allows a more object orientated approach to database records, familiar to users of
-    other ORMs.
+    Results can also be processing on a record by record basis. If you have a 
+    query that has output columns of "Gene.symbol", "Gene.pathways.name" and 
+    "Gene.proteins.proteinDomains.primaryIdentifier", than processing it by 
+    records will return one object per gene, and that gene will have a property
+    named "pathways" which contains objects which have a name property. 
+    Likewise there will be a proteins property which holds a list of 
+    proteinDomains which all have a primaryIdentifier property, and so on.
+    This allows a more object orientated approach to database records,
+    familiar to users of other ORMs.
 
-    This is the format used when you choose to iterate over a query directly, or can be explicitly
-    chosen by invoking L{intermine.query.Query.results}:
+    This is the format used when you choose to iterate over a query directly, 
+    or can be explicitly chosen by invoking L{intermine.query.Query.results}:
 
         >>> for gene in query:
         ...    print gene.name, map(lambda x: x.name, gene.pathways)
 
-    The structure of the object and the information it contains depends entirely
-    on the output columns selected. The values may be None, of course, but also any valid values of an object
-    (according to the data model) will also be None if they were not selected for output. Attempts
-    to access invalid properties (such as gene.favourite_colour) will cause exceptions to be thrown.
+    The structure of the object and the information it contains depends 
+    entirely on the output columns selected. The values may be None, of course,
+    but also any valid values of an object (according to the data model) will 
+    also be None if they were not selected for output. Attempts to access 
+    invalid properties (such as gene.favourite_colour) will cause exceptions
+    to be thrown.
 
     Getting us to Generate your Code
     --------------------------------
 
     Not that you have to actually write any of this! The webapp will happily
-    generate the code for any query (and template) you can build in it. A good way to get
-    started is to use the webapp to generate your code, and then run it as scripts
-    to speed up your queries. You can always tinker with and edit the scripts you download.
+    generate the code for any query (and template) you can build in it. A good
+    way to get started is to use the webapp to generate your code, and then 
+    run it as scripts to speed up your queries. You can always tinker with and
+    edit the scripts you download.
 
-    To get generated queries, look for the "python" link at the bottom of query-builder and
-    template form pages, it looks a bit like this::
+    To get generated queries, look for the "python" link at the bottom of 
+    query-builder and template form pages, it looks a bit like this::
 
       . +=====================================+=============
         |                                     |
