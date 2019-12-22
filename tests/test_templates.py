@@ -185,8 +185,7 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
                     '= Woolies (editable, locked)>]')
         self.assertEqual(expected, repr(t.editable_constraints))
         self.assertEqual(
-            '<TemplateBinaryConstraint: Company.departments.name = Farm Supplies (non-editable, locked)>',
-             repr(t.get_constraint("B")))
+            '<TemplateBinaryConstraint: Company.departments.name = Farm Supplies (non-editable, locked)>', repr(t.get_constraint("B")))
 
         t2 = self.service.get_template("SwitchableConstraints")
         self.assertEqual(len(t2.editable_constraints), 3)
@@ -195,13 +194,11 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         con = t2.get_constraint("B")
         self.assertTrue(con.editable and con.optional and con.switched_on)
         self.assertEqual(
-            '<TemplateBinaryConstraint: Company.departments.name = Farm Supplies (editable, on)>',
-             repr(con))
+            '<TemplateBinaryConstraint: Company.departments.name = Farm Supplies (editable, on)>', repr(con))
         con.switch_off()
         self.assertTrue(con.editable and con.optional and con.switched_off)
         self.assertEqual(
-            '<TemplateBinaryConstraint: Company.departments.name = Farm Supplies (editable, off)>',
-             repr(con))
+            '<TemplateBinaryConstraint: Company.departments.name = Farm Supplies (editable, off)>', repr(con))
         con.switch_on()
         self.assertTrue(con.editable and con.optional and con.switched_on)
         con = t2.get_constraint("C")
