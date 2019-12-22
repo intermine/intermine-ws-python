@@ -1,7 +1,7 @@
 import re
 from copy import deepcopy
-from pandas import DataFrame
 from xml.dom import minidom, getDOMImplementation
+from pandas import DataFrame
 
 from intermine.util import openAnything, ReadableException
 from intermine.pathfeatures import PathDescription, Join, SortOrder, SortOrderList
@@ -305,12 +305,12 @@ class Query(object):
 
     """
 
-    SO_SPLIT_PATTERN = re.compile("\\s*(asc|desc)\\s*", re.I)
-    LOGIC_SPLIT_PATTERN = re.compile("\\s*(?:and|or|\\(|\\))\\s*", re.I)
-    TRAILING_OP_PATTERN = re.compile("\\s*(and|or)\\s*$", re.I)
-    LEADING_OP_PATTERN = re.compile("^\\s*(and|or)\\s*", re.I)
+    SO_SPLIT_PATTERN = re.compile("\s*(asc|desc)\s*", re.I)
+    LOGIC_SPLIT_PATTERN = re.compile("\s*(?:and|or|\(|\))\s*", re.I)
+    TRAILING_OP_PATTERN = re.compile("\s*(and|or)\s*$", re.I)
+    LEADING_OP_PATTERN = re.compile("^\s*(and|or)\s*", re.I)
     ORPHANED_OP_PATTERN = re.compile(
-        "(?:\\(\\s*(?:and|or)\\s*|\\s*(?:and|or)\\s*\\))", re.I)
+        "(?:\(\s*(?:and|or)\s*|\s*(?:and|or)\s*\))", re.I)
 
     def __init__(self, model, service=None, validate=True, root=None):
         """
@@ -514,7 +514,7 @@ class Query(object):
             pattern = re.compile("\\b" + c + "\\b", re.I)
             logic = pattern.sub("", logic)
         # Remove empty groups
-        logic = re.sub("\\((:?and|or|\\s)*\\)", "", logic)
+        logic = re.sub("\((:?and|or|\s)*\)", "", logic)
         # Remove trailing and leading operators
         logic = Query.LEADING_OP_PATTERN.sub("", logic)
         logic = Query.TRAILING_OP_PATTERN.sub("", logic)
@@ -524,7 +524,7 @@ class Query(object):
                     repl = left
                 else:
                     repl = "and"
-                pattern = re.compile(left + "\\s*" + right, re.I)
+                pattern = re.compile(left + "\s*" + right, re.I)
                 logic = pattern.sub(repl, logic)
         logic = Query.ORPHANED_OP_PATTERN.sub(
             lambda x: "(" if "(" in x.group(0) else ")", logic)
@@ -642,14 +642,14 @@ class Query(object):
             elif isinstance(p, Reference):
                 views.append(p.name + ".*")
             else:
-                views.extend(re.split("(?:,?\\s+|,)", str(p)))
+                views.extend(re.split("(?:,?\s+|,)", str(p)))
 
         views = list(map(self.prefix_path, views))
 
         views_to_add = []
         for view in views:
             if view.endswith(".*"):
-                view = re.sub("\\.\\*$", "", view)
+                view = re.sub("\.\*$", "", view)
                 scd = self.get_subclass_dict()
 
                 def expand(p, level, id_only=False):
@@ -691,7 +691,7 @@ class Query(object):
         if self.root is None:
             if self.do_verification:  # eg. not when building from XML
                 if path.endswith(".*"):
-                    trimmed = re.sub("\\.\\*$", "", path)
+                    trimmed = re.sub("\.\*$", "", path)
                 else:
                     trimmed = path
                 self.root = self.model.make_path(trimmed,
@@ -1376,23 +1376,9 @@ class Query(object):
 
         view = to_run.views
         cld = to_run.root
-        if (row == "dataframe"):
-            row = "dict"
-
         return to_run.service.get_results(path, params, row, view, cld)
 
-    def dataframe(self, start=0, size=None):
-        dict = {}
-        query = self.results(row="dict", start=start, size=size)
-        for i in query.view:
-            dict[i] = []
-        for row in query:
-            for i in dict:
-                dict[i].append(row[i])
-        df = DataFrame(data=dict)
-        return df
-
-    def rows(self, start=0, size=None, row="rr"):
+    def rows(self, start=0, size=None):
         """
         Return the results as rows of data
         ==================================
@@ -1410,7 +1396,32 @@ class Query(object):
         @type size: int
         @rtype: iterable<intermine.webservice.ResultRow>
         """
-        return self.results(row=row, start=start, size=size)
+        return self.results(row="rr", start=start, size=size)
+
+    def dataframe(self, start=0, size=None):
+        """
+        Returns a pandas.DataFrame
+        ==================================
+
+        Usage::
+          >>> query.dataframe()
+
+        @param start: the index of the first result to return (default = 0)
+        @type start: int
+        @param size: The maximum number of results to return (default = all)
+        @type size: int
+        @rtype: dataframe<pandas.core.frame.DataFrame>
+
+        """
+        dict = {}
+        query = self.results(row="dict", start=start, size=size)
+        for i in query.view:
+            dict[i] = []
+        for row in query:
+            for i in dict:
+                dict[i].append(row[i])
+        df = DataFrame(data=dict)
+        return df
 
     def summarise(self, summary_path, **kwargs):
         """
@@ -1968,7 +1979,6 @@ class Template(Query):
         return super(Template, clone).get_row_list(start, size)
 
     def rows(self, start=0, size=None, **con_values):
-        print("basil2")
         """Get an iterator over the rows returned by this query"""
         clone = self.get_adjusted_template(con_values)
         return super(Template, clone).rows(start, size)
