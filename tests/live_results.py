@@ -106,7 +106,8 @@ class LiveResultsTest(unittest.TestCase):
     def testLazyCollectionFetching(self):
         results = self.SERVICE.select("Department.*").results()
         age_sum = reduce(lambda x, y: x + reduce(lambda a,
-                                                 b: a + b.age, y.employees, 0), results, 0)
+                                                 b: a + b.age,
+                                                 y.employees, 0), results, 0)
         self.assertEqual(5924, age_sum)
 
         # Can handle empty collections as well as populated ones.
@@ -190,7 +191,7 @@ class LiveResultsTest(unittest.TestCase):
         try:
             s = Service(self.SERVICE.root, username, password)
             s.deregister(s.get_deregistration_token())
-        except:
+        except Exception:
             pass
 
         s = self.SERVICE.register(username, password)

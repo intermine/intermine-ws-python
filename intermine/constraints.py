@@ -101,7 +101,7 @@ class LogicGroup(LogicNode):
 
         Groups may have a reference to their parent.
         """
-        if not op in self.LEGAL_OPS:
+        if op not in self.LEGAL_OPS:
             raise TypeError(op + " is not a legal logical operation")
         self.parent = parent
         self.left = left
@@ -151,7 +151,8 @@ class LogicParseError(ReadableException):
 
 class EmptyLogicError(ValueError):
     """
-    An error representing the fact that an the logic string to be parsed was empty
+    An error representing the fact that an the logic
+    string to be parsed was empty
     """
     pass
 
@@ -269,7 +270,7 @@ class LogicParser(object):
                 return x
 
         logic_str = logic_str.upper()
-        tokens = [t for t in re.split("\s+", logic_str) if t]
+        tokens = [t for t in re.split("\\s+", logic_str) if t]
         if not tokens:
             raise EmptyLogicError()
         tokens = flatten([canonical(x, self.ops) for x in tokens])
@@ -288,8 +289,10 @@ class LogicParser(object):
         which should hopefully lead to more informative error messages.
 
         This checks for:
-         - correct operator positions (cannot put two codes next to each other without intervening operators)
-         - correct grouping (all brackets are matched, and contain valid expressions)
+         - correct operator positions (cannot put two codes next to each
+           other without intervening operators)
+         - correct grouping (all brackets are matched,
+                             and contain valid expressions)
 
         @param infix_tokens: The input parsed into a list of tokens.
         @type infix_tokens: iterable
@@ -303,22 +306,29 @@ class LogicParser(object):
         for token in infix_tokens:
             if token not in self.ops:
                 if need_an_op:
-                    raise LogicParseError("Expected an operator after: '" + ' '.join(processed) + "'"
+                    raise LogicParseError("Expected an operator after: '"
+                                          + ' '.join(processed) + "'"
                                           + " - but got: '" + token + "'")
                 if need_binary_op_or_closing_bracket:
-                    raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                          + " - expected an operator or a closing bracket")
+                    raise LogicParseError("Logic grouping error after: '"
+                                          + ' '.join(processed) + "'"
+                                          + " - expected an operator "
+                                          "or a closing bracket")
 
                 need_an_op = True
             else:
                 need_an_op = False
                 if token == "(":
                     if processed and processed[-1] not in self.ops:
-                        raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                              + " - got an unexpeced opening bracket")
+                        raise LogicParseError("Logic grouping error after: '"
+                                              + ' '.join(processed) + "'"
+                                              + " - got an unexpeced "
+                                              "opening bracket")
                     if need_binary_op_or_closing_bracket:
-                        raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                              + " - expected an operator or a closing bracket")
+                        raise LogicParseError("Logic grouping error after: '"
+                                              + ' '.join(processed) + "'"
+                                              + " - expected an operator or "
+                                              "a closing bracket")
 
                     open_brackets += 1
                 elif token == ")":
@@ -332,7 +342,8 @@ class LogicParser(object):
                 message = "Unmatched closing bracket in: "
             else:
                 message = "Unmatched opening bracket in: "
-            raise LogicParseError(message + '"' + ' '.join(infix_tokens) + '"')
+            raise LogicParseError(message + '"' + ' '.join(infix_tokens)
+                                  + '"')
 
     def infix_to_postfix(self, infix_tokens):
         """
@@ -368,7 +379,8 @@ class LogicParser(object):
                         else:
                             postfix_tokens.append(last_op)
                 else:
-                    while stack and self.get_priority(stack[-1]) <= self.get_priority(op):
+                    while stack and (self.get_priority(stack[-1])
+                                     <= self.get_priority(op)):
                         prev_op = stack.pop()
                         if prev_op != "(":
                             postfix_tokens.append(prev_op)
@@ -519,7 +531,8 @@ class BinaryConstraint(CodedConstraint):
         @param path: The path to constrain
         @type path: string
 
-        @param op: The relationship between the value represented by the path and the value provided (must be a valid operator)
+        @param op: The relationship between the value represented by the path
+                   and the value provided (must be a valid operator)
         @type op: string
 
         @param value: The value to compare the stored value to
@@ -572,8 +585,8 @@ class ListConstraint(CodedConstraint):
     def __init__(self, path, op, list_name, code="A"):
         if hasattr(list_name, 'to_query'):
             q = list_name.to_query()
-            l = q.service.create_list(q)
-            self.list_name = l.name
+            list_name1 = q.service.create_list(q)
+            self.list_name = list_name1.name
         elif hasattr(list_name, "name"):
             self.list_name = list_name.name
         else:
@@ -625,7 +638,8 @@ class LoopConstraint(CodedConstraint):
         @param path: The path to constrain
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
         @param loopPath: The path to check for identity against
@@ -677,18 +691,21 @@ class TernaryConstraint(BinaryConstraint):
         Constructor
         ===========
 
-        @param path: The path to constrain. Here is must be a class, or a reference to a class.
+        @param path: The path to constrain. Here is must be a class,
+                     or a reference to a class.
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
         @param value: The value to check other fields against.
         @type value: string
 
-        @param extra_value: A further value for disambiguation. The meaning of this value varies by class
-                            and configuration. For example, if the class of the object is Gene, then
-                            extra_value will refer to the Organism.
+        @param extra_value: A further value for disambiguation. The meaning
+                            of this value varies by class and configuration.
+                            For example, if the class of the object is Gene,
+                            then extra_value will refer to the Organism.
         @type extra_value: string
 
         @param code: The code for this constraint (default = "A")
@@ -746,13 +763,16 @@ class MultiConstraint(CodedConstraint):
         Constructor
         ===========
 
-        @param path: The path to constrain. Here it must be an attribute of some object.
+        @param path: The path to constrain. Here it must be an attribute of
+                     some object.
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
-        @param values: The set of values which the object of the constraint either must or must not belong to.
+        @param values: The set of values which the object of the constraint
+                       either must or must not belong to.
         @type values: set or list
 
         @param code: The code for this constraint (default = "A")
@@ -803,9 +823,9 @@ class RangeConstraint(MultiConstraint):
 
         4 WITHIN [1..5, 20..25] => True
 
-    The format of the ranges depends on the value being constrained and what range
-    parsers have been configured on the target server. A common range parser for
-    biological mines is the one for Locations:
+    The format of the ranges depends on the value being constrained and what
+    range parsers have been configured on the target server. A common range
+    parser for biological mines is the one for Locations:
 
         Gene.chromosomeLocation OVERLAPS [2X:54321..67890, 3R:12345..456789]
 
@@ -857,10 +877,12 @@ class SubClassConstraint(Constraint):
         Constructor
         ===========
 
-        @param path: The path to constrain. This must refer to a class or a reference to a class.
+        @param path: The path to constrain. This must refer to a class or a
+                     reference to a class.
         @type path: str
 
-        @param subclass: The class to subclass the path to. This must be a simple class name (not a dotted name)
+        @param subclass: The class to subclass the path to. This must be a
+                         simple class name (not a dotted name)
         @type subclass: str
         """
         if not PATH_PATTERN.match(subclass):
@@ -891,11 +913,13 @@ class TemplateConstraint(object):
     A mixin to supply the behaviour and state of constraints on templates
     =====================================================================
 
-    Constraints on templates can also be designated as "on", "off" or "locked", which refers
-    to whether they are active or not. Inactive constraints are still configured, but behave
-    as if absent for the purpose of results. In addition, template constraints can be
-    editable or not. Only values for editable constraints can be provided when requesting results,
-    and only constraints that can participate in logic expressions can be editable.
+    Constraints on templates can also be designated as "on", "off" or
+    "locked", which refers to whether they are active or not. Inactive
+    constraints are still configured, but behave as if absent for the purpose
+    of results. In addition, template constraints can be editable or not.
+    Only values for editable constraints can be provided when requesting
+    results, and only constraints that can participate in logic expressions
+    can be editable.
     """
     REQUIRED = "locked"
     OPTIONAL_ON = "on"
@@ -906,10 +930,12 @@ class TemplateConstraint(object):
         Constructor
         ===========
 
-        @param editable: Whether or not this constraint should accept new values.
+        @param editable: Whether or not this constraint should accept new
+                         values.
         @type editable: bool
 
-        @param optional: Whether a value for this constraint must be provided when running.
+        @param optional: Whether a value for this constraint must be provided
+                         when running.
         @type optional: "locked", "on" or "off"
         """
         self.editable = editable
@@ -997,9 +1023,9 @@ class TemplateConstraint(object):
 
         dict -> (dict, dict)
 
-        Splits a dictionary of arguments into two separate dictionaries, one with
-        arguments for the main constraint, and one with arguments for the template
-        portion of the behaviour
+        Splits a dictionary of arguments into two separate dictionaries, one
+        with arguments for the main constraint, and one with arguments for the
+        template portion of the behaviour
         """
         c_args = {}
         t_args = {}
@@ -1170,7 +1196,8 @@ class ConstraintFactory(object):
         Creates a new ConstraintFactory
         """
         self._codes = iter(string.ascii_uppercase)
-        self.reference_ops = TernaryConstraint.OPS | RangeConstraint.OPS | ListConstraint.OPS | IsaConstraint.OPS
+        self.reference_ops = (TernaryConstraint.OPS | RangeConstraint.OPS
+                              | ListConstraint.OPS | IsaConstraint.OPS)
 
     def get_next_code(self):
         """

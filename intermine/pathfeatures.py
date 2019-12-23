@@ -1,6 +1,6 @@
 import re
 
-PATTERN_STR = "^(?:\w+\.)*\w+$"
+PATTERN_STR = "^(?:\\w+\\.)*\\w+$"
 PATH_PATTERN = re.compile(PATTERN_STR)
 
 
@@ -10,11 +10,12 @@ class PathFeature(object):
             raise ValueError("path must not be None")
         try:
             path = path.name
-        except:
+        except Exception:
             pass
         if not PATH_PATTERN.match(path):
             raise TypeError(
-                "Path '" + path + "' does not match expected pattern" + PATTERN_STR)
+                "Path '" + path +
+                "' does not match expected pattern" + PATTERN_STR)
         self.path = path
 
     def __repr__(self):
@@ -74,10 +75,10 @@ class SortOrder(PathFeature):
     def __init__(self, path, order):
         try:
             order = order.lower()
-        except:
+        except Exception:
             pass
 
-        if not order in self.DIRECTIONS:
+        if order not in self.DIRECTIONS:
             raise TypeError("Order must be one of " + str(self.DIRECTIONS)
                             + " - not " + order)
         self.order = order

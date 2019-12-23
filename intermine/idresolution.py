@@ -71,7 +71,8 @@ class Job(object):
 
         @rtype: dict
         """
-        return get_json(self.service, "/ids/{0}/status".format(self.uid), "status")
+        return get_json(self.service,
+                        "/ids/{0}/status".format(self.uid), "status")
 
     def delete(self):
         """
@@ -91,4 +92,5 @@ class Job(object):
 
         @rtype String
         """
-        return get_json(self.service, "/ids/{0}/result".format(self.uid), "results")
+        return get_json(self.service,
+                        "/ids/{0}/result".format(self.uid), "results")

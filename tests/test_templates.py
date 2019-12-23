@@ -1,6 +1,7 @@
 import unittest
 import sys
 
+
 from intermine.webservice import *
 from intermine.query import Template
 from intermine.constraints import TemplateConstraint
@@ -20,17 +21,23 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         self.assertEqual(len(self.service.templates), 12)
 
     def testGetTemplate(self):
-        """Should be able to get a template from the webservice, if it exists, and get its results"""
+        """Should be able to get a template from the webservice, if it exists,
+        and get its results"""
         t = self.service.get_template("MultiValueConstraints")
         self.assertTrue(isinstance(t, Template))
         if P3K:
-            expected = "[<TemplateMultiConstraint: Employee.name ONE OF ['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
+            expected = ("[<TemplateMultiConstraint: Employee.name ONE OF " +
+                        "['Dick', 'Jane', 'Timmy, the Loyal German-Shepherd']"
+                        " (editable, locked)>]")
         else:
-            expected = "[<TemplateMultiConstraint: Employee.name ONE OF [u'Dick', u'Jane', u'Timmy, the Loyal German-Shepherd'] (editable, locked)>]"
+            expected = ("[<TemplateMultiConstraint: Employee.name ONE OF "
+                        "[u'Dick', u'Jane', u'Timmy, the Loyal German-Shepherd']"
+                        " (editable, locked)>]")
         self.assertEqual(repr(list(t.editable_constraints)), expected)
 
     def testGetTemplateResults(self):
-        """Should be able to get a template from the webservice, if it exists, and get its results"""
+        """Should be able to get a template from the webservice,
+        if it exists, and get its results"""
         t = self.service.get_template("MultiValueConstraints")
         expected = [['foo', 'bar', 'baz'], [
             123, 1.23, -1.23], [True, False, None]]
@@ -53,17 +60,22 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
             self.fail("No ServiceError raised by non-existant template")
         except ServiceError as ex:
             self.assertEqual(
-                ex.message, "There is no template called 'Non_Existant' at this service")
+                ex.message,
+                "There is no template called 'Non_Existant' at this service")
 
     def testIrrelevantSO(self):
         """Should fix up bad sort orders and logic when parsing from xml"""
         model = self.service.model
 
-        xml = '''<template name="bad_so"><query name="bad_so" model="testmodel" view="Employee.name Employee.age" sortOrder="Employee.fullTime ASC"/></template>'''
+        xml = '''<template name="bad_so"><query name="bad_so"
+              model="testmodel" view="Employee.name Employee.age"
+              sortOrder="Employee.fullTime ASC"/></template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_sort_order()), "Employee.name asc")
 
-        xml = '''<template name="bad_so"><query name="bad_so" model="testmodel" view="Employee.name Employee.age" sortOrder="Employee.fullTime"/></template>'''
+        xml = '''<template name="bad_so"><query name="bad_so"
+              model="testmodel" view="Employee.name Employee.age"
+              sortOrder="Employee.fullTime"/></template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_sort_order()), "Employee.name asc")
 
@@ -73,10 +85,11 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
 
         xml = '''
           <template name="codesNotInOrder">
-              <query nampe="codesNotInOrder" model="testmodel" view="Employee.name Employee.age">
-                  <constraint path="Employee.name" op="=" value="foo" code="X"/>
-                  <constraint path="Employee.name" op="=" value="bar" code="Y"/>
-                  <constraint path="Employee.name" op="=" value="baz" code="Z"/>
+              <query nampe="codesNotInOrder" model="testmodel"
+               view="Employee.name Employee.age">
+                <constraint path="Employee.name" op="=" value="foo" code="X"/>
+                <constraint path="Employee.name" op="=" value="bar" code="Y"/>
+                <constraint path="Employee.name" op="=" value="baz" code="Z"/>
               </query>
           </template>
           '''
@@ -84,47 +97,65 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         v = None
         try:
             v = t.get_constraint("X").value
-        except:
+        except Exception:
             pass
 
         self.assertIsNotNone(
-            v, msg="Query (%s) should have a constraint with the code 'X'" % t)
+            v,
+            msg="Query (%s) should have a constraint with the code 'X'" % t)
         self.assertEqual("foo", v, msg="should be the correct constraint")
 
     def testIrrelevantConstraintLogic(self):
         """Should fix up bad logic"""
         model = self.service.model
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A and B and C"/></template>'''
+        xml = '''<template name="bad_cl"><query name="bad_cl"
+              model="testmodel" view="Employee.name Employee.age"
+              constraintLogic="A and B and C"/></template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "")
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A and B or (D and E) and C"/></template>'''
+        xml = '''<template name="bad_cl"><query name="bad_cl"
+              model="testmodel" view="Employee.name Employee.age"
+              constraintLogic="A and B or (D and E) and C"/></template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "")
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A or B or (D and E) and C">
-                <constraint path="Employee.name" op="IS NULL"/><constraint path="Employee.age" op="IS NOT NULL"/>
+        xml = '''<template name="bad_cl"><query name="bad_cl"
+              model="testmodel" view="Employee.name Employee.age"
+              constraintLogic="A or B or (D and E) and C">
+                <constraint path="Employee.name" op="IS NULL"/><constraint
+                 path="Employee.age" op="IS NOT NULL"/>
                 </query>
             </template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "A or B")
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A or B or (D and E) and C">
-                <constraint path="Employee.name" op="IS NULL"/><constraint path="Employee.age" op="IS NOT NULL"/><constraint path="Employee.fullTime" op="=" value="true"/>
+        xml = '''<template name="bad_cl"><query name="bad_cl"
+              model="testmodel" view="Employee.name Employee.age"
+              constraintLogic="A or B or (D and E) and C">
+                <constraint path="Employee.name" op="IS NULL"/><constraint
+                 path="Employee.age" op="IS NOT NULL"/><constraint
+                 path="Employee.fullTime" op="=" value="true"/>
                 </query>
             </template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "(A or B) and C")
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A or B or (D and E) or C">
-                <constraint path="Employee.name" op="IS NULL"/><constraint path="Employee.age" op="IS NOT NULL"/><constraint path="Employee.fullTime" op="=" value="true"/>
+        xml = '''<template name="bad_cl"><query name="bad_cl"
+              model="testmodel" view="Employee.name Employee.age"
+              constraintLogic="A or B or (D and E) or C">
+                <constraint path="Employee.name" op="IS NULL"/><constraint
+                path="Employee.age" op="IS NOT NULL"/><constraint
+                path="Employee.fullTime" op="=" value="true"/>
                 </query>
             </template>'''
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "A or B or C")
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A or B and (D and E) or C">
+        xml = '''<template name="bad_cl"><query name="bad_cl"
+              model="testmodel" view="Employee.name Employee.age"
+              constraintLogic="A or B and (D and E) or C">
                 <constraint path="Employee.name" op="IS NULL"/>
                 <constraint path="Employee.age" op="IS NOT NULL"/>
                 <constraint path="Employee.fullTime" op="=" value="true"/>
@@ -133,7 +164,9 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         t = Template.from_xml(xml, model)
         self.assertEqual(str(t.get_logic()), "(A or B) and C")
 
-        xml = '''<template name="bad_cl"><query name="bad_cl" model="testmodel" view="Employee.name Employee.age" constraintLogic="A or B or (D and E) and C">
+        xml = '''<template name="bad_cl"><query name="bad_cl"
+              model="testmodel" view="Employee.name Employee.age"
+              constraintLogic="A or B or (D and E) and C">
                 <constraint path="Employee.name" op="IS NULL"/>
                 <constraint path="Employee.age" op="IS NOT NULL"/>
                 <constraint path="Employee.fullTime" op="=" value="true"/>
@@ -148,7 +181,8 @@ class TestTemplates(WebserviceTest):  # pragma: no cover
         t = self.service.get_template("UneditableConstraints")
         self.assertEqual(len(t.constraints), 2)
         self.assertEqual(len(t.editable_constraints), 1)
-        expected = '[<TemplateBinaryConstraint: Company.name = Woolies (editable, locked)>]'
+        expected = ('[<TemplateBinaryConstraint: Company.name '
+                    '= Woolies (editable, locked)>]')
         self.assertEqual(expected, repr(t.editable_constraints))
         self.assertEqual(
             '<TemplateBinaryConstraint: Company.departments.name = Farm Supplies (non-editable, locked)>', repr(t.get_constraint("B")))
