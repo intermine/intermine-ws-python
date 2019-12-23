@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/.."))
 
 from intermine.webservice import Service
-from interminebio import RegionQuery, SequenceQuery
+from intermine import RegionQuery, SequenceQuery
 s = Service("squirrel.flymine.org/flymine", token="C1o3t1e0d4V06ep8xb47DdlFVMr")
 q = RegionQuery(s, "D. melanogaster", ["Exon", "Intron"], ["2L:14614843..14619614", "Foo"])
 
