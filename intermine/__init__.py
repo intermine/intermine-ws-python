@@ -1,6 +1,6 @@
 VERSION = "1.11.0"
 from intermine import query
-from interminebio.iterators import *
+from intermine.iterators import *
 try:
     import simplejson as json
 except ImportError:
