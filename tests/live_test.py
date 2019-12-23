@@ -13,16 +13,16 @@ print (q.gff3())
 
 l = s.create_list(q)
 
-print str(l)
+print (str(l))
 
 sq = SequenceQuery(s, "Gene")
 
 sq.add_sequence_features("Gene").where("symbol", "ONE OF", ["eve", "zen", "r"])
 
-print sq.fasta()
+print (sq.fasta())
 
 sq.add_sequence_features("exons")
 
-print sq.bed()
-print sq.gff3()
+print (sq.bed())
+print (sq.gff3())
 
