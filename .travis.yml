@@ -4,8 +4,6 @@ jdk:
 - oraclejdk11
 - openjdk8
 - openjdk11
-dist:
-- bionic
 env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
