@@ -1,7 +1,8 @@
 language: python
 sudo: false # use container based infrastructure
-jdk:
-- oraclejdk11
+dist:
+-trusty
+-bionic
 env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
