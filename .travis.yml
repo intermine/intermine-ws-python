@@ -1,7 +1,6 @@
 language: python
 sudo: false # use container based infrastructure
 dist:
-- trusty
 - bionic
 env:
     global:
