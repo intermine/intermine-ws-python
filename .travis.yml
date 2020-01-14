@@ -1,6 +1,6 @@
 language: python
 sudo: false # use container based infrastructure
-dist: trusty
+dist: xenial
 env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
