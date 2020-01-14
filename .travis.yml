@@ -2,7 +2,7 @@ language: python
 sudo: false # use container based infrastructure
 group: edge
 jdk:
-  - oraclejdk8
+  - oopenjdk145
 dist: 
 - xenial
 env:
