@@ -1,10 +1,14 @@
 language: python
 sudo: false # use container based infrastructure
-dist: xenial
+jdk:
+- openjdk8
+dist: 
+- xenial
 env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
+        - JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
 before_script:
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
@@ -12,7 +16,7 @@ script:
     - python setup.py test
     - python setup.py livetest
 python:
-    - "3.5"
+    - "3.4"
     - "3.6"
     - "3.7"
-    - "3.8"
+    
