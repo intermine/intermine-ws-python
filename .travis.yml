@@ -9,6 +9,7 @@ env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
+        - jdk_switcher use oraclejdk8
 before_script:
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
