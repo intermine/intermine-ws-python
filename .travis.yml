@@ -4,10 +4,10 @@ env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
+        - jdk_switcher use oraclejdk8
         - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 before_script:
 - "./config/travis/init-solr.sh"
-- jdk_switcher use oraclejdk8
 - "./config/travis/init.sh"
 script: 
     - python setup.py test
