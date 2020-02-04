@@ -1,24 +1,20 @@
 language: python
 sudo: false # use container based infrastructure
-dist: trusty
 jdk:
-  - oopenjdk145
+- openjdk8
 dist: 
 - xenial
 env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
-        - jdk_switcher use oraclejdk8
 before_script:
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
-    - jdk_switcher use oraclejdk8
     - python setup.py test
     - python setup.py livetest
 python:
+    - "2.7"
     - "3.4"
-    - "3.6"
-    - "3.7"
-    
+    - "3.5"
