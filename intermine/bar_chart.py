@@ -236,11 +236,11 @@ def query_to_barchart_log(xml, resp):
 
     ax = y.plot(kind='bar')
     ax.set_title(list[0][0])
-    ax.set_xlabel(l[1])
+    ax.set_xlabel(store[1])
     if resp == 'true':
-        ax.set_ylabel('log(' + l[2] + ')')
+        ax.set_ylabel('log(' + store[2] + ')')
     else:
-        ax.set_ylabel(l[2])
+        ax.set_ylabel(store[2])
     ax.set_xticklabels(x, rotation='vertical')
 
     rects = ax.patches
