@@ -1,6 +1,10 @@
-sudo: false # use container based infrastructure
 language:
 - python
+sudo: false # use container based infrastructure
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 dist: 
 - xenial
 env:
@@ -8,6 +12,7 @@ env:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
 before_script:
+
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
