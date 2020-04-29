@@ -1,4 +1,3 @@
-language: python
 sudo: false # use container based infrastructure
 jdk:
 - openjdk8
