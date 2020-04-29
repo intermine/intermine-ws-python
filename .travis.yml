@@ -1,6 +1,8 @@
 sudo: false # use container based infrastructure
 jdk:
 - openjdk8
+language:
+- python
 dist: 
 - xenial
 env:
