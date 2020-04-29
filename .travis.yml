@@ -1,9 +1,6 @@
 language: python
 sudo: false # use container based infrastructure
-matrix:
-  include:
-    - env: JDK='OpenJDK 8'
-      jdk: openjdk8
+
 dist: 
 - xenial
 env:
@@ -11,6 +8,8 @@ env:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
 before_script:
+- export JAVA_HOME=$HOME/openjdk11
+- $TRAVIS_BUILD_DIR/install-jdk.sh --install openjdk11 --target $JAVA_HOME
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
