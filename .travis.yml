@@ -1,6 +1,6 @@
 sudo: false # use container based infrastructure
 jdk:
-- openjdk8
+- openjdk11
 language:
 - python
 dist: 
