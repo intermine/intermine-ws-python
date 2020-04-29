@@ -3,7 +3,7 @@ sudo: false # use container based infrastructure
 jdk:
 - openjdk8
 dist: 
-- trusty
+- xenial
 env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
