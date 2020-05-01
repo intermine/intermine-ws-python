@@ -11,7 +11,7 @@ env:
         - PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
         - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 before_script:
-
+- echo $JAVA_HOME
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
