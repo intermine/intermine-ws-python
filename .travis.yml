@@ -7,7 +7,7 @@ addons:
     packages:
       - oracle-java8-installer
 dist: 
-- trusty
+- xenial
 env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
