@@ -1,11 +1,7 @@
 language: pyhton
 sudo: false # use container based infrastructure
 jdk:
-- oraclejdk8
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+- openjdk8
 dist: 
 - xenial
 env:
@@ -13,7 +9,8 @@ env:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
 before_script:
-
+PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
+JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
