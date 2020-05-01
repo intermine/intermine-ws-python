@@ -1,7 +1,11 @@
-language: java
+language: pyhton
 sudo: false # use container based infrastructure
 jdk:
-- openjdk8
+- oraclejdk8
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 dist: 
 - trusty
 env:
