@@ -8,9 +8,10 @@ env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
+        - PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
+        - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 before_script:
-PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
-JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
