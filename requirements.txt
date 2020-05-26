@@ -1,8 +1,6 @@
-
-requests>=2.20.0
-Lxml==4.2.1
-Unittest2==1.1.0
-Numpy==1.14.5
-Pandas==0.22.0
-matplotlib==2.2.2
-autopep8>=1.4.4
+requests==2.23.0
+numpy==1.18.4
+matplotlib==3.2.1
+simplejson==3.17.0
+pandas==1.0.3
+lxml==4.5.1

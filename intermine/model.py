@@ -397,7 +397,8 @@ class ComposedClass(Class):
     @property
     def parent_classes(self):
         """The flattened list of parent classes, with the parts"""
-        all_parents = [pc for pc in p.parent_classes for p in self.parts]
+        for p in self.parts:
+            all_parents = [pc for pc in p.parent_classes]
         return all_parents + self.parts
 
 
