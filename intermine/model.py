@@ -38,7 +38,7 @@ class Field(object):
     SYNOPSIS
     --------
 
-        >>> service = Service("http://www.flymine.org/query/service")
+        >>> service = Service("https://www.flymine.org/query/service")
         >>> model = service.model
         >>> cd = model.get_class("Gene")
         >>> print "Gene has", len(cd.fields), "fields"
@@ -204,7 +204,7 @@ class Class(object):
     SYNOPSIS
     --------
 
-    >>>  service = Service("http://www.flymine.org/query/service")
+    >>>  service = Service("https://www.flymine.org/query/service")
     >>>  model = service.model
     >>>
     >>>  if "Gene" in model.classes:
@@ -412,7 +412,7 @@ class Path(object):
     SYNOPSIS
     --------
 
-        >>> service = Service("http://www.flymine.org/query/service")
+        >>> service = Service("https://www.flymine.org/query/service")
             model = service.model
             path = model.make_path("Gene.organism.name")
             path.is_attribute()
@@ -788,7 +788,7 @@ class Model(object):
     SYNOPSIS
     --------
 
-        >>> service = Service("http://www.flymine.org/query/service")
+        >>> service = Service("https://www.flymine.org/query/service")
         >>> model = service.model
         >>> model.get_class("Gene")
         <intermine.model.Class: Gene>
@@ -976,7 +976,7 @@ class Model(object):
         Get a class by its name, or by a dotted path
         ============================================
 
-            >>> model = Model("http://www.flymine.org/query/service/model")
+            >>> model = Model("https://www.flymine.org/query/service/model")
             >>> model.get_class("Gene")
             <intermine.model.Class: Gene>
             >>> model.get_class("Gene.proteins")

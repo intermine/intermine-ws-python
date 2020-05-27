@@ -45,7 +45,7 @@ class Query(object):
 
     example:
 
-        >>> service = Service("http://www.flymine.org/query/service")
+        >>> service = Service("https://www.flymine.org/query/service")
         >>> query = service.new_query()
         >>>
         >>> query.add_view("Gene.symbol", "Gene.pathways.name", "Gene.proteins.symbol")
@@ -1796,7 +1796,7 @@ class Template(Query):
 
     example::
 
-      service = Service("http://www.flymine.org/query/service")
+      service = Service("https://www.flymine.org/query/service")
       template = service.get_template("Gene_Pathways")
       for row in template.results(A={"value":"eve"}):
         process_row(row)

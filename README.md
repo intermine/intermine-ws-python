@@ -25,7 +25,7 @@ to perform queries. Some examples of sites that
 are powered by InterMine software, and thus offer
 a compatible webservice API, are:
 
-  * [FlyMine](http://www.flymine.org)
+  * [FlyMine](https://www.flymine.org)
   * [MouseMine](http://www.mousemine.org)
   * [YeastMine](http://yeastmine.yeastgenome.org)
   * [ZebrafishMine](http://zebrafishmine.org)

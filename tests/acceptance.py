@@ -1,7 +1,7 @@
 from intermine.query import Query
 from intermine.model import Model
 
-m = Model('http://www.flymine.org/query/service/model')
+m = Model('https://www.flymine.org/query/service/model')
 q = Query(m)
 
 q.name = 'Foo'
