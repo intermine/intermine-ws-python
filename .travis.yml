@@ -8,7 +8,8 @@ env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
-before_install:        
+before_install:      
+    - ls
     - sudo apt install openjdk-8-jdk
     - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
     - export PATH=$PATH:$JAVA_HOME/bin
