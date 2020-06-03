@@ -5,16 +5,8 @@ env:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
 before_script:
-- java -version
-- echo $PATH
-- /usr/local/lib/jvm/openjdk11/bin/java -version
-- /usr/bin/java -version
-- source ~/.jdk_switcher_rc
-- jdk_switcher use openjdk8
-- source ./custom_path.sh
-- export PATH=$(get_filtered_path /usr/local/lib/jvm/openjdk11/bin)
-- java -version
-- pytest test.py
+- export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+- export PATH=$JAVA_HOME/bin:$PATH
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
