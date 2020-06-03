@@ -8,6 +8,11 @@ env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
+before_install:        
+    - wget https://download.java.net/java/early_access/jdk13/21/GPL/openjdk-13-ea+21_linux-x64_bin.tar.gz
+    - tar xvzf openjdk-13-ea+21_linux-x64_bin.tar.gz
+    - export JAVA_HOME=$PWD/jdk-13
+    - export PATH=$JAVA_HOME/bin:$PATH
 before_script:
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
