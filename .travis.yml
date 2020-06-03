@@ -1,12 +1,11 @@
 language: python
 sudo: false # use container based infrastructure
 env:
-    - JDK=openjdk8
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
 before_script:
-- jdk_switcher use $JDK
+- jdk_switcher use openjdk8
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
