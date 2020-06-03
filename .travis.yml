@@ -10,6 +10,7 @@ before_script:
 - /usr/local/lib/jvm/openjdk11/bin/java -version
 - /usr/bin/java -version
 - jdk_switcher use openjdk8
+- source /opt/jdk_switcher/jdk_switcher.sh
 - source ./custom_path.sh
 - export PATH=$(get_filtered_path /usr/local/lib/jvm/openjdk11/bin)
 - java -version
