@@ -4,10 +4,10 @@ env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
+        - export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+        - export PATH=$JAVA_HOME/bin:$PATH
+        - javac --version
 before_script:
-- export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-- export PATH=$JAVA_HOME/bin:$PATH
-- javac --version
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
