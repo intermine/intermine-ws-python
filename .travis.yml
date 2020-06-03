@@ -5,7 +5,7 @@ env:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
 before_script:
-- export JAVA_HOME="/usr/bin/java"
+- export JAVA_HOME="/usr/bin"
 - export PATH=$JAVA_HOME/bin:$PATH
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
