@@ -1,18 +1,15 @@
 language: python
 sudo: false # use container based infrastructure
 addons:
-  postgresql: "9.6.6"
+  apt:
+    packages:
+      - oracle-java8-set-default
+
 env:
     global:
-        - PGPORT=5431
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
-before_install:            
-    - sudo apt install openjdk-8-jdk
-    - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-    - export PATH=$PATH:$JAVA_HOME/bin
 before_script:
-- psql --version
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
@@ -22,4 +19,3 @@ python:
     - "2.7"
     - "3.4"
     - "3.5"
-    - "3.6"
