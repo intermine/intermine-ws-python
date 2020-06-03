@@ -4,6 +4,7 @@ env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
         - TESTMODEL_PATH=intermine-demo
+        - JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
 before_script:
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
