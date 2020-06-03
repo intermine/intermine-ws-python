@@ -7,7 +7,7 @@ env:
 before_script:
 - export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 - export PATH=$JAVA_HOME/bin:$PATH
-- java --version
+- javac --version
 - "./config/travis/init-solr.sh"
 - "./config/travis/init.sh"
 script: 
