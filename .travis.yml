@@ -3,7 +3,7 @@ sudo: false # use container based infrastructure
 jdk:
 - openjdk8
 dist: 
-- trusty
+- bionic
 env:
     global:
         - TESTMODEL_URL=http://localhost:8080/intermine-demo
@@ -15,6 +15,5 @@ script:
     - python setup.py test
     - python setup.py livetest
 python:
-    - "2.7"
-    - "3.4"
-    - "3.5" 
+    - "3.7"
+    - "3.8"
