@@ -1,6 +1,6 @@
 language: python
 sudo: false # use container based infrastructure
-jdk: openjdk11
+jdk: openjdk8
 services: postgresql
 dist: bionic
 env:
