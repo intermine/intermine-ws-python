@@ -1,7 +1,8 @@
 language: python
 jdk: openjdk11
 dist: bionic
-addons: postgresql: 11
+addons:
+  - postgresql: 11
 services: postgresql
 env:
   global:
