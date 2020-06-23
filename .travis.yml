@@ -10,8 +10,8 @@ env:
     - TESTMODEL_PATH=intermine-demo
 before_install:
   - sudo apt-get update
-  - sudo apt-get -y install tomcat9 tomcat9-admin
-  - sudo systemctl start tomcat9
+  - sudo apt-get -y install tomcat8 tomcat8-admin
+  - sudo systemctl start tomcat8
 before_script:
   - "./config/travis/init-solr.sh"
   - "./config/travis/init.sh"
