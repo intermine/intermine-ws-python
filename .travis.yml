@@ -1,19 +1,20 @@
 language: python
 sudo: false # use container based infrastructure
-jdk: openjdk8
+jdk: openjdk11
 services: postgresql
+addons:
+  postgresql: 11
 dist: bionic
 env:
-    global:
-        - TESTMODEL_URL=http://localhost:8080/intermine-demo
-        - TESTMODEL_PATH=intermine-demo
+  global:
+    - TESTMODEL_URL=http://localhost:8080/intermine-demo
+    - TESTMODEL_PATH=intermine-demo
 before_script:
-    - jdk_switcher use openjdk8
-    - "./config/travis/init-solr.sh"
-    - "./config/travis/init.sh"
+  - "./config/travis/init-solr.sh"
+  - "./config/travis/init.sh"
 script: 
-    - python setup.py test
-    - python setup.py livetest
+  - python setup.py test
+  - python setup.py livetest
 python:
-    - "3.7"
-    - "3.8"
+  - "3.7"
+  - "3.8"
