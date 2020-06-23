@@ -1,14 +1,16 @@
 language: python
-sudo: false # use container based infrastructure
 jdk: openjdk11
-dist:
-  - trusty
-addons:
-  postgresql: 9
+dist: bionic
+addons: postgresql: 11
+services: postgresql
 env:
   global:
     - TESTMODEL_URL=http://localhost:8080/intermine-demo
     - TESTMODEL_PATH=intermine-demo
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install tomcat9 tomcat9-admin
+  - sudo systemctl start tomcat9
 before_script:
   - "./config/travis/init-solr.sh"
   - "./config/travis/init.sh"
