@@ -1,12 +1,8 @@
 language: python
 sudo: false # use container based infrastructure
 jdk: openjdk11
-services: 
-  - postgresql
-  - tomcat
 addons:
-  postgresql: 11
-dist: bionic
+  postgresql: 10
 env:
   global:
     - TESTMODEL_URL=http://localhost:8080/intermine-demo
