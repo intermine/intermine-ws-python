@@ -32,8 +32,10 @@ echo '#---> Building and releasing web application to test against'
 # Travis is so slow
 sleep 60 # let webapp startup
 
-./gradlew --stop
-./gradlew cargoRedeployRemote
+(cd service/testmine && ./gradlew --stop)
+sleep 20
+(cd service/testmine && ./gradlew cargoRedeployRemote)
+sleep 60
 
 # Warm up the keyword search by requesting results, but ignoring the results
 $GET "$TESTMODEL_URL/service/search" > /dev/null
