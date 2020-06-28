@@ -10,7 +10,8 @@ env:
     - TESTMODEL_URL=http://localhost:8080/intermine-demo
     - TESTMODEL_PATH=intermine-demo
 before_script:
-  - jdk_switcher use openjdk8
+  - export JAVA_HOME=$HOME/openjdk8
+  - $TRAVIS_BUILD_DIR/install-jdk.sh --install openjdk8 --target $JAVA_HOME
   - java -version
   - javac -version
   - "./config/travis/init-solr.sh"
