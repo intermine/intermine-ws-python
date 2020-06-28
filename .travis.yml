@@ -12,10 +12,12 @@ env:
 before_script:
   - sudo apt update
   - sudo apt install openjdk-8-jre openjdk-8-jdk-headless openjdk-8-jdk openjdk-8-jre
-  - sudo update-java-alternatives -s java-1.8.0-openjdk-amd64
+  - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+  - export PATH=$JAVA_HOME/bin:$PATH
   - java -version
   - javac -version
   - echo $JAVA_HOME
+  - echo $PATH
   - jdk_switcher use openjdk8
   - "./config/travis/init-solr.sh"
   - "./config/travis/init.sh"
