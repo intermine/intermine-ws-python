@@ -30,7 +30,10 @@ sed -i -e $SED_SCRIPT $TESTMODEL_PROPS
 echo '#---> Building and releasing web application to test against'
 (cd server/testmine && ./setup.sh)
 # Travis is so slow
-sleep 180 # let webapp startup
+sleep 60 # let webapp startup
+
+./gradlew --stop
+./gradlew cargoRedeployRemote
 
 # Warm up the keyword search by requesting results, but ignoring the results
 $GET "$TESTMODEL_URL/service/search" > /dev/null
