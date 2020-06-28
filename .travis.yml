@@ -1,6 +1,6 @@
 language: python
 sudo: false
-jdk: openjdk11
+jdk: openjdk8
 dist: bionic
 addons:
   - postgresql: 11
@@ -12,7 +12,9 @@ env:
 before_script:
   - "./config/travis/init-solr.sh"
   - "./config/travis/init.sh"
-script: 
+script:
+  - java -version
+  - javac -version
   - python setup.py test
   - python setup.py livetest
 python:

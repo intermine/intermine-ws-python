@@ -26,16 +26,22 @@ echo "#--- creating $TESTMODEL_PROPS"
 cp server/config/testmodel.properties $TESTMODEL_PROPS
 sed -i -e $SED_SCRIPT $TESTMODEL_PROPS
 
+# install everything first. we don't want to test what's in maven
+cd server
+(cd plugin && ./gradlew install)
+(cd intermine && ./gradlew install)
+(cd bio && ./gradlew install)
+(cd bio/sources && ./gradlew install)
+(cd bio/postprocess && ./gradlew install)
+# set up database for testing
+(cd intermine && ./gradlew createUnitTestDatabases)
+cd ..
+
 # We will need a fully operational web-application
 echo '#---> Building and releasing web application to test against'
 (cd server/testmine && ./setup.sh)
 # Travis is so slow
-sleep 60 # let webapp startup
-
-(cd service/testmine && ./gradlew --stop)
-sleep 20
-(cd service/testmine && ./gradlew cargoRedeployRemote)
-sleep 60
+sleep 90 # let webapp startup
 
 # Warm up the keyword search by requesting results, but ignoring the results
 $GET "$TESTMODEL_URL/service/search" > /dev/null
