@@ -9,14 +9,15 @@ env:
   global:
     - TESTMODEL_URL=http://localhost:8080/intermine-demo
     - TESTMODEL_PATH=intermine-demo
-script:
+before_script:
+  - export JAVA_HOME=/usr/local/lib/jvm/openjdk8
   - java -version
   - javac -version
   - echo $JAVA_HOME
-  - update-java-alternatives -l
   - jdk_switcher use openjdk8
   - "./config/travis/init-solr.sh"
   - "./config/travis/init.sh"
+script:
   - python setup.py test
   - python setup.py livetest
 python:
