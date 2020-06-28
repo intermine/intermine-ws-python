@@ -18,7 +18,6 @@ before_script:
   - javac -version
   - echo $JAVA_HOME
   - echo $PATH
-  - jdk_switcher use openjdk8
   - "./config/travis/init-solr.sh"
   - "./config/travis/init.sh"
 script:
