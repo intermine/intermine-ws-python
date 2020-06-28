@@ -1,5 +1,5 @@
 language: python
-sudo: true
+sudo: false
 jdk: openjdk8
 dist: bionic
 addons:
@@ -10,9 +10,7 @@ env:
     - TESTMODEL_URL=http://localhost:8080/intermine-demo
     - TESTMODEL_PATH=intermine-demo
 before_script:
-  - sudo apt update
-  - sudo apt install openjdk-8-jre openjdk-8-jdk-headless openjdk-8-jdk openjdk-8-jre
-  - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+  - export JAVA_HOME=/usr/local/lib/jvm/openjdk8
   - export PATH=$JAVA_HOME/bin:$PATH
   - java -version
   - javac -version
@@ -26,3 +24,5 @@ script:
 python:
   - "3.7"
   - "3.8"
+  - "3.9-dev"
+
