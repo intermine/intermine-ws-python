@@ -12,7 +12,6 @@ env:
 before_script:
   - sudo apt update
   - sudo apt install openjdk-8-jre openjdk-8-jdk-headless openjdk-8-jdk openjdk-8-jre
-  - update-java-alternatives -l
   - sudo update-java-alternatives -s java-1.8.0-openjdk-amd64
   - java -version
   - javac -version
