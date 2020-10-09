@@ -10,10 +10,7 @@ else
 fi
 
 # Pull in the server code.
-#git clone --single-branch --depth 1 https://github.com/intermine/intermine.git server
-
-# Testing only for now
-git clone --single-branch --branch remove-gretty-2276 --depth 10 https://github.com/danielabutano/intermine.git server
+git clone --single-branch --depth 1 https://github.com/intermine/intermine.git server
 
 export PSQL_USER=postgres
 

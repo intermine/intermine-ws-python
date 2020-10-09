@@ -1,26 +1,22 @@
+---
+os: linux
 language: python
-sudo: false
 jdk: openjdk11
-dist: bionic
+dist: focal
 addons:
-  - postgresql: 11
+  - postgresql: 12.2
 services: postgresql
 env:
   global:
     - TESTMODEL_URL=http://localhost:8080/intermine-demo
     - TESTMODEL_PATH=intermine-demo
 before_script:
-  #- export JAVA_HOME=/usr/local/lib/jvm/openjdk8
-  #- export PATH=$JAVA_HOME/bin:$PATH
-  - java -version
-  - javac -version
-  - echo $JAVA_HOME
-  - echo $PATH
   - "./config/travis/init-solr.sh"
   - "./config/travis/init.sh"
 script:
   - python setup.py test
   - python setup.py livetest
 python:
+  - "3.6"
   - "3.7"
 
