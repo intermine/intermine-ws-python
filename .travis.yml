@@ -2,8 +2,10 @@
 os: linux
 language: python
 jdk: openjdk11
-dist: focal
+dist: bionic
 services: postgresql
+addons:
+  postgresql: 11
 env:
   global:
     - TESTMODEL_URL=http://localhost:8080/intermine-demo
