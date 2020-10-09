@@ -3,8 +3,6 @@ os: linux
 language: python
 jdk: openjdk11
 dist: focal
-addons:
-  - postgresql: 12.2
 services: postgresql
 env:
   global:
