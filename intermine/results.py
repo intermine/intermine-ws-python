@@ -1,11 +1,11 @@
 try:
-    import simplejson as json # Prefer this as it is faster
-except ImportError: # pragma: no cover
+    import simplejson as json  # Prefer this as it is faster
+except ImportError:  # pragma: no cover
     try:
         import json
     except ImportError:
         raise ImportError("Could not find any JSON module to import - "
-            + "please install simplejson or jsonlib to continue")
+                          + "please install simplejson or jsonlib to continue")
 
 import urllib
 import re
@@ -16,7 +16,7 @@ import logging
 from itertools import groupby
 from contextlib import closing
 
-P3K = sys.version_info >= (3,0)
+P3K = sys.version_info >= (3, 0)
 
 logging.basicConfig()
 
@@ -44,6 +44,7 @@ from intermine.model import Attribute, Reference, Collection
 
 from intermine import VERSION
 
+
 class EnrichmentLine(UserDict):
     """
     An object that represents a result returned from the enrichment service.
@@ -65,6 +66,7 @@ class EnrichmentLine(UserDict):
             if key_name in list(self.keys()):
                 return self.data[key_name]
         raise AttributeError(name)
+
 
 class ResultObject(object):
     """
@@ -94,7 +96,7 @@ class ResultObject(object):
         class_name = data['class']
         if "class" not in data or cld.name == class_name:
             self._cld = cld
-        else: # this could be a composed class - behave accordingly.
+        else:  # this could be a composed class - behave accordingly.
             self._cld = cld.model.get_class(class_name)
 
         self._attr_cache = {}
@@ -102,12 +104,13 @@ class ResultObject(object):
     def __str__(self):
         dont_show = set(["objectId", "class"])
         return "%s(%s)" % (self._cld.name, ",  ".join("%s = %r" % (k, v) for k, v in list(self._data.items())
-            if not isinstance(v, dict) and not isinstance(v, list) and k not in dont_show))
+                                                      if not isinstance(v, dict) and not isinstance(v,
+                                                                                                    list) and k not in dont_show))
 
     def __repr__(self):
         dont_show = set(["objectId", "class"])
         return "%s(%s)" % (self._cld.name, ", ".join("%s = %r" % (k, getattr(self, k)) for k in list(self._data.keys())
-            if k not in dont_show))
+                                                     if k not in dont_show))
 
     def __getattr__(self, name):
         if name in self._attr_cache:
@@ -157,23 +160,24 @@ class ResultObject(object):
 
     def _fetch_attr(self, fld):
         if fld.name in self.selected_attributes:
-            return None # Was originally selected - no point asking twice
+            return None  # Was originally selected - no point asking twice
         c = self._cld
         if "id" not in c:
-            return None # Cannot reliably fetch anything without access to the objectId.
-        q = c.model.service.query(c, fld).where(id = self.id)
+            return None  # Cannot reliably fetch anything without access to the objectId.
+        q = c.model.service.query(c, fld).where(id=self.id)
         r = q.first()
         return r._data[fld.name] if fld.name in r._data else None
 
     def _fetch_reference(self, ref):
         if ref.name + "." in self.reference_paths:
-            return None # Was originally selected - no point asking twice.
+            return None  # Was originally selected - no point asking twice.
         c = self._cld
         if "id" not in c:
-            return None # Cannot reliably fetch anything without access to the objectId.
-        q = c.model.service.query(ref).outerjoin(ref).where(id = self.id)
+            return None  # Cannot reliably fetch anything without access to the objectId.
+        q = c.model.service.query(ref).outerjoin(ref).where(id=self.id)
         r = q.first()
         return r._data[ref.name] if ref.name in r._data else None
+
 
 class ResultRow(object):
     """
@@ -218,9 +222,9 @@ class ResultRow(object):
         root = re.sub("\..*$", "", self.views[0])
         parts = [root + ":"]
         for view in self.views:
-           short_form = re.sub("^[^.]+.", "", view)
-           value = self[view]
-           parts.append(short_form + "=" + repr(value))
+            short_form = re.sub("^[^.]+.", "", view)
+            value = self[view]
+            parts.append(short_form + "=" + repr(value))
         return " ".join(parts)
 
     def __call__(self, name):
@@ -267,7 +271,8 @@ class ResultRow(object):
             self._get_index_for(key)
             return True
         except KeyError:
-           return False
+            return False
+
 
 class TableResultRow(ResultRow):
     """
@@ -287,14 +292,18 @@ class TableResultRow(ResultRow):
         """Return a list view of this row"""
         return [x["value"] for x in self.data]
 
+
 def encode_str(s):
     return s.encode('utf8') if hasattr(s, 'encode') else s
+
 
 def decode_binary(b):
     return b.decode('utf8') if hasattr(b, 'decode') else b
 
+
 def encode_dict(input_d):
     return dict((encode_str(k), encode_str(v)) for k, v in list(input_d.items()))
+
 
 class ResultIterator(object):
     """
@@ -321,7 +330,7 @@ class ResultIterator(object):
         Services are responsible for getting result iterators. You will
         not need to create one manually.
 
-        @param root: The root path (eg: "http://www.flymine.org/query/service")
+        @param root: The root path (eg: "https://www.flymine.org/query/service")
         @type root: string
         @param path: The resource path (eg: "/query/results")
         @type path: string
@@ -337,11 +346,11 @@ class ResultIterator(object):
         @raise ValueError: if the row format is incorrect
         @raise WebserviceError: if the request is unsuccessful
         """
-        if rowformat.startswith("object"): # Accept "object", "objects", "objectformat", etc...
-            rowformat = "jsonobjects" # these are synonymous
+        if rowformat.startswith("object"):  # Accept "object", "objects", "objectformat", etc...
+            rowformat = "jsonobjects"  # these are synonymous
         if rowformat not in self.ROW_FORMATS:
             raise ValueError("'%s' is not one of the valid row formats (%s)"
-                    % (rowformat, repr(list(self.ROW_FORMATS))))
+                             % (rowformat, repr(list(self.ROW_FORMATS))))
 
         self.row = ResultRow if service.version >= 8 else TableResultRow
 
@@ -349,13 +358,13 @@ class ResultIterator(object):
             if service.version >= 8:
                 params.update({"format": "json"})
             else:
-                params.update({"format" : "jsonrows"})
+                params.update({"format": "jsonrows"})
         elif rowformat == 'tsv':
             params.update({"format": "tab"})
         else:
-            params.update({"format" : rowformat})
+            params.update({"format": rowformat})
 
-        self.url  = service.root + path
+        self.url = service.root + path
         self.data = urlencode(encode_dict(params), True)
         self.view = view
         self.opener = service.opener
@@ -390,18 +399,18 @@ class ResultIterator(object):
 
         try:
             reader = {
-                "tsv"         : flat_file_parser,
-                "csv"         : flat_file_parser,
-                "count"       : flat_file_parser,
-                "json"        : simple_json_parser,
-                "jsonrows"    : simple_json_parser,
-                "list"        : lambda: JSONIterator(con, lambda x: self.row(x, self.view).to_l()),
-                "rr"          : lambda: JSONIterator(con, lambda x: self.row(x, self.view)),
-                "dict"        : lambda: JSONIterator(con, lambda x: self.row(x, self.view).to_d()),
-                "jsonobjects" : lambda: JSONIterator(con, lambda x: ResultObject(x, self.cld, self.view))
+                "tsv": flat_file_parser,
+                "csv": flat_file_parser,
+                "count": flat_file_parser,
+                "json": simple_json_parser,
+                "jsonrows": simple_json_parser,
+                "list": lambda: JSONIterator(con, lambda x: self.row(x, self.view).to_l()),
+                "rr": lambda: JSONIterator(con, lambda x: self.row(x, self.view)),
+                "dict": lambda: JSONIterator(con, lambda x: self.row(x, self.view).to_d()),
+                "jsonobjects": lambda: JSONIterator(con, lambda x: ResultObject(x, self.cld, self.view))
             }.get(self.rowformat)()
         except Exception as e:
-            raise Exception("Couldn't get iterator for "  + self.rowformat)
+            raise Exception("Couldn't get iterator for " + self.rowformat)
         return reader
 
     def __next__(self):
@@ -421,6 +430,7 @@ class ResultIterator(object):
         except StopIteration:
             self._it = None
             raise StopIteration
+
 
 class FlatFileIterator(object):
     """
@@ -456,6 +466,7 @@ class FlatFileIterator(object):
         if line.startswith("[ERROR]"):
             raise WebserviceError(line)
         return self.parser(line)
+
 
 class JSONIterator(object):
     """
@@ -551,7 +562,7 @@ class JSONIterator(object):
                         row = json.loads(line)
                     except json.decoder.JSONDecodeError as e:
                         raise WebserviceError("Error parsing line from results: '"
-                                + line + "' - " + str(e))
+                                              + line + "' - " + str(e))
                     next_row = self.parser(row)
         except StopIteration:
             raise WebserviceError("Connection interrupted")
@@ -562,10 +573,12 @@ class JSONIterator(object):
         else:
             return next_row
 
+
 def encode_headers(headers):
     return dict((k.encode('ascii') if isinstance(k, unicode) else k, \
                  v.encode('ascii') if isinstance(v, unicode) else v) \
-                 for k, v in list(headers.items()))
+                for k, v in list(headers.items()))
+
 
 class InterMineURLOpener(object):
     """
@@ -608,7 +621,7 @@ class InterMineURLOpener(object):
             clone.auth_header = self.auth_header
         return clone
 
-    def headers(self, content_type = None, accept = None):
+    def headers(self, content_type=None, accept=None):
         h = {'UserAgent': self.USER_AGENT}
         if self.using_authentication:
             h['Authorization'] = self.auth_header
@@ -621,37 +634,37 @@ class InterMineURLOpener(object):
     def post_plain_text(self, url, body):
         return self.post_content(url, body, InterMineURLOpener.PLAIN_TEXT)
 
-    def post_content(self, url, body, mimetype, charset = "utf-8"):
+    def post_content(self, url, body, mimetype, charset="utf-8"):
         content_type = "{0}; charset={1}".format(mimetype, charset)
 
         with closing(self.open(url, body, {'Content-Type': content_type})) as f:
             return f.read()
 
-    def open(self, url, data=None, headers = None, method = None):
+    def open(self, url, data=None, headers=None, method=None):
         url = self.prepare_url(url)
         buff = data if data is None else bytearray(data, 'utf8')
         hs = self.headers()
         if headers is not None:
             hs.update(headers)
-        req = Request(url, buff, headers = hs)
+        req = Request(url, buff, headers=hs)
         if method is not None:
             req.get_method = lambda: method
         try:
             return urlopen(req)
         except HTTPError as e:
-            args = (url, e, e.code, # The next two lines are python2.6 workarounds
+            args = (url, e, e.code,  # The next two lines are python2.6 workarounds
                     e.reason if hasattr(e, 'reason') else None,
                     e.headers if hasattr(e, 'headers') else None)
             handler = {
-                    400: self.http_error_400,
-                    401: self.http_error_401,
-                    403: self.http_error_403,
-                    404: self.http_error_404,
-                    500: self.http_error_500
-                    }.get(e.code, self.http_error_default)
+                400: self.http_error_400,
+                401: self.http_error_401,
+                403: self.http_error_403,
+                404: self.http_error_404,
+                500: self.http_error_500
+            }.get(e.code, self.http_error_default)
             handler(*args)
 
-    def read(self, url, data = None):
+    def read(self, url, data=None):
         with closing(self.open(url, data)) as conn:
             content = conn.read()
             return decode_binary(content)
@@ -659,7 +672,7 @@ class InterMineURLOpener(object):
     def prepare_url(self, url):
         # Generally unnecessary these days - will be deprecated one of these days.
         if self.token:
-            token_param = urlencode(encode_dict(dict(token = self.token)))
+            token_param = urlencode(encode_dict(dict(token=self.token)))
             o = urlparse(url)
             if o.query:
                 url += "&" + token_param
@@ -669,7 +682,7 @@ class InterMineURLOpener(object):
         return url
 
     def delete(self, url):
-        with closing(self.open(url, method = 'DELETE')) as f:
+        with closing(self.open(url, method='DELETE')) as f:
             return f.read()
 
     def http_error_default(self, url, fp, errcode, errmsg, headers):
@@ -774,4 +787,3 @@ class InterMineURLOpener(object):
         except:
             message = content
         raise WebserviceError("Internal server error", errcode, errmsg, message)
-

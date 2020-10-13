@@ -43,7 +43,7 @@ def getInfo(mine):
         >>> from intermine import registry
         >>> registry.getInfo('flymine')
         Description:  An integrated database for Drosophila genomics
-        URL: http://www.flymine.org/flymine
+        URL: https://www.flymine.org/flymine
         API Version: 25
         Release Version: 45.1 2017 August
         InterMine Version: 1.8.5

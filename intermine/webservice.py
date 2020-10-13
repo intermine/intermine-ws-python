@@ -152,7 +152,7 @@ class Service(object):
     example::
 
       from intermine.webservice import Service
-      service = Service("http://www.flymine.org/query/service")
+      service = Service("https://www.flymine.org/query/service")
 
       template = service.get_template("Gene_Pathways")
       for row in template.results(A={"value":"zen"}):
@@ -233,7 +233,7 @@ class Service(object):
 
         Construct a connection to a webservice::
 
-            url = "http://www.flymine.org/query/service"
+            url = "https://www.flymine.org/query/service"
 
             # An unauthenticated connection - access to all public data
             service = Service(url)

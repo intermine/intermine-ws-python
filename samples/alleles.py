@@ -44,24 +44,24 @@ q = s.query(Gene).\
       order_by("symbol")
 
 for row in q.rows():
-    print row
+    print(row)
 gene_symbols = ["zen", "eve", "bib", "h"]
 filter_genes = (s.model.Gene.symbol ==
                 (gene_symbols).add_columns(s.model.Gene.alleles))
 for gene in s.query(s.model.Gene).filter(filter_genes):
 
-    print summary % (gene.symbol, len(gene.alleles))
-    print hrule
+    print(summary % (gene.symbol, len(gene.alleles)))
+    print(hrule)
     iterhelper = itertools.groupby(sorted(map(lambda a: a.symbol,
                                               gene.alleles)), lines_of(cols))
     for k, line_of_alleles in (iterhelper):
-        print sep.join(map(fit_to_cell, line_of_alleles))
+        print(sep.join(map(fit_to_cell, line_of_alleles)))
 
-    print "\nAllele Classes:"
+    print("\nAllele Classes:")
     allele_classes = [(key, len(list(group))) for
                       key, group in itertools.groupby(
         sorted(map(lambda x: x.alleleClass, gene.alleles)))]
     for pair in reversed(sorted(allele_classes, key=lambda g: g[1])):
-        print "%s (%d)" % pair
+        print("%s (%d)" % pair)
 
-    print hrule
+    print(hrule)
