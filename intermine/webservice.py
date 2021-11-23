@@ -483,6 +483,8 @@ class Service(object):
         except KeyError:
             raise ServiceError("There is no template called '"
                                + name + "' at this service")
+        except StopIteration:
+            return
         if not isinstance(t, Template):
             t = Template.from_xml(t, self.model, self)
             self.templates[name] = t
