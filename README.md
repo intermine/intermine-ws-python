@@ -122,6 +122,13 @@ For example:
 Changes:
 --------
 
+    1.12.00   Added organism to list upload
+              Support for Python 3.7
+              Added getVersion for registry mines
+              Added display method for list object
+              Added get_anonymous_token method for service object
+              Make registry getMines print all when no organism is given
+              Added dataframe method for query object
     1.11.00   Added Query Manager
     1.10.00   Added registry features
     1.09.09   Add Python 3 support
