@@ -7,6 +7,7 @@ try:
 except ImportError:
     import simplejson as json
 
+
 def get_json(service, path, key):
     text = service.opener.read(service.root + path)
     data = json.loads(text)
@@ -16,9 +17,11 @@ def get_json(service, path, key):
         raise Exception(key + " not returned from " + path)
     return data[key]
 
+
 ONE_MINUTE = 60
 
 COMPLETED = set(["SUCCESS", "ERROR"])
+
 
 class Job(object):
     """
@@ -68,7 +71,8 @@ class Job(object):
 
         @rtype: dict
         """
-        return get_json(self.service, "/ids/{0}/status".format(self.uid), "status")
+        return get_json(self.service,
+                        "/ids/{0}/status".format(self.uid), "status")
 
     def delete(self):
         """
@@ -88,4 +92,5 @@ class Job(object):
 
         @rtype String
         """
-        return get_json(self.service, "/ids/{0}/result".format(self.uid), "results")
+        return get_json(self.service,
+                        "/ids/{0}/result".format(self.uid), "results")

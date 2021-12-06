@@ -8,6 +8,32 @@ Functions for making use of registry data
 """
 
 
+def getVersion(mine):
+    """
+    A function to return the API version, release version and
+    InterMine version numbers
+    ================================================
+    example:
+
+        >>> from intermine import registry
+        >>> registry.getVersion('flymine')
+        >>> {'API Version:': '30', 'Release Version:': '48 2019 October',
+        'InterMine Version:': '4.1.0'}
+
+    """
+    link = "http://registry.intermine.org/service/instances/" + mine
+    try:
+        r = requests.get(link)
+        dict = json.loads(r.text)
+        return {
+            "API Version:": dict["instance"]["api_version"],
+            "Release Version:": dict["instance"]["release_version"],
+            "InterMine Version:": dict["instance"]["intermine_version"]
+        }
+    except KeyError:
+        return "No such mine available"
+
+
 def getInfo(mine):
     """
     A function to get information about a mine
@@ -17,7 +43,7 @@ def getInfo(mine):
         >>> from intermine import registry
         >>> registry.getInfo('flymine')
         Description:  An integrated database for Drosophila genomics
-        URL: http://www.flymine.org/flymine
+        URL: https://www.flymine.org/flymine
         API Version: 25
         Release Version: 45.1 2017 August
         InterMine Version: 1.8.5
@@ -89,7 +115,7 @@ def getData(mine):
         return "No such mine available"
 
 
-def getMines(organism):
+def getMines(organism=None):
     """
     A function to get mines containing the organism
     ================================================
@@ -108,13 +134,17 @@ def getMines(organism):
     count = 0
     dict = json.loads(r.text)
     for i in range(len(dict["instances"])):
-        for j in range(len(dict["instances"][i]["organisms"])):
-            if dict["instances"][i]["organisms"][j] == organism:
-                print(dict["instances"][i]["name"])
-                count = count+1
-            elif dict["instances"][i]["organisms"][j] == " " + organism:
-                print(dict["instances"][i]["name"])
-                count = count+1
+        if organism is None:
+            print(dict["instances"][i]["name"])
+            count = count+1
+        else:
+            for j in range(len(dict["instances"][i]["organisms"])):
+                if dict["instances"][i]["organisms"][j] == organism:
+                    print(dict["instances"][i]["name"])
+                    count = count+1
+                elif dict["instances"][i]["organisms"][j] == " " + organism:
+                    print(dict["instances"][i]["name"])
+                    count = count+1
     if(count == 0):
         return "No such mine available"
     else:

@@ -12,7 +12,6 @@ fi
 # Pull in the server code.
 git clone --single-branch --depth 1 https://github.com/intermine/intermine.git server
 
-
 export PSQL_USER=postgres
 
 # Set up properties
@@ -29,7 +28,8 @@ sed -i -e $SED_SCRIPT $TESTMODEL_PROPS
 # We will need a fully operational web-application
 echo '#---> Building and releasing web application to test against'
 (cd server/testmine && ./setup.sh)
-sleep 60 # let webapp startup
+# Travis is so slow
+sleep 90 # let webapp startup
 
 # Warm up the keyword search by requesting results, but ignoring the results
 $GET "$TESTMODEL_URL/service/search" > /dev/null

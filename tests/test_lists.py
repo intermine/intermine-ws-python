@@ -5,7 +5,8 @@ from intermine.lists.list import List
 
 from tests.test_core import WebserviceTest
 
-class TestLists(WebserviceTest): # pragma: no cover
+
+class TestLists(WebserviceTest):  # pragma: no cover
 
     def setUp(self):
         self.service = Service(self.get_test_root())
@@ -39,6 +40,7 @@ class TestLists(WebserviceTest): # pragma: no cover
 
         def alter_size():
             list_a.size = 10
+
         def alter_type():
             list_a.list_type = "foo"
         self.assertRaises(AttributeError, alter_size)

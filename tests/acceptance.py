@@ -1,7 +1,7 @@
 from intermine.query import Query
 from intermine.model import Model
 
-m = Model('http://www.flymine.org/query/service/model')
+m = Model('https://www.flymine.org/query/service/model')
 q = Query(m)
 
 q.name = 'Foo'
@@ -13,5 +13,5 @@ q.add_constraint('Gene', 'CDNAClone')
 q.add_constraint('Gene.symbol', 'ONE OF', ['eve', 'zen'])
 q.add_join('Gene.alleles')
 q.add_path_description('Gene', 'One of those gene-y things')
-print q.to_xml()
-print q.to_formatted_xml()
+print(q.to_xml())
+print(q.to_formatted_xml())

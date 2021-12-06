@@ -35,7 +35,8 @@ OPTIONS = {
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+        "License :: OSI Approved :: GNU Library or "
+        "Lesser General Public License (LGPL)",
         "License :: OSI Approved :: BSD License",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: WWW/HTTP",
@@ -48,10 +49,12 @@ OPTIONS = {
 InterMine Webservice Client
 ----------------------------
 
-A Python API to access bioinformatics data warehouses powered by the InterMine platform.
+A Python API to access bioinformatics
+ data warehouses powered by the InterMine platform.
 
 """
 }
+
 
 class TestCommand(Command):
     description = "Run unit tests"
@@ -72,37 +75,44 @@ class TestCommand(Command):
 
     def run(self):
         '''
-        Finds all the tests modules in tests/, and runs them, exiting after they are all done
+        Finds all the tests modules in tests/, and runs them,
+         exiting after they are all done
         '''
         from tests.server import TestServer
         from tests.test_core import WebserviceTest
 
         log.set_verbosity(self.verbose)
         if self.verbose >= 2:
-            self.announce('Setting log level to DEBUG ({0})'.format(logging.DEBUG), level = 2)
-            logging.basicConfig(level = logging.DEBUG)
+            self.announce('Setting log level to DEBUG ({0})'.format(
+                logging.DEBUG), level=2)
+            logging.basicConfig(level=logging.DEBUG)
 
-        testfiles = [ ]
+        testfiles = []
         if self.testmodule is None:
-            for t in glob(pjoin(self._dir, 'tests', self.test_prefix + '*.py')):
+
+            for t in glob(pjoin(self._dir, 'tests',
+                                self.test_prefix + '*.py')):
                 if not t.endswith('__init__.py'):
-                    testfiles.append('.'.join(['tests', splitext(basename(t))[0]]))
+                    testfiles.append(
+                        '.'.join(['tests', splitext(basename(t))[0]]))
         else:
             testfiles.append(self.testmodule)
 
-        server = TestServer(daemonise = True, silent = (self.verbose < 3))
+        server = TestServer(daemonise=True, silent=(self.verbose < 3))
         server.start()
         WebserviceTest.TEST_PORT = server.port
 
-        self.announce("Waiting for test server to start on port " + str(server.port), level=2)
+        self.announce("Waiting for test server to start on port " +
+                      str(server.port), level=2)
         time.sleep(1)
 
         self.announce("Test files:" + str(testfiles), level=2)
         tests = TestLoader().loadTestsFromNames(testfiles)
-        t = TextTestRunner(verbosity = self.verbose)
+        t = TextTestRunner(verbosity=self.verbose)
         result = t.run(tests)
         failed, errored = map(len, (result.failures, result.errors))
         exit(failed + errored)
+
 
 class PrintVersion(Command):
     user_options = []
@@ -116,11 +126,13 @@ class PrintVersion(Command):
     def run(self):
         print(self.version)
 
+
 class LiveTestCommand(TestCommand):
 
     def initialize_options(self):
         TestCommand.initialize_options(self)
         self.test_prefix = 'live'
+
 
 class CleanCommand(Command):
     """
@@ -133,8 +145,8 @@ class CleanCommand(Command):
     user_options = [('verbose', 'v', "produce verbose output")]
 
     def initialize_options(self):
-        self._files_to_delete = [ ]
-        self._dirs_to_delete = [ ]
+        self._files_to_delete = []
+        self._dirs_to_delete = []
 
         for root, dirs, files in os.walk('.'):
             for f in files:
@@ -162,7 +174,7 @@ class CleanCommand(Command):
                 try:
                     self.announce("Deleting " + clean_me, level=2)
                     os.unlink(clean_me)
-                except:
+                except Exception:
                     message = " ".join(["Failed to delete file", clean_me])
                     log.warn(message)
         for clean_me in self._dirs_to_delete:
@@ -173,11 +185,12 @@ class CleanCommand(Command):
                     try:
                         self.announce("Going to remove " + clean_me, level=2)
                         os.rmdir(clean_me)
-                    except:
+                    except Exception:
                         message = " ".join(["Failed to delete dir", clean_me])
                         log.warn(message)
                 elif clean_me != "build":
                     log.warn(clean_me + " does not exist")
+
 
 extra = {
     'cmdclass': {

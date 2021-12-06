@@ -26,6 +26,7 @@ __organization__ = "InterMine"
 __license__ = "LGPL"
 __contact__ = "dev@intermine.org"
 
+
 class Field(object):
     """
     A class representing columns on database tables
@@ -37,7 +38,7 @@ class Field(object):
     SYNOPSIS
     --------
 
-        >>> service = Service("http://www.flymine.org/query/service")
+        >>> service = Service("https://www.flymine.org/query/service")
         >>> model = service.model
         >>> cd = model.get_class("Gene")
         >>> print "Gene has", len(cd.fields), "fields"
@@ -47,20 +48,28 @@ class Field(object):
             -  CDSs is a group of CDS objects, which link back to this as gene
             -  GLEANRsymbol is a String
             -  UTRs is a group of UTR objects, which link back to this as gene
-            -  alleles is a group of Allele objects, which link back to this as gene
+            -  alleles is a group of Allele objects, which link back
+               to this as gene
             -  chromosome is a Chromosome
             -  chromosomeLocation is a Location
-            -  clones is a group of CDNAClone objects, which link back to this as gene
-            -  crossReferences is a group of CrossReference objects, which link back to this as subject
+            -  clones is a group of CDNAClone objects, which link
+               back to this as gene
+            -  crossReferences is a group of CrossReference objects,
+                which link back to this as subject
             -  cytoLocation is a String
-            -  dataSets is a group of DataSet objects, which link back to this as bioEntities
+            -  dataSets is a group of DataSet objects,
+                which link back to this as bioEntities
             -  downstreamIntergenicRegion is a IntergenicRegion
-            -  exons is a group of Exon objects, which link back to this as gene
-            -  flankingRegions is a group of GeneFlankingRegion objects, which link back to this as gene
+            -  exons is a group of Exon objects,
+                which link back to this as gene
+            -  flankingRegions is a group of GeneFlankingRegion objects,
+                which link back to this as gene
             -  goAnnotation is a group of GOAnnotation objects
-            -  homologues is a group of Homologue objects, which link back to this as gene
+            -  homologues is a group of Homologue objects,
+                which link back to this as gene
             -  id is a Integer
-            -  interactions is a group of Interaction objects, which link back to this as gene
+            -  interactions is a group of Interaction objects,
+                which link back to this as gene
             -  length is a Integer
             ...
 
@@ -68,6 +77,7 @@ class Field(object):
     @see: L{Reference}
     @see: L{Collection}
     """
+
     def __init__(self, name, type_name, class_origin):
         """
         Constructor - DO NOT USE
@@ -99,6 +109,7 @@ class Field(object):
     def fieldtype(self):
         raise Exception("Fields should never be directly instantiated")
 
+
 class Attribute(Field):
     """
     Attributes represent columns that contain actual data
@@ -111,6 +122,7 @@ class Attribute(Field):
     def fieldtype(self):
         return "attribute"
 
+
 class Reference(Field):
     """
     References represent columns that refer to records in other tables
@@ -121,6 +133,7 @@ class Reference(Field):
     back to this one as well. And all references will have their
     type upgraded to a type_class during parsing
     """
+
     def __init__(self, name, type_name, class_origin, reverse_ref=None):
         """
         Constructor
@@ -138,6 +151,7 @@ class Reference(Field):
         self.reverse_reference_name = reverse_ref
         super(Reference, self).__init__(name, type_name, class_origin)
         self.reverse_reference = None
+
     def __repr__(self):
         """
         Return a string representation
@@ -149,11 +163,13 @@ class Reference(Field):
         if self.reverse_reference is None:
             return s
         else:
-            return s + ", which links back to this as " + self.reverse_reference.name
+            return (s + ", which links back to this as " +
+                    self.reverse_reference.name)
 
     @property
     def fieldtype(self):
         return "reference"
+
 
 class Collection(Reference):
     """
@@ -162,9 +178,11 @@ class Collection(Reference):
 
     Collections have all the same behaviour and properties as References
     """
+
     def __repr__(self):
         """Return a string representation"""
-        ret = super(Collection, self).__repr__().replace(" is a ", " is a group of ")
+        ret = super(Collection, self).__repr__().replace(
+            " is a ", " is a group of ")
         if self.reverse_reference is None:
             return ret + " objects"
         else:
@@ -173,6 +191,7 @@ class Collection(Reference):
     @property
     def fieldtype(self):
         return "collection"
+
 
 class Class(object):
     """
@@ -185,7 +204,7 @@ class Class(object):
     SYNOPSIS
     --------
 
-    >>>  service = Service("http://www.flymine.org/query/service")
+    >>>  service = Service("https://www.flymine.org/query/service")
     >>>  model = service.model
     >>>
     >>>  if "Gene" in model.classes:
@@ -206,8 +225,7 @@ class Class(object):
 
     """
 
-
-    def __init__(self, name, parents, model, interface = True):
+    def __init__(self, name, parents, model, interface=True):
         """
         Constructor - Creates a new Class descriptor
         ============================================
@@ -236,7 +254,9 @@ class Class(object):
 
     def __repr__(self):
         return "<%s.%s %s.%s>" % (self.__module__, self.__class__.__name__,
-            self.model.package_name if hasattr(self.model, 'package_name') else "__test__", self.name)
+                                  self.model.package_name if
+                                  hasattr(self.model, 'package_name')
+                                  else "__test__", self.name)
 
     @property
     def fields(self):
@@ -249,7 +269,8 @@ class Class(object):
 
         @rtype: list(L{Field})
         """
-        return sorted(list(self.field_dict.values()), key=lambda field: field.name)
+        return sorted(list(self.field_dict.values()),
+                      key=lambda field: field.name)
 
     def __iter__(self):
         for f in list(self.field_dict.values()):
@@ -279,7 +300,8 @@ class Class(object):
 
         @rtype: list(L{Reference})
         """
-        def isRef(x): return isinstance(x, Reference) and not isinstance(x, Collection)
+        def isRef(x): return isinstance(
+            x, Reference) and not isinstance(x, Collection)
         return list(filter(isRef, self.fields))
 
     @property
@@ -306,7 +328,8 @@ class Class(object):
         if name in self.field_dict:
             return self.field_dict[name]
         else:
-            raise ModelError("There is no field called %s in %s" % (name, self.name))
+            raise ModelError("There is no field called %s in %s" %
+                             (name, self.name))
 
     def isa(self, other):
         """
@@ -333,6 +356,7 @@ class Class(object):
             if p.isa(other):
                 return True
         return False
+
 
 class ComposedClass(Class):
     """
@@ -373,7 +397,8 @@ class ComposedClass(Class):
     @property
     def parent_classes(self):
         """The flattened list of parent classes, with the parts"""
-        all_parents = [pc for pc in p.parent_classes for p in self.parts]
+        for p in self.parts:
+            all_parents = [pc for pc in p.parent_classes]
         return all_parents + self.parts
 
 
@@ -387,7 +412,7 @@ class Path(object):
     SYNOPSIS
     --------
 
-        >>> service = Service("http://www.flymine.org/query/service")
+        >>> service = Service("https://www.flymine.org/query/service")
             model = service.model
             path = model.make_path("Gene.organism.name")
             path.is_attribute()
@@ -408,6 +433,7 @@ class Path(object):
     to some extent, but there are additional methods for verifying certain
     relationships as well
     """
+
     def __init__(self, path, model, subclasses={}):
         """
         Constructor
@@ -422,7 +448,8 @@ class Path(object):
         @type path: str
         @param model: the model to validate the path against
         @type model: L{Model}
-        @param subclasses: a dict which maps subclasses (defaults to an empty dict)
+        @param subclasses: a dict which maps
+                           subclasses (defaults to an empty dict)
         @type subclasses: dict
         """
         self.model = weakref.proxy(model)
@@ -438,7 +465,8 @@ class Path(object):
         return self._string
 
     def __repr__(self):
-        return '<' + self.__module__ + "." + self.__class__.__name__ + ": " + self._string + '>'
+        return ('<' + self.__module__ + "." + self.__class__.__name__ +
+                ": " + self._string + '>')
 
     def prefix(self):
         """
@@ -476,7 +504,8 @@ class Path(object):
     @property
     def root(self):
         """
-        The descriptor for the first part of the string. This should always a class descriptor.
+        The descriptor for the first part of the string.
+        This should always a class descriptor.
 
         @rtype: L{intermine.model.Class}
         """
@@ -511,7 +540,8 @@ class Path(object):
 
     def is_reference(self):
         """
-        Return true if the path is a reference, eg: Gene.organism or Gene.proteins
+        Return true if the path is a reference,
+        eg: Gene.organism or Gene.proteins
         Note: Collections are ALSO references
 
         @rtype: boolean
@@ -539,7 +569,9 @@ class Path(object):
 
     def __hash__(self):
         i = hash(str(self))
-        return reduce(lambda a, b: a ^ b, [hash(k) ^ hash(v) for k, v in list(self.subclasses.items())], i)
+        return (reduce(lambda a, b: a ^ b, [hash(k) ^ hash(v)
+                for k, v in list(self.subclasses.items())], i))
+
 
 class ConstraintTree(object):
 
@@ -559,10 +591,12 @@ class ConstraintTree(object):
             for subn in n:
                 yield subn
 
-    def as_logic(self, codes = None, start = 'A'):
+    def as_logic(self, codes=None, start='A'):
         if codes is None:
             codes = (chr(c) for c in range(ord(start), ord('Z')))
-        return "(%s %s %s)" % (self.left.as_logic(codes), self.op, self.right.as_logic(codes))
+        return ("(%s %s %s)" % (self.left.as_logic(codes),
+                self.op, self.right.as_logic(codes)))
+
 
 class ConstraintNode(ConstraintTree):
 
@@ -573,15 +607,17 @@ class ConstraintNode(ConstraintTree):
     def __iter__(self):
         yield self
 
-    def as_logic(self, codes = None, start = 'A'):
+    def as_logic(self, codes=None, start='A'):
         if codes is None:
             codes = (chr(c) for c in range(ord(start), ord('Z')))
         return next(codes)
 
+
 class CodelessNode(ConstraintNode):
 
-    def as_logic(self, code = None, start = 'A'):
+    def as_logic(self, code=None, start='A'):
         return ''
+
 
 class Column(object):
     """
@@ -592,12 +628,12 @@ class Column(object):
     close to a declarative style
     """
 
-    def __init__(self, path, model, subclasses={}, query=None, parent = None):
+    def __init__(self, path, model, subclasses={}, query=None, parent=None):
         self._model = model
         self._query = query
         self._subclasses = subclasses
         self._parent = parent
-        self.filter = self.where # alias
+        self.filter = self.where  # alias
         if isinstance(path, Path):
             self._path = path
         else:
@@ -606,7 +642,8 @@ class Column(object):
 
     def select(self, *cols):
         """
-        Create a new query with this column as the base class, selecting the given fields.
+        Create a new query with this column as the base class,
+        selecting the given fields.
 
         If no fields are given, then just this column will be selected.
         """
@@ -619,7 +656,8 @@ class Column(object):
 
     def where(self, *args, **kwargs):
         """
-        Create a new query based on this column, filtered with the given constraint.
+        Create a new query based on this column,
+        filtered with the given constraint.
 
         also available as "filter"
         """
@@ -636,8 +674,9 @@ class Column(object):
         """
         Iterate over the things this column represents.
 
-        In the case of an attribute column, that is the values it may have. In the case
-        of a reference or class column, it is the objects that this path may refer to.
+        In the case of an attribute column, that is the values it may have.
+        In the caseof a reference or class column,
+        it is the objects that this path may refer to.
         """
         q = self.select()
         if self._path.is_attribute():
@@ -654,7 +693,8 @@ class Column(object):
         if cld is not None:
             try:
                 fld = cld.get_field(name)
-                branch = Column(str(self) + "." + name, self._model, self._subclasses, self._query, self)
+                branch = Column(str(self) + "." + name, self._model,
+                                self._subclasses, self._query, self)
                 self._branches[name] = branch
                 return branch
             except ModelError as e:
@@ -737,6 +777,7 @@ class Column(object):
     def __ge__(self, other):
         return ConstraintNode(str(self), ">=", other)
 
+
 class Model(object):
     """
     A class for representing the data model of an InterMine datawarehouse
@@ -747,7 +788,7 @@ class Model(object):
     SYNOPSIS
     --------
 
-        >>> service = Service("http://www.flymine.org/query/service")
+        >>> service = Service("https://www.flymine.org/query/service")
         >>> model = service.model
         >>> model.get_class("Gene")
         <intermine.model.Class: Gene>
@@ -760,7 +801,9 @@ class Model(object):
     data is available and how it is inter-related
     """
 
-    NUMERIC_TYPES = frozenset(["int", "Integer", "float", "Float", "double", "Double", "long", "Long", "short", "Short"])
+    NUMERIC_TYPES = frozenset(["int", "Integer", "float", "Float",
+                               "double", "Double", "long",
+                               "Long", "short", "Short"])
 
     LOG = logging.getLogger('Model')
 
@@ -786,7 +829,7 @@ class Model(object):
         else:
             self.service = None
 
-        self.classes= {}
+        self.classes = {}
         self.parse_model(source)
         self.vivify()
 
@@ -795,8 +838,9 @@ class Model(object):
 
     def parse_model(self, source):
         """
-        Create classes, attributes, references and collections from the model.xml
-        =========================================================================
+        Create classes, attributes, references and
+        collections from the model.xml
+        =====================================================================
 
         The xml can be provided as a file, url or string. This method
         is called during instantiation - it does not need to be called
@@ -808,7 +852,8 @@ class Model(object):
         try:
             io = openAnything(source)
             src = io.read()
-            if hasattr(src, 'decode'): # Handle binary and text streams equally.
+            # Handle binary and text streams equally.
+            if hasattr(src, 'decode'):
                 src = src.decode('utf8')
             self.LOG.debug("model = [{0}]".format(src))
             doc = minidom.parseString(src)
@@ -816,14 +861,18 @@ class Model(object):
                 self.name = node.getAttribute('name')
                 self.package_name = node.getAttribute('package')
                 assert node.nextSibling is None, "More than one model element"
-                assert self.name and self.package_name, "No model name or package name"
+                error = "No model name or package name"
+                assert self.name and self.package_name, error
+                        
 
             for c in doc.getElementsByTagName('class'):
                 class_name = c.getAttribute('name')
                 assert class_name, "Name not defined in" + c.toxml()
+
                 def strip_java_prefix(x):
                     return re.sub(r'.*\.', '', x)
-                parents = [strip_java_prefix(p) for p in c.getAttribute('extends').split(' ') if len(p)]
+                parents = [strip_java_prefix(p) for p in c.getAttribute(
+                    'extends').split(' ') if len(p)]
                 interface = c.getAttribute('is-interface') == 'true'
                 cl = Class(class_name, parents, self, interface)
                 self.LOG.debug('Created {0}'.format(cl.name))
@@ -873,7 +922,8 @@ class Model(object):
                 c.field_dict.update(pc.field_dict)
             for f in c.fields:
                 f.type_class = self.classes.get(f.type_name)
-                if hasattr(f, 'reverse_reference_name') and f.reverse_reference_name != '':
+                if (hasattr(f, 'reverse_reference_name') and
+                    f.reverse_reference_name != ''):
                     rrn = f.reverse_reference_name
                     f.reverse_reference = f.type_class.field_dict[rrn]
 
@@ -890,7 +940,7 @@ class Model(object):
         """
         parents = cd.parents
         self.LOG.debug('{0} < {1}'.format(cd.name, cd.parents))
-        def defined(x): return x is not None # weeds out the java classes
+        def defined(x): return x is not None  # weeds out the java classes
         def to_class(x): return self.classes.get(x)
         ancestry = list(filter(defined, list(map(to_class, parents))))
         for ancestor in ancestry:
@@ -908,7 +958,8 @@ class Model(object):
         This simply maps from a list of strings to a list of
         classes in the calling model.
 
-        @raise ModelError: if the list of class names includes ones that don't exist
+        @raise ModelError: if the list of class names
+                           includes ones that don't exist
 
         @rtype: list(L{intermine.model.Class})
         """
@@ -925,7 +976,7 @@ class Model(object):
         Get a class by its name, or by a dotted path
         ============================================
 
-            >>> model = Model("http://www.flymine.org/query/service/model")
+            >>> model = Model("https://www.flymine.org/query/service/model")
             >>> model.get_class("Gene")
             <intermine.model.Class: Gene>
             >>> model.get_class("Gene.proteins")
@@ -951,9 +1002,9 @@ class Model(object):
             else:
                 return path.get_class()
         elif name in self.classes:
-          return self.classes[name]
+            return self.classes[name]
         else:
-          raise ModelError("'" + name + "' is not a class in this model")
+            raise ModelError("'" + name + "' is not a class in this model")
 
     def make_path(self, path, subclasses={}):
         """
@@ -999,7 +1050,7 @@ class Model(object):
             return True
         except PathParseError as e:
             raise PathParseError("Error parsing '%s' (subclasses: %s)"
-                            % ( path_string, str(subclasses) ), e )
+                                 % (path_string, str(subclasses)), e)
 
     def parse_path_string(self, path_string, subclasses={}):
         """
@@ -1046,11 +1097,14 @@ class Model(object):
     def _unproxied(self):
         return self
 
+
 class ModelError(ReadableException):
     pass
 
+
 class PathParseError(ModelError):
     pass
+
 
 class ModelParseError(ModelError):
 
@@ -1064,4 +1118,3 @@ class ModelParseError(ModelError):
             return base
         else:
             return base + repr(self.cause)
-

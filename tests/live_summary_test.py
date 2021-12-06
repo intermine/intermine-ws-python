@@ -1,13 +1,14 @@
+from intermine.webservice import Service
+import unittest
 import sys
 import os
 sys.path.insert(0, os.getcwd())
 
-import unittest
-from intermine.webservice import Service
 
 class LiveSummaryTest(unittest.TestCase):
 
-    TEST_ROOT = os.getenv("TESTMODEL_URL", "http://localhost:8080/intermine-demo/service")
+    TEST_ROOT = os.getenv(
+        "TESTMODEL_URL", "http://localhost:8080/intermine-demo/service")
     SERVICE = Service(TEST_ROOT)
 
     QUERY = SERVICE.select("Employee.*", "department.name")
@@ -30,17 +31,17 @@ class LiveSummaryTest(unittest.TestCase):
     def testSummaryAsIterator(self):
         path = "department.name"
         q = self.QUERY
-        results = q.results(summary_path = path)
+        results = q.results(summary_path=path)
         top = results.next()
         self.assertEqual("Accounting", top["item"])
         self.assertEqual(18, top["count"])
 
-        self.assertEqual(top, q.first(summary_path = path))
+        self.assertEqual(top, q.first(summary_path=path))
 
     def testAliasing(self):
         q = self.QUERY
         self.assertEqual(q.summarise("age"), q.summarize("age"))
 
+
 if __name__ == '__main__':
     unittest.main()
-

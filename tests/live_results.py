@@ -1,21 +1,22 @@
 from __future__ import unicode_literals
 
+from intermine.errors import WebserviceError
+from intermine.webservice import Service
+import unittest
 import sys
 import os
 import uuid
 import csv
 sys.path.insert(0, os.getcwd())
 
-import unittest
-from intermine.webservice import Service
-from intermine.errors import WebserviceError
 
 try:
     from functools import reduce
 except ImportError:
-    pass # py3k import.
+    pass  # py3k import.
 
-PY3K = sys.version_info >= (3,0)
+PY3K = sys.version_info >= (3, 0)
+
 
 def unicode_csv_reader(data, **kwargs):
     """Only needed in py2.x"""
@@ -24,13 +25,16 @@ def unicode_csv_reader(data, **kwargs):
         # Decode back.
         yield [cell.decode('utf-8') for cell in row]
 
+
 def utf_8_encoder(unicode_data):
     for line in unicode_data:
         yield line.encode('utf-8')
 
+
 class LiveResultsTest(unittest.TestCase):
 
-    TEST_ROOT = os.getenv("TESTMODEL_URL", "http://localhost:8080/intermine-demo/service")
+    TEST_ROOT = os.getenv(
+        "TESTMODEL_URL", "http://localhost:8080/intermine-demo/service")
 
     SERVICE = Service(TEST_ROOT)
 
@@ -76,39 +80,43 @@ class LiveResultsTest(unittest.TestCase):
         self.assertEqual(expected, managers)
 
     def assertIsNotNone(self, *args, **kwargs):
-        if hasattr(unittest.TestCase, 'assertIsNotNone'): # py2.6 workaround
+        if hasattr(unittest.TestCase, 'assertIsNotNone'):  # py2.6 workaround
             return unittest.TestCase.assertIsNotNone(self, *args, **kwargs)
         thing = args[0]
         if thing is None:
             raise Exception("It is None")
 
     def assertIsNone(self, *args, **kwargs):
-        if hasattr(unittest.TestCase, 'assertIsNone'): # py2.6 workaround
+        if hasattr(unittest.TestCase, 'assertIsNone'):  # py2.6 workaround
             return unittest.TestCase.assertIsNone(self, *args, **kwargs)
         thing = args[0]
         if thing is not None:
             raise Exception("{0} is not None".format(thing))
 
     def testLazyReferenceFetching(self):
-        dave = self.SERVICE.select("Employee.*").where(name = "David Brent").one()
+        dave = self.SERVICE.select(
+            "Employee.*").where(name="David Brent").one()
         self.assertEqual("Sales", dave.department.name)
         self.assertIsNotNone(dave.address)
 
         # Can handle null references.
-        b1 = self.SERVICE.select("Employee.*").where(name = "EmployeeB1").one();
+        b1 = self.SERVICE.select("Employee.*").where(name="EmployeeB1").one()
         self.assertIsNone(b1.address)
 
     def testLazyCollectionFetching(self):
         results = self.SERVICE.select("Department.*").results()
-        age_sum = reduce(lambda x, y: x + reduce(lambda a, b: a + b.age, y.employees, 0), results, 0)
+        age_sum = reduce(lambda x, y: x + reduce(lambda a,
+                                                 b: a + b.age,
+                                                 y.employees, 0), results, 0)
         self.assertEqual(5924, age_sum)
 
         # Can handle empty collections as well as populated ones.
         banks = self.SERVICE.select("Bank.*").results()
-        self.assertEqual([1, 0, 0, 2, 2], [len(bank.corporateCustomers) for bank in banks])
+        self.assertEqual([1, 0, 0, 2, 2], [len(
+            bank.corporateCustomers) for bank in banks])
 
     def assertManagerAgeIsSum(self, fmt, accessor):
-        total = sum(accessor(x) for x in self.manager_q.results(row = fmt))
+        total = sum(accessor(x) for x in self.manager_q.results(row=fmt))
         self.assertEqual(self.manager_age_sum, total)
 
     def test_attr_access(self):
@@ -133,30 +141,35 @@ class LiveResultsTest(unittest.TestCase):
         self.assertManagerAgeIsSum('jsonrows', lambda row: row[0]['value'])
 
     def test_csv(self):
-        if PY3K: # string handling differences
-            parse = lambda data: csv.reader(data, delimiter = ',', quotechar = '"')
+        if PY3K:  # string handling differences
+            def parse(data): return csv.reader(
+                data, delimiter=',', quotechar='"')
         else:
-            parse = lambda data: unicode_csv_reader(data, delimiter = b',', quotechar = b'"')
+            def parse(data): return unicode_csv_reader(
+                data, delimiter=b',', quotechar=b'"')
 
-        results = self.manager_q.results(row = 'csv')
+        results = self.manager_q.results(row='csv')
         reader = parse(results)
-        self.assertEqual(self.manager_age_sum, sum(int(row[0]) for row in reader))
+        self.assertEqual(self.manager_age_sum, sum(
+            int(row[0]) for row in reader))
 
     def test_tsv(self):
-        if PY3K: # string handling differences
-            parse = lambda data: csv.reader(data, delimiter = '\t')
+        if PY3K:  # string handling differences
+            def parse(data): return csv.reader(data, delimiter='\t')
         else:
-            parse = lambda data: unicode_csv_reader(data, delimiter = b'\t')
+            def parse(data): return unicode_csv_reader(data, delimiter=b'\t')
 
-        results = self.manager_q.results(row = 'tsv')
+        results = self.manager_q.results(row='tsv')
         reader = parse(results)
-        self.assertEqual(self.manager_age_sum, sum(int(row[0]) for row in reader))
+        self.assertEqual(self.manager_age_sum, sum(
+            int(row[0]) for row in reader))
 
     def testModelClassAutoloading(self):
         q = self.SERVICE.model.Manager.select("name", "age")
         expected_sum = 1383
 
-        self.assertEqual(expected_sum, sum(map(lambda x: x.age, q.results(row="object"))))
+        self.assertEqual(expected_sum, sum(
+            map(lambda x: x.age, q.results(row="object"))))
 
     def testSearchRes(self):
         res, facs = self.SERVICE.search('david')
@@ -168,7 +181,7 @@ class LiveResultsTest(unittest.TestCase):
         self.assertEqual(1, facs['Category']['Manager'])
 
     def testSearchWithFacet(self):
-        res, facs = self.SERVICE.search('david', Category = 'Department')
+        res, facs = self.SERVICE.search('david', Category='Department')
         self.assertEqual(1, len(res))
         self.assertEqual('Sales', res[0]['fields']['name'])
 
@@ -178,7 +191,7 @@ class LiveResultsTest(unittest.TestCase):
         try:
             s = Service(self.SERVICE.root, username, password)
             s.deregister(s.get_deregistration_token())
-        except:
+        except Exception:
             pass
 
         s = self.SERVICE.register(username, password)
@@ -197,8 +210,9 @@ class LiveResultsTest(unittest.TestCase):
 
         t0 = self.SERVICE.get_template('CEO_Rivals')
         c = t0.count()
-        self.assertTrue(c, msg = "{0.name} should return some results".format(t0))
+        self.assertTrue(
+            c, msg="{0.name} should return some results".format(t0))
+
 
 if __name__ == '__main__':
     unittest.main()
-

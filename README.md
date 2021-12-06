@@ -25,7 +25,7 @@ to perform queries. Some examples of sites that
 are powered by InterMine software, and thus offer
 a compatible webservice API, are:
 
-  * [FlyMine](http://www.flymine.org)
+  * [FlyMine](https://www.flymine.org)
   * [MouseMine](http://www.mousemine.org)
   * [YeastMine](http://yeastmine.yeastgenome.org)
   * [ZebrafishMine](http://zebrafishmine.org)
@@ -49,10 +49,10 @@ This package is compatible with both Python 2.7 and 3.x. We plan to drop 2.7 sup
 Downloading:
 ------------
 
-The easiest way to install is to use easy_install:
+The easiest way to install is to use pip:
 
 ```
-  sudo easy_install intermine
+  pip install intermine
 ```
 
 The client is also available via [bioconda](https://anaconda.org/bioconda/intermine).
@@ -103,6 +103,20 @@ Also see:
 
 * Documentation on PyPi: http://packages.python.org/intermine/
 
+Before Making PRs:
+-------------------------------
+Please run autopep8 on your files so your code will follow the pep8 conventions. Do it as follows:
+
+```
+  autopep8 <filenames> --in-place
+```
+
+For example:
+
+```
+  autopep8 file1.py file2.py  --in-place
+```
+
 
 
 Changes:
@@ -142,8 +156,8 @@ Changes:
     0.98.14   Added status property to list objects
     0.98.13   Added query column summary support
 
-[badge]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py.svg?branch=master
-[ci]: https://travis-ci.org/alexkalderimis/intermine-ws-client.py
+[badge]: https://travis-ci.org/intermine/intermine-ws-python.svg?branch=dev
+[ci]: https://travis-ci.org/intermine/intermine-ws-python
 
 Copyright and Licence
 ------------------------

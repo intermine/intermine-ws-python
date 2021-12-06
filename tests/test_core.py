@@ -11,24 +11,26 @@ from intermine.lists.list import List
 
 from tests.server import TestServer
 
-P3K = sys.version_info >= (3,0)
+P3K = sys.version_info >= (3, 0)
 
 logging.basicConfig()
 
-class WebserviceTest(unittest.TestCase): # pragma: no cover
+
+class WebserviceTest(unittest.TestCase):  # pragma: no cover
     TEST_PORT = 8000
     MAX_ATTEMPTS = 50
     maxDiff = None
     LOG = logging.getLogger('WebserviceTest')
 
-    def assertIsNotNone(self, expr, msg = None):
+    def assertIsNotNone(self, expr, msg=None):
         try:
             return unittest.TestCase.assertIsNotNone(self, expr, msg)
         except AttributeError:
             return self.assertTrue(expr is not None, msg)
 
     def get_test_root(self):
-        return "http://localhost:" + str(WebserviceTest.TEST_PORT) + "/testservice/service"
+        return "http://localhost:" + str(
+            WebserviceTest.TEST_PORT) + "/testservice/service"
 
     def do_unpredictable_test(self, test, attempts=0, error=None):
         if attempts < WebserviceTest.MAX_ATTEMPTS:
@@ -37,18 +39,19 @@ class WebserviceTest(unittest.TestCase): # pragma: no cover
                 return
             except IOError as e:
                 self.do_unpredictable_test(test, attempts + 1, e)
-            except:
-                if not P3K: # Handle connection reset errors
+            except Exception:
+                if not P3K:  # Handle connection reset errors
                     e, t = sys.exc_info()[:2]
                     if 104 in t:
                         self.do_unpredictable_test(test, attempts + 1, t)
                         return
                 raise
         else:
-            raise RuntimeError("Max error count reached - last error: " + str(error))
+            raise RuntimeError("Max error count reached - last error: " + str(
+                error))
 
-class TestInstantiation(WebserviceTest): # pragma: no cover
 
+class TestInstantiation(WebserviceTest):  # pragma: no cover
     def testMakeModel(self):
         """Should be about to make a model, or fail with an appropriate message"""
         m = Model(self.get_test_root() + "/model")
@@ -64,7 +67,8 @@ class TestInstantiation(WebserviceTest): # pragma: no cover
         s = Service(self.get_test_root())
         self.assertTrue(isinstance(s, Service), "Can make a service")
 
-class TestModel(WebserviceTest):# pragma: no cover
+
+class TestModel(WebserviceTest):  # pragma: no cover
 
     model = None
 
@@ -88,8 +92,7 @@ class TestModel(WebserviceTest):# pragma: no cover
             self.model.get_class("Foo")
             self.fail("No ModelError thrown at non existent class")
         except ModelError as ex:
-            self.assertEqual(ex.message,
-                    "'Foo' is not a class in this model")
+            self.assertEqual(ex.message, "'Foo' is not a class in this model")
         try:
             self.model.get_class("Employee.name")
             self.fail("No ModelError thrown at bad class retrieval")
@@ -116,8 +119,7 @@ class TestModel(WebserviceTest):# pragma: no cover
             ceo.get_field("foo")
             self.fail("No ModelError thrown at non existent field")
         except ModelError as ex:
-            self.assertEqual(ex.message,
-                "There is no field called foo in CEO")
+            self.assertEqual(ex.message, "There is no field called foo in CEO")
 
     def testFieldTypes(self):
         '''The fields should be of the appropriate type'''
@@ -126,14 +128,15 @@ class TestModel(WebserviceTest):# pragma: no cover
         self.assertTrue(isinstance(dep.get_field("employees"), Collection))
         self.assertTrue(isinstance(dep.get_field("company"), Reference))
 
-class TestService(WebserviceTest): # pragma: no cover
 
+class TestService(WebserviceTest):  # pragma: no cover
     def setUp(self):
         self.s = Service(self.get_test_root())
 
     def testRoot(self):
         """The service should have the right root"""
-        self.assertEqual(self.get_test_root(), self.s.root, "it has the right root")
+        self.assertEqual(self.get_test_root(), self.s.root,
+                         "it has the right root")
 
     def testVersion(self):
         """The service should have a version"""
@@ -149,9 +152,11 @@ class TestService(WebserviceTest): # pragma: no cover
         """The service should be able to make a query"""
         q = self.s.new_query()
         self.assertTrue(isinstance(q, Query), "Can make a query")
-        self.assertEqual(q.model.name, "testmodel", "and it has the right model")
+        self.assertEqual(q.model.name, "testmodel",
+                         "and it has the right model")
 
-class TestQuery(WebserviceTest): # pragma: no cover
+
+class TestQuery(WebserviceTest):  # pragma: no cover
 
     model = None
     service = None
@@ -178,8 +183,10 @@ class TestQuery(WebserviceTest): # pragma: no cover
         </query>
         """
 
-    EXPECTED_VIEWS_2 = ["Department.employees.name",
-        "Department.employees.age", "Department.employees.seniority"]
+    EXPECTED_VIEWS_2 = [
+        "Department.employees.name", "Department.employees.age",
+        "Department.employees.seniority"
+    ]
 
     XML_3 = """
         <query model="testmodel"
@@ -223,8 +230,10 @@ class TestQuery(WebserviceTest): # pragma: no cover
         </query>
         """
 
-    EXPECTED_VIEWS_6 = ["Department.employees.name",
-        "Department.employees.age", "Department.employees.salary"]
+    EXPECTED_VIEWS_6 = [
+        "Department.employees.name", "Department.employees.age",
+        "Department.employees.salary"
+    ]
 
     XML_7 = """
         <query model="testmodel"
@@ -238,8 +247,10 @@ class TestQuery(WebserviceTest): # pragma: no cover
         </query>
         """
 
-    EXPECTED_VIEWS_7 = ["Department.employees.seniority",
-        "Department.employees.age", "Department.employees.salary"]
+    EXPECTED_VIEWS_7 = [
+        "Department.employees.seniority", "Department.employees.age",
+        "Department.employees.salary"
+    ]
 
     CONSTRAINTS_COUNT_3 = 2
 
@@ -274,65 +285,81 @@ class TestQuery(WebserviceTest): # pragma: no cover
             self.__class__.service = Service(self.get_test_root())
 
         if self.model is None:
-            self.__class__.model = Model(self.get_test_root() + "/model", self.service)
+            self.__class__.model = Model(self.get_test_root() + "/model",
+                                         self.service)
 
         self.q = Query(self.model, self.service)
+
         class DummyManager:
             pass
 
-        list_dict = {"service": None, "manager": DummyManager(), "name": "my-list", "title": None, "type": "Employee", "size": 10}
+        list_dict = {
+            "service": None,
+            "manager": DummyManager(),
+            "name": "my-list",
+            "title": None,
+            "type": "Employee",
+            "size": 10
+        }
         self.l = List(**list_dict)
 
     def testFromXML(self):
-        q1 = self.service.new_query(xml = TestQuery.XML_1)
+        q1 = self.service.new_query(xml=TestQuery.XML_1)
         self.assertEqual(q1.views, TestQuery.EXPECTED_VIEWS_1)
 
-        q2 = self.service.new_query(xml = TestQuery.XML_2)
+        q2 = self.service.new_query(xml=TestQuery.XML_2)
         self.assertEqual(q2.views, TestQuery.EXPECTED_VIEWS_2)
 
-        q3 = self.service.new_query(xml = TestQuery.XML_3)
+        q3 = self.service.new_query(xml=TestQuery.XML_3)
         self.assertEqual(q3.views, TestQuery.EXPECTED_VIEWS_2)
         self.assertEqual(len(q3.constraints), TestQuery.CONSTRAINTS_COUNT_3)
 
-        q4 = self.service.new_query(xml = TestQuery.XML_4)
+        q4 = self.service.new_query(xml=TestQuery.XML_4)
         self.assertEqual(q4.views, TestQuery.EXPECTED_VIEWS_2)
         self.assertEqual(len(q4.constraints), TestQuery.CONSTRAINTS_COUNT_3)
-        self.assertEqual(str(q4.get_sort_order()), "Department.employees.age asc")
+        self.assertEqual(
+            str(q4.get_sort_order()), "Department.employees.age asc")
 
-        q5 = self.service.new_query(xml = TestQuery.XML_5)
+        q5 = self.service.new_query(xml=TestQuery.XML_5)
         self.assertEqual(q5.views, TestQuery.EXPECTED_VIEWS_2)
         self.assertEqual(len(q5.constraints), TestQuery.CONSTRAINTS_COUNT_3)
-        self.assertEqual(str(q5.get_sort_order()), "Department.employees.age asc")
+        self.assertEqual(
+            str(q5.get_sort_order()), "Department.employees.age asc")
         self.assertEqual(len(q5.path_descriptions), 1)
 
-        q6 = self.service.new_query(xml = TestQuery.XML_6)
+        q6 = self.service.new_query(xml=TestQuery.XML_6)
         self.assertEqual(q6.views, TestQuery.EXPECTED_VIEWS_6)
         self.assertEqual(len(q6.constraints), TestQuery.CONSTRAINTS_COUNT_3)
-        self.assertEqual(str(q6.get_sort_order()), "Department.employees.salary asc")
+        self.assertEqual(
+            str(q6.get_sort_order()), "Department.employees.salary asc")
         self.assertEqual(len(q6.path_descriptions), 2)
 
-        q7 = self.service.new_query(xml = TestQuery.XML_7)
+        q7 = self.service.new_query(xml=TestQuery.XML_7)
         self.assertEqual(q7.views, TestQuery.EXPECTED_VIEWS_7)
         self.assertEqual(len(q7.constraints), TestQuery.CONSTRAINTS_COUNT_3)
-        self.assertEqual(str(q7.get_sort_order()), "Department.employees.salary asc")
+        self.assertEqual(
+            str(q7.get_sort_order()), "Department.employees.salary asc")
         self.assertEqual(len(q7.path_descriptions), 2)
 
-        q8 = self.service.new_query(xml = TestQuery.XML_8)
+        q8 = self.service.new_query(xml=TestQuery.XML_8)
         v = None
         try:
             v = q8.get_constraint("X").value
-        except:
+        except Exception:
             pass
 
-        self.assertIsNotNone(v, "query should have a constraint with the code 'X', but it only has the codes: %s" % map(lambda x: x.code, q8.constraints))
+        self.assertIsNotNone(
+            v,
+            "query should have a constraint with the code 'X', but it only has the codes: %s"
+            % map(lambda x: x.code, q8.constraints))
         self.assertEqual("foo", v, "And it has the right value")
 
-        q9 = self.service.new_query(xml = TestQuery.XML_9)
+        q9 = self.service.new_query(xml=TestQuery.XML_9)
         self.assertEqual(len(q9.constraints), 1)
         self.assertEqual(q9.get_constraint('A').op, 'OVERLAPS')
         self.assertEqual(q9.get_constraint('A').values, ['1..10', '30..35'])
 
-        q10 = self.service.new_query(xml = TestQuery.XML_10)
+        q10 = self.service.new_query(xml=TestQuery.XML_10)
         self.assertEqual(len(q10.constraints), 1)
         self.assertEqual(q10.get_constraint('A').op, 'ONE OF')
         self.assertEqual(q10.get_constraint('A').values, ['foo', 'bar'])
@@ -341,22 +368,34 @@ class TestQuery(WebserviceTest): # pragma: no cover
         """Queries should be able to add legal views, and complain about illegal ones"""
         self.q.add_view("Employee.age")
         self.q.add_view("Employee.name", "Employee.department.company.name")
-        self.q.add_view("Employee.department.name Employee.department.company.vatNumber")
-        self.q.add_view("Employee.department.manager.name,Employee.department.company.CEO.name")
-        self.q.add_view("Employee.department.manager.name, Employee.department.company.CEO.name")
+        self.q.add_view(
+            "Employee.department.name Employee.department.company.vatNumber")
+        self.q.add_view(
+            "Employee.department.manager.name,Employee.department.company.CEO.name"
+        )
+        self.q.add_view(
+            "Employee.department.manager.name, Employee.department.company.CEO.name"
+        )
         self.q.add_view("department.*")
         expected = [
-            "Employee.age", "Employee.name", "Employee.department.company.name",
-            "Employee.department.name", "Employee.department.company.vatNumber",
-            "Employee.department.manager.name", "Employee.department.company.CEO.name",
-            "Employee.department.manager.name", "Employee.department.company.CEO.name",
-            "Employee.department.id", "Employee.department.name"]
+            "Employee.age", "Employee.name",
+            "Employee.department.company.name", "Employee.department.name",
+            "Employee.department.company.vatNumber",
+            "Employee.department.manager.name",
+            "Employee.department.company.CEO.name",
+            "Employee.department.manager.name",
+            "Employee.department.company.CEO.name", "Employee.department.id",
+            "Employee.department.name"
+        ]
         self.assertEqual(self.q.views, expected)
         try:
-            self.q.add_view("Employee.name", "Employee.age", "Employee.department")
+            self.q.add_view("Employee.name", "Employee.age",
+                            "Employee.department")
             self.fail("No ConstraintError thrown at non attribute view")
         except ConstraintError as ex:
-            self.assertEqual(ex.message, "'Employee.department' does not represent an attribute")
+            self.assertEqual(
+                ex.message,
+                "'Employee.department' does not represent an attribute")
 
     def testIDOnlyExpansion(self):
         """Should be able to expand to a given depth, selecting only the id attribute for IM Object classes"""
@@ -365,15 +404,9 @@ class TestQuery(WebserviceTest): # pragma: no cover
 
         self.q.add_view("Employee.*")
         expected = [
-            'Employee.age',
-            'Employee.end',
-            'Employee.fullTime',
-            'Employee.id',
-            'Employee.name',
-            'Employee.address.id',
-            'Employee.department.id',
-            'Employee.department.company.id',
-            'Employee.department.manager.id',
+            'Employee.age', 'Employee.end', 'Employee.fullTime', 'Employee.id',
+            'Employee.name', 'Employee.address.id', 'Employee.department.id',
+            'Employee.department.company.id', 'Employee.department.manager.id',
             'Employee.department.employees.id',
             'Employee.department.rejectedEmployees.id',
             'Employee.departmentThatRejectedMe.id',
@@ -381,14 +414,12 @@ class TestQuery(WebserviceTest): # pragma: no cover
             'Employee.departmentThatRejectedMe.manager.id',
             'Employee.departmentThatRejectedMe.employees.id',
             'Employee.departmentThatRejectedMe.rejectedEmployees.id',
-            'Employee.simpleObjects.name',
-            'Employee.simpleObjects.employee.id'
+            'Employee.simpleObjects.name', 'Employee.simpleObjects.employee.id'
         ]
         self.assertEqual(self.q.views, expected)
-        exp_joins = ['Employee.address',
-            'Employee.department',
-            'Employee.department.company',
-            'Employee.department.manager',
+        exp_joins = [
+            'Employee.address', 'Employee.department',
+            'Employee.department.company', 'Employee.department.manager',
             'Employee.department.employees',
             'Employee.department.rejectedEmployees',
             'Employee.departmentThatRejectedMe',
@@ -396,8 +427,8 @@ class TestQuery(WebserviceTest): # pragma: no cover
             'Employee.departmentThatRejectedMe.manager',
             'Employee.departmentThatRejectedMe.employees',
             'Employee.departmentThatRejectedMe.rejectedEmployees',
-            'Employee.simpleObjects',
-            'Employee.simpleObjects.employee']
+            'Employee.simpleObjects', 'Employee.simpleObjects.employee'
+        ]
         self.assertEqual([j.path for j in self.q.joins], exp_joins)
 
     def testDeepViews(self):
@@ -405,69 +436,62 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.prefetch_depth = 3
         self.q.add_view("Employee.*")
         expected = [
-           'Employee.age',
-           'Employee.end',
-           'Employee.fullTime',
-           'Employee.id',
-           'Employee.name',
-           'Employee.address.address',
-           'Employee.address.id',
-           'Employee.department.id',
-           'Employee.department.name',
-           'Employee.department.company.id',
-           'Employee.department.company.name',
-           'Employee.department.company.vatNumber',
-           'Employee.department.manager.age',
-           'Employee.department.manager.end',
-           'Employee.department.manager.fullTime',
-           'Employee.department.manager.id',
-           'Employee.department.manager.name',
-           'Employee.department.manager.seniority',
-           'Employee.department.manager.title',
-           'Employee.department.employees.age',
-           'Employee.department.employees.end',
-           'Employee.department.employees.fullTime',
-           'Employee.department.employees.id',
-           'Employee.department.employees.name',
-           'Employee.department.rejectedEmployees.age',
-           'Employee.department.rejectedEmployees.end',
-           'Employee.department.rejectedEmployees.fullTime',
-           'Employee.department.rejectedEmployees.id',
-           'Employee.department.rejectedEmployees.name',
-           'Employee.departmentThatRejectedMe.id',
-           'Employee.departmentThatRejectedMe.name',
-           'Employee.departmentThatRejectedMe.company.id',
-           'Employee.departmentThatRejectedMe.company.name',
-           'Employee.departmentThatRejectedMe.company.vatNumber',
-           'Employee.departmentThatRejectedMe.manager.age',
-           'Employee.departmentThatRejectedMe.manager.end',
-           'Employee.departmentThatRejectedMe.manager.fullTime',
-           'Employee.departmentThatRejectedMe.manager.id',
-           'Employee.departmentThatRejectedMe.manager.name',
-           'Employee.departmentThatRejectedMe.manager.seniority',
-           'Employee.departmentThatRejectedMe.manager.title',
-           'Employee.departmentThatRejectedMe.employees.age',
-           'Employee.departmentThatRejectedMe.employees.end',
-           'Employee.departmentThatRejectedMe.employees.fullTime',
-           'Employee.departmentThatRejectedMe.employees.id',
-           'Employee.departmentThatRejectedMe.employees.name',
-           'Employee.departmentThatRejectedMe.rejectedEmployees.age',
-           'Employee.departmentThatRejectedMe.rejectedEmployees.end',
-           'Employee.departmentThatRejectedMe.rejectedEmployees.fullTime',
-           'Employee.departmentThatRejectedMe.rejectedEmployees.id',
-           'Employee.departmentThatRejectedMe.rejectedEmployees.name',
-           'Employee.simpleObjects.name',
-           'Employee.simpleObjects.employee.age',
-           'Employee.simpleObjects.employee.end',
-           'Employee.simpleObjects.employee.fullTime',
-           'Employee.simpleObjects.employee.id',
-           'Employee.simpleObjects.employee.name'
-           ]
+            'Employee.age', 'Employee.end', 'Employee.fullTime', 'Employee.id',
+            'Employee.name', 'Employee.address.address', 'Employee.address.id',
+            'Employee.department.id', 'Employee.department.name',
+            'Employee.department.company.id',
+            'Employee.department.company.name',
+            'Employee.department.company.vatNumber',
+            'Employee.department.manager.age',
+            'Employee.department.manager.end',
+            'Employee.department.manager.fullTime',
+            'Employee.department.manager.id',
+            'Employee.department.manager.name',
+            'Employee.department.manager.seniority',
+            'Employee.department.manager.title',
+            'Employee.department.employees.age',
+            'Employee.department.employees.end',
+            'Employee.department.employees.fullTime',
+            'Employee.department.employees.id',
+            'Employee.department.employees.name',
+            'Employee.department.rejectedEmployees.age',
+            'Employee.department.rejectedEmployees.end',
+            'Employee.department.rejectedEmployees.fullTime',
+            'Employee.department.rejectedEmployees.id',
+            'Employee.department.rejectedEmployees.name',
+            'Employee.departmentThatRejectedMe.id',
+            'Employee.departmentThatRejectedMe.name',
+            'Employee.departmentThatRejectedMe.company.id',
+            'Employee.departmentThatRejectedMe.company.name',
+            'Employee.departmentThatRejectedMe.company.vatNumber',
+            'Employee.departmentThatRejectedMe.manager.age',
+            'Employee.departmentThatRejectedMe.manager.end',
+            'Employee.departmentThatRejectedMe.manager.fullTime',
+            'Employee.departmentThatRejectedMe.manager.id',
+            'Employee.departmentThatRejectedMe.manager.name',
+            'Employee.departmentThatRejectedMe.manager.seniority',
+            'Employee.departmentThatRejectedMe.manager.title',
+            'Employee.departmentThatRejectedMe.employees.age',
+            'Employee.departmentThatRejectedMe.employees.end',
+            'Employee.departmentThatRejectedMe.employees.fullTime',
+            'Employee.departmentThatRejectedMe.employees.id',
+            'Employee.departmentThatRejectedMe.employees.name',
+            'Employee.departmentThatRejectedMe.rejectedEmployees.age',
+            'Employee.departmentThatRejectedMe.rejectedEmployees.end',
+            'Employee.departmentThatRejectedMe.rejectedEmployees.fullTime',
+            'Employee.departmentThatRejectedMe.rejectedEmployees.id',
+            'Employee.departmentThatRejectedMe.rejectedEmployees.name',
+            'Employee.simpleObjects.name',
+            'Employee.simpleObjects.employee.age',
+            'Employee.simpleObjects.employee.end',
+            'Employee.simpleObjects.employee.fullTime',
+            'Employee.simpleObjects.employee.id',
+            'Employee.simpleObjects.employee.name'
+        ]
         self.assertEqual(self.q.views, expected)
-        exp_joins = ['Employee.address',
-            'Employee.department',
-            'Employee.department.company',
-            'Employee.department.manager',
+        exp_joins = [
+            'Employee.address', 'Employee.department',
+            'Employee.department.company', 'Employee.department.manager',
             'Employee.department.employees',
             'Employee.department.rejectedEmployees',
             'Employee.departmentThatRejectedMe',
@@ -475,8 +499,8 @@ class TestQuery(WebserviceTest): # pragma: no cover
             'Employee.departmentThatRejectedMe.manager',
             'Employee.departmentThatRejectedMe.employees',
             'Employee.departmentThatRejectedMe.rejectedEmployees',
-            'Employee.simpleObjects',
-            'Employee.simpleObjects.employee']
+            'Employee.simpleObjects', 'Employee.simpleObjects.employee'
+        ]
         self.assertEqual([j.path for j in self.q.joins], exp_joins)
 
     def testViewAlias(self):
@@ -487,9 +511,10 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.add_columns("department.manager.name")
         self.q.add_views("department.company.CEO.name")
         expected = [
-            "Employee.age", "Employee.name",
-            "Employee.department.name",
-            "Employee.department.manager.name", "Employee.department.company.CEO.name"]
+            "Employee.age", "Employee.name", "Employee.department.name",
+            "Employee.department.manager.name",
+            "Employee.department.company.CEO.name"
+        ]
         self.assertEqual(self.q.views, expected)
         self.q.add_sort_order("name")
         self.q.add_sort_order("department.name")
@@ -503,14 +528,21 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.add_view("Employee.name", "Employee.age", "Employee.fullTime")
         self.assertEqual(str(self.q.get_sort_order()), "Employee.name asc")
         self.q.add_sort_order("Employee.fullTime", "desc")
-        self.assertEqual(str(self.q.get_sort_order()), "Employee.fullTime desc")
+        self.assertEqual(
+            str(self.q.get_sort_order()), "Employee.fullTime desc")
         self.q.add_sort_order("Employee.age", "asc")
-        self.assertEqual(str(self.q.get_sort_order()), "Employee.fullTime desc Employee.age asc")
+        self.assertEqual(
+            str(self.q.get_sort_order()),
+            "Employee.fullTime desc Employee.age asc")
         self.q.add_sort_order("Employee.end", "desc")
-        self.assertEqual(str(self.q.get_sort_order()), "Employee.fullTime desc Employee.age asc Employee.end desc")
+        self.assertEqual(
+            str(self.q.get_sort_order()),
+            "Employee.fullTime desc Employee.age asc Employee.end desc")
         self.assertRaises(ModelError, self.q.add_sort_order, "Foo", "asc")
-        self.assertRaises(TypeError,  self.q.add_sort_order, "Employee.name", "up")
-        self.assertRaises(QueryError, self.q.add_sort_order, "Employee.department.name", "desc")
+        self.assertRaises(TypeError, self.q.add_sort_order, "Employee.name",
+                          "up")
+        self.assertRaises(QueryError, self.q.add_sort_order,
+                          "Employee.department.name", "desc")
 
     def testUCSortOrder(self):
         """Sort-Order directions should be accepted in upper case"""
@@ -518,7 +550,9 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.add_sort_order("Employee.age", "ASC")
         self.assertEqual(str(self.q.get_sort_order()), "Employee.age asc")
         self.q.add_sort_order("Employee.fullTime", "DESC")
-        self.assertEqual(str(self.q.get_sort_order()), "Employee.age asc Employee.fullTime desc")
+        self.assertEqual(
+            str(self.q.get_sort_order()),
+            "Employee.age asc Employee.fullTime desc")
 
     def testConstraintPathProblems(self):
         """Queries should not add constraints with bad paths to themselves"""
@@ -552,9 +586,12 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.assertEqual(self.q.constraints.__repr__(), self.expected_binary)
         try:
             self.q.add_constraint('Employee.department', '=', "foo")
-            self.fail("No ConstraintError thrown for non attribute BinaryConstraint")
+            self.fail(
+                "No ConstraintError thrown for non attribute BinaryConstraint")
         except ConstraintError as ex:
-            self.assertEqual(ex.message, "'Employee.department' does not represent an attribute")
+            self.assertEqual(
+                ex.message,
+                "'Employee.department' does not represent an attribute")
 
     def testAddBinaryConstraintsSugar(self):
         """Queries should be able to handle constraints on attribute values"""
@@ -566,24 +603,32 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.assertEqual(self.q.constraints.__repr__(), self.expected_binary)
         try:
             self.q.add_constraint(Employee.department == "foo")
-            self.fail("No ConstraintError thrown for non attribute BinaryConstraint")
+            self.fail(
+                "No ConstraintError thrown for non attribute BinaryConstraint")
         except ConstraintError as ex:
-            self.assertEqual(ex.message, "'Employee.department' does not represent an attribute")
+            self.assertEqual(
+                ex.message,
+                "'Employee.department' does not represent an attribute")
 
     def testTernaryConstraint(self):
         """Queries should be able to add constraints for LOOKUPs"""
         self.q.add_constraint('Employee', 'LOOKUP', 'Susan')
-        self.q.add_constraint('Employee.department.manager', 'LOOKUP', 'John', 'Wernham-Hogg')
+        self.q.add_constraint('Employee.department.manager', 'LOOKUP', 'John',
+                              'Wernham-Hogg')
         self.assertEqual(self.q.constraints.__repr__(), self.expected_ternary)
         try:
             self.q.add_constraint('Employee.department.name', 'LOOKUP', "foo")
-            self.fail("No ConstraintError thrown for non object TernaryConstraint")
+            self.fail(
+                "No ConstraintError thrown for non object TernaryConstraint")
         except ConstraintError as ex:
-            self.assertEqual(ex.message, "'Employee.department.name' does not represent a class, or a reference to a class")
+            self.assertEqual(
+                ex.message,
+                "'Employee.department.name' does not represent a class, or a reference to a class"
+            )
 
     def testTernaryConstraintImpliedRoot(self):
         """Queries should be able to add constraints for LOOKUPs on the implied root"""
-        self.q.add_view('Employee.age') # Sets root implicitly
+        self.q.add_view('Employee.age')  # Sets root implicitly
         self.q.add_constraint('LOOKUP', 'Susan')
         self.assertEqual(1, len(self.q.constraints))
         self.assertEqual('Employee', self.q.constraints[0].path)
@@ -592,11 +637,15 @@ class TestQuery(WebserviceTest): # pragma: no cover
 
     def testMultiConstraint(self):
         """Queries should be ok with multi-value constraints"""
-        self.q.add_constraint('Employee.name', 'ONE OF', ['Tom', 'Dick', 'Harry'])
-        self.q.add_constraint('Employee.name', 'NONE OF', ['Sue', 'Jane', 'Helen'])
+        self.q.add_constraint('Employee.name', 'ONE OF',
+                              ['Tom', 'Dick', 'Harry'])
+        self.q.add_constraint('Employee.name', 'NONE OF',
+                              ['Sue', 'Jane', 'Helen'])
         self.assertEqual(self.q.constraints.__repr__(), self.expected_multi)
-        self.assertRaises(TypeError, self.q.add_constraint, "Employee.name", "ONE OF", "Tom, Dick, Harry")
-        self.assertRaises(ConstraintError, self.q.add_constraint, "Employee", "ONE OF", ["Tom", "Dick", "Harry"])
+        self.assertRaises(TypeError, self.q.add_constraint, "Employee.name",
+                          "ONE OF", "Tom, Dick, Harry")
+        self.assertRaises(ConstraintError, self.q.add_constraint, "Employee",
+                          "ONE OF", ["Tom", "Dick", "Harry"])
 
     def testMultiConstraintSugar(self):
         """Queries should be ok with multi-value constraints"""
@@ -605,22 +654,27 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.add_constraint(Employee.name == ['Tom', 'Dick', 'Harry'])
         self.q.add_constraint(Employee.name != ['Sue', 'Jane', 'Helen'])
         self.assertEqual(self.q.constraints.__repr__(), self.expected_multi)
-        self.q.add_constraint(Employee.name == "Tom, Dick, Harry") # This method does not throw an error in this form!!
-        self.assertRaises(ConstraintError, self.q.add_constraint, Employee == ["Tom", "Dick", "Harry"])
+        # This method does not throw an error in this form!!
+        self.q.add_constraint(Employee.name == "Tom, Dick, Harry")
+        self.assertRaises(ConstraintError, self.q.add_constraint,
+                          Employee == ["Tom", "Dick", "Harry"])
 
     def testRangeConstraint(self):
         """Queries should be OK with range constraints"""
         self.q.add_constraint('Employee.age', 'OVERLAPS', ['1..10', '30..35'])
         self.assertEqual(self.q.constraints.__repr__(), self.expected_range)
-        self.assertRaises(TypeError, self.q.add_constraint, "Employee.age", "OVERLAPS", "Tom, Dick, Harry")
+        self.assertRaises(TypeError, self.q.add_constraint, "Employee.age",
+                          "OVERLAPS", "Tom, Dick, Harry")
         self.q.add_constraint('Employee', 'OVERLAPS', ['1..10', '30..35'])
 
     def testListConstraint(self):
         """Queries should be ok with list constraints"""
         self.q.add_constraint('Employee', 'IN', 'my-list')
-        self.q.add_constraint('Employee.department.manager', 'NOT IN', 'my-list')
+        self.q.add_constraint('Employee.department.manager', 'NOT IN',
+                              'my-list')
         self.assertEqual(self.q.constraints.__repr__(), self.expected_list)
-        self.assertRaises(ConstraintError, self.q.add_constraint, "Employee.name", "IN", "some list")
+        self.assertRaises(ConstraintError, self.q.add_constraint,
+                          "Employee.name", "IN", "some list")
 
     def testListConstraintSugar(self):
         """Queries should be ok with list constraints"""
@@ -629,47 +683,55 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.add_constraint(Employee == self.l)
         self.q.add_constraint(Employee.department.manager != self.l)
         self.assertEqual(self.q.constraints.__repr__(), self.expected_list)
-        self.assertRaises(ConstraintError, self.q.add_constraint, Employee.name == self.l)
+        self.assertRaises(ConstraintError, self.q.add_constraint,
+                          Employee.name == self.l)
 
     def testLoopConstraint(self):
         """Queries should be ok with loop constraints"""
         self.q.add_constraint('Employee', 'IS', 'Employee.department.manager')
-        self.q.add_constraint('Employee.department.manager', 'IS NOT', 'Employee.department.company.CEO')
+        self.q.add_constraint('Employee.department.manager', 'IS NOT',
+                              'Employee.department.company.CEO')
         self.assertEqual(self.q.constraints.__repr__(), self.expected_loop)
-        self.assertRaises(ConstraintError, self.q.add_constraint, "Employee", "IS", "Employee.department")
+        self.assertRaises(ConstraintError, self.q.add_constraint, "Employee",
+                          "IS", "Employee.department")
 
     def testLoopConstraintSugar(self):
         """Queries should be ok with loop constraints made with alchemical sugar"""
         Employee = self.q.model.table("Employee")
 
         self.q.add_constraint(Employee == Employee.department.manager)
-        self.q.add_constraint(Employee.department.manager != Employee.department.company.CEO)
+        self.q.add_constraint(
+            Employee.department.manager != Employee.department.company.CEO)
         self.assertEqual(self.q.constraints.__repr__(), self.expected_loop)
-        self.assertRaises(ConstraintError, self.q.add_constraint, Employee == Employee.department)
+        self.assertRaises(ConstraintError, self.q.add_constraint,
+                          Employee == Employee.department)
 
     def testSubclassConstraints(self):
         """Queries should be ok with sub class constraints"""
         self.q.add_constraint('Department.employees', 'Manager')
         self.assertEqual(self.q.constraints.__repr__(), self.expected_subclass)
         try:
-           self.q.add_constraint('Department.company.CEO', 'Foo')
-           self.fail("No ModelError raised by bad sub class")
+            self.q.add_constraint('Department.company.CEO', 'Foo')
+            self.fail("No ModelError raised by bad sub class")
         except ModelError as ex:
             self.assertEqual(ex.message, "'Foo' is not a class in this model")
         try:
             self.q.add_constraint('Department.company.CEO', 'Manager')
             self.fail("No ConstraintError raised by bad subclass relationship")
         except ConstraintError as ex:
-            self.assertEqual(ex.message, "'Manager' is not a subclass of 'Department.company.CEO'")
+            self.assertEqual(
+                ex.message,
+                "'Manager' is not a subclass of 'Department.company.CEO'")
 
     def testStringLogic(self):
         """Queries should be able to parse good logic strings"""
 
         a = self.q.add_constraint("Employee.name", "IS NOT NULL")
         b = self.q.add_constraint("Employee.age", ">", 10)
-        c = self.q.add_constraint("Employee.department", "LOOKUP", "Sales", "Wernham-Hogg")
-        d = self.q.add_constraint("Employee.department.employees.name", "ONE OF",
-            ["John", "Paul", "Mary"])
+        c = self.q.add_constraint("Employee.department", "LOOKUP", "Sales",
+                                  "Wernham-Hogg")
+        d = self.q.add_constraint("Employee.department.employees.name",
+                                  "ONE OF", ["John", "Paul", "Mary"])
         self.q.add_constraint("Employee.department.employees", "Manager")
 
         self.assertEqual(str(self.q.get_logic()), "A and B and C and D")
@@ -678,16 +740,18 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.set_logic("B and C or A and D")
         self.assertEqual(str(self.q.get_logic()), "B and (C or A) and D")
         self.q.set_logic("(A and B) or (A and C and D)")
-        self.assertEqual(str(self.q.get_logic()), "(A and B) or (A and C and D)")
+        self.assertEqual(
+            str(self.q.get_logic()), "(A and B) or (A and C and D)")
 
     def testIrrelevantCodeStripping(self):
         """Should be able to recover from queries that have irrelevant codes in their logic"""
 
         a = self.q.add_constraint("Employee.name", "IS NOT NULL")
         b = self.q.add_constraint("Employee.age", ">", 10)
-        c = self.q.add_constraint("Employee.department", "LOOKUP", "Sales", "Wernham-Hogg")
-        d = self.q.add_constraint("Employee.department.employees.name", "ONE OF",
-            ["John", "Paul", "Mary"])
+        c = self.q.add_constraint("Employee.department", "LOOKUP", "Sales",
+                                  "Wernham-Hogg")
+        d = self.q.add_constraint("Employee.department.employees.name",
+                                  "ONE OF", ["John", "Paul", "Mary"])
         self.q.add_constraint("Employee.department.employees", "Manager")
 
         self.q._set_questionable_logic("A and B or C or D and E")
@@ -696,11 +760,14 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.assertEqual(str(self.q.get_logic()), "A and (B or C or D)")
         self.q._set_questionable_logic("A and B and E or C or D")
         self.assertEqual(str(self.q.get_logic()), "A and B and (C or D)")
-        self.q._set_questionable_logic("A and B or X and J or Z and E or C or D")
+        self.q._set_questionable_logic(
+            "A and B or X and J or Z and E or C or D")
         self.assertEqual(str(self.q.get_logic()), "A and B and (C or D)")
-        self.q._set_questionable_logic("A and B or X and (J or Z and E or C) or D")
+        self.q._set_questionable_logic(
+            "A and B or X and (J or Z and E or C) or D")
         self.assertEqual(str(self.q.get_logic()), "(A and B and C) or D")
-        self.q._set_questionable_logic("A or (B or X and J or Z and E or C) or D")
+        self.q._set_questionable_logic(
+            "A or (B or X and J or Z and E or C) or D")
         self.assertEqual(str(self.q.get_logic()), "A or (B and C) or D")
 
     def testObjectLogic(self):
@@ -708,9 +775,10 @@ class TestQuery(WebserviceTest): # pragma: no cover
 
         a = self.q.add_constraint("Employee.name", "IS NOT NULL")
         b = self.q.add_constraint("Employee.age", ">", 10)
-        c = self.q.add_constraint("Employee.department", "LOOKUP", "Sales", "Wernham-Hogg")
-        d = self.q.add_constraint("Employee.department.employees.name", "ONE OF",
-            ["John", "Paul", "Mary"])
+        c = self.q.add_constraint("Employee.department", "LOOKUP", "Sales",
+                                  "Wernham-Hogg")
+        d = self.q.add_constraint("Employee.department.employees.name",
+                                  "ONE OF", ["John", "Paul", "Mary"])
         self.q.add_constraint("Employee.department.employees", "Manager")
 
         self.q.set_logic(a + b + c + d)
@@ -722,17 +790,26 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.set_logic(a + b & c | d)
         self.assertEqual(str(self.q.get_logic()), "(A and B and C) or D")
 
-        self.assertEqual(repr(self.q.get_logic()), '<LogicGroup: (A and B and C) or D>')
+        self.assertEqual(
+            repr(self.q.get_logic()), '<LogicGroup: (A and B and C) or D>')
 
-        self.assertRaises(ConstraintError, self.q.set_logic, "E and C or A and D")
-        self.assertRaises(QueryError,      self.q.set_logic, "A and B and C")
-        self.assertRaises(LogicParseError, self.q.set_logic, "A and B and C not D")
-        self.assertRaises(LogicParseError, self.q.set_logic, "A and ((B and C and D)")
-        self.assertRaises(LogicParseError, self.q.set_logic, "A and ((B and C) and D))")
-        self.assertRaises(LogicParseError, self.q.set_logic, "A and B( and C and D)")
-        self.assertRaises(LogicParseError, self.q.set_logic, "A and (B and C and )D")
-        self.assertRaises(LogicParseError, self.q.set_logic, "A and (B and C) D")
-        self.assertRaises(LogicParseError, self.q.set_logic, "A and (B and C) (D and E)")
+        self.assertRaises(ConstraintError, self.q.set_logic,
+                          "E and C or A and D")
+        self.assertRaises(QueryError, self.q.set_logic, "A and B and C")
+        self.assertRaises(LogicParseError, self.q.set_logic,
+                          "A and B and C not D")
+        self.assertRaises(LogicParseError, self.q.set_logic,
+                          "A and ((B and C and D)")
+        self.assertRaises(LogicParseError, self.q.set_logic,
+                          "A and ((B and C) and D))")
+        self.assertRaises(LogicParseError, self.q.set_logic,
+                          "A and B( and C and D)")
+        self.assertRaises(LogicParseError, self.q.set_logic,
+                          "A and (B and C and )D")
+        self.assertRaises(LogicParseError, self.q.set_logic,
+                          "A and (B and C) D")
+        self.assertRaises(LogicParseError, self.q.set_logic,
+                          "A and (B and C) (D and E)")
         self.assertRaises(TypeError, lambda: self.q.get_logic() + 1)
         self.assertRaises(TypeError, lambda: self.q.get_logic() & 1)
         self.assertRaises(TypeError, lambda: self.q.get_logic() | 1)
@@ -740,9 +817,10 @@ class TestQuery(WebserviceTest): # pragma: no cover
 
     def testJoins(self):
         """Queries should be able to add joins"""
-        self.assertRaises(TypeError,       self.q.add_join, 'Employee.department', 'foo')
+        self.assertRaises(TypeError, self.q.add_join, 'Employee.department',
+                          'foo')
         self.assertRaises(QueryError, self.q.add_join, 'Employee.age', 'inner')
-        self.assertRaises(ModelError,      self.q.add_join, 'Employee.foo', 'inner')
+        self.assertRaises(ModelError, self.q.add_join, 'Employee.foo', 'inner')
         self.q.add_join('Employee.department', 'inner')
         self.q.add_join('Employee.department.company', 'outer')
         expected = "[<Join: Employee.department INNER>, <Join: Employee.department.company OUTER>]"
@@ -750,12 +828,14 @@ class TestQuery(WebserviceTest): # pragma: no cover
 
     def testXML(self):
         """Queries should be able to serialise themselves to XML"""
-        self.q.add_view("Employee.name", "Employee.age", "Employee.department.name")
+        self.q.add_view("Employee.name", "Employee.age",
+                        "Employee.department.name")
         self.q.add_constraint("Employee.name", "IS NOT NULL")
         self.q.add_constraint("Employee.age", ">", 10)
-        self.q.add_constraint("Employee.department", "LOOKUP", "Sales", "Wernham-Hogg")
+        self.q.add_constraint("Employee.department", "LOOKUP", "Sales",
+                              "Wernham-Hogg")
         self.q.add_constraint("Employee.department.employees.name", "ONE OF",
-            ["John", "Paul", "Mary"])
+                              ["John", "Paul", "Mary"])
         self.q.add_constraint("Employee.department.manager", "IS", "Employee")
         self.q.add_constraint("Employee", "IN", "some list of employees")
         self.q.add_constraint("Employee.age", "OVERLAPS", ["1..10", "30..35"])
@@ -763,9 +843,10 @@ class TestQuery(WebserviceTest): # pragma: no cover
         self.q.add_join("Employee.department", "outer")
         self.q.add_sort_order("Employee.age")
         self.q.set_logic("(A and B) or (A and C and D) and (E or F or G)")
-        expected ='<query constraintLogic="((A and B) or (A and C and D)) and (E or F or G)" longDescription="" model="testmodel" name="" sortOrder="Employee.age asc" view="Employee.name Employee.age Employee.department.name"><join path="Employee.department" style="OUTER"/><constraint code="A" op="IS NOT NULL" path="Employee.name"/><constraint code="B" op="&gt;" path="Employee.age" value="10"/><constraint code="C" extraValue="Wernham-Hogg" op="LOOKUP" path="Employee.department" value="Sales"/><constraint code="D" op="ONE OF" path="Employee.department.employees.name"><value>John</value><value>Paul</value><value>Mary</value></constraint><constraint code="E" loopPath="Employee" op="=" path="Employee.department.manager"/><constraint code="F" op="IN" path="Employee" value="some list of employees"/><constraint code="G" op="OVERLAPS" path="Employee.age"><value>1..10</value><value>30..35</value></constraint><constraint path="Employee.department.employees" type="Manager"/></query>'
+        expected = '<query constraintLogic="((A and B) or (A and C and D)) and (E or F or G)" longDescription="" model="testmodel" name="" sortOrder="Employee.age asc" view="Employee.name Employee.age Employee.department.name"><join path="Employee.department" style="OUTER"/><constraint code="A" op="IS NOT NULL" path="Employee.name"/><constraint code="B" op="&gt;" path="Employee.age" value="10"/><constraint code="C" extraValue="Wernham-Hogg" op="LOOKUP" path="Employee.department" value="Sales"/><constraint code="D" op="ONE OF" path="Employee.department.employees.name"><value>John</value><value>Paul</value><value>Mary</value></constraint><constraint code="E" loopPath="Employee" op="=" path="Employee.department.manager"/><constraint code="F" op="IN" path="Employee" value="some list of employees"/><constraint code="G" op="OVERLAPS" path="Employee.age"><value>1..10</value><value>30..35</value></constraint><constraint path="Employee.department.employees" type="Manager"/></query>'
         self.assertEqual(expected, self.q.to_xml())
-        self.assertEqual(expected, self.q.clone().to_xml()) # Clones must produce identical XML
+        # Clones must produce identical XML
+        self.assertEqual(expected, self.q.clone().to_xml())
 
     def testSugaryQueryConstruction(self):
         """Test use of operation coercion which is similar to SQLAlchemy"""
@@ -778,33 +859,33 @@ class TestQuery(WebserviceTest): # pragma: no cover
 
         # SQL style
         q = Employee.\
-                select("name", "age", "department.name").\
-                where(Employee.name != None).\
-                where(Employee.age > 10).\
-                where(Employee.department % ("Sales", "Wernham-Hogg")).\
-                where(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
-                where(Employee.department.manager == Employee).\
-                where(Employee == self.l).\
-                where(Employee.department.employees >> Manager).\
-                outerjoin(Employee.department).\
-                order_by(Employee.age).\
-                set_logic("(A and B) or (A and C and D) and (E or F)")
+            select("name", "age", "department.name").\
+            where(Employee.name != None).\
+            where(Employee.age > 10).\
+            where(Employee.department % ("Sales", "Wernham-Hogg")).\
+            where(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
+            where(Employee.department.manager == Employee).\
+            where(Employee == self.l).\
+            where(Employee.department.employees >> Manager).\
+            outerjoin(Employee.department).\
+            order_by(Employee.age).\
+            set_logic("(A and B) or (A and C and D) and (E or F)")
 
         self.assertEqual(expected, q.to_xml())
 
         # SQLAlchemy style
         q = self.service.query(Employee).\
-                select("name", "age", "department.name").\
-                filter(Employee.name != None).\
-                filter(Employee.age > 10).\
-                filter(Employee.department % ("Sales", "Wernham-Hogg")).\
-                filter(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
-                filter(Employee.department.manager == Employee).\
-                filter(Employee == self.l).\
-                filter(Employee.department.employees >> Manager).\
-                outerjoin(Employee.department).\
-                order_by(Employee.age).\
-                set_logic("(A and B) or (A and C and D) and (E or F)")
+            select("name", "age", "department.name").\
+            filter(Employee.name != None).\
+            filter(Employee.age > 10).\
+            filter(Employee.department % ("Sales", "Wernham-Hogg")).\
+            filter(Employee.department.employees.name == ["John", "Paul", "Mary"]).\
+            filter(Employee.department.manager == Employee).\
+            filter(Employee == self.l).\
+            filter(Employee.department.employees >> Manager).\
+            outerjoin(Employee.department).\
+            order_by(Employee.age).\
+            set_logic("(A and B) or (A and C and D) and (E or F)")
 
         self.assertEqual(expected, q.to_xml())
 
@@ -815,7 +896,7 @@ class TestQuery(WebserviceTest): # pragma: no cover
 
         expected = '<query longDescription="" model="testmodel" name="" sortOrder="Employee.name asc" view="Employee.name"><constraint code="A" op="=" path="Employee.age" value="10"/></query>'
 
-        q = model.Employee.select("name").where(age = 10)
+        q = model.Employee.select("name").where(age=10)
 
         self.assertEqual(expected, q.to_xml())
 
@@ -836,22 +917,23 @@ class TestQuery(WebserviceTest): # pragma: no cover
         e = self.service.model.Employee
         CEO = self.service.model.CEO
         q = self.service.query(e, e.department.name).\
-                filter(
+            filter(
                         e.department.manager < CEO,
                         (
                             ((e.name != None) & (e.age > 10))
                             | (e.in_(self.l) & (e.department.manager % "David"))
                         )
                     ).\
-                outerjoin(e.department).\
-                order_by(e.age)
+            outerjoin(e.department).\
+            order_by(e.age)
 
         expected = re.sub(r'\s+', ' ', expected)
         expected = re.sub(r'>\s+<', '><', expected)
         expected = expected.strip()
         self.assertEqual(expected, q.to_xml())
 
-class TestTemplate(TestQuery): # pragma: no cover
+
+class TestTemplate(TestQuery):  # pragma: no cover
 
     expected_unary = '[<TemplateUnaryConstraint: Employee.age IS NULL (editable, locked)>, <TemplateUnaryConstraint: Employee.name IS NOT NULL (editable, locked)>, <TemplateUnaryConstraint: Employee.address IS NULL (editable, locked)>]'
     expected_binary = '[<TemplateBinaryConstraint: Employee.age > 50000 (editable, locked)>, <TemplateBinaryConstraint: Employee.name = John (editable, locked)>, <TemplateBinaryConstraint: Employee.end != 0 (editable, locked)>]'
@@ -866,7 +948,8 @@ class TestTemplate(TestQuery): # pragma: no cover
         super(TestTemplate, self).setUp()
         self.q = Template(self.model)
 
-class TestQueryResults(WebserviceTest): # pragma: no cover
+
+class TestQueryResults(WebserviceTest):  # pragma: no cover
 
     model = None
     service = None
@@ -910,196 +993,161 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
         t.add_constraint("Employee.name", '=', "Fred")
         t.add_constraint("Employee.age", ">", 25)
 
-        expectedQ = (
-            '/QUERY-PATH',
-            {
-                'query': '<query constraintLogic="A and B" longDescription="" model="testmodel" name="" sortOrder="Employee.name asc" view="Employee.name Employee.age Employee.id"><constraint code="A" op="=" path="Employee.name" value="Fred"/><constraint code="B" op="&gt;" path="Employee.age" value="25"/></query>',
-                'start': 0
-            },
-            'object',
-            ['Employee.name', 'Employee.age', 'Employee.id'],
-            self.model.get_class("Employee")
-        )
+        expectedQ = ('/QUERY-PATH', {
+            'query':
+            '<query constraintLogic="A and B" longDescription="" model="testmodel" name="" sortOrder="Employee.name asc" view="Employee.name Employee.age Employee.id"><constraint code="A" op="=" path="Employee.name" value="Fred"/><constraint code="B" op="&gt;" path="Employee.age" value="25"/></query>',
+            'start': 0
+        }, 'object', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
         self.assertEqual(expectedQ, q.results())
         self.assertEqual(list(expectedQ), q.get_results_list())
 
-        expectedQ = (
-            '/QUERY-PATH',
-            {
-                'query': '<query constraintLogic="A and B" longDescription="" model="testmodel" name="" sortOrder="Employee.name asc" view="Employee.name Employee.age Employee.id"><constraint code="A" op="=" path="Employee.name" value="Fred"/><constraint code="B" op="&gt;" path="Employee.age" value="25"/></query>',
-                'start': 0
-            },
-            'rr',
-            ['Employee.name', 'Employee.age', 'Employee.id'],
-            self.model.get_class("Employee")
-        )
+        expectedQ = ('/QUERY-PATH', {
+            'query':
+            '<query constraintLogic="A and B" longDescription="" model="testmodel" name="" sortOrder="Employee.name asc" view="Employee.name Employee.age Employee.id"><constraint code="A" op="=" path="Employee.name" value="Fred"/><constraint code="B" op="&gt;" path="Employee.age" value="25"/></query>',
+            'start': 0
+        }, 'rr', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
         self.assertEqual(expectedQ, q.rows())
         self.assertEqual(list(expectedQ), q.get_row_list())
 
-        expectedQ = (
-            '/QUERY-PATH',
-            {
-                'query': '<query constraintLogic="A and B" longDescription="" model="testmodel" name="" sortOrder="Employee.name asc" view="Employee.name Employee.age Employee.id"><constraint code="A" op="=" path="Employee.name" value="Fred"/><constraint code="B" op="&gt;" path="Employee.age" value="25"/></query>',
-                'start': 10,
-                'size': 200
-            },
-            'object',
-            ['Employee.name', 'Employee.age', 'Employee.id'],
-            self.model.get_class("Employee")
-        )
+        expectedQ = ('/QUERY-PATH', {
+            'query':
+            '<query constraintLogic="A and B" longDescription="" model="testmodel" name="" sortOrder="Employee.name asc" view="Employee.name Employee.age Employee.id"><constraint code="A" op="=" path="Employee.name" value="Fred"/><constraint code="B" op="&gt;" path="Employee.age" value="25"/></query>',
+            'start': 10,
+            'size': 200
+        }, 'object', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
         self.assertEqual(expectedQ, q.results(start=10, size=200))
-        self.assertEqual(list(expectedQ), q.get_results_list(start=10, size=200))
+        self.assertEqual(
+            list(expectedQ), q.get_results_list(
+                start=10, size=200))
 
-        expected1 = (
-            '/TEMPLATE-PATH',
-            {
-             'name': 'TEST-TEMPLATE',
-             'code1': 'A',
-             'code2': 'B',
-             'constraint1': 'Employee.name',
-             'constraint2': 'Employee.age',
-             'op1': '=',
-             'op2': '>',
-             'value1': 'Fred',
-             'value2': '25',
-             'start': 0
-            },
-           'object',
-           ['Employee.name', 'Employee.age', 'Employee.id'],
-           self.model.get_class("Employee")
-           )
+        expected1 = ('/TEMPLATE-PATH', {
+            'name': 'TEST-TEMPLATE',
+            'code1': 'A',
+            'code2': 'B',
+            'constraint1': 'Employee.name',
+            'constraint2': 'Employee.age',
+            'op1': '=',
+            'op2': '>',
+            'value1': 'Fred',
+            'value2': '25',
+            'start': 0
+        }, 'object', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
         self.assertEqual(expected1, t.results())
         self.assertEqual(list(expected1), t.get_results_list())
 
-        expected1 = (
-            '/TEMPLATE-PATH',
-            {
-             'name': 'TEST-TEMPLATE',
-             'code1': 'A',
-             'code2': 'B',
-             'constraint1': 'Employee.name',
-             'constraint2': 'Employee.age',
-             'op1': '=',
-             'op2': '>',
-             'value1': 'Fred',
-             'value2': '25',
-             'start': 0
-            },
-           'rr',
-           ['Employee.name', 'Employee.age', 'Employee.id'],
-           self.model.get_class("Employee")
-           )
+        expected1 = ('/TEMPLATE-PATH', {
+            'name': 'TEST-TEMPLATE',
+            'code1': 'A',
+            'code2': 'B',
+            'constraint1': 'Employee.name',
+            'constraint2': 'Employee.age',
+            'op1': '=',
+            'op2': '>',
+            'value1': 'Fred',
+            'value2': '25',
+            'start': 0
+        }, 'rr', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
         self.assertEqual(expected1, t.rows())
         self.assertEqual(list(expected1), t.get_row_list())
 
-        expected2 = (
-            '/TEMPLATE-PATH',
-            {
-             'name': 'TEST-TEMPLATE',
-             'code1': 'A',
-             'code2': 'B',
-             'constraint1': 'Employee.name',
-             'constraint2': 'Employee.age',
-             'op1': '<',
-             'op2': '>',
-             'value1': 'Tom',
-             'value2': '55',
-             'start': 0
-            },
-           'object',
-           ['Employee.name', 'Employee.age', 'Employee.id'],
-           self.model.get_class("Employee")
-           )
-        self.assertEqual(expected2, t.results(
-            A = {"op": "<", "value": "Tom"},
-            B = {"value": 55}
-        ))
+        expected2 = ('/TEMPLATE-PATH', {
+            'name': 'TEST-TEMPLATE',
+            'code1': 'A',
+            'code2': 'B',
+            'constraint1': 'Employee.name',
+            'constraint2': 'Employee.age',
+            'op1': '<',
+            'op2': '>',
+            'value1': 'Tom',
+            'value2': '55',
+            'start': 0
+        }, 'object', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
+        self.assertEqual(
+            expected2,
+            t.results(
+                A={"op": "<",
+                   "value": "Tom"}, B={"value": 55}))
 
-        expected2 = (
-            '/TEMPLATE-PATH',
-            {
-             'name': 'TEST-TEMPLATE',
-             'code1': 'A',
-             'code2': 'B',
-             'constraint1': 'Employee.name',
-             'constraint2': 'Employee.age',
-             'op1': '<',
-             'op2': '>',
-             'value1': 'Tom',
-             'value2': '55',
-             'start': 10,
-             'size': 200
-            },
-           'object',
-           ['Employee.name', 'Employee.age', 'Employee.id'],
-           self.model.get_class("Employee")
-           )
-        self.assertEqual(expected2, t.results(
-            start = 10,
-            size = 200,
-            A = {"op": "<", "value": "Tom"},
-            B = {"value": 55}
-        ))
-        self.assertEqual(list(expected2), t.get_results_list(
-            start = 10,
-            size = 200,
-            A = {"op": "<", "value": "Tom"},
-            B = {"value": 55}
-        ))
+        expected2 = ('/TEMPLATE-PATH', {
+            'name': 'TEST-TEMPLATE',
+            'code1': 'A',
+            'code2': 'B',
+            'constraint1': 'Employee.name',
+            'constraint2': 'Employee.age',
+            'op1': '<',
+            'op2': '>',
+            'value1': 'Tom',
+            'value2': '55',
+            'start': 10,
+            'size': 200
+        }, 'object', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
+        self.assertEqual(
+            expected2,
+            t.results(
+                start=10,
+                size=200,
+                A={"op": "<",
+                   "value": "Tom"},
+                B={"value": 55}))
+        self.assertEqual(
+            list(expected2),
+            t.get_results_list(
+                start=10,
+                size=200,
+                A={"op": "<",
+                   "value": "Tom"},
+                B={"value": 55}))
 
         # Check that we can just use strings for simple value replacement.
-        expected3 = (
-            '/TEMPLATE-PATH',
-            {
-             'name': 'TEST-TEMPLATE',
-             'code1': 'A',
-             'code2': 'B',
-             'constraint1': 'Employee.name',
-             'constraint2': 'Employee.age',
-             'op1': '=',
-             'op2': '>',
-             'value1': 'Foo',
-             'value2': 'Bar',
-             'start': 10,
-             'size': 200
-            },
-           'object',
-           ['Employee.name', 'Employee.age', 'Employee.id'],
-           self.model.get_class("Employee")
-           )
-        self.assertEqual(list(expected3), t.get_results_list(
-            start = 10,
-            size  = 200,
-            A = "Foo",
-            B = "Bar"
-            ))
+        expected3 = ('/TEMPLATE-PATH', {
+            'name': 'TEST-TEMPLATE',
+            'code1': 'A',
+            'code2': 'B',
+            'constraint1': 'Employee.name',
+            'constraint2': 'Employee.age',
+            'op1': '=',
+            'op2': '>',
+            'value1': 'Foo',
+            'value2': 'Bar',
+            'start': 10,
+            'size': 200
+        }, 'object', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
+        self.assertEqual(
+            list(expected3),
+            t.get_results_list(
+                start=10, size=200, A="Foo", B="Bar"))
         # Check that these contraint values have not been applied to the actual template
         self.assertEqual(expected1, t.rows())
-        expected1 = (
-            '/TEMPLATE-PATH',
-            {
-             'name': 'TEST-TEMPLATE',
-             'code1': 'A',
-             'code2': 'B',
-             'constraint1': 'Employee.name',
-             'constraint2': 'Employee.age',
-             'op1': '=',
-             'op2': '>',
-             'value1': 'Fred',
-             'value2': '25',
-             'start': 0
-            },
-           'object',
-           ['Employee.name', 'Employee.age', 'Employee.id'],
-           self.model.get_class("Employee")
-           )
+        expected1 = ('/TEMPLATE-PATH', {
+            'name': 'TEST-TEMPLATE',
+            'code1': 'A',
+            'code2': 'B',
+            'constraint1': 'Employee.name',
+            'constraint2': 'Employee.age',
+            'op1': '=',
+            'op2': '>',
+            'value1': 'Fred',
+            'value2': '25',
+            'start': 0
+        }, 'object', ['Employee.name', 'Employee.age', 'Employee.id'],
+                     self.model.get_class("Employee"))
 
         self.assertEqual(expected1, t.results())
 
     def testResultsList(self):
         """Should be able to get results as one list per row"""
+
         def logic():
-            expected = [['foo', 'bar', 'baz'], [123, 1.23, -1.23], [True, False, None]]
+            expected = [['foo', 'bar', 'baz'], [123, 1.23, -1.23],
+                        [True, False, None]]
             self.assertEqual(self.query.get_results_list("list"), expected)
             self.assertEqual(self.template.get_results_list("list"), expected)
 
@@ -1107,21 +1155,26 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
 
     def testResultRows(self):
         """Should be able to get results as result rows"""
+
         def logic():
             assertEqual = self.assertEqual
             q_res = self.query.all("rr")
             t_res = self.template.all("rr")
             for results in [q_res, t_res]:
-                assertEqual(results[0]["age"], 'bar') # Can index by short path
-                assertEqual(results[1]["Employee.age"], 1.23) # or by full path
-                assertEqual(results[2][0], True) # or by numerical index
+                # Can index by short path
+                assertEqual(results[0]["age"], 'bar')
+                assertEqual(results[1]["Employee.age"],
+                            1.23)  # or by full path
+                assertEqual(results[2][0], True)  # or by numerical index
                 assertEqual(len(results), 3)
                 for row in results:
                     assertEqual(len(row), 3)
+
         self.do_unpredictable_test(logic)
 
     def testResultRowIterability(self):
         """Result rows should iterate as lists"""
+
         def logic():
             q_res = self.query.all("rr")
             t_res = self.template.all("rr")
@@ -1140,6 +1193,7 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
 
     def testResultRowDictBehaviour(self):
         """Result rows should allow iteration using items() and iterkeys()"""
+
         def logic():
             q_res = self.query.all("rr")
             t_res = self.template.all("rr")
@@ -1150,15 +1204,22 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
                     count += 1
                     self.assertTrue(0 < count < 4)
                 count = 0
-                self.assertEqual({'Employee.name': 'foo', 'Employee.age': 'bar', 'Employee.id': 'baz'}, r.to_d())
-                self.assertEqual([("Employee.name", 'foo'), ("Employee.age", 'bar'), ("Employee.id", 'baz')], r.items())
+                self.assertEqual({
+                    'Employee.name': 'foo',
+                    'Employee.age': 'bar',
+                    'Employee.id': 'baz'
+                }, r.to_d())
+                self.assertEqual([("Employee.name", 'foo'), (
+                    "Employee.age", 'bar'), ("Employee.id", 'baz')], r.items())
                 for (k, v) in r.iteritems():
                     count += 1
                     self.assertTrue(0 < count < 4)
                 self.assertEqual([pair for pair in r.iteritems()], r.items())
                 self.assertEqual(r.keys(), self.query.views)
                 self.assertEqual(r.values(), r.to_l())
-                self.assertEqual(list(zip(r.values(), r.keys())), list(zip(r.itervalues(), r.iterkeys())))
+                self.assertEqual(
+                    list(zip(r.values(), r.keys())),
+                    list(zip(r.itervalues(), r.iterkeys())))
                 self.assertTrue(r.has_key("age"))
                 self.assertTrue(r.has_key("Employee.age"))
                 self.assertTrue(not r.has_key("Employee.foo"))
@@ -1167,22 +1228,33 @@ class TestQueryResults(WebserviceTest): # pragma: no cover
 
     def testResultsDict(self):
         """Should be able to get results as one dictionary per row"""
-        expected = [
-            {'Employee.age': 'bar', 'Employee.id': 'baz', 'Employee.name': 'foo'},
-            {'Employee.age': 1.23, 'Employee.id': -1.23, 'Employee.name': 123},
-            {'Employee.age': False, 'Employee.id': None, 'Employee.name': True}
-        ]
+        expected = [{
+            'Employee.age': 'bar',
+            'Employee.id': 'baz',
+            'Employee.name': 'foo'
+        }, {
+            'Employee.age': 1.23,
+            'Employee.id': -1.23,
+            'Employee.name': 123
+        }, {
+            'Employee.age': False,
+            'Employee.id': None,
+            'Employee.name': True
+        }]
+
         def logic():
             self.assertEqual(expected, self.query.get_results_list("dict"))
             self.assertEqual(expected, self.template.get_results_list("dict"))
 
         self.do_unpredictable_test(logic)
 
+
 class TestMinimalResults(TestQueryResults):
 
     PATH = "/testservice/legacyjsonrows"
 
-class TestTSVResults(WebserviceTest): # pragma: no cover
+
+class TestTSVResults(WebserviceTest):  # pragma: no cover
 
     model = None
     service = None
@@ -1197,7 +1269,8 @@ class TestTSVResults(WebserviceTest): # pragma: no cover
         if self.service is None:
             self.__class__.service = Service(self.get_test_root())
         if self.model is None:
-            self.__class__.model = Model(self.get_test_root() + "/service/model")
+            self.__class__.model = Model(self.get_test_root() +
+                                         "/service/model")
 
         q = Query(self.model, self.service)
         q.add_view("Employee.name", "Employee.age", "Employee.id")
@@ -1210,24 +1283,32 @@ class TestTSVResults(WebserviceTest): # pragma: no cover
 
     def testResults(self):
         """Should be able to get results as one string per row"""
+
         def logic():
-            self.assertEqual(self.query.get_results_list(self.FORMAT), self.EXPECTED_RESULTS)
-            self.assertEqual(self.template.get_results_list(self.FORMAT), self.EXPECTED_RESULTS)
+            self.assertEqual(
+                self.query.get_results_list(self.FORMAT),
+                self.EXPECTED_RESULTS)
+            self.assertEqual(
+                self.template.get_results_list(self.FORMAT),
+                self.EXPECTED_RESULTS)
+
         self.do_unpredictable_test(logic)
 
 
-class TestCSVResults(TestTSVResults): # pragma: no cover
+class TestCSVResults(TestTSVResults):  # pragma: no cover
 
     PATH = "/testservice/csvservice"
     FORMAT = "csv"
     EXPECTED_RESULTS = ['"foo","bar","baz"', '"123","1.23","-1.23"']
 
-class TestResultObjects(WebserviceTest): # pragma: no cover
+
+class TestResultObjects(WebserviceTest):  # pragma: no cover
     model = None
     service = None
 
     def get_test_root(self):
-        return "http://localhost:" + str(self.TEST_PORT) + "/testservice/testresultobjs"
+        return "http://localhost:" + str(
+            self.TEST_PORT) + "/testservice/testresultobjs"
 
     def setUp(self):
         if self.service is None:
@@ -1236,15 +1317,18 @@ class TestResultObjects(WebserviceTest): # pragma: no cover
             self.__class__.model = self.service.model
 
         q = Query(self.model, self.service)
-        q.add_view("Department.name", "Department.employees.name", "Department.employees.age", "Department.company.vatNumber")
+        q.add_view("Department.name", "Department.employees.name",
+                   "Department.employees.age", "Department.company.vatNumber")
         self.query = q
         t = Template(self.model, self.service)
-        q.add_view("Department.name", "Department.employees.name", "Department.employees.age", "Department.company.vatNumber")
+        q.add_view("Department.name", "Department.employees.name",
+                   "Department.employees.age", "Department.company.vatNumber")
         t.add_constraint("Department.manager.name", '=', "Fred")
         self.template = t
 
     def testResultObjs(self):
         """Should be able to get results as result objects"""
+
         def logic():
             assertEqual = self.assertEqual
             q_res = self.query.all("jsonobjects")
@@ -1258,19 +1342,23 @@ class TestResultObjects(WebserviceTest): # pragma: no cover
 
                 assertEqual(departments[-1].name, 'Slashes')
                 assertEqual(departments[-1].company.vatNumber, 764575)
-                assertEqual(departments[-1].employees[2].name, "Double forward Slash //")
+                assertEqual(departments[-1].employees[2].name,
+                            "Double forward Slash //")
                 assertEqual(departments[-1].employees[2].age, 62)
                 assertEqual(len(departments[-1].employees), 5)
 
                 for idx in [0, -1]:
-                    self.assertRaises(ModelError, lambda: departments[idx].foo) # Model errors are thrown for illegal field access
-                    self.assertRaises(ModelError, lambda: departments[idx].company.foo)
+                    # Model errors are thrown for illegal field access
+                    self.assertRaises(ModelError, lambda: departments[idx].foo)
+                    self.assertRaises(ModelError,
+                                      lambda: departments[idx].company.foo)
 
                 assertEqual(len(departments), 8)
 
         self.do_unpredictable_test(logic)
 
-class TestCountResults(TestTSVResults): # pragma: no cover
+
+class TestCountResults(TestTSVResults):  # pragma: no cover
 
     PATH = "/testservice/countservice"
     FORMAT = "count"
@@ -1279,14 +1367,17 @@ class TestCountResults(TestTSVResults): # pragma: no cover
 
     def testCount(self):
         """Should be able to get count as an integer"""
+
         def logic():
             self.assertEqual(self.query.count(), self.EXPECTED_COUNT)
             self.assertEqual(self.template.count(), self.EXPECTED_COUNT)
+
         self.do_unpredictable_test(logic)
 
-if __name__ == '__main__': # pragma: no cover
+
+if __name__ == '__main__':  # pragma: no cover
     server = TestServer()
     server.start()
-    time.sleep(0.1) # Avoid race conditions with the server
+    time.sleep(0.1)  # Avoid race conditions with the server
     unittest.main()
     server.shutdown()

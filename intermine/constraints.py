@@ -3,6 +3,7 @@ import string
 from intermine.pathfeatures import PathFeature, PATH_PATTERN
 from intermine.util import ReadableException
 
+
 class Constraint(PathFeature):
     """
     A class representing constraints on a query
@@ -13,6 +14,7 @@ class Constraint(PathFeature):
     purposes of serialisation.
     """
     child_type = "constraint"
+
 
 class LogicNode(object):
     """
@@ -77,6 +79,7 @@ class LogicNode(object):
         else:
             return LogicGroup(self, 'OR', other)
 
+
 class LogicGroup(LogicNode):
     """
     A logic node that represents two sub-nodes joined in some way
@@ -98,7 +101,7 @@ class LogicGroup(LogicNode):
 
         Groups may have a reference to their parent.
         """
-        if not op in self.LEGAL_OPS:
+        if op not in self.LEGAL_OPS:
             raise TypeError(op + " is not a legal logical operation")
         self.parent = parent
         self.left = left
@@ -138,17 +141,21 @@ class LogicGroup(LogicNode):
                 codes.append(node.code)
         return codes
 
+
 class LogicParseError(ReadableException):
     """
     An error representing problems in parsing constraint logic.
     """
     pass
 
+
 class EmptyLogicError(ValueError):
     """
-    An error representing the fact that an the logic string to be parsed was empty
+    An error representing the fact that an the logic
+    string to be parsed was empty
     """
     pass
+
 
 class LogicParser(object):
     """
@@ -204,21 +211,21 @@ class LogicParser(object):
         @rtype: int
         """
         return {
-        "AND": 2,
-        "OR" : 1,
-        "("  : 3,
-        ")"  : 3
+            "AND": 2,
+            "OR": 1,
+            "(": 3,
+            ")": 3
         }.get(op)
 
     ops = {
-        "AND" : "AND",
-        "&"   : "AND",
-        "&&"  : "AND",
-        "OR"  : "OR",
-        "|"   : "OR",
-        "||"  : "OR",
-        "("   : "(",
-        ")"   : ")"
+        "AND": "AND",
+        "&": "AND",
+        "&&": "AND",
+        "OR": "OR",
+        "|": "OR",
+        "||": "OR",
+        "(": "(",
+        ")": ")"
     }
 
     def parse(self, logic_str):
@@ -249,11 +256,13 @@ class LogicParser(object):
                 else:
                     ret.append(item)
             return ret
+
         def canonical(x, d):
             if x in d:
                 return d[x]
             else:
                 return re.split("\b", x)
+
         def dedouble(x):
             if re.search("[()]", x):
                 return list(x)
@@ -261,7 +270,7 @@ class LogicParser(object):
                 return x
 
         logic_str = logic_str.upper()
-        tokens = [t for t in re.split("\s+", logic_str) if t]
+        tokens = [t for t in re.split("\\s+", logic_str) if t]
         if not tokens:
             raise EmptyLogicError()
         tokens = flatten([canonical(x, self.ops) for x in tokens])
@@ -280,8 +289,10 @@ class LogicParser(object):
         which should hopefully lead to more informative error messages.
 
         This checks for:
-         - correct operator positions (cannot put two codes next to each other without intervening operators)
-         - correct grouping (all brackets are matched, and contain valid expressions)
+         - correct operator positions (cannot put two codes next to each
+           other without intervening operators)
+         - correct grouping (all brackets are matched,
+                             and contain valid expressions)
 
         @param infix_tokens: The input parsed into a list of tokens.
         @type infix_tokens: iterable
@@ -295,22 +306,29 @@ class LogicParser(object):
         for token in infix_tokens:
             if token not in self.ops:
                 if need_an_op:
-                    raise LogicParseError("Expected an operator after: '" + ' '.join(processed) + "'"
+                    raise LogicParseError("Expected an operator after: '"
+                                          + ' '.join(processed) + "'"
                                           + " - but got: '" + token + "'")
                 if need_binary_op_or_closing_bracket:
-                    raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                          + " - expected an operator or a closing bracket")
+                    raise LogicParseError("Logic grouping error after: '"
+                                          + ' '.join(processed) + "'"
+                                          + " - expected an operator "
+                                          "or a closing bracket")
 
                 need_an_op = True
             else:
                 need_an_op = False
                 if token == "(":
                     if processed and processed[-1] not in self.ops:
-                        raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                          + " - got an unexpeced opening bracket")
+                        raise LogicParseError("Logic grouping error after: '"
+                                              + ' '.join(processed) + "'"
+                                              + " - got an unexpeced "
+                                              "opening bracket")
                     if need_binary_op_or_closing_bracket:
-                        raise LogicParseError("Logic grouping error after: '" + ' '.join(processed) + "'"
-                                          + " - expected an operator or a closing bracket")
+                        raise LogicParseError("Logic grouping error after: '"
+                                              + ' '.join(processed) + "'"
+                                              + " - expected an operator or "
+                                              "a closing bracket")
 
                     open_brackets += 1
                 elif token == ")":
@@ -324,7 +342,8 @@ class LogicParser(object):
                 message = "Unmatched closing bracket in: "
             else:
                 message = "Unmatched opening bracket in: "
-            raise LogicParseError(message + '"' + ' '.join(infix_tokens) + '"')
+            raise LogicParseError(message + '"' + ' '.join(infix_tokens)
+                                  + '"')
 
     def infix_to_postfix(self, infix_tokens):
         """
@@ -354,16 +373,20 @@ class LogicParser(object):
                         if last_op == "(":
                             if stack:
                                 previous_op = stack.pop()
-                                if previous_op != "(": postfix_tokens.append(previous_op)
+                                if previous_op != "(":
+                                    postfix_tokens.append(previous_op)
                                 break
                         else:
                             postfix_tokens.append(last_op)
                 else:
-                    while stack and self.get_priority(stack[-1]) <= self.get_priority(op):
+                    while stack and (self.get_priority(stack[-1])
+                                     <= self.get_priority(op)):
                         prev_op = stack.pop()
-                        if prev_op != "(": postfix_tokens.append(prev_op)
+                        if prev_op != "(":
+                            postfix_tokens.append(prev_op)
                     stack.append(op)
-        while stack: postfix_tokens.append(stack.pop())
+        while stack:
+            postfix_tokens.append(stack.pop())
         return postfix_tokens
 
     def postfix_to_tree(self, postfix_tokens):
@@ -395,6 +418,7 @@ class LogicParser(object):
             return stack.pop()
         except IndexError:
             raise EmptyLogicError()
+
 
 class CodedConstraint(Constraint, LogicNode):
     """
@@ -437,6 +461,7 @@ class CodedConstraint(Constraint, LogicNode):
         Stringify to the code they are refered to by.
         """
         return self.code
+
     def to_string(self):
         """
         Provide a human readable representation of the logic.
@@ -454,6 +479,7 @@ class CodedConstraint(Constraint, LogicNode):
         d.update(op=self.op, code=self.code)
         return d
 
+
 class UnaryConstraint(CodedConstraint):
     """
     Constraints which have just a path and an operator
@@ -467,6 +493,7 @@ class UnaryConstraint(CodedConstraint):
 
     """
     OPS = set(['IS NULL', 'IS NOT NULL'])
+
 
 class BinaryConstraint(CodedConstraint):
     """
@@ -493,7 +520,9 @@ class BinaryConstraint(CodedConstraint):
      - NOT LIKE (same as not equal to, but with implied wildcards)
 
     """
-    OPS = set(['=', '!=', '<', '>', '<=', '>=', 'LIKE', 'NOT LIKE', 'CONTAINS'])
+    OPS = set(['=', '!=', '<', '>', '<=', '>=',
+               'LIKE', 'NOT LIKE', 'CONTAINS'])
+
     def __init__(self, path, op, value, code="A"):
         """
         Constructor
@@ -502,7 +531,8 @@ class BinaryConstraint(CodedConstraint):
         @param path: The path to constrain
         @type path: string
 
-        @param op: The relationship between the value represented by the path and the value provided (must be a valid operator)
+        @param op: The relationship between the value represented by the path
+                   and the value provided (must be a valid operator)
         @type op: string
 
         @param value: The value to compare the stored value to
@@ -521,6 +551,7 @@ class BinaryConstraint(CodedConstraint):
         """
         s = super(BinaryConstraint, self).to_string()
         return " ".join([s, str(self.value)])
+
     def to_dict(self):
         """
         Return a dict object which can be used to construct a
@@ -529,6 +560,7 @@ class BinaryConstraint(CodedConstraint):
         d = super(BinaryConstraint, self).to_dict()
         d.update(value=str(self.value))
         return d
+
 
 class ListConstraint(CodedConstraint):
     """
@@ -549,11 +581,12 @@ class ListConstraint(CodedConstraint):
 
      """
     OPS = set(['IN', 'NOT IN'])
+
     def __init__(self, path, op, list_name, code="A"):
         if hasattr(list_name, 'to_query'):
             q = list_name.to_query()
-            l = q.service.create_list(q)
-            self.list_name = l.name
+            list_name1 = q.service.create_list(q)
+            self.list_name = list_name1.name
         elif hasattr(list_name, "name"):
             self.list_name = list_name.name
         else:
@@ -567,6 +600,7 @@ class ListConstraint(CodedConstraint):
         """
         s = super(ListConstraint, self).to_string()
         return " ".join([s, str(self.list_name)])
+
     def to_dict(self):
         """
         Return a dict object which can be used to construct a
@@ -575,6 +609,7 @@ class ListConstraint(CodedConstraint):
         d = super(ListConstraint, self).to_dict()
         d.update(value=str(self.list_name))
         return d
+
 
 class LoopConstraint(CodedConstraint):
     """
@@ -593,7 +628,8 @@ class LoopConstraint(CodedConstraint):
 
     """
     OPS = set(['IS', 'IS NOT'])
-    SERIALISED_OPS = {'IS':'=', 'IS NOT':'!='}
+    SERIALISED_OPS = {'IS': '=', 'IS NOT': '!='}
+
     def __init__(self, path, op, loopPath, code="A"):
         """
         Constructor
@@ -602,7 +638,8 @@ class LoopConstraint(CodedConstraint):
         @param path: The path to constrain
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
         @param loopPath: The path to check for identity against
@@ -621,6 +658,7 @@ class LoopConstraint(CodedConstraint):
         """
         s = super(LoopConstraint, self).to_string()
         return " ".join([s, self.loopPath])
+
     def to_dict(self):
         """
         Return a dict object which can be used to construct a
@@ -629,6 +667,7 @@ class LoopConstraint(CodedConstraint):
         d = super(LoopConstraint, self).to_dict()
         d.update(loopPath=self.loopPath, op=self.SERIALISED_OPS[self.op])
         return d
+
 
 class TernaryConstraint(BinaryConstraint):
     """
@@ -646,23 +685,27 @@ class TernaryConstraint(BinaryConstraint):
     well as the main value.
     """
     OPS = set(['LOOKUP'])
+
     def __init__(self, path, op, value, extra_value=None, code="A"):
         """
         Constructor
         ===========
 
-        @param path: The path to constrain. Here is must be a class, or a reference to a class.
+        @param path: The path to constrain. Here is must be a class,
+                     or a reference to a class.
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
         @param value: The value to check other fields against.
         @type value: string
 
-        @param extra_value: A further value for disambiguation. The meaning of this value varies by class
-                            and configuration. For example, if the class of the object is Gene, then
-                            extra_value will refer to the Organism.
+        @param extra_value: A further value for disambiguation. The meaning
+                            of this value varies by class and configuration.
+                            For example, if the class of the object is Gene,
+                            then extra_value will refer to the Organism.
         @type extra_value: string
 
         @param code: The code for this constraint (default = "A")
@@ -681,6 +724,7 @@ class TernaryConstraint(BinaryConstraint):
             return s
         else:
             return " ".join([s, 'IN', self.extra_value])
+
     def to_dict(self):
         """
         Return a dict object which can be used to construct a
@@ -690,6 +734,7 @@ class TernaryConstraint(BinaryConstraint):
         if self.extra_value is not None:
             d.update(extraValue=self.extra_value)
         return d
+
 
 class MultiConstraint(CodedConstraint):
     """
@@ -712,25 +757,30 @@ class MultiConstraint(CodedConstraint):
         than an object's identity.
     """
     OPS = set(['ONE OF', 'NONE OF'])
+
     def __init__(self, path, op, values, code="A"):
         """
         Constructor
         ===========
 
-        @param path: The path to constrain. Here it must be an attribute of some object.
+        @param path: The path to constrain. Here it must be an attribute of
+                     some object.
         @type path: string
 
-        @param op: The relationship between the path and the path provided (must be a valid operator)
+        @param op: The relationship between the path and the path provided
+                   (must be a valid operator)
         @type op: string
 
-        @param values: The set of values which the object of the constraint either must or must not belong to.
+        @param values: The set of values which the object of the constraint
+                       either must or must not belong to.
         @type values: set or list
 
         @param code: The code for this constraint (default = "A")
         @type code: string
         """
         if not isinstance(values, (set, list)):
-            raise TypeError("values must be a set or a list, not " + str(type(values)))
+            raise TypeError(
+                "values must be a set or a list, not " + str(type(values)))
         self.values = values
         super(MultiConstraint, self).__init__(path, op, code)
 
@@ -741,6 +791,7 @@ class MultiConstraint(CodedConstraint):
         """
         s = super(MultiConstraint, self).to_string()
         return ' '.join([s, str(self.values)])
+
     def to_dict(self):
         """
         Return a dict object which can be used to construct a
@@ -749,6 +800,7 @@ class MultiConstraint(CodedConstraint):
         d = super(MultiConstraint, self).to_dict()
         d.update(value=self.values)
         return d
+
 
 class RangeConstraint(MultiConstraint):
     """
@@ -771,14 +823,16 @@ class RangeConstraint(MultiConstraint):
 
         4 WITHIN [1..5, 20..25] => True
 
-    The format of the ranges depends on the value being constrained and what range
-    parsers have been configured on the target server. A common range parser for
-    biological mines is the one for Locations:
+    The format of the ranges depends on the value being constrained and what
+    range parsers have been configured on the target server. A common range
+    parser for biological mines is the one for Locations:
 
         Gene.chromosomeLocation OVERLAPS [2X:54321..67890, 3R:12345..456789]
 
     """
-    OPS = set(['OVERLAPS', 'DOES NOT OVERLAP', 'WITHIN', 'OUTSIDE', 'CONTAINS', 'DOES NOT CONTAIN'])
+    OPS = set(['OVERLAPS', 'DOES NOT OVERLAP', 'WITHIN',
+               'OUTSIDE', 'CONTAINS', 'DOES NOT CONTAIN'])
+
 
 class IsaConstraint(MultiConstraint):
     """
@@ -798,6 +852,7 @@ class IsaConstraint(MultiConstraint):
     """
     OPS = set(['ISA'])
 
+
 class SubClassConstraint(Constraint):
     """
     Constraints on the class of a reference
@@ -816,36 +871,41 @@ class SubClassConstraint(Constraint):
     in an InterMine query), they do not have codes
     and cannot be referenced in logic expressions.
     """
+
     def __init__(self, path, subclass):
         """
         Constructor
         ===========
 
-        @param path: The path to constrain. This must refer to a class or a reference to a class.
+        @param path: The path to constrain. This must refer to a class or a
+                     reference to a class.
         @type path: str
 
-        @param subclass: The class to subclass the path to. This must be a simple class name (not a dotted name)
+        @param subclass: The class to subclass the path to. This must be a
+                         simple class name (not a dotted name)
         @type subclass: str
         """
         if not PATH_PATTERN.match(subclass):
-             raise TypeError
+            raise TypeError
         self.subclass = subclass
         super(SubClassConstraint, self).__init__(path)
+
     def to_string(self):
-       """
-       Provide a human readable representation of the logic.
-       This method is called by repr.
-       """
-       s = super(SubClassConstraint, self).to_string()
-       return s + ' ISA ' + self.subclass
+        """
+        Provide a human readable representation of the logic.
+        This method is called by repr.
+        """
+        s = super(SubClassConstraint, self).to_string()
+        return s + ' ISA ' + self.subclass
+
     def to_dict(self):
-       """
-       Return a dict object which can be used to construct a
-       DOM element with the appropriate attributes.
-       """
-       d = super(SubClassConstraint, self).to_dict()
-       d.update(type=self.subclass)
-       return d
+        """
+        Return a dict object which can be used to construct a
+        DOM element with the appropriate attributes.
+        """
+        d = super(SubClassConstraint, self).to_dict()
+        d.update(type=self.subclass)
+        return d
 
 
 class TemplateConstraint(object):
@@ -853,24 +913,29 @@ class TemplateConstraint(object):
     A mixin to supply the behaviour and state of constraints on templates
     =====================================================================
 
-    Constraints on templates can also be designated as "on", "off" or "locked", which refers
-    to whether they are active or not. Inactive constraints are still configured, but behave
-    as if absent for the purpose of results. In addition, template constraints can be
-    editable or not. Only values for editable constraints can be provided when requesting results,
-    and only constraints that can participate in logic expressions can be editable.
+    Constraints on templates can also be designated as "on", "off" or
+    "locked", which refers to whether they are active or not. Inactive
+    constraints are still configured, but behave as if absent for the purpose
+    of results. In addition, template constraints can be editable or not.
+    Only values for editable constraints can be provided when requesting
+    results, and only constraints that can participate in logic expressions
+    can be editable.
     """
     REQUIRED = "locked"
     OPTIONAL_ON = "on"
     OPTIONAL_OFF = "off"
+
     def __init__(self, editable=True, optional="locked"):
         """
         Constructor
         ===========
 
-        @param editable: Whether or not this constraint should accept new values.
+        @param editable: Whether or not this constraint should accept new
+                         values.
         @type editable: bool
 
-        @param optional: Whether a value for this constraint must be provided when running.
+        @param optional: Whether a value for this constraint must be provided
+                         when running.
         @type optional: "locked", "on" or "off"
         """
         self.editable = editable
@@ -950,6 +1015,7 @@ class TemplateConstraint(object):
         else:
             editable = "non-editable"
         return '(' + editable + ", " + self.get_switchable_status() + ')'
+
     def separate_arg_sets(self, args):
         """
         A static function to use when building template constraints.
@@ -957,9 +1023,9 @@ class TemplateConstraint(object):
 
         dict -> (dict, dict)
 
-        Splits a dictionary of arguments into two separate dictionaries, one with
-        arguments for the main constraint, and one with arguments for the template
-        portion of the behaviour
+        Splits a dictionary of arguments into two separate dictionaries, one
+        with arguments for the main constraint, and one with arguments for the
+        template portion of the behaviour
         """
         c_args = {}
         t_args = {}
@@ -972,122 +1038,141 @@ class TemplateConstraint(object):
                 c_args[k] = v
         return (c_args, t_args)
 
+
 class TemplateUnaryConstraint(UnaryConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         UnaryConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(UnaryConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class TemplateBinaryConstraint(BinaryConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         BinaryConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(BinaryConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class TemplateListConstraint(ListConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         ListConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(ListConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class TemplateLoopConstraint(LoopConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         LoopConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(LoopConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class TemplateTernaryConstraint(TernaryConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         TernaryConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(TernaryConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class TemplateMultiConstraint(MultiConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         MultiConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(MultiConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class TemplateRangeConstraint(RangeConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         RangeConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(RangeConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class TemplateIsaConstraint(IsaConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         IsaConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(IsaConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class TemplateSubClassConstraint(SubClassConstraint, TemplateConstraint):
     def __init__(self, *a, **d):
         (c_args, t_args) = self.separate_arg_sets(d)
         SubClassConstraint.__init__(self, *a, **c_args)
         TemplateConstraint.__init__(self, **t_args)
+
     def to_string(self):
         """
         Provide a template specific human readable representation of the
         constraint. This method is called by repr.
         """
         return(SubClassConstraint.to_string(self)
-                + " " + TemplateConstraint.to_string(self))
+               + " " + TemplateConstraint.to_string(self))
+
 
 class ConstraintFactory(object):
     """
@@ -1111,7 +1196,8 @@ class ConstraintFactory(object):
         Creates a new ConstraintFactory
         """
         self._codes = iter(string.ascii_uppercase)
-        self.reference_ops = TernaryConstraint.OPS | RangeConstraint.OPS | ListConstraint.OPS | IsaConstraint.OPS
+        self.reference_ops = (TernaryConstraint.OPS | RangeConstraint.OPS
+                              | ListConstraint.OPS | IsaConstraint.OPS)
 
     def get_next_code(self):
         """
@@ -1140,7 +1226,8 @@ class ConstraintFactory(object):
             except TypeError as e:
                 pass
         raise TypeError("No matching constraint class found for "
-            + str(args) + ", " + str(kwargs))
+                        + str(args) + ", " + str(kwargs))
+
 
 class TemplateConstraintFactory(ConstraintFactory):
     """
