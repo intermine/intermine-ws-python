@@ -3,7 +3,7 @@ The InterMine Python Webservice Client
 
 
 [![Build Status][badge]][ci] 
-![Version](http://img.shields.io/badge/version-1.10.0-blue.svg?style=flat)
+![Version](http://img.shields.io/badge/version-1.12.0-blue.svg?style=flat)
 [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/intermine/intermine/blob/master/LICENSE) 
 [![Research software impact](http://depsy.org/api/package/pypi/intermine/badge.svg)](http://depsy.org/package/python/intermine)
 
