@@ -13,7 +13,10 @@ try:
 except ImportError:
     from urllib.parse import urlparse
     from urllib.parse import urlencode
-    from collections import MutableMapping as DictMixin
+    try:
+        from collections import MutableMapping as DictMixin
+    except ImportError:
+        from collections.abc import MutableMapping as DictMixin
     from urllib.request import urlopen
 
 try:
