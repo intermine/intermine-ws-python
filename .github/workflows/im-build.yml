@@ -1,0 +1,26 @@
+name: InterMine WS Python CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      TESTMODEL_URL: http://localhost:8080/intermine-demo
+      TESTMODEL_PATH: intermine-demo
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run unit tests
+      run: ./config/travis/init-solr.sh && ./config/travis/init.sh && python setup.py test && python setup.py livetest
