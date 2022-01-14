@@ -1835,6 +1835,7 @@ class Template(Query):
         super(Template, self).__init__(*args, **kwargs)
         self.constraint_factory = constraints.TemplateConstraintFactory()
         self.title = ''
+        self.view_types = []
 
     @classmethod
     def from_xml(cls, xml, *args, **kwargs):
@@ -1869,6 +1870,8 @@ class Template(Query):
                                   "Found %d" % len(templates))
         t = templates[0]
         obj.title = t.getAttribute('title')
+        for data_type in t.getAttribute('dataTypes').split(' '):
+            obj.view_types.append(data_type)
 
         obj.verify()
 
