@@ -12,12 +12,19 @@ fi
 # Pull in the server code.
 git clone --single-branch --depth 1 https://github.com/intermine/intermine.git server
 
-export PSQL_USER=postgres
+export PSQL_USER=test
+export PSQL_PWD=test
+export KEYSTORE=${PWD}/keystore.jks
+
+echo "#---> Running unit tests"
+
+sudo -u postgres createuser test
+sudo -u postgres psql -c "alter user test with encrypted password 'test';"
 
 # Set up properties
 PROPDIR=$HOME/.intermine
 TESTMODEL_PROPS=$PROPDIR/testmodel.properties
-SED_SCRIPT='s/PSQL_USER/postgres/'
+SED_SCRIPT='s/PSQL_USER/test/'
 
 mkdir -p $PROPDIR
 

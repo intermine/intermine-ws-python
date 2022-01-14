@@ -42,4 +42,4 @@ jobs:
         sudo apt-get install -y libpq-dev postgresql-client
         sudo service postgresql start
     - name: Run unit tests
-      run: ./config/travis/init-solr.sh && ./config/travis/init.sh && python setup.py test && python setup.py livetest
+      run: ./config/ci/init-solr.sh && ./config/ci/init.sh && python setup.py test && python setup.py livetest
