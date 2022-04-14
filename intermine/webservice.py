@@ -646,7 +646,7 @@ class Service(object):
         self._list_manager = ListManager(self)
         self._templates = None
         self._all_templates = None
-        self.all_templates_names = None
+        self._all_templates_names = None
         self._model = None
         self._version = None
         self._release = None
