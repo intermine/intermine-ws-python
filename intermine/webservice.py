@@ -525,6 +525,7 @@ class Service(object):
                                + name + "' at this service belonging to '" + username + "'")
         if not isinstance(t, Template):
             t = Template.from_xml(t, self.model, self)
+            t.user_name = username
             self.all_templates[name] = t
         return t
 
