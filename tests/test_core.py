@@ -1031,6 +1031,7 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
             'constraint2': 'Employee.age',
             'op1': '=',
             'op2': '>',
+            'userName': '',
             'value1': 'Fred',
             'value2': '25',
             'start': 0
@@ -1047,6 +1048,7 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
             'constraint2': 'Employee.age',
             'op1': '=',
             'op2': '>',
+            'userName': '',
             'value1': 'Fred',
             'value2': '25',
             'start': 0
