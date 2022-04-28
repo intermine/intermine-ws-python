@@ -1025,6 +1025,7 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
 
         expected1 = ('/TEMPLATE-PATH', {
             'name': 'TEST-TEMPLATE',
+            'userName': '',
             'code1': 'A',
             'code2': 'B',
             'constraint1': 'Employee.name',
@@ -1041,6 +1042,7 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
 
         expected1 = ('/TEMPLATE-PATH', {
             'name': 'TEST-TEMPLATE',
+            'userName': '',
             'code1': 'A',
             'code2': 'B',
             'constraint1': 'Employee.name',
@@ -1057,6 +1059,7 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
 
         expected2 = ('/TEMPLATE-PATH', {
             'name': 'TEST-TEMPLATE',
+            'userName': '',
             'code1': 'A',
             'code2': 'B',
             'constraint1': 'Employee.name',
@@ -1076,6 +1079,7 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
 
         expected2 = ('/TEMPLATE-PATH', {
             'name': 'TEST-TEMPLATE',
+            'userName': '',
             'code1': 'A',
             'code2': 'B',
             'constraint1': 'Employee.name',
@@ -1108,6 +1112,7 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
         # Check that we can just use strings for simple value replacement.
         expected3 = ('/TEMPLATE-PATH', {
             'name': 'TEST-TEMPLATE',
+            'userName': '',
             'code1': 'A',
             'code2': 'B',
             'constraint1': 'Employee.name',
@@ -1128,6 +1133,7 @@ class TestQueryResults(WebserviceTest):  # pragma: no cover
         self.assertEqual(expected1, t.rows())
         expected1 = ('/TEMPLATE-PATH', {
             'name': 'TEST-TEMPLATE',
+            'userName': '',
             'code1': 'A',
             'code2': 'B',
             'constraint1': 'Employee.name',

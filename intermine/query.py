@@ -1835,7 +1835,30 @@ class Template(Query):
         super(Template, self).__init__(*args, **kwargs)
         self.constraint_factory = constraints.TemplateConstraintFactory()
         self.title = ''
+        self.user_name = ''
         self.view_types = []
+
+    def clone(self):
+        """
+        Performs a deep clone
+        =====================
+
+        This method will produce a clone that is independent,
+        and can be altered without affecting the original,
+        but starts off with the exact same state as it.
+
+        The only shared elements should be the model
+        and the service, which are shared by all queries
+        that refer to the same webservice.
+
+        @return: same class as caller
+        """
+        newobj = super(Template, self).clone()
+        setattr(newobj, "user_name", getattr(self, "user_name"))
+        return newobj
+
+    def add_user_name(self, user_name):
+        self.user_name = user_name
 
     @classmethod
     def from_xml(cls, xml, *args, **kwargs):
@@ -1914,7 +1937,7 @@ class Template(Query):
 
         @rtype: dict
         """
-        p = {'name': self.name}
+        p = {'name': self.name, 'userName': self.user_name}
         i = 1
         for c in self.editable_constraints:
             if not c.switched_on:
@@ -1964,6 +1987,7 @@ class Template(Query):
         @rtype: L{Template}
         """
         clone = self.clone()
+
         for code, options in list(con_values.items()):
             con = clone.get_constraint(code)
             if not con.editable:
@@ -2031,7 +2055,6 @@ class Template(Query):
         return super(Template, clone).get_row_list(start, size)
 
     def rows(self, start=0, size=None, **con_values):
-        print("basil2")
         """Get an iterator over the rows returned by this query"""
         clone = self.get_adjusted_template(con_values)
         return super(Template, clone).rows(start, size)

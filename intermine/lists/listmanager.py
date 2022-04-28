@@ -256,6 +256,7 @@ class ListManager(object):
                     This only makes sense with text uploads
                     - it is not required (or used) when
                     the content is a list or a query.
+        @param organism: organism name
 
         @rtype: intermine.lists.List
         """

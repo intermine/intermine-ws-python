@@ -211,6 +211,7 @@ class Service(object):
     MODEL_PATH = '/model'
     TEMPLATES_PATH = '/templates'
     TEMPLATEQUERY_PATH = '/template/results'
+    ALL_TEMPLATES_PATH = '/alltemplates'
     LIST_PATH = '/lists'
     LIST_CREATION_PATH = '/lists'
     LIST_RENAME_PATH = '/lists/rename'
@@ -270,6 +271,8 @@ class Service(object):
         self.prefetch_id_only = prefetch_id_only
         # Initialize empty cached data.
         self._templates = None
+        self._all_templates = None
+        self._all_templates_names = None
         self._model = None
         self._version = None
         self._release = None
@@ -488,6 +491,44 @@ class Service(object):
             self.templates[name] = t
         return t
 
+    def get_template_by_user(self, name, username):
+        """
+        Returns a template of the given name belonging to username
+        ==========================================================
+
+        Tries to retrieve a template of the given name belonging
+        to the username from the webservice. You need to authenticate
+        as admin
+
+        @see: L{intermine.webservice.Service.__init__}
+
+        @param name: the template's name
+        @type name: string
+
+        @param username: the username
+        @type name: string
+
+        @raise ServiceError: if the template or user does not exist
+        @raise QueryParseError: if the template cannot be parsed
+
+        @return: L{intermine.query.Template}
+        """
+        try:
+            templates = self.all_templates[username]
+        except KeyError:
+            raise ServiceError("There is no user called '" + username + "'")
+        try:
+            t = templates[name]
+        except KeyError:
+            raise ServiceError("There is no template called '"
+                               + name + "' at this service belonging to '"
+                               + username + "'")
+        if not isinstance(t, Template):
+            t = Template.from_xml(t, self.model, self)
+            t.user_name = username
+            self.all_templates[name] = t
+        return t
+
     def _get_json(self, path, payload=None):
         headers = {'Accept': 'application/json'}
         with closing(self.opener.open(self.root + path, payload,
@@ -605,6 +646,8 @@ class Service(object):
         self._list_manager.delete_temporary_lists()
         self._list_manager = ListManager(self)
         self._templates = None
+        self._all_templates = None
+        self._all_templates_names = None
         self._model = None
         self._version = None
         self._release = None
@@ -643,6 +686,80 @@ class Service(object):
                     templates[name] = e.toxml()
             self._templates = templates
         return self._templates
+
+    @property
+    def all_templates(self):
+        """
+        The dictionary of templates by users from the webservice
+        ========================================================
+
+        Service.all_templates S{->} dict(string|string)
+
+        You need to be authenticated as admin.
+
+        For efficiency's sake, Templates are not parsed until
+        they are required, and until then they are stored as XML
+        strings. It is recommended that in most cases you would want
+        to use L{Service.get_template}.
+
+        You can use this property however to test for template existence::
+
+         if name in service.templates:
+           template = service.get_template(name)
+
+        @rtype: dict
+
+        """
+        if self._all_templates is None:
+            all_templates = {}
+            dom = self._get_xml(self.ALL_TEMPLATES_PATH)
+            for e in dom.getElementsByTagName('template'):
+                user = e.getAttribute('userName')
+                name = e.getAttribute('name')
+                if user in all_templates:
+                    templates = all_templates[user]
+                    templates[name] = e.toxml()
+                else:
+                    templates = {}
+                    templates[name] = e.toxml()
+                    all_templates[user] = templates
+            self._all_templates = all_templates
+        return self._all_templates
+
+    @property
+    def all_templates_names(self):
+        """
+        The dictionary of templates names by users from the webservice
+        =============================================================
+
+        Service.all_templates_names S{->} dict(string|array)
+
+        You need to be authenticated as admin.
+
+        Example::
+          allTemplatesNames = service.all_templates_names
+          for user in allTemplatesNames:
+            userTemplatesNames = allTemplatesNames[user]
+            for templateName in userTemplatesNames:
+              template = service.get_template_by_user(templateName, user)
+
+        @rtype: dict
+
+        """
+        if self._all_templates_names is None:
+            all_templates_names = {}
+            dom = self._get_xml(self.ALL_TEMPLATES_PATH)
+            for e in dom.getElementsByTagName('template'):
+                user = e.getAttribute('userName')
+                name = e.getAttribute('name')
+                if user in all_templates_names:
+                    all_templates_names[user].append(name)
+                else:
+                    templates_names = []
+                    templates_names.append(name)
+                    all_templates_names[user] = templates_names
+            self._all_templates_names = all_templates_names
+        return self._all_templates_names
 
     @property
     def model(self):
