@@ -521,7 +521,8 @@ class Service(object):
             t = templates[name]
         except KeyError:
             raise ServiceError("There is no template called '"
-                + name + "' at this service belonging to '" + username + "'")
+                               + name + "' at this service belonging to '"
+                               + username + "'")
         if not isinstance(t, Template):
             t = Template.from_xml(t, self.model, self)
             t.user_name = username
