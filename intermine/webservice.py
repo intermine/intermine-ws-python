@@ -521,7 +521,7 @@ class Service(object):
             t = templates[name]
         except KeyError:
             raise ServiceError("There is no template called '"
-                               + name + "' at this service belonging to '" + username + "'")
+                + name + "' at this service belonging to '" + username + "'")
         if not isinstance(t, Template):
             t = Template.from_xml(t, self.model, self)
             t.user_name = username
@@ -701,10 +701,10 @@ class Service(object):
         strings. It is recommended that in most cases you would want
         to use L{Service.get_template}.
 
-        You can use this property however to test for template existence though::
+        You can use this property however to test for template existence::
 
          if name in service.templates:
-            template = service.get_template(name)
+           template = service.get_template(name)
 
         @rtype: dict
 
@@ -735,11 +735,12 @@ class Service(object):
 
         You need to be authenticated as admin.
 
-        allTemplatesNames = service.all_templates_names
-        for user in allTemplatesNames:
-	    userTemplatesNames = allTemplatesNames[user]
-	    for templateName in userTemplatesNames:
-		    template = service.get_template_by_user(templateName, user)
+        Example::
+          allTemplatesNames = service.all_templates_names
+          for user in allTemplatesNames:
+            userTemplatesNames = allTemplatesNames[user]
+            for templateName in userTemplatesNames:
+              template = service.get_template_by_user(templateName, user)
 
         @rtype: dict
 
