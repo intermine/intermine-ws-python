@@ -122,6 +122,8 @@ For example:
 Changes:
 --------
 
+    1.13.00   Added get_template_by_user method
+			  Added property view_types to the template
     1.12.00   Added organism to list upload
               Support for Python 3.7
               Added getVersion for registry mines
