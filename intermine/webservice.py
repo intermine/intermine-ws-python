@@ -496,10 +496,9 @@ class Service(object):
         Returns a template of the given name belonging to username
         ==========================================================
 
-        Tries to retrieve a template of the given name
-        from the webservice. If you are trying to fetch
-        a private template (ie. one you made yourself
-        and is not available to others) then you may need to authenticate
+        Tries to retrieve a template of the given name belonging
+        to the username from the webservice. You need to authenticate
+        as admin
 
         @see: L{intermine.webservice.Service.__init__}
 
@@ -695,6 +694,8 @@ class Service(object):
 
         Service.all_templates S{->} dict(string|string)
 
+        You need to be authenticated as admin.
+
         For efficiency's sake, Templates are not parsed until
         they are required, and until then they are stored as XML
         strings. It is recommended that in most cases you would want
@@ -727,12 +728,12 @@ class Service(object):
     @property
     def all_templates_names(self):
         """
-        The dictionary of templates name by users from the webservice
+        The dictionary of templates names by users from the webservice
         =============================================================
 
         Service.all_templates_names S{->} dict(string|array)
 
-        You can use this property however to test for template existence though::
+        You need to be authenticated as admin.
 
         allTemplatesNames = service.all_templates_names
         for user in allTemplatesNames:
