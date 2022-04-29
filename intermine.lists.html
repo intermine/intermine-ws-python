@@ -1,38 +1,36 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="python">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intermine.lists package &#8212; Intermine 1.10.0 documentation</title>
+    
+    <title>intermine.lists package &mdash; Intermine 1.10.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '1.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Intermine 1.10.0 documentation" href="query.html" />
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>
-  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -49,13 +47,13 @@
 <dl class="class">
 <dt id="intermine.lists.list.List">
 <em class="property">class </em><code class="descclassname">intermine.lists.list.</code><code class="descname">List</code><span class="sig-paren">(</span><em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/lists/list.html#List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.lists.list.List" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Lists represent stored collections of data and saved result
 sets in an InterMine data warehouse. This class is an abstraction
 of this information, and provides mechanisms for managing the
 data.</p>
 <p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">intermine.webservice</span> <span class="k">import</span> <span class="n">Service</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">intermine.webservice</span> <span class="kn">import</span> <span class="n">Service</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">flymine</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;www.flymine.org/query&quot;</span><span class="p">,</span> <span class="s2">&quot;SOMETOKEN&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_list</span> <span class="o">=</span> <span class="n">flymine</span><span class="o">.</span><span class="n">create_list</span><span class="p">([</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;zen&quot;</span><span class="p">,</span> <span class="s2">&quot;eve&quot;</span><span class="p">,</span> <span class="s2">&quot;bib&quot;</span><span class="p">],</span> <span class="s2">&quot;Gene&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;My New List&quot;</span><span class="p">)</span>
@@ -73,11 +71,11 @@ data.</p>
 </div>
 <p>Lists are created from a webservice, and can be manipulated in various ways.
 The operations are:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">Union</span><span class="p">:</span> <span class="n">this</span> <span class="o">|</span> <span class="n">that</span>
-<span class="o">*</span> <span class="n">Intersection</span><span class="p">:</span> <span class="n">this</span> <span class="o">&amp;</span> <span class="n">that</span>
-<span class="o">*</span> <span class="n">Symmetric</span> <span class="n">Difference</span><span class="p">:</span> <span class="n">this</span> <span class="o">^</span> <span class="n">that</span>
-<span class="o">*</span> <span class="n">Asymmetric</span> <span class="n">Difference</span> <span class="p">(</span><span class="n">subtraction</span><span class="p">):</span> <span class="n">this</span> <span class="o">-</span> <span class="n">that</span>
-<span class="o">*</span> <span class="n">Appending</span><span class="p">:</span> <span class="n">this</span> <span class="o">+=</span> <span class="n">that</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span>* Union: this | that
+* Intersection: this &amp; that
+* Symmetric Difference: this ^ that
+* Asymmetric Difference (subtraction): this - that
+* Appending: this += that
 </pre></div>
 </div>
 <dl class="docutils">
@@ -90,13 +88,13 @@ The operations are:</p>
 </dd>
 </dl>
 <p>In all these cases the syntax is the same:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_list</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">create_list</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Some name&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Some description&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;some&quot;</span><span class="p">,</span> <span class="s2">&quot;tags&quot;</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_list</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">create_list</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Some name&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Some description&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;some&quot;</span><span class="p">,</span> <span class="s2">&quot;tags&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>Lists can also be created from a query's result with the exact
+<p>Lists can also be created from a query&#8217;s result with the exact
 same syntax. In the case of queries, the type is not required,
 but the query should have just one view, and it should be an id.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">new_query</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">new_query</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.id&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.length&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_list</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">create_list</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Short Genes&quot;</span><span class="p">)</span>
@@ -123,7 +121,7 @@ but the query should have just one view, and it should be an id.</p>
 <dt id="intermine.lists.list.List.calculate_enrichment">
 <code class="descname">calculate_enrichment</code><span class="sig-paren">(</span><em>widget</em>, <em>background=None</em>, <em>correction='Holm-Bonferroni'</em>, <em>maxp=0.05</em>, <em>filter=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/lists/list.html#List.calculate_enrichment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.lists.list.List.calculate_enrichment" title="Permalink to this definition">¶</a></dt>
 <dd><p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">get_list</span><span class="p">(</span><span class="s2">&quot;some list&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">calculate_enrichment</span><span class="p">(</span><span class="s2">&quot;thingy_enrichment&quot;</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">get_list</span><span class="p">(</span><span class="s2">&quot;some list&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">calculate_enrichment</span><span class="p">(</span><span class="s2">&quot;thingy_enrichment&quot;</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span> <span class="n">item</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">p_value</span>
 </pre></div>
 </div>
@@ -139,7 +137,7 @@ a record with the following properties:</p>
 </div></blockquote>
 <p>The enrichment row object may be treated as an object with property access, or as
 a dictionary, supporting key lookup with the [] operator:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p_value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;p-value&#39;</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p_value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;p-value&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -215,7 +213,7 @@ to do so will raise errors.</p>
 <dl class="method">
 <dt id="intermine.lists.list.List.set_name">
 <code class="descname">set_name</code><span class="sig-paren">(</span><em>new_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/lists/list.html#List.set_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.lists.list.List.set_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Setting the list's name causes the list's name to be updated on the server.</p>
+<dd><p>Setting the list&#8217;s name causes the list&#8217;s name to be updated on the server.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -264,7 +262,7 @@ and with a single view column of the objects ids.</p>
 <dl class="class">
 <dt id="intermine.lists.listmanager.ListManager">
 <em class="property">class </em><code class="descclassname">intermine.lists.listmanager.</code><code class="descname">ListManager</code><span class="sig-paren">(</span><em>service</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/lists/listmanager.html#ListManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.lists.listmanager.ListManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>This class provides methods to manage list contents and operations.</p>
 <p>This class may be called itself, but all the useful methods it has
 are also available on the Service object, which delegates to this class, while
@@ -276,22 +274,22 @@ or intersect, union, subtract, diff) unless you are choosing your own names each
 and are confident that these will not conflict.</p>
 <dl class="attribute">
 <dt id="intermine.lists.listmanager.ListManager.DEFAULT_DESCRIPTION">
-<code class="descname">DEFAULT_DESCRIPTION</code><em class="property"> = u'List created with Python client library'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.DEFAULT_DESCRIPTION" title="Permalink to this definition">¶</a></dt>
+<code class="descname">DEFAULT_DESCRIPTION</code><em class="property"> = 'List created with Python client library'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.DEFAULT_DESCRIPTION" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.lists.listmanager.ListManager.DEFAULT_LIST_NAME">
-<code class="descname">DEFAULT_LIST_NAME</code><em class="property"> = u'my_list'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.DEFAULT_LIST_NAME" title="Permalink to this definition">¶</a></dt>
+<code class="descname">DEFAULT_LIST_NAME</code><em class="property"> = 'my_list'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.DEFAULT_LIST_NAME" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.lists.listmanager.ListManager.DIFFERENCE_PATH">
-<code class="descname">DIFFERENCE_PATH</code><em class="property"> = u'/lists/diff/json'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.DIFFERENCE_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">DIFFERENCE_PATH</code><em class="property"> = '/lists/diff/json'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.DIFFERENCE_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.lists.listmanager.ListManager.INTERSECTION_PATH">
-<code class="descname">INTERSECTION_PATH</code><em class="property"> = u'/lists/intersect/json'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.INTERSECTION_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">INTERSECTION_PATH</code><em class="property"> = '/lists/intersect/json'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.INTERSECTION_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -301,12 +299,12 @@ and are confident that these will not conflict.</p>
 
 <dl class="attribute">
 <dt id="intermine.lists.listmanager.ListManager.SUBTRACTION_PATH">
-<code class="descname">SUBTRACTION_PATH</code><em class="property"> = u'/lists/subtract/json'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.SUBTRACTION_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SUBTRACTION_PATH</code><em class="property"> = '/lists/subtract/json'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.SUBTRACTION_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.lists.listmanager.ListManager.UNION_PATH">
-<code class="descname">UNION_PATH</code><em class="property"> = u'/lists/union/json'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.UNION_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">UNION_PATH</code><em class="property"> = '/lists/union/json'</em><a class="headerlink" href="#intermine.lists.listmanager.ListManager.UNION_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -317,7 +315,7 @@ and are confident that these will not conflict.</p>
 
 <dl class="method">
 <dt id="intermine.lists.listmanager.ListManager.create_list">
-<code class="descname">create_list</code><span class="sig-paren">(</span><em>content</em>, <em>list_type=u''</em>, <em>name=None</em>, <em>description=None</em>, <em>tags=[]</em>, <em>add=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/lists/listmanager.html#ListManager.create_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.lists.listmanager.ListManager.create_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_list</code><span class="sig-paren">(</span><em>content</em>, <em>list_type=''</em>, <em>name=None</em>, <em>description=None</em>, <em>tags=[]</em>, <em>add=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/lists/listmanager.html#ListManager.create_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.lists.listmanager.ListManager.create_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>If no name is given, the list will be considered to be a temporary
 list, and will be automatically deleted when the program ends. To prevent
 this happening, give the list a name, either on creation, or by renaming it.</p>
@@ -328,7 +326,7 @@ with locks if you intend to create lists with multiple threads in parallel.</p>
 <dd><ul class="first last simple">
 <li>A string with white-space separated terms.</li>
 <li>The name of a file that contains the terms.</li>
-<li>A file-handle like thing (something with a 'read' method)</li>
+<li>A file-handle like thing (something with a &#8216;read&#8217; method)</li>
 <li>An iterable of identifiers</li>
 <li>A query with a single column.</li>
 <li>Another list.</li>
@@ -347,16 +345,21 @@ with locks if you intend to create lists with multiple threads in parallel.</p>
 <div><p>collection of strings naming issue groups that would otherwise be ignored, but
 in this case will be added to the list. The available groups are:</p>
 <blockquote>
-<div><ul class="simple">
-<li>DUPLICATE - More than one match was found.</li>
-<li>WILDCARD - A wildcard match was made.</li>
+<div><ul>
+<li><p class="first">DUPLICATE - More than one match was found.</p>
+</li>
+<li><p class="first">WILDCARD - A wildcard match was made.</p>
+</li>
 <li><dl class="first docutils">
 <dt>TYPE_CONVERTED - A match was found, but in another type (eg. found a protein</dt>
-<dd>and we could convert it to a gene).</dd>
+<dd><p class="first last">and we could convert it to a gene).</p>
+</dd>
 </dl>
 </li>
-<li>OTHER - other issue types</li>
-<li>:all - All issues should be considered acceptable.</li>
+<li><p class="first">OTHER - other issue types</p>
+</li>
+<li><p class="first">:all - All issues should be considered acceptable.</p>
+</li>
 </ul>
 </div></blockquote>
 <p>This only makes sense with text uploads - it is not required (or used) when
@@ -523,18 +526,21 @@ of allocation.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/intermine.lists.rst.txt"
+      <li><a href="_sources/intermine.lists.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -545,11 +551,11 @@ of allocation.</p>
       &copy;2018, Alex Kalderimis, Julie Sullivan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="_sources/intermine.lists.rst.txt"
+      <a href="_sources/intermine.lists.txt"
           rel="nofollow">Page source</a>
     </div>
 

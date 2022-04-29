@@ -1,38 +1,36 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="python">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intermine package &#8212; Intermine 1.10.0 documentation</title>
+    
+    <title>intermine package &mdash; Intermine 1.10.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '1.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Intermine 1.10.0 documentation" href="query.html" />
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>
-  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -68,8 +66,8 @@
 value represented by the path (it must be a representation
 of a value, ie an Attribute) and another value - ie. the
 operator takes two parameters.</p>
-<p>In all case the 'left' side of the relationship is the path,
-and the 'right' side is the supplied value.</p>
+<p>In all case the &#8216;left&#8217; side of the relationship is the path,
+and the &#8216;right&#8217; side is the supplied value.</p>
 <dl class="docutils">
 <dt>Valid operators are:</dt>
 <dd><ul class="first last simple">
@@ -87,7 +85,7 @@ and the 'right' side is the supplied value.</p>
 </dl>
 <dl class="attribute">
 <dt id="intermine.constraints.BinaryConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set(['CONTAINS', '&gt;=', 'LIKE', 'NOT LIKE', '=', '&lt;=', '!=', '&lt;', '&gt;'])</em><a class="headerlink" href="#intermine.constraints.BinaryConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = {'!=', '&gt;=', 'LIKE', 'NOT LIKE', '&gt;', '=', 'CONTAINS', '&lt;=', '&lt;'}</em><a class="headerlink" href="#intermine.constraints.BinaryConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -118,7 +116,7 @@ embody, and so have a reference to an operator.</p>
 inherited from to supply default behaviour.</p>
 <dl class="attribute">
 <dt id="intermine.constraints.CodedConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set([])</em><a class="headerlink" href="#intermine.constraints.CodedConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = set()</em><a class="headerlink" href="#intermine.constraints.CodedConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -159,13 +157,13 @@ purposes of serialisation.</p>
 <dl class="class">
 <dt id="intermine.constraints.ConstraintFactory">
 <em class="property">class </em><code class="descclassname">intermine.constraints.</code><code class="descname">ConstraintFactory</code><a class="reference internal" href="_modules/intermine/constraints.html#ConstraintFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.constraints.ConstraintFactory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>A constraint factory is responsible for finding an appropriate
 constraint class for the given arguments and instantiating the
 constraint.</p>
 <dl class="attribute">
 <dt id="intermine.constraints.ConstraintFactory.CONSTRAINT_CLASSES">
-<code class="descname">CONSTRAINT_CLASSES</code><em class="property"> = set([&lt;class 'intermine.constraints.BinaryConstraint'&gt;, &lt;class 'intermine.constraints.MultiConstraint'&gt;, &lt;class 'intermine.constraints.RangeConstraint'&gt;, &lt;class 'intermine.constraints.TernaryConstraint'&gt;, &lt;class 'intermine.constraints.SubClassConstraint'&gt;, &lt;class 'intermine.constraints.UnaryConstraint'&gt;, &lt;class 'intermine.constraints.LoopConstraint'&gt;, &lt;class 'intermine.constraints.ListConstraint'&gt;, &lt;class 'intermine.constraints.IsaConstraint'&gt;])</em><a class="headerlink" href="#intermine.constraints.ConstraintFactory.CONSTRAINT_CLASSES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">CONSTRAINT_CLASSES</code><em class="property"> = {&lt;class 'intermine.constraints.SubClassConstraint'&gt;, &lt;class 'intermine.constraints.BinaryConstraint'&gt;, &lt;class 'intermine.constraints.ListConstraint'&gt;, &lt;class 'intermine.constraints.UnaryConstraint'&gt;, &lt;class 'intermine.constraints.LoopConstraint'&gt;, &lt;class 'intermine.constraints.TernaryConstraint'&gt;, &lt;class 'intermine.constraints.RangeConstraint'&gt;, &lt;class 'intermine.constraints.IsaConstraint'&gt;, &lt;class 'intermine.constraints.MultiConstraint'&gt;}</em><a class="headerlink" href="#intermine.constraints.ConstraintFactory.CONSTRAINT_CLASSES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -188,7 +186,7 @@ constraint.</p>
 <dl class="exception">
 <dt id="intermine.constraints.EmptyLogicError">
 <em class="property">exception </em><code class="descclassname">intermine.constraints.</code><code class="descname">EmptyLogicError</code><a class="reference internal" href="_modules/intermine/constraints.html#EmptyLogicError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.constraints.EmptyLogicError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.ValueError</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/exceptions.html#ValueError" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">ValueError</span></code></a></p>
 <p>An error representing the fact that an the logic string to be parsed was empty</p>
 </dd></dl>
 
@@ -210,7 +208,7 @@ should be an instance of one of the classes provided.</p>
 <div>SequenceFeature ISA [Exon, Intron]</div></blockquote>
 <dl class="attribute">
 <dt id="intermine.constraints.IsaConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set(['ISA'])</em><a class="headerlink" href="#intermine.constraints.IsaConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = {'ISA'}</em><a class="headerlink" href="#intermine.constraints.IsaConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -236,7 +234,7 @@ upload feature.</p>
 </dl>
 <dl class="attribute">
 <dt id="intermine.constraints.ListConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set(['NOT IN', 'IN'])</em><a class="headerlink" href="#intermine.constraints.ListConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = {'IN', 'NOT IN'}</em><a class="headerlink" href="#intermine.constraints.ListConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -263,7 +261,7 @@ This method is called by repr.</p>
 either connected by AND or by OR logic.</p>
 <dl class="attribute">
 <dt id="intermine.constraints.LogicGroup.LEGAL_OPS">
-<code class="descname">LEGAL_OPS</code><em class="property"> = frozenset(['AND', 'OR'])</em><a class="headerlink" href="#intermine.constraints.LogicGroup.LEGAL_OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LEGAL_OPS</code><em class="property"> = frozenset({'AND', 'OR'})</em><a class="headerlink" href="#intermine.constraints.LogicGroup.LEGAL_OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -277,7 +275,7 @@ either connected by AND or by OR logic.</p>
 <dl class="class">
 <dt id="intermine.constraints.LogicNode">
 <em class="property">class </em><code class="descclassname">intermine.constraints.</code><code class="descname">LogicNode</code><a class="reference internal" href="_modules/intermine/constraints.html#LogicNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.constraints.LogicNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Objects which can be represented as nodes
 in the AST of a constraint logic graph should
 inherit from this class, which defines
@@ -294,7 +292,7 @@ methods for overloading built-in operations.</p>
 <dl class="class">
 <dt id="intermine.constraints.LogicParser">
 <em class="property">class </em><code class="descclassname">intermine.constraints.</code><code class="descname">LogicParser</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/constraints.html#LogicParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.constraints.LogicParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Instances of this class are used to parse logic strings into
 abstract syntax trees, and then logic groups. This aims to provide
 robust parsing of logic strings, with the ability to identify syntax
@@ -355,16 +353,16 @@ to a postfix sequence.</p>
 
 <dl class="attribute">
 <dt id="intermine.constraints.LogicParser.ops">
-<code class="descname">ops</code><em class="property"> = {'&amp;': 'AND', '&amp;&amp;': 'AND', '(': '(', ')': ')', 'AND': 'AND', 'OR': 'OR', '|': 'OR', '||': 'OR'}</em><a class="headerlink" href="#intermine.constraints.LogicParser.ops" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ops</code><em class="property"> = {'OR': 'OR', '||': 'OR', ')': ')', 'AND': 'AND', '&amp;': 'AND', '|': 'OR', '(': '(', '&amp;&amp;': 'AND'}</em><a class="headerlink" href="#intermine.constraints.LogicParser.ops" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intermine.constraints.LogicParser.parse">
 <code class="descname">parse</code><span class="sig-paren">(</span><em>logic_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/constraints.html#LogicParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.constraints.LogicParser.parse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a string such as &quot;A and B or C and D&quot;, and parses it
+<dd><p>Takes a string such as &#8220;A and B or C and D&#8221;, and parses it
 into a structure which represents this logic as a binary
 abstract syntax tree. The above string would parse to
-&quot;(A and B) or (C and D)&quot;, as AND binds more tightly than OR.</p>
+&#8220;(A and B) or (C and D)&#8221;, as AND binds more tightly than OR.</p>
 <p>Note that only singly rooted trees are parsed.</p>
 <p>&#64;param logic_str: The logic defininition as a string
 &#64;type logic_str: string</p>
@@ -380,7 +378,7 @@ LogicGroup object.</p>
 <p>&#64;param postfix_tokens: A list of tokens in postfix notation.
 &#64;type postfix_tokens: list</p>
 <p>&#64;rtype: LogicGroup</p>
-<p>&#64;raise AssertionError: is the tree doesn't have a unique root.</p>
+<p>&#64;raise AssertionError: is the tree doesn&#8217;t have a unique root.</p>
 </dd></dl>
 
 </dd></dl>
@@ -399,11 +397,11 @@ object.</p>
 </ul>
 </dd>
 </dl>
-<p>The operators IS and IS NOT map to the ops &quot;=&quot; and &quot;!=&quot; when they
+<p>The operators IS and IS NOT map to the ops &#8220;=&#8221; and &#8221;!=&#8221; when they
 are used in XML serialisation.</p>
 <dl class="attribute">
 <dt id="intermine.constraints.LoopConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set(['IS', 'IS NOT'])</em><a class="headerlink" href="#intermine.constraints.LoopConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = {'IS', 'IS NOT'}</em><a class="headerlink" href="#intermine.constraints.LoopConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -449,12 +447,12 @@ the following differences:</p>
 along with the query itself, rather than anything stored
 independently on a server.</li>
 <li>The object of the constaint is the value of an attribute, rather
-than an object's identity.</li>
+than an object&#8217;s identity.</li>
 </ul>
 </div></blockquote>
 <dl class="attribute">
 <dt id="intermine.constraints.MultiConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set(['ONE OF', 'NONE OF'])</em><a class="headerlink" href="#intermine.constraints.MultiConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = {'NONE OF', 'ONE OF'}</em><a class="headerlink" href="#intermine.constraints.MultiConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -502,7 +500,7 @@ biological mines is the one for Locations:</p>
 <div>Gene.chromosomeLocation OVERLAPS [2X:54321..67890, 3R:12345..456789]</div></blockquote>
 <dl class="attribute">
 <dt id="intermine.constraints.RangeConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set(['OVERLAPS', 'CONTAINS', 'DOES NOT OVERLAP', 'WITHIN', 'DOES NOT CONTAIN', 'OUTSIDE'])</em><a class="headerlink" href="#intermine.constraints.RangeConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = {'OUTSIDE', 'OVERLAPS', 'DOES NOT OVERLAP', 'CONTAINS', 'WITHIN', 'DOES NOT CONTAIN'}</em><a class="headerlink" href="#intermine.constraints.RangeConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -513,13 +511,13 @@ biological mines is the one for Locations:</p>
 <dd><p>Bases: <a class="reference internal" href="#intermine.constraints.Constraint" title="intermine.constraints.Constraint"><code class="xref py py-class docutils literal"><span class="pre">intermine.constraints.Constraint</span></code></a></p>
 <p>If an object has a reference X to another object of type A,
 and type B extends type A, then any object of type B may be
-the value of the reference X. If you only want to see X's
-which are B's, this may be achieved with subclass constraints,
+the value of the reference X. If you only want to see X&#8217;s
+which are B&#8217;s, this may be achieved with subclass constraints,
 which allow the type of an object to be limited to one of the
 subclasses (at any depth) of the class type required
 by the attribute.</p>
 <p>These constraints do not use operators. Since they cannot be
-conditional (eg. &quot;A is a B or A is a C&quot; would not be possible
+conditional (eg. &#8220;A is a B or A is a C&#8221; would not be possible
 in an InterMine query), they do not have codes
 and cannot be referenced in logic expressions.</p>
 <dl class="method">
@@ -554,8 +552,8 @@ constraint. This method is called by repr.</p>
 <dl class="class">
 <dt id="intermine.constraints.TemplateConstraint">
 <em class="property">class </em><code class="descclassname">intermine.constraints.</code><code class="descname">TemplateConstraint</code><span class="sig-paren">(</span><em>editable=True</em>, <em>optional='locked'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/constraints.html#TemplateConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.constraints.TemplateConstraint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Constraints on templates can also be designated as &quot;on&quot;, &quot;off&quot; or &quot;locked&quot;, which refers
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Constraints on templates can also be designated as &#8220;on&#8221;, &#8220;off&#8221; or &#8220;locked&#8221;, which refers
 to whether they are active or not. Inactive constraints are still configured, but behave
 as if absent for the purpose of results. In addition, template constraints can be
 editable or not. Only values for editable constraints can be provided when requesting results,
@@ -578,7 +576,7 @@ and only constraints that can participate in logic expressions can be editable.<
 <dl class="method">
 <dt id="intermine.constraints.TemplateConstraint.get_switchable_status">
 <code class="descname">get_switchable_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/constraints.html#TemplateConstraint.get_switchable_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.constraints.TemplateConstraint.get_switchable_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns either &quot;locked&quot;, &quot;on&quot; or &quot;off&quot;.</p>
+<dd><p>Returns either &#8220;locked&#8221;, &#8220;on&#8221; or &#8220;off&#8221;.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -635,7 +633,7 @@ constraint. TemplateConstraintFactories make constraints with the
 extra set of TemplateConstraint qualities.</p>
 <dl class="attribute">
 <dt id="intermine.constraints.TemplateConstraintFactory.CONSTRAINT_CLASSES">
-<code class="descname">CONSTRAINT_CLASSES</code><em class="property"> = set([&lt;class 'intermine.constraints.TemplateTernaryConstraint'&gt;, &lt;class 'intermine.constraints.TemplateListConstraint'&gt;, &lt;class 'intermine.constraints.TemplateMultiConstraint'&gt;, &lt;class 'intermine.constraints.TemplateRangeConstraint'&gt;, &lt;class 'intermine.constraints.TemplateIsaConstraint'&gt;, &lt;class 'intermine.constraints.TemplateSubClassConstraint'&gt;, &lt;class 'intermine.constraints.TemplateBinaryConstraint'&gt;, &lt;class 'intermine.constraints.TemplateUnaryConstraint'&gt;, &lt;class 'intermine.constraints.TemplateLoopConstraint'&gt;])</em><a class="headerlink" href="#intermine.constraints.TemplateConstraintFactory.CONSTRAINT_CLASSES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">CONSTRAINT_CLASSES</code><em class="property"> = {&lt;class 'intermine.constraints.TemplateListConstraint'&gt;, &lt;class 'intermine.constraints.TemplateIsaConstraint'&gt;, &lt;class 'intermine.constraints.TemplateUnaryConstraint'&gt;, &lt;class 'intermine.constraints.TemplateSubClassConstraint'&gt;, &lt;class 'intermine.constraints.TemplateBinaryConstraint'&gt;, &lt;class 'intermine.constraints.TemplateTernaryConstraint'&gt;, &lt;class 'intermine.constraints.TemplateRangeConstraint'&gt;, &lt;class 'intermine.constraints.TemplateLoopConstraint'&gt;, &lt;class 'intermine.constraints.TemplateMultiConstraint'&gt;}</em><a class="headerlink" href="#intermine.constraints.TemplateConstraintFactory.CONSTRAINT_CLASSES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -762,7 +760,7 @@ from related classes.</p>
 well as the main value.</p>
 <dl class="attribute">
 <dt id="intermine.constraints.TernaryConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set(['LOOKUP'])</em><a class="headerlink" href="#intermine.constraints.TernaryConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = {'LOOKUP'}</em><a class="headerlink" href="#intermine.constraints.TernaryConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -796,7 +794,7 @@ operators is:</p>
 </div></blockquote>
 <dl class="attribute">
 <dt id="intermine.constraints.UnaryConstraint.OPS">
-<code class="descname">OPS</code><em class="property"> = set(['IS NULL', 'IS NOT NULL'])</em><a class="headerlink" href="#intermine.constraints.UnaryConstraint.OPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OPS</code><em class="property"> = {'IS NOT NULL', 'IS NULL'}</em><a class="headerlink" href="#intermine.constraints.UnaryConstraint.OPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -822,13 +820,13 @@ operators is:</p>
 <dl class="exception">
 <dt id="intermine.errors.UnimplementedError">
 <em class="property">exception </em><code class="descclassname">intermine.errors.</code><code class="descname">UnimplementedError</code><a class="reference internal" href="_modules/intermine/errors.html#UnimplementedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.errors.UnimplementedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/exceptions.html#Exception" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="intermine.errors.WebserviceError">
 <em class="property">exception </em><code class="descclassname">intermine.errors.</code><code class="descname">WebserviceError</code><a class="reference internal" href="_modules/intermine/errors.html#WebserviceError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.errors.WebserviceError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.IOError</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/exceptions.html#OSError" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">OSError</span></code></a></p>
 <p>Errors from interaction with the webservice</p>
 </dd></dl>
 
@@ -838,7 +836,7 @@ operators is:</p>
 <dl class="class">
 <dt id="intermine.idresolution.Job">
 <em class="property">class </em><code class="descclassname">intermine.idresolution.</code><code class="descname">Job</code><span class="sig-paren">(</span><em>service</em>, <em>uid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/idresolution.html#Job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.idresolution.Job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Users can submit requests to resolve sets of IDs to
 objects in the data-store. These jobs begin in a PENDING
 state, and transition through RUNNING to either SUCCESS
@@ -914,10 +912,10 @@ status of the job in the process.</p>
 <dl class="class">
 <dt id="intermine.model.Class">
 <em class="property">class </em><code class="descclassname">intermine.model.</code><code class="descname">Class</code><span class="sig-paren">(</span><em>name</em>, <em>parents</em>, <em>model</em>, <em>interface=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>These objects refer to the table objects in the
 InterMine ORM layer.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span> <span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span> <span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span> <span class="n">model</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">model</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span> <span class="k">if</span> <span class="s2">&quot;Gene&quot;</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">classes</span><span class="p">:</span>
@@ -964,7 +962,7 @@ includes all Attributes, References and Collections</p>
 <dt id="intermine.model.Class.isa">
 <code class="descname">isa</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Class.isa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Class.isa" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method validates statements about inheritance.
-Returns true if the &quot;other&quot; is, or is within the
+Returns true if the &#8220;other&#8221; is, or is within the
 ancestry of, this class</p>
 <p>Other can be passed as a name (str), or as the class object itself</p>
 <p>&#64;rtype: boolean</p>
@@ -1004,7 +1002,7 @@ ancestry of, this class</p>
 <dl class="class">
 <dt id="intermine.model.Column">
 <em class="property">class </em><code class="descclassname">intermine.model.</code><code class="descname">Column</code><span class="sig-paren">(</span><em>path</em>, <em>model</em>, <em>subclasses={}</em>, <em>query=None</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Column" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Column objects allow constraints to be constructed in something
 close to a declarative style</p>
 <dl class="method">
@@ -1023,7 +1021,7 @@ close to a declarative style</p>
 <dt id="intermine.model.Column.where">
 <code class="descname">where</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Column.where"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Column.where" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new query based on this column, filtered with the given constraint.</p>
-<p>also available as &quot;filter&quot;</p>
+<p>also available as &#8220;filter&#8221;</p>
 </dd></dl>
 
 </dd></dl>
@@ -1076,7 +1074,7 @@ close to a declarative style</p>
 <dl class="class">
 <dt id="intermine.model.ConstraintTree">
 <em class="property">class </em><code class="descclassname">intermine.model.</code><code class="descname">ConstraintTree</code><span class="sig-paren">(</span><em>op</em>, <em>left</em>, <em>right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#ConstraintTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.ConstraintTree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="intermine.model.ConstraintTree.as_logic">
 <code class="descname">as_logic</code><span class="sig-paren">(</span><em>codes=None</em>, <em>start='A'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#ConstraintTree.as_logic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.ConstraintTree.as_logic" title="Permalink to this definition">¶</a></dt>
@@ -1087,10 +1085,10 @@ close to a declarative style</p>
 <dl class="class">
 <dt id="intermine.model.Field">
 <em class="property">class </em><code class="descclassname">intermine.model.</code><code class="descname">Field</code><span class="sig-paren">(</span><em>name</em>, <em>type_name</em>, <em>class_origin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Field" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>The base class for attributes, references and collections. All
 columns in DB tables are represented by fields</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cd</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="s2">&quot;Gene&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="s2">&quot;Gene has&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cd</span><span class="o">.</span><span class="n">fields</span><span class="p">),</span> <span class="s2">&quot;fields&quot;</span>
@@ -1131,9 +1129,9 @@ columns in DB tables are represented by fields</p>
 <dl class="class">
 <dt id="intermine.model.Model">
 <em class="property">class </em><code class="descclassname">intermine.model.</code><code class="descname">Model</code><span class="sig-paren">(</span><em>source</em>, <em>service=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>An abstraction of the database schema</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="s2">&quot;Gene&quot;</span><span class="p">)</span>
 <span class="go">&lt;intermine.model.Class: Gene&gt;</span>
@@ -1149,7 +1147,7 @@ data is available and how it is inter-related</p>
 
 <dl class="attribute">
 <dt id="intermine.model.Model.NUMERIC_TYPES">
-<code class="descname">NUMERIC_TYPES</code><em class="property"> = frozenset(['Float', 'Short', 'int', 'Double', 'float', 'long', 'short', 'Long', 'double', 'Integer'])</em><a class="headerlink" href="#intermine.model.Model.NUMERIC_TYPES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">NUMERIC_TYPES</code><em class="property"> = frozenset({'int', 'Float', 'Double', 'long', 'float', 'double', 'Long', 'short', 'Short', 'Integer'})</em><a class="headerlink" href="#intermine.model.Model.NUMERIC_TYPES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1160,7 +1158,7 @@ data is available and how it is inter-related</p>
 <dl class="method">
 <dt id="intermine.model.Model.get_class">
 <code class="descname">get_class</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Model.get_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Model.get_class" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service/model&quot;</span><span class="p">)</span>
+<dd><div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service/model&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="s2">&quot;Gene&quot;</span><span class="p">)</span>
 <span class="go">&lt;intermine.model.Class: Gene&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">get_class</span><span class="p">(</span><span class="s2">&quot;Gene.proteins&quot;</span><span class="p">)</span>
@@ -1169,7 +1167,7 @@ data is available and how it is inter-related</p>
 </div>
 <p>This is the recommended way of retrieving a class from
 the model. As well as handling class names, you can also
-pass in a path such as &quot;Gene.proteins&quot; and get the
+pass in a path such as &#8220;Gene.proteins&#8221; and get the
 corresponding class back (&lt;intermine.model.Class: Protein&gt;)</p>
 <p>&#64;raise ModelError: if the class name refers to a non-existant object</p>
 <p>&#64;rtype: L{intermine.model.Class}</p>
@@ -1178,7 +1176,7 @@ corresponding class back (&lt;intermine.model.Class: Protein&gt;)</p>
 <dl class="method">
 <dt id="intermine.model.Model.make_path">
 <code class="descname">make_path</code><span class="sig-paren">(</span><em>path</em>, <em>subclasses={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Model.make_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Model.make_path" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">make_path</span><span class="p">(</span><span class="s2">&quot;Gene.organism.name&quot;</span><span class="p">)</span>
+<dd><div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">make_path</span><span class="p">(</span><span class="s2">&quot;Gene.organism.name&quot;</span><span class="p">)</span>
 <span class="go">&lt;intermine.model.Path: Gene.organism.name&gt;</span>
 </pre></div>
 </div>
@@ -1202,11 +1200,11 @@ directly.</p>
 <dl class="method">
 <dt id="intermine.model.Model.parse_path_string">
 <code class="descname">parse_path_string</code><span class="sig-paren">(</span><em>path_string</em>, <em>subclasses={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Model.parse_path_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Model.parse_path_string" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parts</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">parse_path_string</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<dd><div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parts</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">parse_path_string</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This method is used when making paths from a model, and
-when validating path strings. It probably won't need to
+when validating path strings. It probably won&#8217;t need to
 be called directly.</p>
 <p>&#64;see: L{intermine.model.Model.make_path}
 &#64;see: L{intermine.model.Model.validate_path}
@@ -1216,29 +1214,29 @@ be called directly.</p>
 <dl class="method">
 <dt id="intermine.model.Model.to_ancestry">
 <code class="descname">to_ancestry</code><span class="sig-paren">(</span><em>cd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Model.to_ancestry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Model.to_ancestry" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">classes</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">to_ancestry</span><span class="p">(</span><span class="n">cd</span><span class="p">)</span>
+<dd><div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">classes</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">to_ancestry</span><span class="p">(</span><span class="n">cd</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Returns the class' parents, and all the class' parents' parents</p>
+<p>Returns the class&#8217; parents, and all the class&#8217; parents&#8217; parents</p>
 <p>&#64;rtype: list(L{intermine.model.Class})</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="intermine.model.Model.to_classes">
 <code class="descname">to_classes</code><span class="sig-paren">(</span><em>classnames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Model.to_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Model.to_classes" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">classes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_classes</span><span class="p">([</span><span class="s2">&quot;Gene&quot;</span><span class="p">,</span> <span class="s2">&quot;Protein&quot;</span><span class="p">,</span> <span class="s2">&quot;Organism&quot;</span><span class="p">])</span>
+<dd><div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">classes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_classes</span><span class="p">([</span><span class="s2">&quot;Gene&quot;</span><span class="p">,</span> <span class="s2">&quot;Protein&quot;</span><span class="p">,</span> <span class="s2">&quot;Organism&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>This simply maps from a list of strings to a list of
 classes in the calling model.</p>
-<p>&#64;raise ModelError: if the list of class names includes ones that don't exist</p>
+<p>&#64;raise ModelError: if the list of class names includes ones that don&#8217;t exist</p>
 <p>&#64;rtype: list(L{intermine.model.Class})</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="intermine.model.Model.validate_path">
 <code class="descname">validate_path</code><span class="sig-paren">(</span><em>path_string</em>, <em>subclasses={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Model.validate_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Model.validate_path" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<dd><div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">model</span><span class="o">.</span><span class="n">validate_path</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="s2">&quot;path is valid&quot;</span>
 <span class="gp">... </span><span class="k">except</span> <span class="n">PathParseError</span><span class="p">:</span>
@@ -1246,7 +1244,7 @@ classes in the calling model.</p>
 <span class="go">&quot;path is valid&quot;</span>
 </pre></div>
 </div>
-<p>When you don't need to interrogate relationships
+<p>When you don&#8217;t need to interrogate relationships
 between paths, simply using this method to validate
 a path string is enough. It guarantees that there
 is a descriptor for each section of the string,
@@ -1280,9 +1278,9 @@ directly.</p>
 <dl class="class">
 <dt id="intermine.model.Path">
 <em class="property">class </em><code class="descclassname">intermine.model.</code><code class="descname">Path</code><span class="sig-paren">(</span><em>path</em>, <em>model</em>, <em>subclasses={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>A path represents a connection between records and fields</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
 <span class="go">    model = service.model</span>
 <span class="go">    path = model.make_path(&quot;Gene.organism.name&quot;)</span>
 <span class="go">    path.is_attribute()</span>
@@ -1303,7 +1301,7 @@ relationships as well</p>
 <dl class="method">
 <dt id="intermine.model.Path.append">
 <code class="descname">append</code><span class="sig-paren">(</span><em>*elements</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Path.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Path.append" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;Gene.exons&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<dd><div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;Gene.exons&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">p2</span>
 <span class="gp">... </span><span class="n">Gene</span><span class="o">.</span><span class="n">exons</span><span class="o">.</span><span class="n">name</span>
@@ -1360,7 +1358,7 @@ Note: Collections are ALSO references</p>
 <dl class="method">
 <dt id="intermine.model.Path.prefix">
 <code class="descname">prefix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/model.html#Path.prefix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.model.Path.prefix" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;Gene.exons.name&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<dd><div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;Gene.exons.name&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">prefix</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">p2</span>
 <span class="gp">... </span><span class="n">Gene</span><span class="o">.</span><span class="n">exons</span>
@@ -1451,7 +1449,7 @@ type upgraded to a type_class during parsing</p>
 <dl class="class">
 <dt id="intermine.pathfeatures.PathFeature">
 <em class="property">class </em><code class="descclassname">intermine.pathfeatures.</code><code class="descname">PathFeature</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/pathfeatures.html#PathFeature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.pathfeatures.PathFeature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="intermine.pathfeatures.PathFeature.child_type">
 <code class="descname">child_type</code><a class="headerlink" href="#intermine.pathfeatures.PathFeature.child_type" title="Permalink to this definition">¶</a></dt>
@@ -1485,7 +1483,7 @@ type upgraded to a type_class during parsing</p>
 
 <dl class="attribute">
 <dt id="intermine.pathfeatures.SortOrder.DIRECTIONS">
-<code class="descname">DIRECTIONS</code><em class="property"> = frozenset(['asc', 'desc'])</em><a class="headerlink" href="#intermine.pathfeatures.SortOrder.DIRECTIONS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">DIRECTIONS</code><em class="property"> = frozenset({'asc', 'desc'})</em><a class="headerlink" href="#intermine.pathfeatures.SortOrder.DIRECTIONS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1498,7 +1496,7 @@ type upgraded to a type_class during parsing</p>
 <dl class="class">
 <dt id="intermine.pathfeatures.SortOrderList">
 <em class="property">class </em><code class="descclassname">intermine.pathfeatures.</code><code class="descname">SortOrderList</code><span class="sig-paren">(</span><em>*sos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/pathfeatures.html#SortOrderList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.pathfeatures.SortOrderList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>This class exists to hold the sort order information for a
 query. It handles appending elements, and the stringification
 of the sort order.</p>
@@ -1538,12 +1536,12 @@ as a tuple of arguments (path, direction).</p>
 <dl class="class">
 <dt id="intermine.query.Query">
 <em class="property">class </em><code class="descclassname">intermine.query.</code><code class="descname">Query</code><span class="sig-paren">(</span><em>model</em>, <em>service=None</em>, <em>validate=True</em>, <em>root=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Objects of this class have properties that model the
 attributes of the query, and methods for performing
 the request.</p>
 <p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">new_query</span><span class="p">()</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.pathways.name&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.proteins.symbol&quot;</span><span class="p">)</span>
@@ -1559,7 +1557,7 @@ the request.</p>
 </pre></div>
 </div>
 <p>OR, using an SQL style DSL:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;www.flymine.org/query&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;www.flymine.org/query&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Gene&quot;</span><span class="p">)</span><span class="o">.</span>\
 <span class="gp">... </span>          <span class="n">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;pathways.*&quot;</span><span class="p">)</span><span class="o">.</span>\
 <span class="gp">... </span>          <span class="n">where</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">)</span><span class="o">.</span>\
@@ -1570,44 +1568,44 @@ the request.</p>
 </pre></div>
 </div>
 <p>OR, for a more SQL-alchemy, ORM style:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gene</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gene</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;zen&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;eve&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gene</span><span class="o">.</span><span class="n">alleles</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gene</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gene</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;zen&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;eve&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gene</span><span class="o">.</span><span class="n">alleles</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="n">handle</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Query objects represent structured requests for information over the database
 housed at the datawarehouse whose webservice you are querying. They utilise
 some of the concepts of relational databases, within an object-related
-ORM context. If you don't know what that means, don't worry: you
-don't need to write SQL, and the queries will be fast.</p>
+ORM context. If you don&#8217;t know what that means, don&#8217;t worry: you
+don&#8217;t need to write SQL, and the queries will be fast.</p>
 <p>To make things slightly more familiar to those with knowledge of SQL, some syntactical
 sugar is provided to make constructing queries a bit more recognisable.</p>
 <p>The data model represents tables in the databases as classes, with records
 within tables as instances of that class. The columns of the database are the
 fields of that object:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">Gene</span> <span class="n">table</span> <span class="o">-</span> <span class="n">showing</span> <span class="n">two</span> <span class="n">records</span><span class="o">/</span><span class="n">objects</span>
-<span class="o">+---------------------------------------------------+</span>
-<span class="o">|</span> <span class="nb">id</span>  <span class="o">|</span> <span class="n">symbol</span>  <span class="o">|</span> <span class="n">length</span> <span class="o">|</span> <span class="n">cyto</span><span class="o">-</span><span class="n">location</span> <span class="o">|</span> <span class="n">organism</span> <span class="o">|</span>
-<span class="o">+----------------------------------------+----------+</span>
-<span class="o">|</span> <span class="mi">01</span>  <span class="o">|</span> <span class="n">eve</span>     <span class="o">|</span> <span class="mi">1539</span>   <span class="o">|</span> <span class="mi">46</span><span class="n">C10</span><span class="o">-</span><span class="mi">46</span><span class="n">C10</span>   <span class="o">|</span>  <span class="mi">01</span>      <span class="o">|</span>
-<span class="o">+----------------------------------------+----------+</span>
-<span class="o">|</span> <span class="mi">02</span>  <span class="o">|</span> <span class="n">zen</span>     <span class="o">|</span> <span class="mi">1331</span>   <span class="o">|</span> <span class="mi">84</span><span class="n">A5</span><span class="o">-</span><span class="mi">84</span><span class="n">A5</span>     <span class="o">|</span>  <span class="mi">01</span>      <span class="o">|</span>
-<span class="o">+----------------------------------------+----------+</span>
-<span class="o">...</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span>The Gene table - showing two records/objects
++---------------------------------------------------+
+| id  | symbol  | length | cyto-location | organism |
++----------------------------------------+----------+
+| 01  | eve     | 1539   | 46C10-46C10   |  01      |
++----------------------------------------+----------+
+| 02  | zen     | 1331   | 84A5-84A5     |  01      |
++----------------------------------------+----------+
+...
 
-<span class="n">The</span> <span class="n">organism</span> <span class="n">table</span> <span class="o">-</span> <span class="n">showing</span> <span class="n">one</span> <span class="n">record</span><span class="o">/</span><span class="nb">object</span>
-<span class="o">+----------------------------------+</span>
-<span class="o">|</span> <span class="nb">id</span>  <span class="o">|</span> <span class="n">name</span>            <span class="o">|</span> <span class="n">taxon</span> <span class="nb">id</span> <span class="o">|</span>
-<span class="o">+----------------------------------+</span>
-<span class="o">|</span> <span class="mi">01</span>  <span class="o">|</span> <span class="n">D</span><span class="o">.</span> <span class="n">melanogaster</span> <span class="o">|</span> <span class="mi">7227</span>     <span class="o">|</span>
-<span class="o">+----------------------------------+</span>
+The organism table - showing one record/object
++----------------------------------+
+| id  | name            | taxon id |
++----------------------------------+
+| 01  | D. melanogaster | 7227     |
++----------------------------------+
 </pre></div>
 </div>
-<p>Columns that contain a meaningful value are known as 'attributes' (in the tables above, that is
-everything except the id columns). The other columns (such as &quot;organism&quot; in the gene table)
+<p>Columns that contain a meaningful value are known as &#8216;attributes&#8217; (in the tables above, that is
+everything except the id columns). The other columns (such as &#8220;organism&#8221; in the gene table)
 are ones that reference records of other tables (ie. other objects), and are called
 references. You can refer to any field in any class, that has a connection,
 however tenuous, with a table, by using dotted path notation:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Gene</span><span class="o">.</span><span class="n">organism</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="n">the</span> <span class="n">name</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">organism</span> <span class="n">table</span><span class="p">,</span> <span class="n">referenced</span> <span class="n">by</span> <span class="n">a</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">gene</span> <span class="n">table</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span>Gene.organism.name -&gt; the name column in the organism table, referenced by a record in the gene table
 </pre></div>
 </div>
 <p>These paths, and the connections between records and tables they represent,
@@ -1621,69 +1619,69 @@ are the basis for the structure of InterMine queries.</p>
 </dd>
 </dl>
 <p>A query must have at least one output column in its view, but constraints
-are optional - if you don't include any, you will get back every record
+are optional - if you don&#8217;t include any, you will get back every record
 from the table (every object of that type)</p>
 <p>In addition, the query must be coherent: if you have information about
-an organism, and you want a list of genes, then the &quot;Gene&quot; table
+an organism, and you want a list of genes, then the &#8220;Gene&#8221; table
 should be the basis for your query, and as such the Gene class, which
 represents this table, should be the root of all the paths that appear in it:</p>
 <p>So, to take a simple example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">I</span> <span class="n">have</span> <span class="n">an</span> <span class="n">organism</span> <span class="n">name</span><span class="p">,</span> <span class="ow">and</span> <span class="n">I</span> <span class="n">want</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">genes</span><span class="p">:</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span>I have an organism name, and I want a list of genes:
 </pre></div>
 </div>
 <p>The view is the list of things I want to know about those genes:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.name&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.name&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.length&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.proteins.sequence.length&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Note I can freely mix attributes and references, as long as every view ends in
 an attribute (a meaningful value). As a short-cut I can also write:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_views</span><span class="p">(</span><span class="s2">&quot;Gene.name&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.length&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.proteins.sequence.length&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_views</span><span class="p">(</span><span class="s2">&quot;Gene.name&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.length&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.proteins.sequence.length&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>or:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_views</span><span class="p">(</span><span class="s2">&quot;Gene.name Gene.length Gene.proteins.sequence.length&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_views</span><span class="p">(</span><span class="s2">&quot;Gene.name Gene.length Gene.proteins.sequence.length&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>They are all equivalent. You can also use common SQL style shortcuts such as &quot;*&quot; for all
+<p>They are all equivalent. You can also use common SQL style shortcuts such as &#8220;*&#8221; for all
 attribute fields:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_views</span><span class="p">(</span><span class="s2">&quot;Gene.*&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_views</span><span class="p">(</span><span class="s2">&quot;Gene.*&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can also use &quot;select&quot; as a synonymn for &quot;add_view&quot;</p>
+<p>You can also use &#8220;select&#8221; as a synonymn for &#8220;add_view&#8221;</p>
 <p>Now I can add my constraints. As, we mentioned, I have information about an organism, so:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.organism.name&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;D. melanogaster&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.organism.name&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;D. melanogaster&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>(note, here I can use &quot;where&quot; as a synonymn for &quot;add_constraint&quot;)</p>
+<p>(note, here I can use &#8220;where&#8221; as a synonymn for &#8220;add_constraint&#8221;)</p>
 <p>If I run this query, I will get literally millions of results -
 it needs to be filtered further:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.proteins.sequence.length&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.proteins.sequence.length&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If that doesn't restrict things enough I can add more filters:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;ONE OF&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;eve&quot;</span><span class="p">,</span> <span class="s2">&quot;zen&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">])</span>
+<p>If that doesn&#8217;t restrict things enough I can add more filters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;ONE OF&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;eve&quot;</span><span class="p">,</span> <span class="s2">&quot;zen&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Now I am guaranteed to get only information on genes I am interested in.</p>
-<p>Note, though, that because I have included the link (or &quot;join&quot;) from Gene -&gt; Protein,
+<p>Note, though, that because I have included the link (or &#8220;join&#8221;) from Gene -&gt; Protein,
 this, by default, means that I only want genes that have protein information associated
 with them. If in fact I want information on all genes, and just want to know the
 protein information if it is available, then I can specify that with:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_join</span><span class="p">(</span><span class="s2">&quot;Gene.proteins&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTER&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_join</span><span class="p">(</span><span class="s2">&quot;Gene.proteins&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTER&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And if perhaps my query is not as simple as a strict cumulative filter, but I want all
 D. mel genes that EITHER have a short protein sequence OR come from one of my favourite genes
 (as unlikely as that sounds), I can specify the logic for that too:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">set_logic</span><span class="p">(</span><span class="s2">&quot;A and (B or C)&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">set_logic</span><span class="p">(</span><span class="s2">&quot;A and (B or C)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Each letter refers to one of the constraints - the codes are assigned in the order you add
 the constraints. If you want to be absolutely certain about the constraints you mean, you
 can use the constraint objects themselves:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gene_is_eve</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;eve&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gene_is_eve</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;eve&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">gene_is_zen</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;zne&quot;</span><span class="p">)</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">set_logic</span><span class="p">(</span><span class="n">gene_is_eve</span> <span class="o">|</span> <span class="n">gene_is_zen</span><span class="p">)</span>
@@ -1691,7 +1689,7 @@ can use the constraint objects themselves:</p>
 </div>
 <p>By default the logic is a straight cumulative filter (ie: A and B and C and D  and ...)</p>
 <p>Putting it all together:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.name&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.length&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.proteins.sequence.length&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.name&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.length&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.proteins.sequence.length&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.organism.name&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;D. melanogaster&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.proteins.sequence.length&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;ONE OF&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;eve&quot;</span><span class="p">,</span> <span class="s2">&quot;zen&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">])</span>
@@ -1700,57 +1698,57 @@ can use the constraint objects themselves:</p>
 </pre></div>
 </div>
 <p>This can be made more concise and readable with a little DSL sugar:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Gene&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Gene&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">,</span> <span class="s2">&quot;proteins.sequence.length&quot;</span><span class="p">)</span><span class="o">.</span>        <span class="o">...</span>       <span class="n">where</span><span class="p">(</span><span class="s1">&#39;organism.name&#39;</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;D. melanogaster&#39;</span><span class="p">)</span><span class="o">.</span>        <span class="o">...</span>       <span class="n">where</span><span class="p">(</span><span class="s2">&quot;proteins.sequence.length&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span>        <span class="o">...</span>       <span class="n">where</span><span class="p">(</span><span class="s1">&#39;symbol&#39;</span><span class="p">,</span> <span class="s1">&#39;ONE OF&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;eve&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;zen&#39;</span><span class="p">])</span><span class="o">.</span>        <span class="o">...</span>       <span class="n">outerjoin</span><span class="p">(</span><span class="s1">&#39;proteins&#39;</span><span class="p">)</span><span class="o">.</span>        <span class="o">...</span>       <span class="n">set_logic</span><span class="p">(</span><span class="s2">&quot;A and (B or C)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And the query is defined.</p>
-<p>calling &quot;.rows()&quot; on a query will return an iterator of rows, where each row
+<p>calling &#8221;.rows()&#8221; on a query will return an iterator of rows, where each row
 is a ResultRow object, which can be treated as both a list and a dictionary.</p>
 <p>Which means you can refer to columns by name:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">():</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="nb">print</span> <span class="s2">&quot;name is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
 <span class="gp">... </span>    <span class="nb">print</span> <span class="s2">&quot;length is </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>As well as using list indices:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">():</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="nb">print</span> <span class="s2">&quot;The first column is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Iterating over a row iterates over the cell values as a list:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">():</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
 <span class="gp">... </span>        <span class="n">do_something</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Here each row will have a gene name, a gene length, and a sequence length, eg:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">row</span><span class="o">.</span><span class="n">to_l</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">row</span><span class="o">.</span><span class="n">to_l</span>
 <span class="go">[&quot;even skipped&quot;, &quot;1359&quot;, &quot;376&quot;]</span>
 </pre></div>
 </div>
 <p>To make that clearer, you can ask for a dictionary instead of a list:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">()</span>
 <span class="gp">... </span>      <span class="nb">print</span> <span class="n">row</span><span class="o">.</span><span class="n">to_d</span>
 <span class="go">{&quot;Gene.name&quot;:&quot;even skipped&quot;,&quot;Gene.length&quot;:&quot;1359&quot;,&quot;Gene.proteins.sequence.length&quot;:&quot;376&quot;}</span>
 </pre></div>
 </div>
 <p>If you just want the raw results, for printing to a file, or for piping to another program,
-you can request strings instead:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">)</span>
+you can request the results in one of these formats: json&#8217;, &#8216;rr&#8217;, &#8216;tsv&#8217;, &#8216;jsonobjects&#8217;, &#8216;jsonrows&#8217;, &#8216;list&#8217;, &#8216;dict&#8217;, &#8216;csv&#8217;</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="s2">&quot;&lt;format name&gt;&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">size</span><span class="o">&gt;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Results can also be processing on a record by record basis. If you have a query that
-has output columns of &quot;Gene.symbol&quot;, &quot;Gene.pathways.name&quot; and &quot;Gene.proteins.proteinDomains.primaryIdentifier&quot;,
+has output columns of &#8220;Gene.symbol&#8221;, &#8220;Gene.pathways.name&#8221; and &#8220;Gene.proteins.proteinDomains.primaryIdentifier&#8221;,
 than processing it by records will return one object per gene, and that gene will have a property
-named &quot;pathways&quot; which contains objects which have a name property. Likewise there will be a
+named &#8220;pathways&#8221; which contains objects which have a name property. Likewise there will be a
 proteins property which holds a list of proteinDomains which all have a primaryIdentifier property, and so on.
 This allows a more object orientated approach to database records, familiar to users of
 other ORMs.</p>
 <p>This is the format used when you choose to iterate over a query directly, or can be explicitly
 chosen by invoking L{intermine.query.Query.results}:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
 <span class="gp">... </span>   <span class="nb">print</span> <span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">gene</span><span class="o">.</span><span class="n">pathways</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1762,45 +1760,45 @@ to access invalid properties (such as gene.favourite_colour) will cause exceptio
 generate the code for any query (and template) you can build in it. A good way to get
 started is to use the webapp to generate your code, and then run it as scripts
 to speed up your queries. You can always tinker with and edit the scripts you download.</p>
-<p>To get generated queries, look for the &quot;python&quot; link at the bottom of query-builder and
+<p>To get generated queries, look for the &#8220;python&#8221; link at the bottom of query-builder and
 template form pages, it looks a bit like this:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">.</span> <span class="o">+=====================================+=============</span>
-  <span class="o">|</span>                                     <span class="o">|</span>
-  <span class="o">|</span>    <span class="n">Perl</span>  <span class="o">|</span>  <span class="n">Python</span>  <span class="o">|</span>  <span class="n">Java</span> <span class="p">[</span><span class="n">Help</span><span class="p">]</span>  <span class="o">|</span>
-  <span class="o">|</span>                                     <span class="o">|</span>
-  <span class="o">+==============================================</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span>. +=====================================+=============
+  |                                     |
+  |    Perl  |  Python  |  Java [Help]  |
+  |                                     |
+  +==============================================
 </pre></div>
 </div>
 <dl class="attribute">
 <dt id="intermine.query.Query.LEADING_OP_PATTERN">
-<code class="descname">LEADING_OP_PATTERN</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#intermine.query.Query.LEADING_OP_PATTERN" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LEADING_OP_PATTERN</code><em class="property"> = re.compile('^\\s*(and|or)\\s*', re.IGNORECASE)</em><a class="headerlink" href="#intermine.query.Query.LEADING_OP_PATTERN" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.query.Query.LOGIC_SPLIT_PATTERN">
-<code class="descname">LOGIC_SPLIT_PATTERN</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#intermine.query.Query.LOGIC_SPLIT_PATTERN" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LOGIC_SPLIT_PATTERN</code><em class="property"> = re.compile('\\s*(?:and|or|\\(|\\))\\s*', re.IGNORECASE)</em><a class="headerlink" href="#intermine.query.Query.LOGIC_SPLIT_PATTERN" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.query.Query.ORPHANED_OP_PATTERN">
-<code class="descname">ORPHANED_OP_PATTERN</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#intermine.query.Query.ORPHANED_OP_PATTERN" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ORPHANED_OP_PATTERN</code><em class="property"> = re.compile('(?:\\(\\s*(?:and|or)\\s*|\\s*(?:and|or)\\s*\\))', re.IGNORECASE)</em><a class="headerlink" href="#intermine.query.Query.ORPHANED_OP_PATTERN" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.query.Query.SO_SPLIT_PATTERN">
-<code class="descname">SO_SPLIT_PATTERN</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#intermine.query.Query.SO_SPLIT_PATTERN" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SO_SPLIT_PATTERN</code><em class="property"> = re.compile('\\s*(asc|desc)\\s*', re.IGNORECASE)</em><a class="headerlink" href="#intermine.query.Query.SO_SPLIT_PATTERN" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.query.Query.TRAILING_OP_PATTERN">
-<code class="descname">TRAILING_OP_PATTERN</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#intermine.query.Query.TRAILING_OP_PATTERN" title="Permalink to this definition">¶</a></dt>
+<code class="descname">TRAILING_OP_PATTERN</code><em class="property"> = re.compile('\\s*(and|or)\\s*$', re.IGNORECASE)</em><a class="headerlink" href="#intermine.query.Query.TRAILING_OP_PATTERN" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intermine.query.Query.add_constraint">
 <code class="descname">add_constraint</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.add_constraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.add_constraint" title="Permalink to this definition">¶</a></dt>
 <dd><p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;zen&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;zen&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This method will try to make a constraint from the arguments
@@ -1821,13 +1819,13 @@ calling Query.verify_constraint_paths()</p>
 <dt id="intermine.query.Query.add_join">
 <code class="descname">add_join</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.add_join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.add_join" title="Permalink to this definition">¶</a></dt>
 <dd><p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_join</span><span class="p">(</span><span class="s2">&quot;Gene.proteins&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTER&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_join</span><span class="p">(</span><span class="s2">&quot;Gene.proteins&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTER&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>A join statement is used to determine if references should
 restrict the result set by only including those references
 exist. For example, if one had a query with the view:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;Gene.name&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.proteins.name&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="s2">&quot;Gene.name&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene.proteins.name&quot;</span>
 </pre></div>
 </div>
 <p>Then in the normal case (that of an INNER join), we would only
@@ -1838,11 +1836,11 @@ restriction on the information you get back.</p>
 proteins associated with them or not, but if they did
 you would rather like to know _what_ proteins, then you need
 to specify this reference to be an OUTER join:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_join</span><span class="p">(</span><span class="s2">&quot;Gene.proteins&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTER&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_join</span><span class="p">(</span><span class="s2">&quot;Gene.proteins&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTER&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now you will get many more rows of results, some of which will
-have &quot;null&quot; values where the protein name would have been,</p>
+have &#8220;null&#8221; values where the protein name would have been,</p>
 <p>This method will also attempt to validate the join by calling
 Query.verify_join_paths(). Joins must have a valid path, the
 style can be either INNER or OUTER (defaults to OUTER,
@@ -1858,14 +1856,14 @@ must be a reference.</p>
 <dt id="intermine.query.Query.add_path_description">
 <code class="descname">add_path_description</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.add_path_description"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.add_path_description" title="Permalink to this definition">¶</a></dt>
 <dd><p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_path_description</span><span class="p">(</span><span class="s2">&quot;Gene.proteins.proteinDomains&quot;</span><span class="p">,</span> <span class="s2">&quot;Protein Domain&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_path_description</span><span class="p">(</span><span class="s2">&quot;Gene.proteins.proteinDomains&quot;</span><span class="p">,</span> <span class="s2">&quot;Protein Domain&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This allows you to alias the components of long paths to
 improve the way they display column headers in a variety of circumstances.
 In the above example, if the view included the unwieldy path
-&quot;Gene.proteins.proteinDomains.primaryIdentifier&quot;, it would (depending on the
-mine) be displayed as &quot;Protein Domain &gt; DB Identifer&quot;. These
+&#8220;Gene.proteins.proteinDomains.primaryIdentifier&#8221;, it would (depending on the
+mine) be displayed as &#8220;Protein Domain &gt; DB Identifer&#8221;. These
 setting are taken into account by the webservice when generating
 column headers for flat-file results with the columnheaders parameter given, and
 always supplied when requesting jsontable results.</p>
@@ -1876,15 +1874,15 @@ always supplied when requesting jsontable results.</p>
 <dt id="intermine.query.Query.add_sort_order">
 <code class="descname">add_sort_order</code><span class="sig-paren">(</span><em>path</em>, <em>direction='asc'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.add_sort_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.add_sort_order" title="Permalink to this definition">¶</a></dt>
 <dd><p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Query</span><span class="o">.</span><span class="n">add_sort_order</span><span class="p">(</span><span class="s2">&quot;Gene.name&quot;</span><span class="p">,</span> <span class="s2">&quot;DESC&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Query</span><span class="o">.</span><span class="n">add_sort_order</span><span class="p">(</span><span class="s2">&quot;Gene.name&quot;</span><span class="p">,</span> <span class="s2">&quot;DESC&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This method adds a sort order to the query.
 A query can have multiple sort orders, which are
 assessed in sequence.</p>
 <p>If a query has two sort-orders, for example,
-the first being &quot;Gene.organism.name asc&quot;,
-and the second being &quot;Gene.name desc&quot;, you would have
+the first being &#8220;Gene.organism.name asc&#8221;,
+and the second being &#8220;Gene.name desc&#8221;, you would have
 the list of genes grouped by organism, with the
 lists within those groupings in reverse alphabetical
 order by gene name.</p>
@@ -1897,7 +1895,7 @@ by calling validate_sort_order()</p>
 <dt id="intermine.query.Query.add_view">
 <code class="descname">add_view</code><span class="sig-paren">(</span><em>*paths</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.add_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.add_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.name Gene.organism.name&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s2">&quot;Gene.name Gene.organism.name&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This is the main method for adding views to the list
@@ -1928,7 +1926,7 @@ data model, and they must represent attributes of tables</p>
 <code class="descname">children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.children"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.children" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method is used during the serialisation of queries
 to xml. It is unlikely you will need access to this as a whole.
-Consider using &quot;path_descriptions&quot;, &quot;joins&quot;, &quot;constraints&quot; instead</p>
+Consider using &#8220;path_descriptions&#8221;, &#8220;joins&#8221;, &#8220;constraints&#8221; instead</p>
 <p>&#64;see: Query.path_descriptions
 &#64;see: Query.joins
 &#64;see: Query.constraints</p>
@@ -2010,7 +2008,7 @@ to read in queries you have saved to a file.</p>
 <p>&#64;param xml: The xml as a file name, url, or string</p>
 <p>&#64;raise QueryParseError: if the query cannot be parsed
 &#64;raise ModelError: if the query has illegal paths in it
-&#64;raise ConstraintError: if the constraints don't make sense</p>
+&#64;raise ConstraintError: if the constraints don&#8217;t make sense</p>
 <p>&#64;rtype: L{Query}</p>
 </dd></dl>
 
@@ -2054,11 +2052,11 @@ on queries.</p>
 <dt id="intermine.query.Query.get_logic">
 <code class="descname">get_logic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.get_logic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.get_logic" title="Permalink to this definition">¶</a></dt>
 <dd><p>This returns the up to date logic expression. The default
-value is the representation of all coded constraints and'ed together.</p>
+value is the representation of all coded constraints and&#8217;ed together.</p>
 <p>If the logic is empty and there are no constraints, returns an
 empty string.</p>
 <p>The LogicGroup object stringifies to a string that can be parsed to
-obtain itself (eg: &quot;A and (B or C or D)&quot;).</p>
+obtain itself (eg: &#8220;A and (B or C or D)&#8221;).</p>
 <p>&#64;rtype: L{intermine.constraints.LogicGroup}</p>
 </dd></dl>
 
@@ -2068,7 +2066,7 @@ obtain itself (eg: &quot;A and (B or C or D)&quot;).</p>
 <dd><p>This method is a shortcut so that you do not have to
 do a list comprehension yourself on the iterator that
 is normally returned. If you have a very large result
-set (and these can get up to 100's of thousands or rows
+set (and these can get up to 100&#8217;s of thousands or rows
 pretty easily) you will not want to
 have the whole list in memory at once, but there may
 be other circumstances when you might want to keep the whole
@@ -2109,7 +2107,7 @@ by the model for assessing whether certain paths are valid. For
 intance, if you subclass MicroArrayResult to be FlyAtlasResult,
 you can refer to the .presentCall attributes of fly atlas results.
 MicroArrayResults do not have this attribute, and a path such as:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Gene</span><span class="o">.</span><span class="n">microArrayResult</span><span class="o">.</span><span class="n">presentCall</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Gene</span><span class="o">.</span><span class="n">microArrayResult</span><span class="o">.</span><span class="n">presentCall</span>
 </pre></div>
 </div>
 <p>would be marked as invalid unless the dictionary is provided.</p>
@@ -2132,7 +2130,7 @@ MicroArrayResults do not have this attribute, and a path such as:</p>
 <dl class="method">
 <dt id="intermine.query.Query.outerjoin">
 <code class="descname">outerjoin</code><span class="sig-paren">(</span><em>column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.outerjoin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.outerjoin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for add_join(column, &quot;OUTER&quot;)</p>
+<dd><p>Alias for add_join(column, &#8220;OUTER&#8221;)</p>
 </dd></dl>
 
 <dl class="method">
@@ -2144,7 +2142,7 @@ MicroArrayResults do not have this attribute, and a path such as:</p>
 <dt id="intermine.query.Query.results">
 <code class="descname">results</code><span class="sig-paren">(</span><em>row='object'</em>, <em>start=0</em>, <em>size=None</em>, <em>summary_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gene</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gene</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">results</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="nb">print</span> <span class="n">gene</span><span class="o">.</span><span class="n">symbol</span>           <span class="c1"># handle strings</span>
@@ -2177,21 +2175,21 @@ MicroArrayResults do not have this attribute, and a path such as:</p>
 result formats. The example above shows the ways these differ in terms
 of accessing fields of the rows, as well as dealing with different
 data types. Results can either be retrieved as typed values (jsonobjects,
-rr ['ResultRows'], dict, list), or as lists of strings (csv, tsv) which then require
-further parsing. The default format for this method is &quot;objects&quot;, where
+rr [&#8216;ResultRows&#8217;], dict, list), or as lists of strings (csv, tsv) which then require
+further parsing. The default format for this method is &#8220;objects&#8221;, where
 information is grouped by its relationships. The other main format is
-&quot;rr&quot;, which stands for 'ResultRows', and can be accessed directly through
+&#8220;rr&#8221;, which stands for &#8216;ResultRows&#8217;, and can be accessed directly through
 the L{rows} method.</p>
 <p>Note that when requesting object based results (the default), if your query
-contains any kind of collection, it is highly likely that start and size won't do what
+contains any kind of collection, it is highly likely that start and size won&#8217;t do what
 you think, as they operate only on the underlying
 rows used to build up the returned objects. If you want rows
 back, you are recommeded to use the simpler rows method.</p>
 <p>If no views have been specified, all attributes of the root class
 are selected for output.</p>
 <dl class="docutils">
-<dt>&#64;param row: The format for each result. One of &quot;object&quot;, &quot;rr&quot;,</dt>
-<dd>&quot;dict&quot;, &quot;list&quot;, &quot;tsv&quot;, &quot;csv&quot;, &quot;jsonrows&quot;, &quot;jsonobjects&quot;</dd>
+<dt>&#64;param row: The format for each result. One of &#8220;object&#8221;, &#8220;rr&#8221;,</dt>
+<dd>&#8220;dict&#8221;, &#8220;list&#8221;, &#8220;tsv&#8221;, &#8220;csv&#8221;, &#8220;jsonrows&#8221;, &#8220;jsonobjects&#8221;</dd>
 </dl>
 <p>&#64;type row: string
 &#64;param start: the index of the first result to return (default = 0)
@@ -2200,7 +2198,7 @@ are selected for output.</p>
 &#64;type size: int
 &#64;param summary_path: A column name to optionally summarise. Specifying a path</p>
 <blockquote>
-<div>will force &quot;jsonrows&quot; format, and return an iterator over a list
+<div>will force &#8220;jsonrows&#8221; format, and return an iterator over a list
 of dictionaries. Use this when you are interested in processing
 a summary in order of greatest count to smallest.</div></blockquote>
 <p>&#64;type summary_path: str or L{intermine.model.Path}</p>
@@ -2211,9 +2209,9 @@ a summary in order of greatest count to smallest.</div></blockquote>
 <dl class="method">
 <dt id="intermine.query.Query.rows">
 <code class="descname">rows</code><span class="sig-paren">(</span><em>start=0</em>, <em>size=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.rows" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a shortcut for results(&quot;rr&quot;)</p>
+<dd><p>This is a shortcut for results(&#8220;rr&#8221;)</p>
 <p>Usage:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">rows</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;proteins.name&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -2228,7 +2226,7 @@ a summary in order of greatest count to smallest.</div></blockquote>
 <dt id="intermine.query.Query.select">
 <code class="descname">select</code><span class="sig-paren">(</span><em>*paths</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;proteins.name&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;proteins.name&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This method is intended to provide an API familiar to those
@@ -2244,7 +2242,7 @@ be removed.</p>
 <dt id="intermine.query.Query.set_logic">
 <code class="descname">set_logic</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.set_logic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.set_logic" title="Permalink to this definition">¶</a></dt>
 <dd><p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Query</span><span class="o">.</span><span class="n">set_logic</span><span class="p">(</span><span class="s2">&quot;A and (B or C)&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Query</span><span class="o">.</span><span class="n">set_logic</span><span class="p">(</span><span class="s2">&quot;A and (B or C)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This sets the logic to the appropriate value. If the value is
@@ -2259,7 +2257,7 @@ the string is tokenised and parsed.</p>
 <code class="descname">summarise</code><span class="sig-paren">(</span><em>summary_path</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.summarise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.summarise" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Usage::</dt>
-<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Gene.*&quot;</span><span class="p">,</span> <span class="s2">&quot;organism.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;Gene&quot;</span><span class="p">,</span> <span class="s2">&quot;IN&quot;</span><span class="p">,</span> <span class="s2">&quot;my-list&quot;</span><span class="p">)</span>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Gene.*&quot;</span><span class="p">,</span> <span class="s2">&quot;organism.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;Gene&quot;</span><span class="p">,</span> <span class="s2">&quot;IN&quot;</span><span class="p">,</span> <span class="s2">&quot;my-list&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">query</span><span class="o">.</span><span class="n">summarise</span><span class="p">(</span><span class="s2">&quot;length&quot;</span><span class="p">)[</span><span class="s2">&quot;average&quot;</span><span class="p">]</span>
 <span class="gp">... </span><span class="mf">12345.67890</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">query</span><span class="o">.</span><span class="n">summarise</span><span class="p">(</span><span class="s2">&quot;organism.name&quot;</span><span class="p">)[</span><span class="s2">&quot;Drosophila simulans&quot;</span><span class="p">]</span>
@@ -2270,11 +2268,11 @@ the string is tokenised and parsed.</p>
 </dl>
 <p>This method allows you to get statistics summarising the information
 from just one column of a query. For numerical columns you get dictionary with
-four keys ('average', 'stdev', 'max', 'min'), and for non-numerical
+four keys (&#8216;average&#8217;, &#8216;stdev&#8217;, &#8216;max&#8217;, &#8216;min&#8217;), and for non-numerical
 columns you get a dictionary where each item is a key and the values
 are the number of occurrences of this value in the column.</p>
 <p>Any key word arguments will be passed to the underlying results call -
-so you can limit the result size to the top 100 items by passing &quot;size = 100&quot;
+so you can limit the result size to the top 100 items by passing &#8220;size = 100&#8221;
 as part of the call.</p>
 <p>&#64;see: L{intermine.query.Query.results}</p>
 <p>&#64;param summary_path: The column to summarise (either in long or short form)
@@ -2288,7 +2286,7 @@ This method is sugar for particular combinations of calls to L{results}.</p>
 <code class="descname">to_Node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/query.html#Query.to_Node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.query.Query.to_Node" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is an intermediate step in the creation of the
 xml serialised version of the query. You probably
-won't need to call this directly.</p>
+won&#8217;t need to call this directly.</p>
 <p>&#64;rtype: xml.minidom.Node</p>
 </dd></dl>
 
@@ -2381,7 +2379,7 @@ In addition it will:</p>
 <li>Check that SubClassConstraints have a correct subclass relationship</li>
 <li>Check that LoopConstraints have a valid loopPath, of a compatible type</li>
 <li>Check that ListConstraints refer to an object</li>
-<li>Don't even try to check RangeConstraints: these have variable semantics</li>
+<li>Don&#8217;t even try to check RangeConstraints: these have variable semantics</li>
 </ul>
 </div></blockquote>
 <p>&#64;param cons: The constraints to check (defaults to all constraints on the query)</p>
@@ -2458,7 +2456,7 @@ and allowing others to run them
 simply. They are the main interface
 to querying in the webapp</p>
 <p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
 <span class="n">template</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;Gene_Pathways&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">template</span><span class="o">.</span><span class="n">results</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span><span class="s2">&quot;eve&quot;</span><span class="p">}):</span>
   <span class="n">process_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
@@ -2470,7 +2468,7 @@ are typically retrieved from the webservice and run by specifying
 the values for their existing constraints. They are a concise
 and powerful way of running queries in the webapp.</p>
 <p>Being subclasses of query, everything is true of them that is true
-of a query. They are just less work, as you don't have to design each
+of a query. They are just less work, as you don&#8217;t have to design each
 one. Also, you can store your own templates in the web-app, and then
 access them as a private webservice method, from anywhere, making them
 a kind of query in the cloud - for this you will need to authenticate
@@ -2552,7 +2550,7 @@ arguments.</p>
 <p>The template result methods also accept a key-word pair
 set of arguments that are used to supply values
 to the editable constraints. eg:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">template</span><span class="o">.</span><span class="n">results</span><span class="p">(</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">template</span><span class="o">.</span><span class="n">results</span><span class="p">(</span>
   <span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;eve&quot;</span><span class="p">},</span>
   <span class="n">B</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">5000</span><span class="p">}</span>
 <span class="p">)</span>
@@ -2561,7 +2559,7 @@ to the editable constraints. eg:</p>
 <p>The keys should be codes for editable constraints (you can inspect these
 with Template.editable_constraints) and the values should be a dictionary
 of constraint properties to replace. You can replace the values for
-&quot;op&quot; (operator), &quot;value&quot;, and &quot;extra_value&quot; and &quot;values&quot; in the case of
+&#8220;op&#8221; (operator), &#8220;value&#8221;, and &#8220;extra_value&#8221; and &#8220;values&#8221; in the case of
 ternary and multi constraints.</p>
 <p>&#64;rtype: L{intermine.webservice.ResultIterator}</p>
 </dd></dl>
@@ -2580,11 +2578,12 @@ ternary and multi constraints.</p>
 parameters needed by the templates results service. These
 are slightly more complex:</p>
 <blockquote>
-<div><ul class="simple">
-<li>name: The template's name</li>
+<div><ul>
+<li><p class="first">name: The template&#8217;s name</p>
+</li>
 <li><dl class="first docutils">
 <dt>for each constraint: (where [i] is an integer incremented for each constraint)</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li>constraint[i]: the path</li>
 <li>op[i]:         the operator</li>
 <li>value[i]:      the value</li>
@@ -2606,18 +2605,51 @@ are slightly more complex:</p>
 <span id="intermine-registry-module"></span><h2>intermine.registry module<a class="headerlink" href="#module-intermine.registry" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="intermine.registry.getData">
-<code class="descclassname">intermine.registry.</code><code class="descname">getData</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/registry.html#getData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.registry.getData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">intermine.registry.</code><code class="descname">getData</code><span class="sig-paren">(</span><em>mine</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/registry.html#getData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.registry.getData" title="Permalink to this definition">¶</a></dt>
+<dd><p>example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">intermine</span> <span class="kn">import</span> <span class="n">registry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">registry</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;flymine&#39;</span><span class="p">)</span>
+<span class="go">Name: Affymetrix array: Drosophila1</span>
+<span class="go">Name: Affymetrix array: Drosophila2</span>
+<span class="go">Name: Affymetrix array: GeneChip Drosophila Genome 2.0 Array</span>
+<span class="go">Name: Affymetrix array: GeneChip Drosophila Genome Array</span>
+<span class="go">Name: Anoph-Expr data set</span>
+<span class="go">Name: BDGP cDNA clone data set.....</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="intermine.registry.getInfo">
 <code class="descclassname">intermine.registry.</code><code class="descname">getInfo</code><span class="sig-paren">(</span><em>mine</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/registry.html#getInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.registry.getInfo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">intermine</span> <span class="kn">import</span> <span class="n">registry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">registry</span><span class="o">.</span><span class="n">getInfo</span><span class="p">(</span><span class="s1">&#39;flymine&#39;</span><span class="p">)</span>
+<span class="go">Description:  An integrated database for Drosophila genomics</span>
+<span class="go">URL: http://www.flymine.org/flymine</span>
+<span class="go">API Version: 25</span>
+<span class="go">Release Version: 45.1 2017 August</span>
+<span class="go">InterMine Version: 1.8.5</span>
+<span class="go">Organisms:</span>
+<span class="go">D. melanogaster</span>
+<span class="go">Neighbours:</span>
+<span class="go">MODs</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="intermine.registry.getMines">
 <code class="descclassname">intermine.registry.</code><code class="descname">getMines</code><span class="sig-paren">(</span><em>organism</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/registry.html#getMines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.registry.getMines" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">intermine</span> <span class="kn">import</span> <span class="n">registry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">registry</span><span class="o">.</span><span class="n">getMines</span><span class="p">(</span><span class="s1">&#39;D. melanogaster&#39;</span><span class="p">)</span>
+<span class="go">FlyMine</span>
+<span class="go">FlyMine Beta</span>
+<span class="go">XenMine</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </div>
 <div class="section" id="module-intermine.results">
@@ -2625,7 +2657,7 @@ are slightly more complex:</p>
 <dl class="class">
 <dt id="intermine.results.EnrichmentLine">
 <em class="property">class </em><code class="descclassname">intermine.results.</code><code class="descname">EnrichmentLine</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#EnrichmentLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.EnrichmentLine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">UserDict.UserDict</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/collections.html#collections.UserDict" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">collections.UserDict</span></code></a></p>
 <p>These objects operate as dictionaries as well as objects with predefined
 properties.</p>
 </dd></dl>
@@ -2633,7 +2665,7 @@ properties.</p>
 <dl class="class">
 <dt id="intermine.results.FlatFileIterator">
 <em class="property">class </em><code class="descclassname">intermine.results.</code><code class="descname">FlatFileIterator</code><span class="sig-paren">(</span><em>connection</em>, <em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#FlatFileIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.FlatFileIterator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>This iterator can be used as the sub iterator in a ResultIterator</p>
 <dl class="method">
 <dt id="intermine.results.FlatFileIterator.next">
@@ -2646,7 +2678,7 @@ properties.</p>
 <dl class="class">
 <dt id="intermine.results.InterMineURLOpener">
 <em class="property">class </em><code class="descclassname">intermine.results.</code><code class="descname">InterMineURLOpener</code><span class="sig-paren">(</span><em>credentials=None</em>, <em>token=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#InterMineURLOpener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.InterMineURLOpener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Provides user agent and authentication headers, and handling of errors</p>
 <dl class="attribute">
 <dt id="intermine.results.InterMineURLOpener.JSON">
@@ -2660,7 +2692,7 @@ properties.</p>
 
 <dl class="attribute">
 <dt id="intermine.results.InterMineURLOpener.USER_AGENT">
-<code class="descname">USER_AGENT</code><em class="property"> = &quot;InterMine-Client-1.09.09/python-sys.version_info(major=2, minor=7, micro=14, releaselevel='final', serial=0)&quot;</em><a class="headerlink" href="#intermine.results.InterMineURLOpener.USER_AGENT" title="Permalink to this definition">¶</a></dt>
+<code class="descname">USER_AGENT</code><em class="property"> = &quot;InterMine-Client-1.11.0/python-sys.version_info(major=3, minor=5, micro=2, releaselevel='final', serial=0)&quot;</em><a class="headerlink" href="#intermine.results.InterMineURLOpener.USER_AGENT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2688,7 +2720,7 @@ properties.</p>
 <dl class="method">
 <dt id="intermine.results.InterMineURLOpener.http_error_401">
 <code class="descname">http_error_401</code><span class="sig-paren">(</span><em>url</em>, <em>fp</em>, <em>errcode</em>, <em>errmsg</em>, <em>headers</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#InterMineURLOpener.http_error_401"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.InterMineURLOpener.http_error_401" title="Permalink to this definition">¶</a></dt>
-<dd><p>401 errors indicate we don't have sufficient permission for the resource
+<dd><p>401 errors indicate we don&#8217;t have sufficient permission for the resource
 we requested - usually a list or a tempate</p>
 <p>&#64;raise WebserviceError: in all circumstances</p>
 </dd></dl>
@@ -2696,7 +2728,7 @@ we requested - usually a list or a tempate</p>
 <dl class="method">
 <dt id="intermine.results.InterMineURLOpener.http_error_403">
 <code class="descname">http_error_403</code><span class="sig-paren">(</span><em>url</em>, <em>fp</em>, <em>errcode</em>, <em>errmsg</em>, <em>headers</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#InterMineURLOpener.http_error_403"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.InterMineURLOpener.http_error_403" title="Permalink to this definition">¶</a></dt>
-<dd><p>401 errors indicate we don't have sufficient permission for the resource
+<dd><p>401 errors indicate we don&#8217;t have sufficient permission for the resource
 we requested - usually a list or a tempate</p>
 <p>&#64;raise WebserviceError: in all circumstances</p>
 </dd></dl>
@@ -2712,7 +2744,7 @@ a template that is not longer available.</p>
 <dl class="method">
 <dt id="intermine.results.InterMineURLOpener.http_error_500">
 <code class="descname">http_error_500</code><span class="sig-paren">(</span><em>url</em>, <em>fp</em>, <em>errcode</em>, <em>errmsg</em>, <em>headers</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#InterMineURLOpener.http_error_500"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.InterMineURLOpener.http_error_500" title="Permalink to this definition">¶</a></dt>
-<dd><p>500 errors indicate that the server borked during the request - ie: it wasn't
+<dd><p>500 errors indicate that the server borked during the request - ie: it wasn&#8217;t
 our fault.</p>
 <p>&#64;raise WebserviceError: in all circumstances</p>
 </dd></dl>
@@ -2753,7 +2785,7 @@ our fault.</p>
 <dl class="class">
 <dt id="intermine.results.JSONIterator">
 <em class="property">class </em><code class="descclassname">intermine.results.</code><code class="descname">JSONIterator</code><span class="sig-paren">(</span><em>connection</em>, <em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#JSONIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.JSONIterator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>This iterator can be used as the sub iterator in a ResultIterator</p>
 <dl class="attribute">
 <dt id="intermine.results.JSONIterator.LOG">
@@ -2765,7 +2797,7 @@ our fault.</p>
 <code class="descname">check_return_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#JSONIterator.check_return_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.JSONIterator.check_return_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>The footer containts information as to whether the result
 set was successfully transferred in its entirety. This
-method makes sure we don't silently accept an
+method makes sure we don&#8217;t silently accept an
 incomplete result set.</p>
 <p>&#64;raise WebserviceError: if the footer indicates there was an error</p>
 </dd></dl>
@@ -2794,7 +2826,7 @@ incomplete result set.</p>
 <dl class="class">
 <dt id="intermine.results.ResultIterator">
 <em class="property">class </em><code class="descclassname">intermine.results.</code><code class="descname">ResultIterator</code><span class="sig-paren">(</span><em>service</em>, <em>path</em>, <em>params</em>, <em>rowformat</em>, <em>view</em>, <em>cld=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#ResultIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.ResultIterator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>These objects handle the iteration over results
 in the formats requested by the user. They are responsible
 for generating an appropriate parser,
@@ -2802,22 +2834,22 @@ connecting the parser to the results, and delegating
 iteration appropriately.</p>
 <dl class="attribute">
 <dt id="intermine.results.ResultIterator.JSON_FORMATS">
-<code class="descname">JSON_FORMATS</code><em class="property"> = frozenset(['jsonobjects', 'json', 'jsonrows'])</em><a class="headerlink" href="#intermine.results.ResultIterator.JSON_FORMATS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">JSON_FORMATS</code><em class="property"> = frozenset({'jsonobjects', 'jsonrows', 'json'})</em><a class="headerlink" href="#intermine.results.ResultIterator.JSON_FORMATS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.results.ResultIterator.PARSED_FORMATS">
-<code class="descname">PARSED_FORMATS</code><em class="property"> = frozenset(['dict', 'list', 'rr'])</em><a class="headerlink" href="#intermine.results.ResultIterator.PARSED_FORMATS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">PARSED_FORMATS</code><em class="property"> = frozenset({'rr', 'dict', 'list'})</em><a class="headerlink" href="#intermine.results.ResultIterator.PARSED_FORMATS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.results.ResultIterator.ROW_FORMATS">
-<code class="descname">ROW_FORMATS</code><em class="property"> = frozenset(['count', 'jsonobjects', 'json', 'dict', 'jsonrows', 'rr', 'tsv', 'csv', 'list'])</em><a class="headerlink" href="#intermine.results.ResultIterator.ROW_FORMATS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ROW_FORMATS</code><em class="property"> = frozenset({'dict', 'jsonrows', 'tsv', 'rr', 'count', 'csv', 'jsonobjects', 'json', 'list'})</em><a class="headerlink" href="#intermine.results.ResultIterator.ROW_FORMATS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.results.ResultIterator.STRING_FORMATS">
-<code class="descname">STRING_FORMATS</code><em class="property"> = frozenset(['tsv', 'count', 'csv'])</em><a class="headerlink" href="#intermine.results.ResultIterator.STRING_FORMATS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">STRING_FORMATS</code><em class="property"> = frozenset({'count', 'csv', 'tsv'})</em><a class="headerlink" href="#intermine.results.ResultIterator.STRING_FORMATS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2832,17 +2864,17 @@ iteration appropriately.</p>
 <dl class="class">
 <dt id="intermine.results.ResultObject">
 <em class="property">class </em><code class="descclassname">intermine.results.</code><code class="descname">ResultObject</code><span class="sig-paren">(</span><em>data</em>, <em>cld</em>, <em>view=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#ResultObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.ResultObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>These objects are backed by a row of data and the class descriptor that
 describes the object. They allow access in standard object style:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">results</span><span class="p">():</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">results</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="nb">print</span> <span class="n">gene</span><span class="o">.</span><span class="n">symbol</span>
 <span class="gp">... </span>   <span class="nb">print</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">gene</span><span class="o">.</span><span class="n">pathways</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>All objects will have &quot;id&quot; and &quot;type&quot; properties. The type refers to the
+<p>All objects will have &#8220;id&#8221; and &#8220;type&#8221; properties. The type refers to the
 actual type of this object: if it is a subclass of the one requested, the
-subclass name will be returned. The &quot;id&quot; refers to the internal database id
+subclass name will be returned. The &#8220;id&#8221; refers to the internal database id
 of the object, and is a guarantor of object identity.</p>
 <dl class="attribute">
 <dt id="intermine.results.ResultObject.id">
@@ -2855,11 +2887,11 @@ of the object, and is a guarantor of object identity.</p>
 <dl class="class">
 <dt id="intermine.results.ResultRow">
 <em class="property">class </em><code class="descclassname">intermine.results.</code><code class="descname">ResultRow</code><span class="sig-paren">(</span><em>data</em>, <em>views</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/results.html#ResultRow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.results.ResultRow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>ResultRows provide access to the fields of the row through index lookup. However,
 for convenience both list indexes and dictionary keys can be used. So the
 following all work:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Assuming the view is &quot;Gene.symbol&quot;, &quot;Gene.organism.name&quot;:</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Assuming the view is &quot;Gene.symbol&quot;, &quot;Gene.organism.name&quot;:</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;symbol&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Gene.symbol&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">row</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">)</span>
 <span class="gp">... </span><span class="kc">True</span>
 </pre></div>
@@ -2952,7 +2984,7 @@ following all work:</p>
 <dl class="exception">
 <dt id="intermine.util.ReadableException">
 <em class="property">exception </em><code class="descclassname">intermine.util.</code><code class="descname">ReadableException</code><span class="sig-paren">(</span><em>message</em>, <em>cause=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/util.html#ReadableException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.util.ReadableException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/exceptions.html#Exception" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></a></p>
 </dd></dl>
 
 <dl class="function">
@@ -2965,27 +2997,27 @@ following all work:</p>
 <span id="intermine-webservice-module"></span><h2>intermine.webservice module<a class="headerlink" href="#module-intermine.webservice" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intermine.webservice.Registry">
-<em class="property">class </em><code class="descclassname">intermine.webservice.</code><code class="descname">Registry</code><span class="sig-paren">(</span><em>registry_url=u'http://www.intermine.org/registry'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Registry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Registry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">UserDict.DictMixin</span></code></p>
+<em class="property">class </em><code class="descclassname">intermine.webservice.</code><code class="descname">Registry</code><span class="sig-paren">(</span><em>registry_url='http://www.intermine.org/registry'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Registry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Registry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/collections.abc.html#collections.abc.MutableMapping" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">collections.abc.MutableMapping</span></code></a></p>
 <p>Registries are web-services that mines can automatically register
 themselves with, and thus enable service discovery by clients.</p>
 <p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">intermine.webservice</span> <span class="k">import</span> <span class="n">Registry</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span>from intermine.webservice import Registry
 
-<span class="c1"># Connect to the default registry service</span>
-<span class="c1"># at www.intermine.org/registry</span>
-<span class="n">registry</span> <span class="o">=</span> <span class="n">Registry</span><span class="p">()</span>
+# Connect to the default registry service
+# at www.intermine.org/registry
+registry = Registry()
 
-<span class="c1"># Find all the available mines:</span>
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">mine</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span> <span class="n">name</span><span class="p">,</span> <span class="n">mine</span><span class="o">.</span><span class="n">version</span>
+# Find all the available mines:
+for name, mine in registry.items():
+    print name, mine.version
 
-<span class="c1"># Dict-like interface for accessing mines.</span>
-<span class="n">flymine</span> <span class="o">=</span> <span class="n">registry</span><span class="p">[</span><span class="s2">&quot;flymine&quot;</span><span class="p">]</span>
+# Dict-like interface for accessing mines.
+flymine = registry[&quot;flymine&quot;]
 
-<span class="c1"># The mine object is a Service</span>
-<span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">flymine</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Gene.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">results</span><span class="p">():</span>
-    <span class="n">process</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+# The mine object is a Service
+for gene in flymine.select(&quot;Gene.*&quot;).results():
+    process(gene)
 </pre></div>
 </div>
 <p>This class is meant to aid with interoperation between
@@ -2993,7 +3025,7 @@ mines by allowing them to discover one-another, and
 allow users to always have correct connection information.</p>
 <dl class="attribute">
 <dt id="intermine.webservice.Registry.MINES_PATH">
-<code class="descname">MINES_PATH</code><em class="property"> = u'/mines.json'</em><a class="headerlink" href="#intermine.webservice.Registry.MINES_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">MINES_PATH</code><em class="property"> = '/mines.json'</em><a class="headerlink" href="#intermine.webservice.Registry.MINES_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3006,13 +3038,13 @@ allow users to always have correct connection information.</p>
 <dl class="class">
 <dt id="intermine.webservice.Service">
 <em class="property">class </em><code class="descclassname">intermine.webservice.</code><code class="descname">Service</code><span class="sig-paren">(</span><em>root</em>, <em>username=None</em>, <em>password=None</em>, <em>token=None</em>, <em>prefetch_depth=1</em>, <em>prefetch_id_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>The intermine.webservice.Service class is the main interface for the user.
 It will provide access to queries and templates, as well as doing the
 background task of fetching the data model, and actually requesting
 the query results.</p>
 <p>example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">intermine.webservice</span> <span class="k">import</span> <span class="n">Service</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">intermine.webservice</span> <span class="kn">import</span> <span class="n">Service</span>
 <span class="n">service</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;http://www.flymine.org/query/service&quot;</span><span class="p">)</span>
 
 <span class="n">template</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;Gene_Pathways&quot;</span><span class="p">)</span>
@@ -3050,7 +3082,7 @@ the query results.</p>
 data from the webservice. The user is responsible for specifying the
 structure that determines what records are returned, and what information
 about each record is provided.</p>
-<p>X{Template} is the term for a predefined &quot;Query&quot;, ie: one that has been
+<p>X{Template} is the term for a predefined &#8220;Query&#8221;, ie: one that has been
 written and saved on the webservice you will access. The definition
 of the query is already done, but the user may want to specify the
 values of the constraints that exist on the template. Templates are accessed
@@ -3061,119 +3093,119 @@ in the database. Lists can be created and managed using this client library.</p>
 <p>&#64;see: L{intermine.query}</p>
 <dl class="attribute">
 <dt id="intermine.webservice.Service.IDS_PATH">
-<code class="descname">IDS_PATH</code><em class="property"> = u'/ids'</em><a class="headerlink" href="#intermine.webservice.Service.IDS_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">IDS_PATH</code><em class="property"> = '/ids'</em><a class="headerlink" href="#intermine.webservice.Service.IDS_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.LIST_APPENDING_PATH">
-<code class="descname">LIST_APPENDING_PATH</code><em class="property"> = u'/lists/append'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_APPENDING_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LIST_APPENDING_PATH</code><em class="property"> = '/lists/append'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_APPENDING_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.LIST_CREATION_PATH">
-<code class="descname">LIST_CREATION_PATH</code><em class="property"> = u'/lists'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_CREATION_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LIST_CREATION_PATH</code><em class="property"> = '/lists'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_CREATION_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.LIST_ENRICHMENT_PATH">
-<code class="descname">LIST_ENRICHMENT_PATH</code><em class="property"> = u'/list/enrichment'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_ENRICHMENT_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LIST_ENRICHMENT_PATH</code><em class="property"> = '/list/enrichment'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_ENRICHMENT_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.LIST_MANAGER_METHODS">
-<code class="descname">LIST_MANAGER_METHODS</code><em class="property"> = frozenset([u'create_list', u'get_all_list_names', u'delete_lists', u'l', u'get_list', u'get_list_count', u'get_all_lists'])</em><a class="headerlink" href="#intermine.webservice.Service.LIST_MANAGER_METHODS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LIST_MANAGER_METHODS</code><em class="property"> = frozenset({'get_all_lists', 'create_list', 'get_list_count', 'get_all_list_names', 'delete_lists', 'l', 'get_list'})</em><a class="headerlink" href="#intermine.webservice.Service.LIST_MANAGER_METHODS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.LIST_PATH">
-<code class="descname">LIST_PATH</code><em class="property"> = u'/lists'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LIST_PATH</code><em class="property"> = '/lists'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.LIST_RENAME_PATH">
-<code class="descname">LIST_RENAME_PATH</code><em class="property"> = u'/lists/rename'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_RENAME_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LIST_RENAME_PATH</code><em class="property"> = '/lists/rename'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_RENAME_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.LIST_TAG_PATH">
-<code class="descname">LIST_TAG_PATH</code><em class="property"> = u'/list/tags'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_TAG_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LIST_TAG_PATH</code><em class="property"> = '/list/tags'</em><a class="headerlink" href="#intermine.webservice.Service.LIST_TAG_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.MODEL_PATH">
-<code class="descname">MODEL_PATH</code><em class="property"> = u'/model'</em><a class="headerlink" href="#intermine.webservice.Service.MODEL_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">MODEL_PATH</code><em class="property"> = '/model'</em><a class="headerlink" href="#intermine.webservice.Service.MODEL_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.QUERY_LIST_APPEND_PATH">
-<code class="descname">QUERY_LIST_APPEND_PATH</code><em class="property"> = u'/query/append/tolist'</em><a class="headerlink" href="#intermine.webservice.Service.QUERY_LIST_APPEND_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">QUERY_LIST_APPEND_PATH</code><em class="property"> = '/query/append/tolist'</em><a class="headerlink" href="#intermine.webservice.Service.QUERY_LIST_APPEND_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.QUERY_LIST_UPLOAD_PATH">
-<code class="descname">QUERY_LIST_UPLOAD_PATH</code><em class="property"> = u'/query/tolist'</em><a class="headerlink" href="#intermine.webservice.Service.QUERY_LIST_UPLOAD_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">QUERY_LIST_UPLOAD_PATH</code><em class="property"> = '/query/tolist'</em><a class="headerlink" href="#intermine.webservice.Service.QUERY_LIST_UPLOAD_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.QUERY_PATH">
-<code class="descname">QUERY_PATH</code><em class="property"> = u'/query/results'</em><a class="headerlink" href="#intermine.webservice.Service.QUERY_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">QUERY_PATH</code><em class="property"> = '/query/results'</em><a class="headerlink" href="#intermine.webservice.Service.QUERY_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.RELEASE_PATH">
-<code class="descname">RELEASE_PATH</code><em class="property"> = u'/version/release'</em><a class="headerlink" href="#intermine.webservice.Service.RELEASE_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">RELEASE_PATH</code><em class="property"> = '/version/release'</em><a class="headerlink" href="#intermine.webservice.Service.RELEASE_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.SAVEDQUERY_PATH">
-<code class="descname">SAVEDQUERY_PATH</code><em class="property"> = u'/savedqueries/xml'</em><a class="headerlink" href="#intermine.webservice.Service.SAVEDQUERY_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SAVEDQUERY_PATH</code><em class="property"> = '/savedqueries/xml'</em><a class="headerlink" href="#intermine.webservice.Service.SAVEDQUERY_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.SCHEME">
-<code class="descname">SCHEME</code><em class="property"> = u'http://'</em><a class="headerlink" href="#intermine.webservice.Service.SCHEME" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SCHEME</code><em class="property"> = 'http://'</em><a class="headerlink" href="#intermine.webservice.Service.SCHEME" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.SEARCH_PATH">
-<code class="descname">SEARCH_PATH</code><em class="property"> = u'/search'</em><a class="headerlink" href="#intermine.webservice.Service.SEARCH_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SEARCH_PATH</code><em class="property"> = '/search'</em><a class="headerlink" href="#intermine.webservice.Service.SEARCH_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.SERVICE_RESOLUTION_PATH">
-<code class="descname">SERVICE_RESOLUTION_PATH</code><em class="property"> = u'/check/'</em><a class="headerlink" href="#intermine.webservice.Service.SERVICE_RESOLUTION_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SERVICE_RESOLUTION_PATH</code><em class="property"> = '/check/'</em><a class="headerlink" href="#intermine.webservice.Service.SERVICE_RESOLUTION_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.TEMPLATEQUERY_PATH">
-<code class="descname">TEMPLATEQUERY_PATH</code><em class="property"> = u'/template/results'</em><a class="headerlink" href="#intermine.webservice.Service.TEMPLATEQUERY_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">TEMPLATEQUERY_PATH</code><em class="property"> = '/template/results'</em><a class="headerlink" href="#intermine.webservice.Service.TEMPLATEQUERY_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.TEMPLATES_PATH">
-<code class="descname">TEMPLATES_PATH</code><em class="property"> = u'/templates'</em><a class="headerlink" href="#intermine.webservice.Service.TEMPLATES_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">TEMPLATES_PATH</code><em class="property"> = '/templates'</em><a class="headerlink" href="#intermine.webservice.Service.TEMPLATES_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.USERS_PATH">
-<code class="descname">USERS_PATH</code><em class="property"> = u'/users'</em><a class="headerlink" href="#intermine.webservice.Service.USERS_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">USERS_PATH</code><em class="property"> = '/users'</em><a class="headerlink" href="#intermine.webservice.Service.USERS_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.VERSION_PATH">
-<code class="descname">VERSION_PATH</code><em class="property"> = u'/version/ws'</em><a class="headerlink" href="#intermine.webservice.Service.VERSION_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">VERSION_PATH</code><em class="property"> = '/version/ws'</em><a class="headerlink" href="#intermine.webservice.Service.VERSION_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intermine.webservice.Service.WIDGETS_PATH">
-<code class="descname">WIDGETS_PATH</code><em class="property"> = u'/widgets'</em><a class="headerlink" href="#intermine.webservice.Service.WIDGETS_PATH" title="Permalink to this definition">¶</a></dt>
+<code class="descname">WIDGETS_PATH</code><em class="property"> = '/widgets'</em><a class="headerlink" href="#intermine.webservice.Service.WIDGETS_PATH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="intermine.webservice.Service.deregister">
-<code class="descname">deregister</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service.deregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service.deregister" title="Permalink to this definition">¶</a></dt>
+<code class="descname">deregister</code><span class="sig-paren">(</span><em>deregistration_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service.deregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service.deregister" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;param deregistration_token A token to prove you really want to do this</p>
-<p>&#64;return string All the user's data.</p>
+<p>&#64;return string All the user&#8217;s data.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3184,7 +3216,7 @@ in the database. Lists can be created and managed using this client library.</p>
 
 <dl class="method">
 <dt id="intermine.webservice.Service.get_deregistration_token">
-<code class="descname">get_deregistration_token</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service.get_deregistration_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service.get_deregistration_token" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_deregistration_token</code><span class="sig-paren">(</span><em>validity=300</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service.get_deregistration_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service.get_deregistration_token" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3193,11 +3225,11 @@ in the database. Lists can be created and managed using this client library.</p>
 <dd><p>This method is called internally by the query objects
 when they are called to get results. You will not
 normally need to call it directly</p>
-<p>&#64;param path: The resource path (eg: &quot;/query/results&quot;)
+<p>&#64;param path: The resource path (eg: &#8220;/query/results&#8221;)
 &#64;type path: string
 &#64;param params: The query parameters for this request as a dictionary
 &#64;type params: dict
-&#64;param rowformat: One of &quot;rr&quot;, &quot;object&quot;, &quot;count&quot;, &quot;dict&quot;, &quot;list&quot;, &quot;tsv&quot;, &quot;csv&quot;, &quot;jsonrows&quot;, &quot;jsonobjects&quot;
+&#64;param rowformat: One of &#8220;rr&#8221;, &#8220;object&#8221;, &#8220;count&#8221;, &#8220;dict&#8221;, &#8220;list&#8221;, &#8220;tsv&#8221;, &#8220;csv&#8221;, &#8220;jsonrows&#8221;, &#8220;jsonobjects&#8221;
 &#64;type rowformat: string
 &#64;param view: The output columns
 &#64;type view: list</p>
@@ -3213,7 +3245,7 @@ from the webservice. If you are trying to fetch
 a private template (ie. one you made yourself
 and is not available to others) then you may need to authenticate</p>
 <p>&#64;see: L{intermine.webservice.Service.__init__}</p>
-<p>&#64;param name: the template's name
+<p>&#64;param name: the template&#8217;s name
 &#64;type name: string</p>
 <p>&#64;raise ServiceError: if the template does not exist
 &#64;raise QueryParseError: if the template cannot be parsed</p>
@@ -3226,11 +3258,11 @@ and is not available to others) then you may need to authenticate</p>
 <dd><p>This method is primarily useful as a context manager
 when creating temporary lists, since on context exit all
 temporary lists will be cleaned up:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">service</span><span class="o">.</span><span class="n">list_manager</span><span class="p">()</span> <span class="k">as</span> <span class="n">manager</span><span class="p">:</span>
-    <span class="n">temp_a</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">create_list</span><span class="p">(</span><span class="n">file_a</span><span class="p">,</span> <span class="s2">&quot;Gene&quot;</span><span class="p">)</span>
-    <span class="n">temp_b</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">create_list</span><span class="p">(</span><span class="n">file_b</span><span class="p">,</span> <span class="s2">&quot;Gene&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="p">(</span><span class="n">temp_a</span> <span class="o">&amp;</span> <span class="n">temp_b</span><span class="p">):</span>
-        <span class="nb">print</span> <span class="n">gene</span><span class="o">.</span><span class="n">primaryIdentifier</span><span class="p">,</span> <span class="s2">&quot;is in both&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span>with service.list_manager() as manager:
+    temp_a = manager.create_list(file_a, &quot;Gene&quot;)
+    temp_b = manager.create_list(file_b, &quot;Gene&quot;)
+    for gene in (temp_a &amp; temp_b):
+        print gene.primaryIdentifier, &quot;is in both&quot;
 </pre></div>
 </div>
 <p>&#64;rtype: ListManager</p>
@@ -3267,7 +3299,7 @@ output column expressions are passed instead.</p>
 
 <dl class="method">
 <dt id="intermine.webservice.Service.register">
-<code class="descname">register</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service.register" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register</code><span class="sig-paren">(</span><em>username</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;return {Service} an authenticated service.</p>
 </dd></dl>
 
@@ -3279,25 +3311,25 @@ output column expressions are passed instead.</p>
 releases of the datawarehouse. This usually coincides
 with updates to the data contained within. While a string,
 releases usually sort in ascending order of recentness
-(eg: &quot;release-26&quot;, &quot;release-27&quot;, &quot;release-28&quot;). They can also
-have less machine readable meanings (eg: &quot;beta&quot;)</p>
+(eg: &#8220;release-26&#8221;, &#8220;release-27&#8221;, &#8220;release-28&#8221;). They can also
+have less machine readable meanings (eg: &#8220;beta&#8221;)</p>
 <p>&#64;rtype: string</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="intermine.webservice.Service.resolve_ids">
-<code class="descname">resolve_ids</code><span class="sig-paren">(</span><em>data_type</em>, <em>identifiers</em>, <em>extra=u''</em>, <em>case_sensitive=False</em>, <em>wildcards=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service.resolve_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service.resolve_ids" title="Permalink to this definition">¶</a></dt>
+<code class="descname">resolve_ids</code><span class="sig-paren">(</span><em>data_type</em>, <em>identifiers</em>, <em>extra=''</em>, <em>case_sensitive=False</em>, <em>wildcards=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/intermine/webservice.html#Service.resolve_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intermine.webservice.Service.resolve_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Request that a set of identifiers be resolved to objects in
 the data store.</p>
-<p>&#64;param data_type: The type of these identifiers (eg. 'Gene')
+<p>&#64;param data_type: The type of these identifiers (eg. &#8216;Gene&#8217;)
 &#64;type data_type: String</p>
-<p>&#64;param identifiers: The ids to resolve (eg. ['eve', 'zen', 'pparg'])
+<p>&#64;param identifiers: The ids to resolve (eg. [&#8216;eve&#8217;, &#8216;zen&#8217;, &#8216;pparg&#8217;])
 &#64;type identifiers: iterable of string</p>
-<p>&#64;param extra: A disambiguating value (eg. &quot;Drosophila melanogaster&quot;)
+<p>&#64;param extra: A disambiguating value (eg. &#8220;Drosophila melanogaster&#8221;)
 &#64;type extra: String</p>
 <p>&#64;param case_sensitive: Whether to treat IDs case sensitively.
 &#64;type case_sensitive: Boolean</p>
-<p>&#64;param wildcards: Whether or not to interpret wildcards (eg: &quot;eve*&quot;)
+<p>&#64;param wildcards: Whether or not to interpret wildcards (eg: &#8220;eve*&#8221;)
 &#64;type wildcards: Boolean</p>
 <p>&#64;return: {idresolution.Job} The job.</p>
 </dd></dl>
@@ -3315,7 +3347,7 @@ the data store.</p>
 indexed by the service endpoint, returning results
 and facets for those results.</p>
 <p>&#64;param term The search term
-&#64;param facets The facets to search by (eg: Organism = 'H. sapiens')</p>
+&#64;param facets The facets to search by (eg: Organism = &#8216;H. sapiens&#8217;)</p>
 <p>&#64;return (list, dict) The results, and a dictionary of facetting informtation.</p>
 </dd></dl>
 
@@ -3330,12 +3362,12 @@ output column expressions are passed instead.</p>
 <dt id="intermine.webservice.Service.templates">
 <code class="descname">templates</code><a class="headerlink" href="#intermine.webservice.Service.templates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Service.templates S{-&gt;} dict(intermine.query.Template|string)</p>
-<p>For efficiency's sake, Templates are not parsed until
+<p>For efficiency&#8217;s sake, Templates are not parsed until
 they are required, and until then they are stored as XML
 strings. It is recommended that in most cases you would want
 to use L{Service.get_template}.</p>
 <p>You can use this property however to test for template existence though:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">templates</span><span class="p">:</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">templates</span><span class="p">:</span>
    <span class="n">template</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -3412,18 +3444,21 @@ L{Service.flush}, or simply get a new Service object.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/intermine.rst.txt"
+      <li><a href="_sources/intermine.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -3434,11 +3469,11 @@ L{Service.flush}, or simply get a new Service object.</p>
       &copy;2018, Alex Kalderimis, Julie Sullivan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="_sources/intermine.rst.txt"
+      <a href="_sources/intermine.txt"
           rel="nofollow">Page source</a>
     </div>
 

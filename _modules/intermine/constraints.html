@@ -1,38 +1,37 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="python">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>intermine.constraints &#8212; Intermine 1.10.0 documentation</title>
+    
+    <title>intermine.constraints &mdash; Intermine 1.10.0 documentation</title>
+    
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '1.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Intermine 1.10.0 documentation" href="../../query.html" />
+    <link rel="up" title="Module code" href="../index.html" />
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>
-  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -42,8 +41,8 @@
   <h1>Source code for intermine.constraints</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">string</span>
-<span class="kn">from</span> <span class="nn">intermine.pathfeatures</span> <span class="k">import</span> <span class="n">PathFeature</span><span class="p">,</span> <span class="n">PATH_PATTERN</span>
-<span class="kn">from</span> <span class="nn">intermine.util</span> <span class="k">import</span> <span class="n">ReadableException</span>
+<span class="kn">from</span> <span class="nn">intermine.pathfeatures</span> <span class="kn">import</span> <span class="n">PathFeature</span><span class="p">,</span> <span class="n">PATH_PATTERN</span>
+<span class="kn">from</span> <span class="nn">intermine.util</span> <span class="kn">import</span> <span class="n">ReadableException</span>
 
 <div class="viewcode-block" id="Constraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.Constraint">[docs]</a><span class="k">class</span> <span class="nc">Constraint</span><span class="p">(</span><span class="n">PathFeature</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -67,7 +66,7 @@
 <span class="sd">    methods for overloading built-in operations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overloads +</span>
 <span class="sd">        ===========</span>
@@ -85,7 +84,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">LogicGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;AND&#39;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overloads &amp;</span>
 <span class="sd">        ===========</span>
@@ -102,7 +101,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">LogicGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;AND&#39;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overloads |</span>
 <span class="sd">        ===========</span>
@@ -130,7 +129,7 @@
 
     <span class="n">LEGAL_OPS</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">([</span><span class="s1">&#39;AND&#39;</span><span class="p">,</span> <span class="s1">&#39;OR&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -150,13 +149,13 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">LogicGroup</span><span class="p">):</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Provide a sensible representation of a node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Provide a human readable version of the group. The</span>
 <span class="sd">        string version should be able to be parsed back into the</span>
@@ -203,7 +202,7 @@
 <span class="sd">    errors in such strings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -454,7 +453,7 @@
 
     <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -474,7 +473,7 @@
 <div class="viewcode-block" id="CodedConstraint.get_codes"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.CodedConstraint.get_codes">[docs]</a>    <span class="k">def</span> <span class="nf">get_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stringify to the code they are refered to by.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -536,7 +535,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span> <span class="s1">&#39;NOT LIKE&#39;</span><span class="p">,</span> <span class="s1">&#39;CONTAINS&#39;</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -591,7 +590,7 @@
 
 <span class="sd">     &quot;&quot;&quot;</span>
     <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;IN&#39;</span><span class="p">,</span> <span class="s1">&#39;NOT IN&#39;</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">list_name</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">list_name</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">list_name</span><span class="p">,</span> <span class="s1">&#39;to_query&#39;</span><span class="p">):</span>
             <span class="n">q</span> <span class="o">=</span> <span class="n">list_name</span><span class="o">.</span><span class="n">to_query</span><span class="p">()</span>
             <span class="n">l</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">create_list</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
@@ -636,7 +635,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;IS&#39;</span><span class="p">,</span> <span class="s1">&#39;IS NOT&#39;</span><span class="p">])</span>
     <span class="n">SERIALISED_OPS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;IS&#39;</span><span class="p">:</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;IS NOT&#39;</span><span class="p">:</span><span class="s1">&#39;!=&#39;</span><span class="p">}</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">loopPath</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">loopPath</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -688,7 +687,7 @@
 <span class="sd">    well as the main value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;LOOKUP&#39;</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">extra_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">extra_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -754,7 +753,7 @@
 <span class="sd">        than an object&#39;s identity.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">OPS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;ONE OF&#39;</span><span class="p">,</span> <span class="s1">&#39;NONE OF&#39;</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -858,7 +857,7 @@
 <span class="sd">    in an InterMine query), they do not have codes</span>
 <span class="sd">    and cannot be referenced in logic expressions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">subclass</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">subclass</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -904,7 +903,7 @@
     <span class="n">REQUIRED</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span>
     <span class="n">OPTIONAL_ON</span> <span class="o">=</span> <span class="s2">&quot;on&quot;</span>
     <span class="n">OPTIONAL_OFF</span> <span class="o">=</span> <span class="s2">&quot;off&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="s2">&quot;locked&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="s2">&quot;locked&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -1015,7 +1014,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="TemplateUnaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateUnaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateUnaryConstraint</span><span class="p">(</span><span class="n">UnaryConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">UnaryConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1028,7 +1027,7 @@
                 <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="TemplateBinaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateBinaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateBinaryConstraint</span><span class="p">(</span><span class="n">BinaryConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">BinaryConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1041,7 +1040,7 @@
                 <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="TemplateListConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateListConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateListConstraint</span><span class="p">(</span><span class="n">ListConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">ListConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1054,7 +1053,7 @@
                 <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="TemplateLoopConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateLoopConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateLoopConstraint</span><span class="p">(</span><span class="n">LoopConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">LoopConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1067,7 +1066,7 @@
                 <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="TemplateTernaryConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateTernaryConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateTernaryConstraint</span><span class="p">(</span><span class="n">TernaryConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">TernaryConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1080,7 +1079,7 @@
                 <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="TemplateMultiConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateMultiConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateMultiConstraint</span><span class="p">(</span><span class="n">MultiConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">MultiConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1093,7 +1092,7 @@
                 <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="TemplateRangeConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateRangeConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateRangeConstraint</span><span class="p">(</span><span class="n">RangeConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">RangeConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1106,7 +1105,7 @@
                 <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="TemplateIsaConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateIsaConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateIsaConstraint</span><span class="p">(</span><span class="n">IsaConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">IsaConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1119,7 +1118,7 @@
                 <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">TemplateConstraint</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="TemplateSubClassConstraint"><a class="viewcode-back" href="../../intermine.html#intermine.constraints.TemplateSubClassConstraint">[docs]</a><span class="k">class</span> <span class="nc">TemplateSubClassConstraint</span><span class="p">(</span><span class="n">SubClassConstraint</span><span class="p">,</span> <span class="n">TemplateConstraint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span><span class="p">):</span>
         <span class="p">(</span><span class="n">c_args</span><span class="p">,</span> <span class="n">t_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_arg_sets</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="n">SubClassConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">c_args</span><span class="p">)</span>
         <span class="n">TemplateConstraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">t_args</span><span class="p">)</span>
@@ -1145,7 +1144,7 @@
         <span class="n">MultiConstraint</span><span class="p">,</span> <span class="n">SubClassConstraint</span><span class="p">,</span> <span class="n">LoopConstraint</span><span class="p">,</span>
         <span class="n">ListConstraint</span><span class="p">,</span> <span class="n">RangeConstraint</span><span class="p">,</span> <span class="n">IsaConstraint</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        ===========</span>
@@ -1218,11 +1217,14 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1233,8 +1235,8 @@
       &copy;2018, Alex Kalderimis, Julie Sullivan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
     </div>
 
