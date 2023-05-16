@@ -4,16 +4,20 @@ from xml.dom import minidom
 from contextlib import closing
 
 import requests
+import sys
 
 try:
     from urlparse import urlparse
     from UserDict import DictMixin
     from urllib import urlopen
     from urllib import urlencode
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     from urllib.parse import urlparse
     from urllib.parse import urlencode
-    from collections import MutableMapping as DictMixin
+    if sys.version_info[:2] >= (3, 8):
+        from collections.abc import MutableMapping as DictMixin
+    else:
+        from collections import MutableMapping as DictMixin
     from urllib.request import urlopen
 
 try:
