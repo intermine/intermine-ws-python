@@ -4,6 +4,9 @@ import unittest
 from intermine import registry
 
 
+# TODO: Test should not rely on live site. Replace with mock response
+# https://github.com/intermine/intermine-ws-python/issues/101
+@unittest.skip("Flymine not available")
 class RegistryTest(unittest.TestCase):
 
     def test_getInfo(self):
