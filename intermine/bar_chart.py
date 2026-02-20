@@ -1,18 +1,14 @@
-from lxml import etree
 import json
-try:
-    import urllib.request as req
-except ImportError:
-    import urllib as req
-from lxml import etree
-
-from intermine.webservice import Service
+import urllib.request as req
 from math import log
-import json
-import requests
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import requests
+from lxml import etree
+
+from intermine.webservice import Service
 
 
 def save_mine_and_token(m, t):

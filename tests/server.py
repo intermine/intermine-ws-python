@@ -2,17 +2,9 @@ import threading
 import time
 import os
 import posixpath
-import urllib
 from socket import socket
-
-try:
-    from SimpleHTTPServer import SimpleHTTPRequestHandler
-    from BaseHTTPServer import HTTPServer
-    from urllib import unquote
-except ImportError:
-    from http.server import SimpleHTTPRequestHandler
-    from http.server import HTTPServer
-    from urllib.parse import unquote
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+from urllib.parse import unquote
 
 
 class SilentRequestHandler(SimpleHTTPRequestHandler):  # pragma: no cover

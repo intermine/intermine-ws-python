@@ -1,9 +1,5 @@
-try:
-    from urllib import urlopen
-    from StringIO import StringIO
-except ImportError:
-    from urllib.request import urlopen
-    from io import StringIO
+from urllib.request import urlopen
+from io import StringIO
 
 
 def openAnything(source):

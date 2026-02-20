@@ -1,11 +1,6 @@
+import json
 import weakref
 import time
-
-# Use core json for 2.6+, simplejson for <=2.5
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 
 def get_json(service, path, key):

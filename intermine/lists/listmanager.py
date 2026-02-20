@@ -1,49 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import weakref
-import sys
 import logging
-
+import json
+import codecs
 from functools import partial
 from contextlib import closing
-
-# Use core json for 2.6+, simplejson for <=2.5
-
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
-try:
-
-    # Python 2.x imports
-
-    from urllib import urlencode
-except ImportError:
-
-    # Python 3.x imports
-
-    from urllib.parse import urlencode
-
-import urllib
-import codecs
+from urllib.parse import urlencode
 
 from intermine.errors import WebserviceError
 from intermine.lists.list import List
 
-P3K = sys.version_info >= (3, 0)
-
 logging.basicConfig()
-
-
-def safe_key(maybe_unicode):
-    if P3K:
-        return maybe_unicode  # that is fine
-
-    return maybe_unicode.decode('utf8')
 
 
 class ListManager(object):
@@ -102,10 +71,9 @@ class ListManager(object):
 
     @staticmethod
     def safe_dict(d):
-        """Recursively clone json structure with UTF-8 dictionary keys"""
-
+        """Clone dictionary (Python 2 compatibility shim, now just returns copy)"""
         if isinstance(d, dict):
-            return dict((safe_key(k), v) for (k, v) in d.items())
+            return dict(d)
         else:
             return d
 

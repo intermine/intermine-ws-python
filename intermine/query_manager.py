@@ -1,10 +1,8 @@
+import json
+import urllib.request as req
+
 import requests
 from lxml import etree
-import json
-try:
-    import urllib.request as req
-except ImportError:
-    import urllib as req
 """
 Functions for better usage of queries
 ================================================

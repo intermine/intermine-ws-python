@@ -44,7 +44,7 @@ to enable wide-ranging and arbitrary queries.
 
 Requirements
 ------------
-This package is compatible with both Python 2.7 and 3.x. We plan to drop 2.7 support next year.
+This package requires Python 3.10 or higher.
 
 Downloading:
 ------------

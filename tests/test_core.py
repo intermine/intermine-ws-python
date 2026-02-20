@@ -12,8 +12,6 @@ from intermine.lists.list import List
 
 from tests.server import TestServer
 
-P3K = sys.version_info >= (3, 0)
-
 logging.basicConfig()
 
 
@@ -41,11 +39,6 @@ class WebserviceTest(unittest.TestCase):  # pragma: no cover
             except IOError as e:
                 self.do_unpredictable_test(test, attempts + 1, e)
             except Exception:
-                if not P3K:  # Handle connection reset errors
-                    e, t = sys.exc_info()[:2]
-                    if 104 in t:
-                        self.do_unpredictable_test(test, attempts + 1, t)
-                        return
                 raise
         else:
             raise RuntimeError("Max error count reached - last error: " + str(

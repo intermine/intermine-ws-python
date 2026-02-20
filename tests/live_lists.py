@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from intermine.webservice import Service
 import os
 import sys
