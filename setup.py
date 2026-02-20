@@ -3,19 +3,14 @@ The test and clean code is shamelessly stolen from
 http://da44en.wordpress.com/2002/11/22/using-distutils/
 """
 
-from __future__ import print_function
-
 import os
 import time
 import logging
-from distutils.core import Command, setup
+from setuptools import Command, setup
 from distutils import log
-from distutils.fancy_getopt import fancy_getopt
 from unittest import TextTestRunner, TestLoader
 from glob import glob
 from os.path import splitext, basename, join as pjoin
-import setuptools
-from distutils.core import setup
 
 from intermine import VERSION
 
@@ -30,8 +25,11 @@ OPTIONS = {
     'url': "http://www.intermine.org",
     'keywords': ["webservice", "genomic", "bioinformatics"],
     'classifiers': [
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",
@@ -44,6 +42,7 @@ OPTIONS = {
         "Topic :: Scientific/Engineering :: Information Analysis",
         "Operating System :: OS Independent",
     ],
+    'python_requires': '>=3.10',
     'license': "LGPL, BSD",
     'long_description': """\
 InterMine Webservice Client
@@ -164,7 +163,7 @@ class CleanCommand(Command):
         self.verbose = 0
 
     def finalize_options(self):
-        fancy_getopt(self.user_options, {}, self, None)
+        pass
 
     def run(self):
         for clean_me in self._files_to_delete:

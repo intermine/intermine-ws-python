@@ -1,34 +1,14 @@
-from __future__ import unicode_literals
-
-from intermine.errors import WebserviceError
-from intermine.webservice import Service
+from functools import reduce
 import unittest
 import sys
 import os
 import uuid
 import csv
+
+from intermine.errors import WebserviceError
+from intermine.webservice import Service
+
 sys.path.insert(0, os.getcwd())
-
-
-try:
-    from functools import reduce
-except ImportError:
-    pass  # py3k import.
-
-PY3K = sys.version_info >= (3, 0)
-
-
-def unicode_csv_reader(data, **kwargs):
-    """Only needed in py2.x"""
-    reader = csv.reader(utf_8_encoder(data), **kwargs)
-    for row in reader:
-        # Decode back.
-        yield [cell.decode('utf-8') for cell in row]
-
-
-def utf_8_encoder(unicode_data):
-    for line in unicode_data:
-        yield line.encode('utf-8')
 
 
 class LiveResultsTest(unittest.TestCase):
@@ -141,26 +121,14 @@ class LiveResultsTest(unittest.TestCase):
         self.assertManagerAgeIsSum('jsonrows', lambda row: row[0]['value'])
 
     def test_csv(self):
-        if PY3K:  # string handling differences
-            def parse(data): return csv.reader(
-                data, delimiter=',', quotechar='"')
-        else:
-            def parse(data): return unicode_csv_reader(
-                data, delimiter=b',', quotechar=b'"')
-
         results = self.manager_q.results(row='csv')
-        reader = parse(results)
+        reader = csv.reader(results, delimiter=',', quotechar='"')
         self.assertEqual(self.manager_age_sum, sum(
             int(row[0]) for row in reader))
 
     def test_tsv(self):
-        if PY3K:  # string handling differences
-            def parse(data): return csv.reader(data, delimiter='\t')
-        else:
-            def parse(data): return unicode_csv_reader(data, delimiter=b'\t')
-
         results = self.manager_q.results(row='tsv')
-        reader = parse(results)
+        reader = csv.reader(results, delimiter='\t')
         self.assertEqual(self.manager_age_sum, sum(
             int(row[0]) for row in reader))
 

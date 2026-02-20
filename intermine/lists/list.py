@@ -1,14 +1,7 @@
 import weakref
 import logging
-
 import codecs
-
-try:
-    # Python 2.x imports
-    from urllib import urlencode
-except ImportError:
-    # Python 3.x imports
-    from urllib.parse import urlencode
+from urllib.parse import urlencode
 
 from intermine.results import JSONIterator, EnrichmentLine
 from intermine.model import ConstraintNode

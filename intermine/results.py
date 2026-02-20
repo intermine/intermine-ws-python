@@ -1,13 +1,8 @@
 try:
     import simplejson as json  # Prefer this as it is faster
-except ImportError:  # pragma: no cover
-    try:
-        import json
-    except ImportError:
-        raise ImportError("Could not find any JSON module to import - "
-                          + "please install simplejson or jsonlib to continue")
+except ImportError:
+    import json
 
-import urllib
 import re
 import copy
 import base64
@@ -15,29 +10,13 @@ import sys
 import logging
 from itertools import groupby
 from contextlib import closing
-
-P3K = sys.version_info >= (3, 0)
+from collections import UserDict
+from urllib.parse import urlencode, urlparse
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError
+import http.client as httplib
 
 logging.basicConfig()
-
-try:
-    # Python 2.x imports
-    from UserDict import UserDict
-    from urllib import urlencode
-    from urllib2 import urlopen
-    from urllib2 import HTTPError
-    from urllib2 import Request
-    from urlparse import urlparse
-    import httplib
-except ImportError:
-    # Python 3.x imports
-    from urllib.parse import urlencode
-    from urllib.parse import urlparse
-    from urllib.request import urlopen
-    from urllib.request import Request
-    from urllib.error import HTTPError
-    from collections import UserDict
-    import http.client as httplib
 
 from intermine.errors import WebserviceError
 from intermine.model import Attribute, Reference, Collection

@@ -1,23 +1,16 @@
-from __future__ import unicode_literals
-
 from xml.dom import minidom
 from contextlib import closing
 
 import requests
 
-from urllib.parse import urlparse
-from urllib.parse import urlencode
+from urllib.parse import urlparse, urlencode
 from collections.abc import MutableMapping as DictMixin
 from urllib.request import urlopen
 
 try:
     import simplejson as json  # Prefer this as it is faster
-except ImportError:  # pragma: no cover
-    try:
-        import json
-    except ImportError:
-        raise ImportError("Could not find any JSON module to import - "
-                          + "please install simplejson or jsonlib to continue")
+except ImportError:
+    import json
 
 # Local intermine imports
 from intermine.query import Query, Template

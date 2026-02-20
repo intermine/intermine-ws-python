@@ -2,13 +2,9 @@ from xml.dom import minidom
 import weakref
 import re
 import logging
+from functools import reduce
 
 from intermine.util import openAnything, ReadableException
-
-try:
-    from functools import reduce
-except ImportError:
-    pass
 
 logging.basicConfig()
 

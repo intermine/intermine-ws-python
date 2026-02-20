@@ -10,10 +10,7 @@ from intermine.util import openAnything, ReadableException
 from intermine.pathfeatures import PathDescription, Join, SortOrder
 from intermine.pathfeatures import SortOrderList
 
-try:
-    from functools import reduce
-except ImportError:
-    pass
+from functools import reduce
 """
 Classes representing queries against webservices
 ================================================
