@@ -2,9 +2,9 @@ The InterMine Python Webservice Client
 =====================================
 
 
-[![Build Status][badge]][ci] 
+[![Build Status][badge]][ci]
 ![Version](http://img.shields.io/badge/version-1.12.0-blue.svg?style=flat)
-[![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/intermine/intermine/blob/master/LICENSE) 
+[![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/intermine/intermine/blob/master/LICENSE)
 [![Research software impact](http://depsy.org/api/package/pypi/intermine/badge.svg)](http://depsy.org/package/python/intermine)
 
 [![Conda](https://anaconda.org/intermine/intermine/badges/installer/conda.svg)](https://anaconda.org/bioconda/intermine)
@@ -12,15 +12,15 @@ The InterMine Python Webservice Client
 [![Downloads](https://anaconda.org/bioconda/intermine/badges/downloads.svg)](https://anaconda.org/bioconda/intermine)
 
 
-An implementation of a webservice client 
+An implementation of a webservice client
 for InterMine webservices, written in Python
 
 Who should use this software?
 -----------------------------
 
-This software is intended for people who make 
+This software is intended for people who make
 use of InterMine datawarehouses (ie. Biologists)
-and who want a quicker, more automated way 
+and who want a quicker, more automated way
 to perform queries. Some examples of sites that
 are powered by InterMine software, and thus offer
 a compatible webservice API, are:
@@ -36,9 +36,9 @@ a compatible webservice API, are:
 
 See the [InterMine registry](http://registry.intermine.org/) for the full list of available InterMines.
 
-Queries here refer to database queries over the 
-integrated datawarehouse. Instead of using 
-SQL, InterMine services use a flexible and 
+Queries here refer to database queries over the
+integrated datawarehouse. Instead of using
+SQL, InterMine services use a flexible and
 powerful sub-set of database query language
 to enable wide-ranging and arbitrary queries.
 
@@ -67,7 +67,7 @@ the following command: (from the source directory)
   python setup.py test
 ```
 
-If you want to run the suite against a live server (e.g. as deployed by the testmodel/setup.sh in 
+If you want to run the suite against a live server (e.g. as deployed by the testmodel/setup.sh in
 the InterMine distribution, then you can run:
 
 ```
@@ -122,6 +122,7 @@ For example:
 Changes:
 --------
 
+    1.14.00   Add Python 3.10 support
     1.13.00   Added get_template_by_user method
 			  Added property view_types to the template
     1.12.00   Added organism to list upload
@@ -152,7 +153,7 @@ Changes:
               Ensure lists and queries share the same overloading
     0.99.02   Allow sort-orders which are not in the view but are on selected classes
     0.99.01   Better representation of multiple sort-orders.
-    0.99.00   Fixed bug with subclasses not being included in clones 
+    0.99.00   Fixed bug with subclasses not being included in clones
               Added support for new json format for ws versions >= 8.
     0.98.16   Fixed bug with XML parsing and subclasses where the subclass is mentioned in the first view.
               better result format documentation and tests
@@ -184,7 +185,5 @@ Please cite
 
 [Nucleic Acids Res. 2014 Jul;42(Web Server issue):W468-72](https://academic.oup.com/nar/article/42/W1/W468/2435235)
 
-[![doi](http://img.shields.io/badge/doi-10.1093/nar/gku301-blue.svg?style=flat)](https://doi.org/10.1093/nar/gku301) 
+[![doi](http://img.shields.io/badge/doi-10.1093/nar/gku301-blue.svg?style=flat)](https://doi.org/10.1093/nar/gku301)
 [![pubmed](http://img.shields.io/badge/pubmed-24753429-blue.svg?style=flat)](http://www.ncbi.nlm.nih.gov/pubmed/24753429)
-
-
