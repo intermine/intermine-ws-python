@@ -8,7 +8,8 @@ if [ "$#" != "2" ]; then
 fi
 
 WORKSPACE_DIR=$1
-TESTMODEL_URL=$2
+PYTHON=$2
+TESTMODEL_URL=$3
 
 INTERMINE_DIR=${WORKSPACE_DIR}/server
 TESTMINE_DIR=${INTERMINE_DIR}/testmine
@@ -48,6 +49,7 @@ sed -i -e "s/PSQL_HOST/${PSQL_HOST}/" "$TESTMODEL_PROPS"
 sed -i -e "s/PSQL_USER/${PSQL_USER}/" "$TESTMODEL_PROPS"
 sed -i -e "s/PSQL_PWD/${PSQL_PWD}/" "$TESTMODEL_PROPS"
 
+${PYTHON} "${INTERMINE_DIR}"/config/lib/install_intermine.py
 
 # We will need a fully operational web-application
 echo '#---> Building and releasing web application to test against'

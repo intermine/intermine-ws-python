@@ -58,6 +58,6 @@ jobs:
       run: |
         set -euo pipefail
         ./config/ci/init-solr.sh ${GITHUB_WORKSPACE}
-        ./config/ci/init.sh ${GITHUB_WORKSPACE} http://localhost:8080/intermine-demo
+        ./config/ci/init.sh ${GITHUB_WORKSPACE} $(which python3) http://localhost:8080/intermine-demo
         python setup.py test
         python setup.py livetest
