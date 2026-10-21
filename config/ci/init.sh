@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-if [ "$#" != "2" ]; then
-   echo "Usage: $0 <workspace_dir> <testmodel_url>"
+if [ "$#" != "3" ]; then
+   echo "Usage: $0 <workspace_dir> <python executable> <testmodel_url>"
    exit 2
 fi
 
