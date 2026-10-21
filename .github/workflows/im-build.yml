@@ -2,7 +2,6 @@ name: InterMine WS Python CI
 
 on:
   push:
-  pull_request:
 
 env:
   SOLR_VERSION: 8.6.2
